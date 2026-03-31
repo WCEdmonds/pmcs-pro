@@ -1,0 +1,6 @@
+node_modules
+dist
+.env
+.vercel
+.worktrees
+public/tm/*.pdf

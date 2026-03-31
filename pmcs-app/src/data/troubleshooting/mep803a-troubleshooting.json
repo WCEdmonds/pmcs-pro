@@ -1,0 +1,972 @@
+[
+  {
+    "categoryId": "gen-engine",
+    "vehicleType": "MEP803A",
+    "tmReference": "TM 9-6115-642-10, Table 3-1, Malfunctions 1-7",
+    "rootNodeId": "ge-q1",
+    "nodes": {
+      "ge-q1": {
+        "id": "ge-q1",
+        "type": "question",
+        "text": "What is the engine doing?",
+        "options": [
+          { "label": "Fails to crank", "nextNodeId": "ge-q2" },
+          { "label": "Cranks but won't start", "nextNodeId": "ge-q6" },
+          { "label": "Stops when MASTER SWITCH released from START", "nextNodeId": "ge-q10" },
+          { "label": "Stops suddenly", "nextNodeId": "ge-q12" },
+          { "label": "Runs erratically or misfires", "nextNodeId": "ge-q14" },
+          { "label": "Doesn't develop full power", "nextNodeId": "ge-q18" },
+          { "label": "Knocks", "nextNodeId": "ge-q22" }
+        ]
+      },
+      "ge-q2": {
+        "id": "ge-q2",
+        "type": "question",
+        "text": "Is the DEAD CRANK switch set to NORMAL?",
+        "options": [
+          { "label": "No — it was not set to NORMAL", "nextNodeId": "ge-a1" },
+          { "label": "Yes — already set to NORMAL", "nextNodeId": "ge-q3" }
+        ]
+      },
+      "ge-a1": {
+        "id": "ge-a1",
+        "type": "action",
+        "text": "Set DEAD CRANK switch to NORMAL",
+        "actionText": "Set the DEAD CRANK switch to the NORMAL position. Try cranking the engine again.",
+        "nextNodeId": "ge-q3a"
+      },
+      "ge-q3a": {
+        "id": "ge-q3a",
+        "type": "question",
+        "text": "Does the engine crank now?",
+        "options": [
+          { "label": "Yes — engine cranks", "nextNodeId": "ge-t1" },
+          { "label": "No — still won't crank", "nextNodeId": "ge-q3" }
+        ]
+      },
+      "ge-q3": {
+        "id": "ge-q3",
+        "type": "question",
+        "text": "Is the DC CONTROL POWER circuit breaker pushed in (ON)?",
+        "options": [
+          { "label": "No — it was tripped", "nextNodeId": "ge-a2" },
+          { "label": "Yes — already ON", "nextNodeId": "ge-q4" }
+        ]
+      },
+      "ge-a2": {
+        "id": "ge-a2",
+        "type": "action",
+        "text": "Reset DC CONTROL POWER circuit breaker",
+        "actionText": "Push the DC CONTROL POWER circuit breaker back in to the ON position. Try cranking the engine again.",
+        "nextNodeId": "ge-q4a"
+      },
+      "ge-q4a": {
+        "id": "ge-q4a",
+        "type": "question",
+        "text": "Does the engine crank now?",
+        "options": [
+          { "label": "Yes — engine cranks", "nextNodeId": "ge-t1" },
+          { "label": "No — still won't crank", "nextNodeId": "ge-q4" }
+        ]
+      },
+      "ge-q4": {
+        "id": "ge-q4",
+        "type": "question",
+        "text": "Is the Emergency Stop Switch pulled out (released)?",
+        "options": [
+          { "label": "No — it was pushed in (engaged)", "nextNodeId": "ge-a3" },
+          { "label": "Yes — already released", "nextNodeId": "ge-q5" }
+        ]
+      },
+      "ge-a3": {
+        "id": "ge-a3",
+        "type": "action",
+        "text": "Release Emergency Stop Switch",
+        "actionText": "Pull the Emergency Stop Switch out to release it. Try cranking the engine again.",
+        "nextNodeId": "ge-q5a"
+      },
+      "ge-q5a": {
+        "id": "ge-q5a",
+        "type": "question",
+        "text": "Does the engine crank now?",
+        "options": [
+          { "label": "Yes — engine cranks", "nextNodeId": "ge-t1" },
+          { "label": "No — still won't crank", "nextNodeId": "ge-q5" }
+        ]
+      },
+      "ge-q5": {
+        "id": "ge-q5",
+        "type": "question",
+        "text": "Check battery connections. Are they clean, tight, and free of corrosion?",
+        "options": [
+          { "label": "Connections are corroded or loose", "nextNodeId": "ge-a4" },
+          { "label": "Connections look good", "nextNodeId": "ge-t2" }
+        ]
+      },
+      "ge-a4": {
+        "id": "ge-a4",
+        "type": "action",
+        "text": "Clean and tighten battery connections",
+        "actionText": "Disconnect negative cable first, then positive. Clean terminals and cable clamps with a wire brush. Reconnect positive first, then negative. Ensure connections are tight. Try cranking again.",
+        "nextNodeId": "ge-q5b"
+      },
+      "ge-q5b": {
+        "id": "ge-q5b",
+        "type": "question",
+        "text": "Does the engine crank now?",
+        "options": [
+          { "label": "Yes — engine cranks", "nextNodeId": "ge-t3" },
+          { "label": "No — still won't crank", "nextNodeId": "ge-t2" }
+        ]
+      },
+      "ge-q6": {
+        "id": "ge-q6",
+        "type": "question",
+        "text": "Is the ambient temperature below 40 degrees F?",
+        "options": [
+          { "label": "Yes — it's cold", "nextNodeId": "ge-a5" },
+          { "label": "No — temperature is above 40F", "nextNodeId": "ge-q7" }
+        ]
+      },
+      "ge-a5": {
+        "id": "ge-a5",
+        "type": "action",
+        "text": "Use PREHEAT before starting",
+        "actionText": "Use the PREHEAT position on the MASTER SWITCH to preheat the engine before cranking. Hold PREHEAT for the time specified on the data plate (usually 30-60 seconds), then move to START.",
+        "nextNodeId": "ge-q6a"
+      },
+      "ge-q6a": {
+        "id": "ge-q6a",
+        "type": "question",
+        "text": "Does the engine start now after preheating?",
+        "options": [
+          { "label": "Yes — engine starts", "nextNodeId": "ge-t4" },
+          { "label": "No — still won't start", "nextNodeId": "ge-q7" }
+        ]
+      },
+      "ge-q7": {
+        "id": "ge-q7",
+        "type": "question",
+        "text": "Check the air cleaner restriction indicator. Is the air cleaner dirty or clogged?",
+        "options": [
+          { "label": "Yes — air cleaner is dirty", "nextNodeId": "ge-a6" },
+          { "label": "No — air cleaner looks clean", "nextNodeId": "ge-q8" }
+        ]
+      },
+      "ge-a6": {
+        "id": "ge-a6",
+        "type": "action",
+        "text": "Service the air cleaner",
+        "actionText": "Remove and clean or replace the air cleaner element. Reset the restriction indicator. Try starting the engine again.",
+        "tmPage": "3-5",
+        "nextNodeId": "ge-q7a"
+      },
+      "ge-q7a": {
+        "id": "ge-q7a",
+        "type": "question",
+        "text": "Does the engine start now?",
+        "options": [
+          { "label": "Yes — engine starts", "nextNodeId": "ge-t5" },
+          { "label": "No — still won't start", "nextNodeId": "ge-q8" }
+        ]
+      },
+      "ge-q8": {
+        "id": "ge-q8",
+        "type": "question",
+        "text": "Is the fuel filter/water separator dirty or full of water?",
+        "options": [
+          { "label": "Yes — dirty or water present", "nextNodeId": "ge-a7" },
+          { "label": "No — fuel filter looks clean", "nextNodeId": "ge-t6" }
+        ]
+      },
+      "ge-a7": {
+        "id": "ge-a7",
+        "type": "action",
+        "text": "Service the fuel filter/water separator",
+        "actionText": "Drain the water from the fuel filter/water separator. If the filter element is dirty, replace it. Prime the fuel system after servicing. Try starting the engine again.",
+        "tmPage": "3-6",
+        "nextNodeId": "ge-q8a"
+      },
+      "ge-q8a": {
+        "id": "ge-q8a",
+        "type": "question",
+        "text": "Does the engine start now?",
+        "options": [
+          { "label": "Yes — engine starts", "nextNodeId": "ge-t7" },
+          { "label": "No — still won't start", "nextNodeId": "ge-t6" }
+        ]
+      },
+      "ge-q10": {
+        "id": "ge-q10",
+        "type": "question",
+        "text": "Did you hold the MASTER SWITCH in START until oil pressure reached at least 25 psi?",
+        "options": [
+          { "label": "No — I released it too soon", "nextNodeId": "ge-a8" },
+          { "label": "Yes — I held it until 25 psi", "nextNodeId": "ge-t8" }
+        ]
+      },
+      "ge-a8": {
+        "id": "ge-a8",
+        "type": "action",
+        "text": "Hold MASTER SWITCH in START longer",
+        "actionText": "Turn the MASTER SWITCH to START and hold it there. Watch the oil pressure gauge. Do not release until oil pressure reaches at least 25 psi. The engine will shut down if released before oil pressure is sufficient.",
+        "nextNodeId": "ge-q10a"
+      },
+      "ge-q10a": {
+        "id": "ge-q10a",
+        "type": "question",
+        "text": "Does the engine stay running now?",
+        "options": [
+          { "label": "Yes — engine stays running", "nextNodeId": "ge-t9" },
+          { "label": "No — still stops when released", "nextNodeId": "ge-t8" }
+        ]
+      },
+      "ge-q12": {
+        "id": "ge-q12",
+        "type": "question",
+        "text": "Check the FAULT INDICATOR lights on the control panel. Are any fault lights on?",
+        "options": [
+          { "label": "Yes — fault lights are on", "nextNodeId": "ge-t10" },
+          { "label": "No — no fault lights", "nextNodeId": "ge-q13" }
+        ]
+      },
+      "ge-q13": {
+        "id": "ge-q13",
+        "type": "question",
+        "text": "Is the DC CONTROL POWER circuit breaker tripped (popped out)?",
+        "options": [
+          { "label": "Yes — it's tripped", "nextNodeId": "ge-a9" },
+          { "label": "No — it's still ON", "nextNodeId": "ge-t11" }
+        ]
+      },
+      "ge-a9": {
+        "id": "ge-a9",
+        "type": "action",
+        "text": "Reset DC CONTROL POWER circuit breaker",
+        "actionText": "Push the DC CONTROL POWER circuit breaker back in. Restart the generator and observe. If it trips again immediately, do not reset again.",
+        "nextNodeId": "ge-q13a"
+      },
+      "ge-q13a": {
+        "id": "ge-q13a",
+        "type": "question",
+        "text": "Does the generator stay running now?",
+        "options": [
+          { "label": "Yes — running normally", "nextNodeId": "ge-t12" },
+          { "label": "No — trips again or still stops", "nextNodeId": "ge-t11" }
+        ]
+      },
+      "ge-q14": {
+        "id": "ge-q14",
+        "type": "question",
+        "text": "Check the air cleaner restriction indicator. Is the air cleaner dirty or clogged?",
+        "options": [
+          { "label": "Yes — air cleaner is dirty", "nextNodeId": "ge-a10" },
+          { "label": "No — air cleaner looks clean", "nextNodeId": "ge-q15" }
+        ]
+      },
+      "ge-a10": {
+        "id": "ge-a10",
+        "type": "action",
+        "text": "Service the air cleaner",
+        "actionText": "Remove and clean or replace the air cleaner element. Reset the restriction indicator. Restart and check if the engine runs smoothly.",
+        "tmPage": "3-5",
+        "nextNodeId": "ge-q14a"
+      },
+      "ge-q14a": {
+        "id": "ge-q14a",
+        "type": "question",
+        "text": "Does the engine run smoothly now?",
+        "options": [
+          { "label": "Yes — running smoothly", "nextNodeId": "ge-t5" },
+          { "label": "No — still runs rough", "nextNodeId": "ge-q15" }
+        ]
+      },
+      "ge-q15": {
+        "id": "ge-q15",
+        "type": "question",
+        "text": "Could the fuel be contaminated (water, dirt, or wrong fuel type)?",
+        "options": [
+          { "label": "Yes — fuel may be contaminated", "nextNodeId": "ge-a11" },
+          { "label": "No — fuel seems clean", "nextNodeId": "ge-q16" }
+        ]
+      },
+      "ge-a11": {
+        "id": "ge-a11",
+        "type": "action",
+        "text": "Service the fuel filter/water separator",
+        "actionText": "Drain the fuel filter/water separator. If water or debris is present, replace the filter element and prime the fuel system. Try running the generator again.",
+        "tmPage": "3-6",
+        "nextNodeId": "ge-q15a"
+      },
+      "ge-q15a": {
+        "id": "ge-q15a",
+        "type": "question",
+        "text": "Does the engine run smoothly now?",
+        "options": [
+          { "label": "Yes — running smoothly", "nextNodeId": "ge-t7" },
+          { "label": "No — still runs rough", "nextNodeId": "ge-q16" }
+        ]
+      },
+      "ge-q16": {
+        "id": "ge-q16",
+        "type": "question",
+        "text": "Is the generator using the correct fuel type (DF-2 diesel or JP-8)?",
+        "options": [
+          { "label": "No — wrong fuel type", "nextNodeId": "ge-t13" },
+          { "label": "Yes — correct fuel", "nextNodeId": "ge-t14" }
+        ]
+      },
+      "ge-q18": {
+        "id": "ge-q18",
+        "type": "question",
+        "text": "Check the air cleaner restriction indicator. Is the air cleaner dirty or clogged?",
+        "options": [
+          { "label": "Yes — air cleaner is dirty", "nextNodeId": "ge-a12" },
+          { "label": "No — air cleaner looks clean", "nextNodeId": "ge-q19" }
+        ]
+      },
+      "ge-a12": {
+        "id": "ge-a12",
+        "type": "action",
+        "text": "Service the air cleaner",
+        "actionText": "Remove and clean or replace the air cleaner element. Reset the restriction indicator. Run the generator and check if it develops full power.",
+        "tmPage": "3-5",
+        "nextNodeId": "ge-q18a"
+      },
+      "ge-q18a": {
+        "id": "ge-q18a",
+        "type": "question",
+        "text": "Does the generator develop full power now?",
+        "options": [
+          { "label": "Yes — full power", "nextNodeId": "ge-t5" },
+          { "label": "No — still low power", "nextNodeId": "ge-q19" }
+        ]
+      },
+      "ge-q19": {
+        "id": "ge-q19",
+        "type": "question",
+        "text": "Could the fuel be contaminated?",
+        "options": [
+          { "label": "Yes — fuel may be contaminated", "nextNodeId": "ge-a13" },
+          { "label": "No — fuel seems clean", "nextNodeId": "ge-q20" }
+        ]
+      },
+      "ge-a13": {
+        "id": "ge-a13",
+        "type": "action",
+        "text": "Service the fuel filter/water separator",
+        "actionText": "Drain the fuel filter/water separator. If water or debris is present, replace the filter element and prime the fuel system.",
+        "tmPage": "3-6",
+        "nextNodeId": "ge-q19a"
+      },
+      "ge-q19a": {
+        "id": "ge-q19a",
+        "type": "question",
+        "text": "Does the generator develop full power now?",
+        "options": [
+          { "label": "Yes — full power", "nextNodeId": "ge-t7" },
+          { "label": "No — still low power", "nextNodeId": "ge-q20" }
+        ]
+      },
+      "ge-q20": {
+        "id": "ge-q20",
+        "type": "question",
+        "text": "Is the exhaust system restricted or damaged?",
+        "options": [
+          { "label": "Yes — exhaust appears restricted", "nextNodeId": "ge-t15" },
+          { "label": "No — exhaust looks clear", "nextNodeId": "ge-q21" }
+        ]
+      },
+      "ge-q21": {
+        "id": "ge-q21",
+        "type": "question",
+        "text": "Is the generator using the correct fuel type?",
+        "options": [
+          { "label": "No — wrong fuel type", "nextNodeId": "ge-t13" },
+          { "label": "Yes — correct fuel", "nextNodeId": "ge-t16" }
+        ]
+      },
+      "ge-q22": {
+        "id": "ge-q22",
+        "type": "question",
+        "text": "Check the oil level on the dipstick. Is the oil low?",
+        "options": [
+          { "label": "Yes — oil is low", "nextNodeId": "ge-a14" },
+          { "label": "No — oil level is good", "nextNodeId": "ge-q23" }
+        ]
+      },
+      "ge-a14": {
+        "id": "ge-a14",
+        "type": "action",
+        "text": "Add engine oil",
+        "actionText": "Add the correct type and weight of engine oil until the dipstick reads in the safe operating range. Run the engine and listen for the knock.",
+        "nextNodeId": "ge-q22a"
+      },
+      "ge-q22a": {
+        "id": "ge-q22a",
+        "type": "question",
+        "text": "Is the knocking gone after adding oil?",
+        "options": [
+          { "label": "Yes — no more knocking", "nextNodeId": "ge-t17" },
+          { "label": "No — still knocking", "nextNodeId": "ge-q23" }
+        ]
+      },
+      "ge-q23": {
+        "id": "ge-q23",
+        "type": "question",
+        "text": "Can you identify any loose parts or foreign objects inside the generator housing?",
+        "options": [
+          { "label": "Yes — found loose parts or foreign objects", "nextNodeId": "ge-a15" },
+          { "label": "No — nothing loose or foreign", "nextNodeId": "ge-q24" }
+        ]
+      },
+      "ge-a15": {
+        "id": "ge-a15",
+        "type": "action",
+        "text": "Remove foreign objects and secure loose parts",
+        "actionText": "Shut down the generator. Remove any foreign objects. Tighten any loose hardware. Restart and listen for the knock.",
+        "nextNodeId": "ge-q23a"
+      },
+      "ge-q23a": {
+        "id": "ge-q23a",
+        "type": "question",
+        "text": "Is the knocking gone?",
+        "options": [
+          { "label": "Yes — no more knocking", "nextNodeId": "ge-t18" },
+          { "label": "No — still knocking", "nextNodeId": "ge-q24" }
+        ]
+      },
+      "ge-q24": {
+        "id": "ge-q24",
+        "type": "question",
+        "text": "Is the generator using the correct fuel type?",
+        "options": [
+          { "label": "No — wrong fuel type", "nextNodeId": "ge-t13" },
+          { "label": "Yes — correct fuel", "nextNodeId": "ge-t19" }
+        ]
+      },
+      "ge-t1": { "id": "ge-t1", "type": "terminal", "text": "Engine cranks after correcting switch position.", "terminal": { "resolution": "operator-fix", "readiness": "PMC", "summary": "DEAD CRANK switch was not in NORMAL — corrected" } },
+      "ge-t2": { "id": "ge-t2", "type": "terminal", "text": "Engine fails to crank after all operator checks. Notify next higher maintenance level.", "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Engine fails to crank — beyond operator repair" } },
+      "ge-t3": { "id": "ge-t3", "type": "terminal", "text": "Battery connections cleaned and tightened. Engine cranks.", "terminal": { "resolution": "operator-fix", "readiness": "PMC", "summary": "Battery connections corroded/loose — cleaned and tightened" } },
+      "ge-t4": { "id": "ge-t4", "type": "terminal", "text": "Cold weather start — preheating resolved the issue.", "terminal": { "resolution": "operator-fix", "readiness": "PMC", "summary": "Cold weather — used PREHEAT, engine started" } },
+      "ge-t5": { "id": "ge-t5", "type": "terminal", "text": "Air cleaner was dirty. Serviced and engine runs properly.", "terminal": { "resolution": "operator-fix", "readiness": "PMC", "summary": "Dirty air cleaner — serviced, engine runs properly" } },
+      "ge-t6": { "id": "ge-t6", "type": "terminal", "text": "Engine cranks but will not start after all operator checks. Notify next higher maintenance level.", "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Engine cranks but won't start — beyond operator repair" } },
+      "ge-t7": { "id": "ge-t7", "type": "terminal", "text": "Fuel filter/water separator serviced. Engine runs properly.", "terminal": { "resolution": "operator-fix", "readiness": "PMC", "summary": "Fuel filter/water separator dirty — serviced, engine runs" } },
+      "ge-t8": { "id": "ge-t8", "type": "terminal", "text": "Engine stops when MASTER SWITCH is released from START. Notify next higher maintenance level.", "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Engine stops on switch release — beyond operator repair" } },
+      "ge-t9": { "id": "ge-t9", "type": "terminal", "text": "Engine stays running. Operator was releasing MASTER SWITCH too early.", "terminal": { "resolution": "operator-fix", "readiness": "PMC", "summary": "Improper starting procedure — held START until 25 psi" } },
+      "ge-t10": { "id": "ge-t10", "type": "terminal", "text": "Fault indicator lights are on. The generator has detected a fault condition. Shut down and notify next higher maintenance level.", "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Fault indicator lights on — generator shutdown, needs maintenance" } },
+      "ge-t11": { "id": "ge-t11", "type": "terminal", "text": "Engine stops suddenly with no clear operator-level cause. Notify next higher maintenance level.", "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Engine stops suddenly — beyond operator repair" } },
+      "ge-t12": { "id": "ge-t12", "type": "terminal", "text": "DC CONTROL POWER circuit breaker was tripped. Reset and generator runs.", "terminal": { "resolution": "operator-fix", "readiness": "PMC", "summary": "DC CONTROL POWER breaker tripped — reset, generator runs" } },
+      "ge-t13": { "id": "ge-t13", "type": "terminal", "text": "Wrong fuel type in the generator. Notify next higher maintenance level to drain and refuel with correct fuel.", "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Improper fuel type — needs drain and refuel" } },
+      "ge-t14": { "id": "ge-t14", "type": "terminal", "text": "Engine runs erratically after all operator checks. Notify next higher maintenance level.", "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Engine runs erratically — beyond operator repair" } },
+      "ge-t15": { "id": "ge-t15", "type": "terminal", "text": "Exhaust system appears restricted or damaged. Notify next higher maintenance level.", "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Restricted/damaged exhaust — needs maintenance" } },
+      "ge-t16": { "id": "ge-t16", "type": "terminal", "text": "Generator does not develop full power after all operator checks. Notify next higher maintenance level.", "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Low power output — beyond operator repair" } },
+      "ge-t17": { "id": "ge-t17", "type": "terminal", "text": "Oil was low causing engine knock. Oil added, knock resolved.", "terminal": { "resolution": "operator-fix", "readiness": "PMC", "summary": "Low oil caused knock — oil added, knock resolved" } },
+      "ge-t18": { "id": "ge-t18", "type": "terminal", "text": "Loose parts or foreign objects removed. Knock resolved.", "terminal": { "resolution": "operator-fix", "readiness": "PMC", "summary": "Foreign objects/loose parts removed — knock resolved" } },
+      "ge-t19": { "id": "ge-t19", "type": "terminal", "text": "Engine knocks after all operator checks. Notify next higher maintenance level.", "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Engine knock — beyond operator repair" } }
+    }
+  },
+  {
+    "categoryId": "gen-exhaust",
+    "vehicleType": "MEP803A",
+    "tmReference": "TM 9-6115-642-10, Table 3-1, Malfunctions 8-9",
+    "rootNodeId": "gx-q1",
+    "nodes": {
+      "gx-q1": {
+        "id": "gx-q1",
+        "type": "question",
+        "text": "What color is the exhaust smoke?",
+        "options": [
+          { "label": "Blue or white", "nextNodeId": "gx-q2" },
+          { "label": "Black", "nextNodeId": "gx-q3" }
+        ]
+      },
+      "gx-q2": {
+        "id": "gx-q2",
+        "type": "question",
+        "text": "Is the generator using the correct fuel type (DF-2 diesel or JP-8)?",
+        "options": [
+          { "label": "No — wrong fuel type", "nextNodeId": "gx-t1" },
+          { "label": "Yes — correct fuel", "nextNodeId": "gx-t2" }
+        ]
+      },
+      "gx-q3": {
+        "id": "gx-q3",
+        "type": "question",
+        "text": "Is the generator using the correct fuel type?",
+        "options": [
+          { "label": "No — wrong fuel type", "nextNodeId": "gx-t1" },
+          { "label": "Yes — correct fuel", "nextNodeId": "gx-q4" }
+        ]
+      },
+      "gx-q4": {
+        "id": "gx-q4",
+        "type": "question",
+        "text": "Check the air cleaner restriction indicator. Is the air cleaner dirty or clogged?",
+        "options": [
+          { "label": "Yes — air cleaner is dirty", "nextNodeId": "gx-a1" },
+          { "label": "No — air cleaner looks clean", "nextNodeId": "gx-t3" }
+        ]
+      },
+      "gx-a1": {
+        "id": "gx-a1",
+        "type": "action",
+        "text": "Service the air cleaner",
+        "actionText": "Remove and clean or replace the air cleaner element. Reset the restriction indicator. Run the generator and observe the exhaust.",
+        "tmPage": "3-5",
+        "nextNodeId": "gx-q5"
+      },
+      "gx-q5": {
+        "id": "gx-q5",
+        "type": "question",
+        "text": "Is the black smoke gone?",
+        "options": [
+          { "label": "Yes — exhaust is clear", "nextNodeId": "gx-t4" },
+          { "label": "No — still black smoke", "nextNodeId": "gx-t3" }
+        ]
+      },
+      "gx-t1": { "id": "gx-t1", "type": "terminal", "text": "Wrong fuel type in the generator. Notify next higher maintenance level to drain and refuel.", "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Improper fuel type causing exhaust smoke — needs drain and refuel" } },
+      "gx-t2": { "id": "gx-t2", "type": "terminal", "text": "Blue or white exhaust smoke with correct fuel. Notify next higher maintenance level.", "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Blue/white exhaust smoke — beyond operator repair" } },
+      "gx-t3": { "id": "gx-t3", "type": "terminal", "text": "Black exhaust smoke after all operator checks. Notify next higher maintenance level.", "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Black exhaust smoke — beyond operator repair" } },
+      "gx-t4": { "id": "gx-t4", "type": "terminal", "text": "Air cleaner was dirty causing black smoke. Serviced and exhaust is clear.", "terminal": { "resolution": "operator-fix", "readiness": "PMC", "summary": "Dirty air cleaner caused black smoke — serviced, exhaust clear" } }
+    }
+  },
+  {
+    "categoryId": "gen-oil-pressure",
+    "vehicleType": "MEP803A",
+    "tmReference": "TM 9-6115-642-10, Table 3-1, Malfunction 10",
+    "rootNodeId": "go-q1",
+    "nodes": {
+      "go-q1": {
+        "id": "go-q1",
+        "type": "question",
+        "text": "Oil pressure is low. Check the oil level on the dipstick. Is the oil low?",
+        "options": [
+          { "label": "Yes — oil is low", "nextNodeId": "go-a1" },
+          { "label": "No — oil level is good", "nextNodeId": "go-q2" }
+        ]
+      },
+      "go-a1": {
+        "id": "go-a1",
+        "type": "action",
+        "text": "Add engine oil",
+        "actionText": "Add the correct type and weight of engine oil until the dipstick reads in the safe operating range. Run the engine and check oil pressure.",
+        "nextNodeId": "go-q1a"
+      },
+      "go-q1a": {
+        "id": "go-q1a",
+        "type": "question",
+        "text": "Is oil pressure normal now?",
+        "options": [
+          { "label": "Yes — pressure is normal", "nextNodeId": "go-t1" },
+          { "label": "No — still low pressure", "nextNodeId": "go-q2" }
+        ]
+      },
+      "go-q2": {
+        "id": "go-q2",
+        "type": "question",
+        "text": "Is the coolant temperature high (overheating)?",
+        "options": [
+          { "label": "Yes — coolant temp is high", "nextNodeId": "go-q3" },
+          { "label": "No — coolant temp is normal", "nextNodeId": "go-q4" }
+        ]
+      },
+      "go-q3": {
+        "id": "go-q3",
+        "type": "question",
+        "text": "Check the coolant level. Is it low?",
+        "options": [
+          { "label": "Yes — coolant is low", "nextNodeId": "go-a2" },
+          { "label": "No — coolant level is good", "nextNodeId": "go-q4" }
+        ]
+      },
+      "go-a2": {
+        "id": "go-a2",
+        "type": "action",
+        "text": "Add coolant",
+        "actionText": "Allow the engine to cool. Remove the radiator cap carefully. Add coolant to the proper level. Replace the cap and run the engine. Check oil pressure.",
+        "nextNodeId": "go-q3a"
+      },
+      "go-q3a": {
+        "id": "go-q3a",
+        "type": "question",
+        "text": "Is oil pressure normal now?",
+        "options": [
+          { "label": "Yes — pressure is normal", "nextNodeId": "go-t2" },
+          { "label": "No — still low pressure", "nextNodeId": "go-q4" }
+        ]
+      },
+      "go-q4": {
+        "id": "go-q4",
+        "type": "question",
+        "text": "Is the air intake or exhaust obstructed with debris?",
+        "options": [
+          { "label": "Yes — obstructions found", "nextNodeId": "go-a3" },
+          { "label": "No — air flow looks clear", "nextNodeId": "go-q5" }
+        ]
+      },
+      "go-a3": {
+        "id": "go-a3",
+        "type": "action",
+        "text": "Remove debris from air intake",
+        "actionText": "Shut down the generator. Clear all debris from the air intake grills, exhaust grills, and surrounding area. Restart and check oil pressure.",
+        "nextNodeId": "go-q4a"
+      },
+      "go-q4a": {
+        "id": "go-q4a",
+        "type": "question",
+        "text": "Is oil pressure normal now?",
+        "options": [
+          { "label": "Yes — pressure is normal", "nextNodeId": "go-t3" },
+          { "label": "No — still low pressure", "nextNodeId": "go-q5" }
+        ]
+      },
+      "go-q5": {
+        "id": "go-q5",
+        "type": "question",
+        "text": "Is the fan belt loose or slipping?",
+        "options": [
+          { "label": "Yes — belt is loose", "nextNodeId": "go-t4" },
+          { "label": "No — belt tension is good", "nextNodeId": "go-t5" }
+        ]
+      },
+      "go-t1": { "id": "go-t1", "type": "terminal", "text": "Oil was low causing low pressure. Oil added, pressure is normal.", "terminal": { "resolution": "operator-fix", "readiness": "PMC", "summary": "Low oil level — added oil, pressure normal" } },
+      "go-t2": { "id": "go-t2", "type": "terminal", "text": "Engine was overheating due to low coolant, which caused low oil pressure. Coolant added.", "terminal": { "resolution": "operator-fix", "readiness": "PMC", "summary": "Low coolant caused overheating/low oil pressure — coolant added" } },
+      "go-t3": { "id": "go-t3", "type": "terminal", "text": "Air intake was obstructed causing overheating and low oil pressure. Debris removed.", "terminal": { "resolution": "operator-fix", "readiness": "PMC", "summary": "Air intake obstructed — debris removed, pressure normal" } },
+      "go-t4": { "id": "go-t4", "type": "terminal", "text": "Fan belt is loose, which may cause overheating and low oil pressure. Notify next higher maintenance level for belt adjustment.", "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Loose fan belt — needs maintenance for adjustment" } },
+      "go-t5": { "id": "go-t5", "type": "terminal", "text": "Low oil pressure after all operator checks. Notify next higher maintenance level.", "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Low oil pressure — beyond operator repair" } }
+    }
+  },
+  {
+    "categoryId": "gen-overheat",
+    "vehicleType": "MEP803A",
+    "tmReference": "TM 9-6115-642-10, Table 3-1, Malfunction 11",
+    "rootNodeId": "gc-q1",
+    "nodes": {
+      "gc-q1": {
+        "id": "gc-q1",
+        "type": "question",
+        "text": "Coolant temperature indicator shows overheating. Check the ammeter PERCENT RATED CURRENT. Is the generator overloaded (above 100%)?",
+        "options": [
+          { "label": "Yes — above 100% rated current", "nextNodeId": "gc-a1" },
+          { "label": "No — load is within limits", "nextNodeId": "gc-q2" }
+        ]
+      },
+      "gc-a1": {
+        "id": "gc-a1",
+        "type": "action",
+        "text": "Reduce the electrical load",
+        "actionText": "Disconnect or turn off enough electrical loads to bring the ammeter PERCENT RATED CURRENT below 100%. Allow the generator to cool down and check the temperature indicator.",
+        "nextNodeId": "gc-q1a"
+      },
+      "gc-q1a": {
+        "id": "gc-q1a",
+        "type": "question",
+        "text": "Does the temperature come down after reducing load?",
+        "options": [
+          { "label": "Yes — temperature is dropping", "nextNodeId": "gc-t1" },
+          { "label": "No — still overheating", "nextNodeId": "gc-t2" }
+        ]
+      },
+      "gc-q2": {
+        "id": "gc-q2",
+        "type": "question",
+        "text": "Check the coolant level. Is it low?",
+        "options": [
+          { "label": "Yes — coolant is low", "nextNodeId": "gc-a2" },
+          { "label": "No — coolant level is good", "nextNodeId": "gc-q3" }
+        ]
+      },
+      "gc-a2": {
+        "id": "gc-a2",
+        "type": "action",
+        "text": "Add coolant",
+        "actionText": "Shut down the generator and allow it to cool. Remove the radiator cap carefully. Add coolant to the proper level. Replace the cap and restart. Monitor the temperature.",
+        "nextNodeId": "gc-q2a"
+      },
+      "gc-q2a": {
+        "id": "gc-q2a",
+        "type": "question",
+        "text": "Is the temperature normal now?",
+        "options": [
+          { "label": "Yes — temperature is normal", "nextNodeId": "gc-t3" },
+          { "label": "No — still overheating", "nextNodeId": "gc-q3" }
+        ]
+      },
+      "gc-q3": {
+        "id": "gc-q3",
+        "type": "question",
+        "text": "Check the oil level on the dipstick. Is it low?",
+        "options": [
+          { "label": "Yes — oil is low", "nextNodeId": "gc-a3" },
+          { "label": "No — oil level is good", "nextNodeId": "gc-q4" }
+        ]
+      },
+      "gc-a3": {
+        "id": "gc-a3",
+        "type": "action",
+        "text": "Add engine oil",
+        "actionText": "Add the correct type and weight of engine oil until the dipstick reads in the safe operating range. Run the engine and monitor the temperature.",
+        "nextNodeId": "gc-q3a"
+      },
+      "gc-q3a": {
+        "id": "gc-q3a",
+        "type": "question",
+        "text": "Is the temperature dropping to normal?",
+        "options": [
+          { "label": "Yes — temperature is normal", "nextNodeId": "gc-t4" },
+          { "label": "No — still overheating", "nextNodeId": "gc-q4" }
+        ]
+      },
+      "gc-q4": {
+        "id": "gc-q4",
+        "type": "question",
+        "text": "Is the air intake or exhaust obstructed with debris?",
+        "options": [
+          { "label": "Yes — obstructions found", "nextNodeId": "gc-a4" },
+          { "label": "No — air flow looks clear", "nextNodeId": "gc-q5" }
+        ]
+      },
+      "gc-a4": {
+        "id": "gc-a4",
+        "type": "action",
+        "text": "Remove debris from air intake",
+        "actionText": "Shut down the generator. Clear all debris from the air intake grills, exhaust grills, and surrounding area. Restart and monitor the temperature.",
+        "nextNodeId": "gc-q4a"
+      },
+      "gc-q4a": {
+        "id": "gc-q4a",
+        "type": "question",
+        "text": "Is the temperature dropping to normal?",
+        "options": [
+          { "label": "Yes — temperature is normal", "nextNodeId": "gc-t5" },
+          { "label": "No — still overheating", "nextNodeId": "gc-q5" }
+        ]
+      },
+      "gc-q5": {
+        "id": "gc-q5",
+        "type": "question",
+        "text": "Is the fan belt loose or slipping?",
+        "options": [
+          { "label": "Yes — belt is loose", "nextNodeId": "gc-t6" },
+          { "label": "No — belt tension is good", "nextNodeId": "gc-t7" }
+        ]
+      },
+      "gc-t1": { "id": "gc-t1", "type": "terminal", "text": "Generator was overloaded. Load reduced, temperature returning to normal.", "terminal": { "resolution": "operator-fix", "readiness": "PMC", "summary": "Generator overloaded — load reduced, temp normal" } },
+      "gc-t2": { "id": "gc-t2", "type": "terminal", "text": "Generator still overheating after reducing load. Notify next higher maintenance level.", "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Overheating despite load reduction — needs maintenance" } },
+      "gc-t3": { "id": "gc-t3", "type": "terminal", "text": "Coolant was low causing overheating. Coolant added, temperature normal.", "terminal": { "resolution": "operator-fix", "readiness": "PMC", "summary": "Low coolant — added coolant, temp normal" } },
+      "gc-t4": { "id": "gc-t4", "type": "terminal", "text": "Oil was low contributing to overheating. Oil added, temperature normal.", "terminal": { "resolution": "operator-fix", "readiness": "PMC", "summary": "Low oil — added oil, temp normal" } },
+      "gc-t5": { "id": "gc-t5", "type": "terminal", "text": "Air intake was obstructed causing overheating. Debris removed, temperature normal.", "terminal": { "resolution": "operator-fix", "readiness": "PMC", "summary": "Air intake obstructed — debris removed, temp normal" } },
+      "gc-t6": { "id": "gc-t6", "type": "terminal", "text": "Fan belt is loose causing insufficient cooling. Notify next higher maintenance level for belt adjustment.", "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Loose fan belt — needs maintenance for adjustment" } },
+      "gc-t7": { "id": "gc-t7", "type": "terminal", "text": "Generator overheating after all operator checks. Notify next higher maintenance level.", "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Overheating — beyond operator repair" } }
+    }
+  },
+  {
+    "categoryId": "gen-electrical",
+    "vehicleType": "MEP803A",
+    "tmReference": "TM 9-6115-642-10, Table 3-1, Malfunctions 12-19",
+    "rootNodeId": "gl-q1",
+    "nodes": {
+      "gl-q1": {
+        "id": "gl-q1",
+        "type": "question",
+        "text": "What electrical problem are you experiencing?",
+        "options": [
+          { "label": "Battery not charging or low charge", "nextNodeId": "gl-q2" },
+          { "label": "Excessive battery charging", "nextNodeId": "gl-q6" },
+          { "label": "AC voltmeter shows low voltage", "nextNodeId": "gl-q8" },
+          { "label": "AC circuit interrupter trips", "nextNodeId": "gl-q10" },
+          { "label": "No voltage at convenience receptacle", "nextNodeId": "gl-q14" }
+        ]
+      },
+      "gl-q2": {
+        "id": "gl-q2",
+        "type": "question",
+        "text": "Check the BATTERY CHARGER FUSE. Is it blown?",
+        "options": [
+          { "label": "Yes — fuse is blown", "nextNodeId": "gl-t1" },
+          { "label": "No — fuse is good", "nextNodeId": "gl-q3" }
+        ]
+      },
+      "gl-q3": {
+        "id": "gl-q3",
+        "type": "question",
+        "text": "Is the fan belt intact and tight? A loose or broken belt prevents the alternator from charging.",
+        "options": [
+          { "label": "Belt is loose or broken", "nextNodeId": "gl-t2" },
+          { "label": "Belt is tight and intact", "nextNodeId": "gl-q4" }
+        ]
+      },
+      "gl-q4": {
+        "id": "gl-q4",
+        "type": "question",
+        "text": "Check for loose or broken wires at the battery and alternator. Any problems?",
+        "options": [
+          { "label": "Yes — loose or broken wires found", "nextNodeId": "gl-t3" },
+          { "label": "No — wiring looks good", "nextNodeId": "gl-t4" }
+        ]
+      },
+      "gl-q6": {
+        "id": "gl-q6",
+        "type": "question",
+        "text": "Check the battery electrolyte level. Is it low?",
+        "options": [
+          { "label": "Yes — electrolyte is low", "nextNodeId": "gl-t5" },
+          { "label": "No — electrolyte level is good", "nextNodeId": "gl-q7" }
+        ]
+      },
+      "gl-q7": {
+        "id": "gl-q7",
+        "type": "question",
+        "text": "Are battery connections clean and tight?",
+        "options": [
+          { "label": "No — connections are corroded or loose", "nextNodeId": "gl-a1" },
+          { "label": "Yes — connections are good", "nextNodeId": "gl-t6" }
+        ]
+      },
+      "gl-a1": {
+        "id": "gl-a1",
+        "type": "action",
+        "text": "Clean and tighten battery connections",
+        "actionText": "Disconnect negative cable first, then positive. Clean terminals and cable clamps with a wire brush. Reconnect positive first, then negative. Ensure connections are tight.",
+        "nextNodeId": "gl-q7a"
+      },
+      "gl-q7a": {
+        "id": "gl-q7a",
+        "type": "question",
+        "text": "Is the excessive charging resolved?",
+        "options": [
+          { "label": "Yes — charging is normal", "nextNodeId": "gl-t7" },
+          { "label": "No — still charging excessively", "nextNodeId": "gl-t6" }
+        ]
+      },
+      "gl-q8": {
+        "id": "gl-q8",
+        "type": "question",
+        "text": "Try adjusting the VOLTAGE ADJUST potentiometer. Turn it slightly clockwise to increase voltage.",
+        "options": [
+          { "label": "Voltage came up to normal range", "nextNodeId": "gl-t8" },
+          { "label": "Voltage did not change or still low", "nextNodeId": "gl-q9" }
+        ]
+      },
+      "gl-q9": {
+        "id": "gl-q9",
+        "type": "question",
+        "text": "Check for loose or broken wires at the output box and generator. Any problems?",
+        "options": [
+          { "label": "Yes — loose or broken wires found", "nextNodeId": "gl-t3" },
+          { "label": "No — wiring looks good", "nextNodeId": "gl-t9" }
+        ]
+      },
+      "gl-q10": {
+        "id": "gl-q10",
+        "type": "question",
+        "text": "Press the AC CIRCUIT INTERRUPTER test button. Does it trip and reset properly?",
+        "options": [
+          { "label": "Yes — trips and resets properly", "nextNodeId": "gl-q11" },
+          { "label": "No — does not trip or reset properly", "nextNodeId": "gl-t10" }
+        ]
+      },
+      "gl-q11": {
+        "id": "gl-q11",
+        "type": "question",
+        "text": "Check the load cable connections at the output box. Are they tight and in good condition?",
+        "options": [
+          { "label": "No — connections are loose or damaged", "nextNodeId": "gl-a2" },
+          { "label": "Yes — connections are good", "nextNodeId": "gl-q12" }
+        ]
+      },
+      "gl-a2": {
+        "id": "gl-a2",
+        "type": "action",
+        "text": "Tighten load cable connections",
+        "actionText": "Shut down the generator. Tighten all load cable connections at the output box. Inspect cables for damage. Restart and apply load.",
+        "nextNodeId": "gl-q11a"
+      },
+      "gl-q11a": {
+        "id": "gl-q11a",
+        "type": "question",
+        "text": "Does the AC circuit interrupter still trip?",
+        "options": [
+          { "label": "No — running normally", "nextNodeId": "gl-t11" },
+          { "label": "Yes — still trips", "nextNodeId": "gl-q12" }
+        ]
+      },
+      "gl-q12": {
+        "id": "gl-q12",
+        "type": "question",
+        "text": "Does the total load exceed the generator's rated capacity? Check the ammeter and compare to the rating plate.",
+        "options": [
+          { "label": "Yes — load exceeds rating", "nextNodeId": "gl-a3" },
+          { "label": "No — load is within rating", "nextNodeId": "gl-t12" }
+        ]
+      },
+      "gl-a3": {
+        "id": "gl-a3",
+        "type": "action",
+        "text": "Reduce the electrical load",
+        "actionText": "Disconnect or turn off enough electrical loads to bring the total below the generator's rated capacity. Reset the AC circuit interrupter and apply load gradually.",
+        "nextNodeId": "gl-q12a"
+      },
+      "gl-q12a": {
+        "id": "gl-q12a",
+        "type": "question",
+        "text": "Does the AC circuit interrupter hold now?",
+        "options": [
+          { "label": "Yes — running normally", "nextNodeId": "gl-t13" },
+          { "label": "No — still trips", "nextNodeId": "gl-t12" }
+        ]
+      },
+      "gl-q14": {
+        "id": "gl-q14",
+        "type": "question",
+        "text": "Check the Ground Fault Circuit Interrupter (GFCI) at the convenience receptacle. Is it tripped?",
+        "options": [
+          { "label": "Yes — GFCI is tripped", "nextNodeId": "gl-a4" },
+          { "label": "No — GFCI is not tripped", "nextNodeId": "gl-q15" }
+        ]
+      },
+      "gl-a4": {
+        "id": "gl-a4",
+        "type": "action",
+        "text": "Reset the GFCI",
+        "actionText": "Press the RESET button on the Ground Fault Circuit Interrupter. Check for voltage at the convenience receptacle.",
+        "nextNodeId": "gl-q14a"
+      },
+      "gl-q14a": {
+        "id": "gl-q14a",
+        "type": "question",
+        "text": "Is there voltage at the convenience receptacle now?",
+        "options": [
+          { "label": "Yes — voltage is present", "nextNodeId": "gl-t14" },
+          { "label": "No — still no voltage", "nextNodeId": "gl-q15" }
+        ]
+      },
+      "gl-q15": {
+        "id": "gl-q15",
+        "type": "question",
+        "text": "Check the convenience receptacle fuse. Is it blown?",
+        "options": [
+          { "label": "Yes — fuse is blown", "nextNodeId": "gl-t15" },
+          { "label": "No — fuse is good", "nextNodeId": "gl-t16" }
+        ]
+      },
+      "gl-t1": { "id": "gl-t1", "type": "terminal", "text": "BATTERY CHARGER FUSE is blown. Notify next higher maintenance level for fuse replacement.", "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Battery charger fuse blown — needs replacement" } },
+      "gl-t2": { "id": "gl-t2", "type": "terminal", "text": "Fan belt is loose or broken, preventing alternator from charging. Notify next higher maintenance level.", "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Loose/broken fan belt — battery not charging, needs maintenance" } },
+      "gl-t3": { "id": "gl-t3", "type": "terminal", "text": "Loose or broken wires found. Notify next higher maintenance level for repair.", "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Loose/broken wiring — needs maintenance" } },
+      "gl-t4": { "id": "gl-t4", "type": "terminal", "text": "Battery not charging after all operator checks. Notify next higher maintenance level.", "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Battery not charging — beyond operator repair" } },
+      "gl-t5": { "id": "gl-t5", "type": "terminal", "text": "Battery electrolyte is low, which can cause excessive charging. Notify next higher maintenance level — do not add water to sealed batteries.", "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Low battery electrolyte — needs maintenance" } },
+      "gl-t6": { "id": "gl-t6", "type": "terminal", "text": "Excessive battery charging after all operator checks. Notify next higher maintenance level.", "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Excessive battery charging — beyond operator repair" } },
+      "gl-t7": { "id": "gl-t7", "type": "terminal", "text": "Battery connections were corroded or loose. Cleaned and tightened, charging is normal.", "terminal": { "resolution": "operator-fix", "readiness": "PMC", "summary": "Battery connections cleaned — charging normal" } },
+      "gl-t8": { "id": "gl-t8", "type": "terminal", "text": "Voltage adjusted using the VOLTAGE ADJUST potentiometer. Output is now in normal range.", "terminal": { "resolution": "operator-fix", "readiness": "PMC", "summary": "Voltage adjust potentiometer set — voltage normal" } },
+      "gl-t9": { "id": "gl-t9", "type": "terminal", "text": "AC voltage is low after all operator checks. Notify next higher maintenance level.", "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Low AC voltage — beyond operator repair" } },
+      "gl-t10": { "id": "gl-t10", "type": "terminal", "text": "AC circuit interrupter does not function properly. Notify next higher maintenance level.", "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "AC circuit interrupter malfunction — needs maintenance" } },
+      "gl-t11": { "id": "gl-t11", "type": "terminal", "text": "Load cable connections were loose. Tightened, generator running normally.", "terminal": { "resolution": "operator-fix", "readiness": "PMC", "summary": "Loose load cable connections — tightened, running normally" } },
+      "gl-t12": { "id": "gl-t12", "type": "terminal", "text": "AC circuit interrupter continues to trip after all operator checks. Notify next higher maintenance level.", "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "AC circuit interrupter tripping — beyond operator repair" } },
+      "gl-t13": { "id": "gl-t13", "type": "terminal", "text": "Generator was overloaded causing the interrupter to trip. Load reduced, running normally.", "terminal": { "resolution": "operator-fix", "readiness": "PMC", "summary": "Generator overloaded — load reduced, interrupter holds" } },
+      "gl-t14": { "id": "gl-t14", "type": "terminal", "text": "GFCI was tripped. Reset and convenience receptacle has voltage.", "terminal": { "resolution": "operator-fix", "readiness": "PMC", "summary": "GFCI tripped — reset, receptacle has voltage" } },
+      "gl-t15": { "id": "gl-t15", "type": "terminal", "text": "Convenience receptacle fuse is blown. Notify next higher maintenance level for fuse replacement.", "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Convenience receptacle fuse blown — needs replacement" } },
+      "gl-t16": { "id": "gl-t16", "type": "terminal", "text": "No voltage at convenience receptacle after all operator checks. Notify next higher maintenance level.", "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "No voltage at receptacle — beyond operator repair" } }
+    }
+  }
+]

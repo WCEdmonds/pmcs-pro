@@ -1,0 +1,271 @@
+{
+  "vehicleType": "M1152",
+  "tmReference": "TM 9-2320-387-10",
+  "zones": [
+    {
+      "id": "zone-1",
+      "name": "Exterior Walk-Around",
+      "description": "Left side, front, right side checks",
+      "steps": [
+        {
+          "id": "m1152-b-001",
+          "sequence": 1,
+          "zone": "Exterior Walk-Around",
+          "zoneId": "zone-1",
+          "item": "1",
+          "itemDescription": "Left Front/Side Exterior",
+          "procedure": "Get down and look under the left front of your truck for fresh puddles or drips — oil, coolant, brake fluid, or fuel. Also walk the left side and check for any body damage, loose panels, or cracked glass that would keep you from operating safely.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Any brake fluid leaks. Class III leak of oil, fuel, or coolant. Any damage that prevents operation."
+        },
+        {
+          "id": "m1152-b-002",
+          "sequence": 2,
+          "zone": "Exterior Walk-Around",
+          "zoneId": "zone-1",
+          "item": "2",
+          "itemDescription": "Left Side Tires",
+          "procedure": "Check both left side tires for low air, bald spots, sidewall cuts or bulges, and anything stuck in the tread. Make sure they aren't flat or obviously underinflated.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Tire missing, deflated, or unserviceable."
+        },
+        {
+          "id": "m1152-b-003",
+          "sequence": 3,
+          "zone": "Exterior Walk-Around",
+          "zoneId": "zone-1",
+          "item": "3",
+          "itemDescription": "Rear Exterior",
+          "procedure": "Walk around to the rear and look underneath for fluid leaks. Check the rear of the vehicle for obvious damage. If you're planning to tow a trailer, inspect the bumper supports for cracks.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Any brake fluid leaks. Class III leak of oil, fuel, or coolant. Bumper support damage that would prevent towing operations."
+        },
+        {
+          "id": "m1152-b-004",
+          "sequence": 4,
+          "zone": "Exterior Walk-Around",
+          "zoneId": "zone-1",
+          "item": "4",
+          "itemDescription": "Right Front/Side Exterior",
+          "procedure": "Check underneath the right front and side for fluid leaks — same as the left side. Walk down the right side looking for body damage, loose panels, or anything that would impair operation.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Any brake fluid leaks. Class III leak of oil, fuel, or coolant. Any damage that prevents operation."
+        },
+        {
+          "id": "m1152-b-005",
+          "sequence": 5,
+          "zone": "Exterior Walk-Around",
+          "zoneId": "zone-1",
+          "item": "5",
+          "itemDescription": "Right Side Tires",
+          "procedure": "Check both right side tires for low air, bald spots, sidewall cuts or bulges, and anything stuck in the tread. Make sure they aren't flat or obviously underinflated.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Tire missing, deflated, or unserviceable."
+        },
+        {
+          "id": "m1152-b-006",
+          "sequence": 6,
+          "zone": "Exterior Walk-Around",
+          "zoneId": "zone-1",
+          "item": "6",
+          "itemDescription": "Front of Vehicle",
+          "procedure": "Check the front of your truck for obvious damage that would keep you from driving. Look underneath the front for any fluid leaks — oil, coolant, brake fluid, or fuel.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Any damage that prevents operation. Any brake fluid leaks. Class III leak of oil, fuel, or coolant."
+        }
+      ]
+    },
+    {
+      "id": "zone-2",
+      "name": "Under Hood",
+      "description": "Engine compartment and fluids",
+      "steps": [
+        {
+          "id": "m1152-b-007",
+          "sequence": 7,
+          "zone": "Under Hood",
+          "zoneId": "zone-2",
+          "item": "6.1",
+          "itemDescription": "Power Steering Reservoir (RCSK 18330)",
+          "procedure": "Check your power steering fluid level. It should be between the HOT and COLD marks. If it's below COLD, add fluid. Keep dirt and dust out of the reservoir when you open it, and don't overfill it.",
+          "conditionSet": "BEFORE",
+          "isNoGo": false
+        },
+        {
+          "id": "m1152-b-008",
+          "sequence": 8,
+          "zone": "Under Hood",
+          "zoneId": "zone-2",
+          "item": "6.2",
+          "itemDescription": "Power Steering Reservoir (94252A)",
+          "procedure": "If your truck has the 94252A power steering reservoir, check the fluid level between the HOT and COLD marks. Add fluid if it's below COLD. Keep it clean and don't overfill.",
+          "conditionSet": "BEFORE",
+          "isNoGo": false
+        },
+        {
+          "id": "m1152-b-009",
+          "sequence": 9,
+          "zone": "Under Hood",
+          "zoneId": "zone-2",
+          "item": "7",
+          "itemDescription": "Serpentine Drivebelt and Pulleys",
+          "procedure": "Check the drive and idler pulleys for wear or misalignment. Look at the serpentine belt for cracks, fraying, looseness, or splitting. If you see deep cracks or long frays, that belt needs to go.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Pulleys worn, broken, or misaligned. Serpentine drivebelt missing or broken. Belt fiber has more than one crack 1/8 in. in depth or 50%, or frays more than 2 in. long. Belt is loose or misaligned off one or more grooves on any pulley."
+        },
+        {
+          "id": "m1152-b-010",
+          "sequence": 10,
+          "zone": "Under Hood",
+          "zoneId": "zone-2",
+          "item": "8",
+          "itemDescription": "Cooling System",
+          "procedure": "Check the coolant level in the surge tank — it should be at or above the FULL COLD line. Add coolant if it's low. Do NOT open the radiator cap if the engine has been running recently — you'll get a steam burn.",
+          "conditionSet": "BEFORE",
+          "isNoGo": false
+        }
+      ]
+    },
+    {
+      "id": "zone-3",
+      "name": "Cab Interior",
+      "description": "Instruments, controls, seat belts, fire extinguisher",
+      "steps": [
+        {
+          "id": "m1152-b-011",
+          "sequence": 11,
+          "zone": "Cab Interior",
+          "zoneId": "zone-3",
+          "item": "8.2",
+          "itemDescription": "Armored Doors",
+          "procedure": "Check your armored doors for proper operation — they should open and close without needing excessive force. Make sure each door latch works correctly and the combat locks engage and disengage properly.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Excessive force required to operate door. Door does not latch. Combat lock does not lock."
+        },
+        {
+          "id": "m1152-b-012",
+          "sequence": 12,
+          "zone": "Cab Interior",
+          "zoneId": "zone-3",
+          "item": "9",
+          "itemDescription": "Seat and Seatbelts",
+          "procedure": "Check all seatbelts — pull them out, let them retract, and click each buckle to make sure it holds. Look for fraying or cuts in the webbing. Check that the driver's seat adjustment moves and locks properly.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Seat adjustment lock broken or missing."
+        },
+        {
+          "id": "m1152-b-013",
+          "sequence": 13,
+          "zone": "Cab Interior",
+          "zoneId": "zone-3",
+          "item": "10",
+          "itemDescription": "Fire Extinguisher",
+          "procedure": "Make sure the fire extinguisher is there and not damaged. Check the gauge — it should read about 150 psi with the needle out of the recharge area. Confirm the seal is intact and not broken or missing.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Fire extinguisher missing or damaged. Pressure gauge needle in recharge area. Seal broken or missing."
+        },
+        {
+          "id": "m1152-b-014",
+          "sequence": 14,
+          "zone": "Cab Interior",
+          "zoneId": "zone-3",
+          "item": "10.1",
+          "itemDescription": "Automatic Fire Extinguisher System (AFES)",
+          "procedure": "Check both AFES extinguisher pressure gauges — they should read at or above the minimum pressure on the label. Check the wiring harness and sensors for damage. Make sure the extinguisher, manual lever lock pin, and tube assembly are all present and secure. Turn the rotary switch to RUN and confirm the control module shows a steady green LED. Check each fire sensor LED for a steady green light and make sure the sensors are clean.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Pressure gauge reads below pressure shown on label. Wiring harness or sensor box disconnected, improperly installed, damaged, or missing. Fire extinguisher, manual lever lock pin, or tube assembly missing. Green LED indicator light is off, steady blink, slow blink, or double blink. Sensor LED does not come on, is blinking, or covered with dust or foreign object."
+        },
+        {
+          "id": "m1152-b-015",
+          "sequence": 15,
+          "zone": "Cab Interior",
+          "zoneId": "zone-3",
+          "item": "11",
+          "itemDescription": "Gear Shifter Lever",
+          "procedure": "Shift the transmission lever through all the ranges — it should move freely without binding. Then with the transmission in N, shift the transfer case lever through all positions. Both should move smoothly through every range.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Transmission lever inoperable or binds between range detents. Transfer lever inoperable or does not engage in all ranges with engine not running."
+        },
+        {
+          "id": "m1152-b-016",
+          "sequence": 16,
+          "zone": "Cab Interior",
+          "zoneId": "zone-3",
+          "item": "13",
+          "itemDescription": "Lights",
+          "procedure": "Check all your lights — service drive, turn signals, blackout marker, marker, blackout drive, and side marker lights. Make sure each one works and the lenses aren't cracked or missing.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Any required light inoperative. Headlights inoperative."
+        },
+        {
+          "id": "m1152-b-017",
+          "sequence": 17,
+          "zone": "Cab Interior",
+          "zoneId": "zone-3",
+          "item": "14",
+          "itemDescription": "Horn, Windshield and Wipers",
+          "procedure": "Hit the horn and make sure it actually works. Check the windshield for cracks that would block your view. Turn on the wipers and run them through all speeds — look for torn blades. Hit the washer fluid to make sure it sprays.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Windshield cracked, broken, or missing to extent that impairs operator's vision."
+        }
+      ]
+    },
+    {
+      "id": "zone-4",
+      "name": "Engine Running",
+      "description": "Start engine, gauges, brakes",
+      "steps": [
+        {
+          "id": "m1152-b-018",
+          "sequence": 18,
+          "zone": "Engine Running",
+          "zoneId": "zone-4",
+          "item": "12",
+          "itemDescription": "Instrument Panel — Pre-Start",
+          "procedure": "Turn the rotary switch to RUN but don't start the engine yet. The wait-to-start light should come on (if engine is cold) and the brake warning light should illuminate. If the wait-to-start light stays on continuously or the brake warning light doesn't come on, report it.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Wait-to-start light does not come on when engine is cold, or stays on continually. Brake warning light does not come on."
+        },
+        {
+          "id": "m1152-b-019",
+          "sequence": 19,
+          "zone": "Engine Running",
+          "zoneId": "zone-4",
+          "item": "12b",
+          "itemDescription": "Instrument Panel — Engine Start",
+          "procedure": "Start the engine. If it won't start, report it. Once running, check the oil pressure gauge — it should read above 6 psi at idle and 15 psi under load. Check the voltmeter — the needle should be in the green, not yellow or red.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Engine will not start. Oil pressure less than 6 psi at idle or 15 psi under load. Voltmeter needle stays in yellow or red range."
+        },
+        {
+          "id": "m1152-b-020",
+          "sequence": 20,
+          "zone": "Engine Running",
+          "zoneId": "zone-4",
+          "item": "12c",
+          "itemDescription": "Instrument Panel — Gauges",
+          "procedure": "Check the air restriction gauge — if it's in the red zone, your air filter needs service. Confirm the brake warning light goes off when you release the hand brake. Check the fuel gauge. Check the coolant temp gauge — it should stay below 250 degrees F and the overheat lamp should stay off.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Air restriction indicator reaches red zone. Brake warning light stays on after hand brake is released or comes on while driving. Coolant temperature gauge inoperative or reads greater than 250°F and/or overheat lamp illuminates."
+        }
+      ]
+    }
+  ]
+}

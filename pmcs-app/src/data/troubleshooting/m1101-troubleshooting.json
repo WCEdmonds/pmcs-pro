@@ -1,0 +1,486 @@
+[
+  {
+    "categoryId": "trailer-electrical",
+    "vehicleType": "M1101",
+    "tmReference": "TM 9-2330-392-14P, Table 3-1",
+    "rootNodeId": "te-q1",
+    "nodes": {
+      "te-q1": {
+        "id": "te-q1",
+        "type": "question",
+        "text": "Which lights are affected?",
+        "options": [
+          { "label": "All lights — none of them work", "nextNodeId": "te-q2" },
+          { "label": "One or more lights don't work (others are fine)", "nextNodeId": "te-q5" },
+          { "label": "Lights are dim or flickering", "nextNodeId": "te-q8" }
+        ]
+      },
+      "te-q2": {
+        "id": "te-q2",
+        "type": "question",
+        "text": "Are the light switches in the towing vehicle turned on?",
+        "options": [
+          { "label": "No — switches were off", "nextNodeId": "te-a1" },
+          { "label": "Yes — switches are on", "nextNodeId": "te-q3" }
+        ]
+      },
+      "te-a1": {
+        "id": "te-a1",
+        "type": "action",
+        "text": "Turn on the light switches in the towing vehicle",
+        "actionText": "Turn on the towing vehicle's light switches. Check that headlights, taillights, and running lights are activated. Recheck trailer lights.",
+        "nextNodeId": "te-q2b"
+      },
+      "te-q2b": {
+        "id": "te-q2b",
+        "type": "question",
+        "text": "Do trailer lights work now?",
+        "options": [
+          { "label": "Yes — lights are working", "nextNodeId": "te-t1" },
+          { "label": "No — still not working", "nextNodeId": "te-q3" }
+        ]
+      },
+      "te-q3": {
+        "id": "te-q3",
+        "type": "question",
+        "text": "Check the intervehicular cable connector between the trailer and towing vehicle. Is it fully seated?",
+        "options": [
+          { "label": "No — connector is loose or partially pulled out", "nextNodeId": "te-a2" },
+          { "label": "Yes — connector looks fully seated", "nextNodeId": "te-q4" }
+        ]
+      },
+      "te-a2": {
+        "id": "te-a2",
+        "type": "action",
+        "text": "Reseat the intervehicular cable connector",
+        "actionText": "Pull the cable connector fully out, inspect the pins, then firmly push it back in until it locks. Recheck trailer lights.",
+        "nextNodeId": "te-q3b"
+      },
+      "te-q3b": {
+        "id": "te-q3b",
+        "type": "question",
+        "text": "Do trailer lights work now?",
+        "options": [
+          { "label": "Yes — lights are working", "nextNodeId": "te-t1" },
+          { "label": "No — still not working", "nextNodeId": "te-q4" }
+        ]
+      },
+      "te-q4": {
+        "id": "te-q4",
+        "type": "question",
+        "text": "Inspect the connector pins on both the trailer and towing vehicle ends. Are the pins dirty or corroded (green/white buildup)?",
+        "options": [
+          { "label": "Yes — pins are dirty or corroded", "nextNodeId": "te-a3" },
+          { "label": "No — pins look clean", "nextNodeId": "te-q4b" }
+        ]
+      },
+      "te-a3": {
+        "id": "te-a3",
+        "type": "action",
+        "text": "Clean the connector contacts",
+        "actionText": "Use a dry rag or contact cleaner to clean the connector pins on both ends. Remove all dirt, corrosion, and moisture. Reseat the connector firmly and recheck lights.",
+        "nextNodeId": "te-q4c"
+      },
+      "te-q4c": {
+        "id": "te-q4c",
+        "type": "question",
+        "text": "Do trailer lights work after cleaning the contacts?",
+        "options": [
+          { "label": "Yes — lights are working", "nextNodeId": "te-t1" },
+          { "label": "No — still not working", "nextNodeId": "te-q4b" }
+        ]
+      },
+      "te-q4b": {
+        "id": "te-q4b",
+        "type": "question",
+        "text": "Inspect the cable and wiring harness along the trailer frame. Are there any visibly broken, cut, or pinched wires?",
+        "options": [
+          { "label": "Yes — found damaged wires", "nextNodeId": "te-t2" },
+          { "label": "No — wires look intact", "nextNodeId": "te-t2" }
+        ]
+      },
+      "te-q5": {
+        "id": "te-q5",
+        "type": "question",
+        "text": "Inspect the connector pins at the trailer-to-towing-vehicle cable. Are the pins dirty or corroded?",
+        "options": [
+          { "label": "Yes — dirty or corroded", "nextNodeId": "te-a4" },
+          { "label": "No — pins look clean", "nextNodeId": "te-q6" }
+        ]
+      },
+      "te-a4": {
+        "id": "te-a4",
+        "type": "action",
+        "text": "Clean the connector contacts",
+        "actionText": "Use a dry rag or contact cleaner to clean the connector pins. Remove all dirt, corrosion, and moisture. Reseat the connector firmly and recheck the affected lights.",
+        "nextNodeId": "te-q5b"
+      },
+      "te-q5b": {
+        "id": "te-q5b",
+        "type": "question",
+        "text": "Do the affected lights work after cleaning?",
+        "options": [
+          { "label": "Yes — lights working", "nextNodeId": "te-t3" },
+          { "label": "No — still not working", "nextNodeId": "te-q6" }
+        ]
+      },
+      "te-q6": {
+        "id": "te-q6",
+        "type": "question",
+        "text": "Inspect the wiring at the base of each affected light. Are the wires loose or broken where they connect to the light?",
+        "options": [
+          { "label": "Yes — loose or broken wires found", "nextNodeId": "te-t4" },
+          { "label": "No — wires look secure", "nextNodeId": "te-t4" }
+        ]
+      },
+      "te-q8": {
+        "id": "te-q8",
+        "type": "question",
+        "text": "Inspect the connector pins at the trailer-to-towing-vehicle cable. Are the pins dirty or corroded?",
+        "options": [
+          { "label": "Yes — dirty or corroded", "nextNodeId": "te-a5" },
+          { "label": "No — pins look clean", "nextNodeId": "te-q9" }
+        ]
+      },
+      "te-a5": {
+        "id": "te-a5",
+        "type": "action",
+        "text": "Clean the connector contacts",
+        "actionText": "Use a dry rag or contact cleaner to clean the connector pins. Remove all dirt, corrosion, and moisture. Reseat the connector firmly and recheck light brightness.",
+        "nextNodeId": "te-q8b"
+      },
+      "te-q8b": {
+        "id": "te-q8b",
+        "type": "question",
+        "text": "Are lights now at normal brightness (steady, not flickering)?",
+        "options": [
+          { "label": "Yes — lights are normal", "nextNodeId": "te-t5" },
+          { "label": "No — still dim or flickering", "nextNodeId": "te-q9" }
+        ]
+      },
+      "te-q9": {
+        "id": "te-q9",
+        "type": "question",
+        "text": "Inspect the wiring at the base of the affected lights. Are any wires loose where they connect to the light?",
+        "options": [
+          { "label": "Yes — loose wire found", "nextNodeId": "te-t6" },
+          { "label": "No — wires look secure", "nextNodeId": "te-t6" }
+        ]
+      },
+      "te-t1": { "id": "te-t1", "type": "terminal", "text": "Trailer lights are now working.", "terminal": { "resolution": "operator-fix", "readiness": "PMC", "summary": "All trailer lights restored — switch or connector reseated" } },
+      "te-t2": { "id": "te-t2", "type": "terminal", "text": "Cable or wiring harness damage found. Notify maintenance — trailer lights cannot be fixed at operator level.", "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Trailer wiring harness damage — all lights inoperative, needs maintenance" } },
+      "te-t3": { "id": "te-t3", "type": "terminal", "text": "Affected lights restored after cleaning connector contacts.", "terminal": { "resolution": "operator-fix", "readiness": "PMC", "summary": "Partial trailer light failure — corroded connector contacts cleaned, lights restored" } },
+      "te-t4": { "id": "te-t4", "type": "terminal", "text": "Loose or broken wires at affected light. Notify maintenance.", "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Loose/broken wires at affected trailer light — needs maintenance" } },
+      "te-t5": { "id": "te-t5", "type": "terminal", "text": "Dim/flickering lights resolved after cleaning connector contacts.", "terminal": { "resolution": "operator-fix", "readiness": "PMC", "summary": "Dim/flickering trailer lights — corroded contacts cleaned, lights normal" } },
+      "te-t6": { "id": "te-t6", "type": "terminal", "text": "Loose wires at light fixture or no obvious cause found. Notify maintenance.", "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Dim/flickering trailer lights — loose wiring, needs maintenance" } }
+    }
+  },
+  {
+    "categoryId": "trailer-brakes",
+    "vehicleType": "M1101",
+    "tmReference": "TM 9-2330-392-14P, Table 3-1",
+    "rootNodeId": "tb-q1",
+    "nodes": {
+      "tb-q1": {
+        "id": "tb-q1",
+        "type": "question",
+        "text": "What is the brake problem?",
+        "options": [
+          { "label": "Brakes will not release — trailer dragging", "nextNodeId": "tb-q2" },
+          { "label": "Brakes will not hold when engaged", "nextNodeId": "tb-q5" },
+          { "label": "Hydraulic brakes not working", "nextNodeId": "tb-q6" },
+          { "label": "Handbrake lever will not move", "nextNodeId": "tb-q9" }
+        ]
+      },
+      "tb-q2": {
+        "id": "tb-q2",
+        "type": "question",
+        "text": "Check both handbrake levers on the trailer. Are they fully released (in the down/off position)?",
+        "options": [
+          { "label": "No — one or both levers were still engaged", "nextNodeId": "tb-a1" },
+          { "label": "Yes — both levers are fully released", "nextNodeId": "tb-q3" }
+        ]
+      },
+      "tb-a1": {
+        "id": "tb-a1",
+        "type": "action",
+        "text": "Fully release both handbrake levers",
+        "actionText": "Push both handbrake levers fully down to the released position. Confirm they are seated in the release detent. Attempt to roll the trailer by hand to confirm brakes are free.",
+        "tmPage": "2-14",
+        "nextNodeId": "tb-q2b"
+      },
+      "tb-q2b": {
+        "id": "tb-q2b",
+        "type": "question",
+        "text": "Are the brakes now released and trailer rolling freely?",
+        "options": [
+          { "label": "Yes — brakes released", "nextNodeId": "tb-t1" },
+          { "label": "No — still dragging", "nextNodeId": "tb-q3" }
+        ]
+      },
+      "tb-q3": {
+        "id": "tb-q3",
+        "type": "question",
+        "text": "Check the breakaway lever (emergency brake). Is it engaged or pulled out?",
+        "options": [
+          { "label": "Yes — breakaway lever was engaged", "nextNodeId": "tb-a2" },
+          { "label": "No — breakaway lever is in the normal position", "nextNodeId": "tb-t2" }
+        ]
+      },
+      "tb-a2": {
+        "id": "tb-a2",
+        "type": "action",
+        "text": "Reset the breakaway lever",
+        "actionText": "Return the breakaway lever to its normal (disengaged) position. This lever is typically a pull pin or cable — reset it per the label on the trailer. Confirm brakes are now free.",
+        "tmPage": "2-14",
+        "nextNodeId": "tb-q3b"
+      },
+      "tb-q3b": {
+        "id": "tb-q3b",
+        "type": "question",
+        "text": "Are the brakes now released and trailer rolling freely?",
+        "options": [
+          { "label": "Yes — brakes released", "nextNodeId": "tb-t1" },
+          { "label": "No — still dragging", "nextNodeId": "tb-t2" }
+        ]
+      },
+      "tb-q5": {
+        "id": "tb-q5",
+        "type": "question",
+        "text": "Check both handbrake levers. Are they fully engaged (in the up/on position)?",
+        "options": [
+          { "label": "No — levers were not fully up", "nextNodeId": "tb-a3" },
+          { "label": "Yes — levers are fully engaged", "nextNodeId": "tb-t3" }
+        ]
+      },
+      "tb-a3": {
+        "id": "tb-a3",
+        "type": "action",
+        "text": "Fully engage both handbrake levers",
+        "actionText": "Pull both handbrake levers fully up to the engaged position. Confirm they click into the lock detent. Attempt to roll the trailer to confirm brakes are holding.",
+        "tmPage": "2-14",
+        "nextNodeId": "tb-q5b"
+      },
+      "tb-q5b": {
+        "id": "tb-q5b",
+        "type": "question",
+        "text": "Are brakes now holding with the trailer stationary?",
+        "options": [
+          { "label": "Yes — brakes holding", "nextNodeId": "tb-t4" },
+          { "label": "No — trailer still rolls", "nextNodeId": "tb-t3" }
+        ]
+      },
+      "tb-q6": {
+        "id": "tb-q6",
+        "type": "question",
+        "text": "Check the brake fluid reservoir. Is the fluid level below the MIN mark?",
+        "options": [
+          { "label": "Yes — fluid is low or empty", "nextNodeId": "tb-a4" },
+          { "label": "No — fluid level looks OK", "nextNodeId": "tb-q7" }
+        ]
+      },
+      "tb-a4": {
+        "id": "tb-a4",
+        "type": "action",
+        "text": "Add brake fluid to the reservoir",
+        "actionText": "Add the correct brake fluid (check the reservoir cap for type) to bring the level up to the MAX mark. Do not overfill. Clean up any spills — brake fluid damages paint.",
+        "tmPage": "2-8",
+        "nextNodeId": "tb-q6b"
+      },
+      "tb-q6b": {
+        "id": "tb-q6b",
+        "type": "question",
+        "text": "Do the hydraulic brakes work now after adding fluid?",
+        "options": [
+          { "label": "Yes — brakes working", "nextNodeId": "tb-t5" },
+          { "label": "No — still not working", "nextNodeId": "tb-q7" }
+        ]
+      },
+      "tb-q7": {
+        "id": "tb-q7",
+        "type": "question",
+        "text": "Inspect the brake tubes and hoses along the trailer frame. Do you see any wet spots, drips, or signs of a brake fluid leak?",
+        "options": [
+          { "label": "Yes — found a leak", "nextNodeId": "tb-t6" },
+          { "label": "No — no visible leaks", "nextNodeId": "tb-t6" }
+        ]
+      },
+      "tb-q9": {
+        "id": "tb-q9",
+        "type": "question",
+        "text": "Inspect the handbrake lever. Is it seized (won't move at all) or visibly damaged?",
+        "options": [
+          { "label": "Seized — won't move but looks intact", "nextNodeId": "tb-a5" },
+          { "label": "Damaged — bent, broken, or missing parts", "nextNodeId": "tb-t7" }
+        ]
+      },
+      "tb-a5": {
+        "id": "tb-a5",
+        "type": "action",
+        "text": "Clean and lubricate the handbrake lever",
+        "actionText": "Clean the lever pivot points with a rag to remove dirt and rust. Apply a light coat of lubricant (WD-40 or equivalent) to the pivot and cable attachment points. Work the lever back and forth several times.",
+        "nextNodeId": "tb-q9b"
+      },
+      "tb-q9b": {
+        "id": "tb-q9b",
+        "type": "question",
+        "text": "Does the handbrake lever move freely now?",
+        "options": [
+          { "label": "Yes — lever moves freely", "nextNodeId": "tb-t8" },
+          { "label": "No — still seized or stiff", "nextNodeId": "tb-t7" }
+        ]
+      },
+      "tb-t1": { "id": "tb-t1", "type": "terminal", "text": "Brakes released. Handbrake lever or breakaway lever was the cause.", "terminal": { "resolution": "operator-fix", "readiness": "PMC", "summary": "Brakes not releasing — handbrake or breakaway lever repositioned, brakes now free" } },
+      "tb-t2": { "id": "tb-t2", "type": "terminal", "text": "Brakes still will not release after checking both levers. Notify maintenance — do not tow the trailer.", "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Brakes locked — beyond operator repair, NMC safety-critical" } },
+      "tb-t3": { "id": "tb-t3", "type": "terminal", "text": "Handbrake levers are fully engaged but brakes still will not hold. Notify maintenance — do not park on any slope.", "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Brakes not holding — beyond operator repair, NMC safety-critical" } },
+      "tb-t4": { "id": "tb-t4", "type": "terminal", "text": "Brakes now holding. Levers were not fully engaged.", "terminal": { "resolution": "operator-fix", "readiness": "PMC", "summary": "Brakes not holding — handbrake levers fully engaged, brakes now holding" } },
+      "tb-t5": { "id": "tb-t5", "type": "terminal", "text": "Hydraulic brakes restored after adding brake fluid. Monitor for further fluid loss — low fluid indicates a possible leak that needs follow-up maintenance.", "terminal": { "resolution": "operator-fix", "readiness": "PMC", "summary": "Hydraulic brakes restored — brake fluid topped off, monitor for leak" } },
+      "tb-t6": { "id": "tb-t6", "type": "terminal", "text": "Brake fluid leak found, or hydraulic brakes still inoperative. This is a safety-critical NO-GO. Do not tow. Notify maintenance immediately.", "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Hydraulic brake failure — brake fluid leak or unresolved, NMC safety-critical" } },
+      "tb-t7": { "id": "tb-t7", "type": "terminal", "text": "Handbrake lever is damaged or cannot be fixed at operator level. Notify maintenance.", "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Handbrake lever inoperative — damage or seized beyond operator repair" } },
+      "tb-t8": { "id": "tb-t8", "type": "terminal", "text": "Handbrake lever is now operational after cleaning and lubrication.", "terminal": { "resolution": "operator-fix", "readiness": "PMC", "summary": "Handbrake lever seized — cleaned and lubricated, lever now operational" } }
+    }
+  },
+  {
+    "categoryId": "tire-damage",
+    "vehicleType": "M1101",
+    "tmReference": "TM 9-2330-392-14P, Table 3-1",
+    "rootNodeId": "ttd-q1",
+    "nodes": {
+      "ttd-q1": {
+        "id": "ttd-q1",
+        "type": "question",
+        "text": "What is the tire problem?",
+        "options": [
+          { "label": "Abnormal or uneven tire wear", "nextNodeId": "ttd-q2" },
+          { "label": "Wheel is wobbly", "nextNodeId": "ttd-q4" }
+        ]
+      },
+      "ttd-q2": {
+        "id": "ttd-q2",
+        "type": "question",
+        "text": "Check the tire pressure. Is it below 17 PSI (±2 PSI)?",
+        "options": [
+          { "label": "Yes — pressure is low", "nextNodeId": "ttd-a1" },
+          { "label": "No — pressure is 15–19 PSI", "nextNodeId": "ttd-t1" }
+        ]
+      },
+      "ttd-a1": {
+        "id": "ttd-a1",
+        "type": "action",
+        "text": "Inflate tire to 17 PSI",
+        "actionText": "Inflate the tire to 17 PSI (±2 PSI). Use a tire pressure gauge to confirm. Uneven wear caused by low pressure may require maintenance inspection of the tire and alignment.",
+        "nextNodeId": "ttd-q2b"
+      },
+      "ttd-q2b": {
+        "id": "ttd-q2b",
+        "type": "question",
+        "text": "Is the tire now at 15–19 PSI and holding pressure?",
+        "options": [
+          { "label": "Yes — tire inflated and holding", "nextNodeId": "ttd-t2" },
+          { "label": "No — tire won't hold pressure", "nextNodeId": "ttd-t3" }
+        ]
+      },
+      "ttd-q4": {
+        "id": "ttd-q4",
+        "type": "question",
+        "text": "Inspect the wheel stud nuts (lug nuts). Are any missing or visibly loose?",
+        "options": [
+          { "label": "Yes — missing or loose studs/lug nuts found", "nextNodeId": "ttd-a2" },
+          { "label": "No — all look tight", "nextNodeId": "ttd-t4" }
+        ]
+      },
+      "ttd-a2": {
+        "id": "ttd-a2",
+        "type": "action",
+        "text": "Replace missing or tighten loose stud nuts",
+        "actionText": "Replace any missing stud nuts from BII if available. Hand-tighten all loose lug nuts in a star pattern. NOTE: Proper torque (85–115 ft-lbs) requires a torque wrench — notify maintenance to verify torque after this field fix.",
+        "nextNodeId": "ttd-q4b"
+      },
+      "ttd-q4b": {
+        "id": "ttd-q4b",
+        "type": "question",
+        "text": "After tightening, does the wheel still wobble?",
+        "options": [
+          { "label": "No — wheel feels solid", "nextNodeId": "ttd-t5" },
+          { "label": "Yes — still wobbling", "nextNodeId": "ttd-t4" }
+        ]
+      },
+      "ttd-t1": { "id": "ttd-t1", "type": "terminal", "text": "Tire pressure is correct but uneven wear is present. Notify maintenance to inspect the tire and wheel alignment.", "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Uneven tire wear with correct pressure — possible alignment or tire damage, needs maintenance" } },
+      "ttd-t2": { "id": "ttd-t2", "type": "terminal", "text": "Tire inflated to correct pressure. Monitor wear on next PMCS. Notify maintenance if uneven wear continues.", "terminal": { "resolution": "operator-fix", "readiness": "PMC", "summary": "Uneven tire wear — low pressure corrected, inflated to 17 PSI" } },
+      "ttd-t3": { "id": "ttd-t3", "type": "terminal", "text": "Tire will not hold pressure. Possible puncture or bead damage. Notify maintenance.", "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Trailer tire will not hold pressure — needs replacement" } },
+      "ttd-t4": { "id": "ttd-t4", "type": "terminal", "text": "Wobbly wheel with no loose lug nuts, or wheel still wobbling after tightening. Possible bearing or hub damage. Do not tow — notify maintenance.", "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Wobbly wheel — possible bearing or hub damage, NMC" } },
+      "ttd-t5": { "id": "ttd-t5", "type": "terminal", "text": "Wheel secured after tightening lug nuts. Notify maintenance to verify proper torque (85–115 ft-lbs) before next mission.", "terminal": { "resolution": "operator-fix", "readiness": "PMC", "summary": "Wobbly wheel — loose lug nuts tightened, maintenance needed to verify torque" } }
+    }
+  },
+  {
+    "categoryId": "trailer-support-leg",
+    "vehicleType": "M1101",
+    "tmReference": "TM 9-2330-392-14P, Table 3-1",
+    "rootNodeId": "tsl-t1",
+    "nodes": {
+      "tsl-t1": {
+        "id": "tsl-t1",
+        "type": "terminal",
+        "text": "Front support leg will not crank. Inspect for dents or physical damage to the leg or crank mechanism. This is beyond operator repair — notify maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Front support leg inoperative — dents or damage found, needs maintenance"
+        }
+      }
+    }
+  },
+  {
+    "categoryId": "trailer-suspension",
+    "vehicleType": "M1101",
+    "tmReference": "TM 9-2330-392-14P, Table 3-1",
+    "rootNodeId": "ts-q1",
+    "nodes": {
+      "ts-q1": {
+        "id": "ts-q1",
+        "type": "question",
+        "text": "The trailer is leaning to one side. Check the tire pressure on both tires. Is either tire below 17 PSI?",
+        "options": [
+          { "label": "Yes — one or both tires are low", "nextNodeId": "ts-a1" },
+          { "label": "No — both tires are at correct pressure", "nextNodeId": "ts-q2" }
+        ]
+      },
+      "ts-a1": {
+        "id": "ts-a1",
+        "type": "action",
+        "text": "Inflate both tires to 17 PSI",
+        "actionText": "Inflate both tires to 17 PSI. Use a tire pressure gauge to confirm both are equal. A significant difference in pressure between sides can cause the trailer to lean.",
+        "nextNodeId": "ts-q1b"
+      },
+      "ts-q1b": {
+        "id": "ts-q1b",
+        "type": "question",
+        "text": "Is the trailer now level after inflating the tires?",
+        "options": [
+          { "label": "Yes — trailer is level", "nextNodeId": "ts-t1" },
+          { "label": "No — still leaning", "nextNodeId": "ts-q2" }
+        ]
+      },
+      "ts-q2": {
+        "id": "ts-q2",
+        "type": "question",
+        "text": "Inspect the shock absorbers on both sides. Do you see any wet spots or fluid leaking from either shock?",
+        "options": [
+          { "label": "Yes — leaking shock found", "nextNodeId": "ts-t2" },
+          { "label": "No — no visible leaks", "nextNodeId": "ts-q3" }
+        ]
+      },
+      "ts-q3": {
+        "id": "ts-q3",
+        "type": "question",
+        "text": "Compare the shock absorber extension rods on both sides. Are they visibly uneven — one side extended significantly more than the other?",
+        "options": [
+          { "label": "Yes — extension rods are uneven", "nextNodeId": "ts-t2" },
+          { "label": "No — extension rods look even", "nextNodeId": "ts-t2" }
+        ]
+      },
+      "ts-t1": { "id": "ts-t1", "type": "terminal", "text": "Trailer is now level after correcting tire pressure.", "terminal": { "resolution": "operator-fix", "readiness": "PMC", "summary": "Trailer leaning — uneven tire pressure corrected, trailer now level" } },
+      "ts-t2": { "id": "ts-t2", "type": "terminal", "text": "Shock absorber leak, uneven extension, or trailer still leaning with correct tire pressure. Notify maintenance.", "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Trailer leaning — shock absorber failure or suspension issue, needs maintenance" } }
+    }
+  }
+]

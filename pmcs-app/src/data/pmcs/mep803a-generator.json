@@ -1,0 +1,525 @@
+{
+  "vehicleType": "MEP803A",
+  "tmReference": "TM 9-6115-642-10",
+  "zones": [
+    {
+      "id": "zone-1",
+      "name": "Generator Set Exterior",
+      "description": "Housing, identification plates, skid base, and acoustical materials",
+      "steps": [
+        {
+          "id": "mep803a-b-001",
+          "sequence": 1,
+          "zone": "Generator Set Exterior",
+          "zoneId": "zone-1",
+          "item": "1",
+          "itemDescription": "Housing",
+          "procedure": "Check door panels, hinges, latches for damage, loose, or corroded items. Inspect air intake and exhaust grills for debris.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Cannot secure door."
+        },
+        {
+          "id": "mep803a-b-002",
+          "sequence": 2,
+          "zone": "Generator Set Exterior",
+          "zoneId": "zone-1",
+          "item": "2",
+          "itemDescription": "Identification Plates",
+          "procedure": "Check to ensure identification plates are secure.",
+          "conditionSet": "BEFORE",
+          "isNoGo": false
+        },
+        {
+          "id": "mep803a-b-003",
+          "sequence": 3,
+          "zone": "Generator Set Exterior",
+          "zoneId": "zone-1",
+          "item": "3",
+          "itemDescription": "Skid Base",
+          "procedure": "Inspect skid base for cracks and/or corrosion.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Cracked or shows signs of structural damage."
+        },
+        {
+          "id": "mep803a-b-004",
+          "sequence": 4,
+          "zone": "Generator Set Exterior",
+          "zoneId": "zone-1",
+          "item": "4",
+          "itemDescription": "Acoustical Materials",
+          "procedure": "Inspect to ensure acoustical materials in the grill areas and under the engine are secure, not damaged, or missing.",
+          "conditionSet": "BEFORE",
+          "isNoGo": false
+        }
+      ]
+    },
+    {
+      "id": "zone-2",
+      "name": "Engine Assembly",
+      "description": "Engine, fuel system, lubrication, radiator, hoses, cooling fan, and fan belt",
+      "steps": [
+        {
+          "id": "mep803a-b-005",
+          "sequence": 5,
+          "zone": "Engine Assembly",
+          "zoneId": "zone-2",
+          "item": "5",
+          "itemDescription": "Engine Assembly",
+          "procedure": "Inspect for loose, damaged, or missing hardware.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Any loose, damaged, or missing hardware."
+        },
+        {
+          "id": "mep803a-b-006",
+          "sequence": 6,
+          "zone": "Engine Assembly",
+          "zoneId": "zone-2",
+          "item": "6",
+          "itemDescription": "Fuel System",
+          "procedure": "Inspect for leaks, damage, loose, or missing hardware.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Any fuel leaks, damage, loose or missing parts."
+        },
+        {
+          "id": "mep803a-b-007",
+          "sequence": 7,
+          "zone": "Engine Assembly",
+          "zoneId": "zone-2",
+          "item": "7",
+          "itemDescription": "Fuel Filter/Water Separator",
+          "procedure": "Inspect for leaks, cracks, damage, proper mounting, loose or missing parts. Drain water from the fuel filter/water separator.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Any fuel leaks. Water not drained."
+        },
+        {
+          "id": "mep803a-b-008",
+          "sequence": 8,
+          "zone": "Engine Assembly",
+          "zoneId": "zone-2",
+          "item": "8",
+          "itemDescription": "Lubrication System",
+          "procedure": "Inspect for leaks, damage, loose or missing parts. Inspect oil level on the dipstick. Inspect for contamination (milky or gritty oil).",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Class III leaks, low oil, or contamination."
+        },
+        {
+          "id": "mep803a-b-009",
+          "sequence": 9,
+          "zone": "Engine Assembly",
+          "zoneId": "zone-2",
+          "item": "9",
+          "itemDescription": "Radiator",
+          "procedure": "Inspect for leaks, damage, loose or missing parts.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Class III leaks or missing radiator cap."
+        },
+        {
+          "id": "mep803a-b-010",
+          "sequence": 10,
+          "zone": "Engine Assembly",
+          "zoneId": "zone-2",
+          "item": "10",
+          "itemDescription": "Hoses",
+          "procedure": "Inspect for leaks, cracks, or missing parts.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Class III leaks or missing clamps/hoses."
+        },
+        {
+          "id": "mep803a-b-011",
+          "sequence": 11,
+          "zone": "Engine Assembly",
+          "zoneId": "zone-2",
+          "item": "11",
+          "itemDescription": "Cooling Fan",
+          "procedure": "Inspect for obstruction, damage, or looseness. Inspect for unusual noise in fan area.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Damaged or loose. Unusual noise."
+        },
+        {
+          "id": "mep803a-b-012",
+          "sequence": 12,
+          "zone": "Engine Assembly",
+          "zoneId": "zone-2",
+          "item": "12",
+          "itemDescription": "Fan Belt",
+          "procedure": "Inspect for cracks, fraying, or looseness.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Broken or missing belt."
+        }
+      ]
+    },
+    {
+      "id": "zone-3",
+      "name": "Cooling & Exhaust",
+      "description": "Overflow bottle, exhaust system, and air cleaner assembly",
+      "steps": [
+        {
+          "id": "mep803a-b-013",
+          "sequence": 13,
+          "zone": "Cooling & Exhaust",
+          "zoneId": "zone-3",
+          "item": "13",
+          "itemDescription": "Overflow Bottle",
+          "procedure": "Inspect for proper mounting, leaks, or missing hardware.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Class III leaks or missing hardware."
+        },
+        {
+          "id": "mep803a-b-014",
+          "sequence": 14,
+          "zone": "Cooling & Exhaust",
+          "zoneId": "zone-3",
+          "item": "14",
+          "itemDescription": "Exhaust System",
+          "procedure": "Inspect for leaks, corrosion, and missing parts.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Leaks, damaged, or missing parts."
+        },
+        {
+          "id": "mep803a-b-015",
+          "sequence": 15,
+          "zone": "Cooling & Exhaust",
+          "zoneId": "zone-3",
+          "item": "15",
+          "itemDescription": "Air Cleaner Assembly",
+          "procedure": "Inspect for loose, damage, or missing parts. Inspect restriction indicator for clogged air cleaner element.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Loose or missing parts. Clogged air cleaner element."
+        }
+      ]
+    },
+    {
+      "id": "zone-4",
+      "name": "Electrical",
+      "description": "Ground rod, batteries, cables, output box, controls, and harness",
+      "steps": [
+        {
+          "id": "mep803a-b-016",
+          "sequence": 16,
+          "zone": "Electrical",
+          "zoneId": "zone-4",
+          "item": "16",
+          "itemDescription": "Ground Rod Cable and Connections",
+          "procedure": "Inspect for damage, corrosion, and loose connections.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Damaged, corroded, or loose connections."
+        },
+        {
+          "id": "mep803a-b-017",
+          "sequence": 17,
+          "zone": "Electrical",
+          "zoneId": "zone-4",
+          "item": "17",
+          "itemDescription": "Batteries",
+          "procedure": "Inspect for secure mounting.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Broken or missing mounting hardware."
+        },
+        {
+          "id": "mep803a-b-018",
+          "sequence": 18,
+          "zone": "Electrical",
+          "zoneId": "zone-4",
+          "item": "18",
+          "itemDescription": "Battery Cables",
+          "procedure": "Inspect for corrosion, damage, loose connections, or missing parts.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Damaged, loose, or missing parts."
+        },
+        {
+          "id": "mep803a-b-019",
+          "sequence": 19,
+          "zone": "Electrical",
+          "zoneId": "zone-4",
+          "item": "19",
+          "itemDescription": "Output Box Assembly",
+          "procedure": "Inspect cables for damage or loose connections. Inspect output terminals for damage or missing hardware.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Damaged, loose, or missing parts/hardware."
+        },
+        {
+          "id": "mep803a-b-020",
+          "sequence": 20,
+          "zone": "Electrical",
+          "zoneId": "zone-4",
+          "item": "20",
+          "itemDescription": "Controls and Indicators",
+          "procedure": "Inspect for damage or missing parts.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Damaged or missing parts."
+        },
+        {
+          "id": "mep803a-b-021",
+          "sequence": 21,
+          "zone": "Electrical",
+          "zoneId": "zone-4",
+          "item": "21",
+          "itemDescription": "Control Box Harness",
+          "procedure": "Inspect for damage and looseness.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Damaged or loose."
+        }
+      ]
+    },
+    {
+      "id": "zone-5",
+      "name": "Generator Set Exterior (During)",
+      "description": "During-operation checks: housing, engine, fuel, lubrication, cooling, electrical",
+      "steps": [
+        {
+          "id": "mep803a-b-022",
+          "sequence": 22,
+          "zone": "Generator Set Exterior (During)",
+          "zoneId": "zone-5",
+          "item": "22",
+          "itemDescription": "Housing",
+          "procedure": "Check door panels, hinges, latches for damage, loose, or corroded items.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "Cannot secure door."
+        },
+        {
+          "id": "mep803a-b-023",
+          "sequence": 23,
+          "zone": "Generator Set Exterior (During)",
+          "zoneId": "zone-5",
+          "item": "23",
+          "itemDescription": "Engine Assembly",
+          "procedure": "Inspect for loose, damaged, or missing hardware.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "Any loose, damaged, or missing hardware."
+        },
+        {
+          "id": "mep803a-b-024",
+          "sequence": 24,
+          "zone": "Generator Set Exterior (During)",
+          "zoneId": "zone-5",
+          "item": "24",
+          "itemDescription": "Fuel System",
+          "procedure": "Inspect for leaks, damage, loose, or missing hardware.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "Any fuel leaks."
+        },
+        {
+          "id": "mep803a-b-025",
+          "sequence": 25,
+          "zone": "Generator Set Exterior (During)",
+          "zoneId": "zone-5",
+          "item": "25",
+          "itemDescription": "Lubrication System",
+          "procedure": "Inspect for leaks, damage, loose or missing parts. Inspect for contamination.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "Class III leaks or contamination."
+        },
+        {
+          "id": "mep803a-b-026",
+          "sequence": 26,
+          "zone": "Generator Set Exterior (During)",
+          "zoneId": "zone-5",
+          "item": "26",
+          "itemDescription": "Cooling Fan",
+          "procedure": "Inspect for obstruction, damage, or looseness. Inspect for unusual noise.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "Damaged or loose."
+        },
+        {
+          "id": "mep803a-b-027",
+          "sequence": 27,
+          "zone": "Generator Set Exterior (During)",
+          "zoneId": "zone-5",
+          "item": "27",
+          "itemDescription": "Overflow Bottle",
+          "procedure": "Inspect for proper mounting, leaks, or missing hardware.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "Class III leaks or missing hardware."
+        },
+        {
+          "id": "mep803a-b-028",
+          "sequence": 28,
+          "zone": "Generator Set Exterior (During)",
+          "zoneId": "zone-5",
+          "item": "28",
+          "itemDescription": "Ground Rod Cable",
+          "procedure": "Inspect for damage, corrosion, loose connections.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "Damaged, corroded, or loose."
+        },
+        {
+          "id": "mep803a-b-029",
+          "sequence": 29,
+          "zone": "Generator Set Exterior (During)",
+          "zoneId": "zone-5",
+          "item": "29",
+          "itemDescription": "Controls and Indicators",
+          "procedure": "Inspect that indicators are operating properly.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "Indicators not operating properly."
+        }
+      ]
+    },
+    {
+      "id": "zone-6",
+      "name": "Generator Set Exterior (After)",
+      "description": "After-operation checks: full exterior, engine, fuel, lubrication, cooling, electrical",
+      "steps": [
+        {
+          "id": "mep803a-b-030",
+          "sequence": 30,
+          "zone": "Generator Set Exterior (After)",
+          "zoneId": "zone-6",
+          "item": "30",
+          "itemDescription": "Housing",
+          "procedure": "Check door panels, hinges, latches for damage.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "Cannot secure door."
+        },
+        {
+          "id": "mep803a-b-031",
+          "sequence": 31,
+          "zone": "Generator Set Exterior (After)",
+          "zoneId": "zone-6",
+          "item": "31",
+          "itemDescription": "Identification Plates",
+          "procedure": "Check to ensure identification plates are secure.",
+          "conditionSet": "AFTER",
+          "isNoGo": false
+        },
+        {
+          "id": "mep803a-b-032",
+          "sequence": 32,
+          "zone": "Generator Set Exterior (After)",
+          "zoneId": "zone-6",
+          "item": "32",
+          "itemDescription": "Skid Base",
+          "procedure": "Inspect for cracks and/or corrosion.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "Cracked or structural damage."
+        },
+        {
+          "id": "mep803a-b-033",
+          "sequence": 33,
+          "zone": "Generator Set Exterior (After)",
+          "zoneId": "zone-6",
+          "item": "33",
+          "itemDescription": "Engine Assembly",
+          "procedure": "Inspect for loose, damaged, or missing hardware.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "Any loose, damaged, or missing hardware."
+        },
+        {
+          "id": "mep803a-b-034",
+          "sequence": 34,
+          "zone": "Generator Set Exterior (After)",
+          "zoneId": "zone-6",
+          "item": "34",
+          "itemDescription": "Fuel System",
+          "procedure": "Inspect for leaks, damage, loose, or missing hardware.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "Any fuel leaks."
+        },
+        {
+          "id": "mep803a-b-035",
+          "sequence": 35,
+          "zone": "Generator Set Exterior (After)",
+          "zoneId": "zone-6",
+          "item": "35",
+          "itemDescription": "Fuel Filter/Water Separator",
+          "procedure": "Inspect for leaks, cracks, damage. Drain water from the fuel filter/water separator.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "Any fuel leaks. Water not drained."
+        },
+        {
+          "id": "mep803a-b-036",
+          "sequence": 36,
+          "zone": "Generator Set Exterior (After)",
+          "zoneId": "zone-6",
+          "item": "36",
+          "itemDescription": "Lubrication System",
+          "procedure": "Inspect for leaks, damage, loose or missing parts. Inspect oil level on the dipstick. Inspect for contamination.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "Class III leaks, low oil, or contamination."
+        },
+        {
+          "id": "mep803a-b-037",
+          "sequence": 37,
+          "zone": "Generator Set Exterior (After)",
+          "zoneId": "zone-6",
+          "item": "37",
+          "itemDescription": "Radiator",
+          "procedure": "Inspect for leaks, damage, loose or missing parts.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "Class III leaks or missing radiator cap."
+        },
+        {
+          "id": "mep803a-b-038",
+          "sequence": 38,
+          "zone": "Generator Set Exterior (After)",
+          "zoneId": "zone-6",
+          "item": "38",
+          "itemDescription": "Hoses",
+          "procedure": "Inspect for leaks, cracks, or missing parts.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "Class III leaks or missing clamps/hoses."
+        },
+        {
+          "id": "mep803a-b-039",
+          "sequence": 39,
+          "zone": "Generator Set Exterior (After)",
+          "zoneId": "zone-6",
+          "item": "39",
+          "itemDescription": "Fan Belt",
+          "procedure": "Inspect for cracks, fraying, or looseness.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "Broken or missing belt."
+        },
+        {
+          "id": "mep803a-b-040",
+          "sequence": 40,
+          "zone": "Generator Set Exterior (After)",
+          "zoneId": "zone-6",
+          "item": "40",
+          "itemDescription": "Controls and Indicators",
+          "procedure": "Inspect for damaged or missing parts.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "Damaged or missing parts."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,280 @@
+{
+  "vehicleType": "M1101",
+  "tmReference": "TM 9-2330-392-14P",
+  "zones": [
+    {
+      "id": "zone-1",
+      "name": "Drawbar & Front",
+      "description": "Lunette, brake actuator, and front support leg",
+      "steps": [
+        {
+          "id": "m1101-b-001",
+          "sequence": 1,
+          "zone": "Drawbar & Front",
+          "zoneId": "zone-1",
+          "item": "1",
+          "itemDescription": "Lunette Ring",
+          "procedure": "Inspect the lunette ring where it connects to the drawbar. Check that the mounting hardware is tight and that the ring itself shows no cracks, bends, or obvious damage. A damaged lunette can separate from the towing vehicle without warning.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Damage evident to the lunette ring or its mounting."
+        },
+        {
+          "id": "m1101-b-002",
+          "sequence": 2,
+          "zone": "Drawbar & Front",
+          "zoneId": "zone-1",
+          "item": "2",
+          "itemDescription": "Brake Actuator Assembly",
+          "procedure": "Inspect the brake actuator assembly at the front of the drawbar: (a) Check the front roller pin area for wear or damage. (b) Inspect the master pin for wear or damage. (c) Check all mounting nuts and bolts are present and tight. (d) Inspect the breakaway cable and lever — cable must be intact and lever must be able to actuate. This assembly applies the trailer brakes if it separates from the tow vehicle.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Damage evident to actuator; mounting nuts or bolts missing; breakaway cable or lever missing or damaged."
+        },
+        {
+          "id": "m1101-b-003",
+          "sequence": 3,
+          "zone": "Drawbar & Front",
+          "zoneId": "zone-1",
+          "item": "3",
+          "itemDescription": "Front Support Leg",
+          "procedure": "Check the front support leg (also called the tongue jack or landing leg) for damage or missing parts. Lower it and verify the caster wheel rolls freely. Crank the handle through its full range to confirm it raises and lowers without binding. Stow it properly before movement.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Support leg inoperative, damaged, or missing parts."
+        }
+      ]
+    },
+    {
+      "id": "zone-2",
+      "name": "Left Side",
+      "description": "Left handbrake and left tires",
+      "steps": [
+        {
+          "id": "m1101-b-004",
+          "sequence": 4,
+          "zone": "Left Side",
+          "zoneId": "zone-2",
+          "item": "4",
+          "itemDescription": "Handbrake Lever (Left)",
+          "procedure": "Locate the left-side handbrake lever. Check for damage or missing parts. Pull the lever to engage the brake and then release it — it must engage and disengage fully. A sticky or inoperative handbrake is a NO-GO.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Handbrake lever fails to engage or release."
+        },
+        {
+          "id": "m1101-b-005",
+          "sequence": 5,
+          "zone": "Left Side",
+          "zoneId": "zone-2",
+          "item": "5",
+          "itemDescription": "Tires (Left)",
+          "procedure": "Inspect the left trailer tire for underinflation or obvious unserviceability. Look for cuts, gouges, sidewall cracks, and bulges. Check the tread for any objects that have penetrated the tire and remove them. A flat or badly damaged tire is a NO-GO before moving the trailer.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Tire missing, deflated, or unserviceable."
+        }
+      ]
+    },
+    {
+      "id": "zone-3",
+      "name": "Right Side",
+      "description": "Right tires and right handbrake",
+      "steps": [
+        {
+          "id": "m1101-b-006",
+          "sequence": 6,
+          "zone": "Right Side",
+          "zoneId": "zone-3",
+          "item": "6",
+          "itemDescription": "Tires (Right)",
+          "procedure": "Inspect the right trailer tire for underinflation or obvious unserviceability. Look for cuts, gouges, sidewall cracks, and bulges. Check the tread for any objects that have penetrated the tire and remove them. A flat or badly damaged tire is a NO-GO before moving the trailer.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Tire missing, deflated, or unserviceable."
+        },
+        {
+          "id": "m1101-b-007",
+          "sequence": 7,
+          "zone": "Right Side",
+          "zoneId": "zone-3",
+          "item": "7",
+          "itemDescription": "Handbrake Lever (Right)",
+          "procedure": "Locate the right-side handbrake lever. Check for damage or missing parts. Pull the lever to engage the brake and then release it — it must engage and disengage fully. A sticky or inoperative handbrake is a NO-GO.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Handbrake lever fails to engage or release."
+        }
+      ]
+    },
+    {
+      "id": "zone-4",
+      "name": "Electrical",
+      "description": "Intervehicular cable and trailer lights",
+      "steps": [
+        {
+          "id": "m1101-b-008",
+          "sequence": 8,
+          "zone": "Electrical",
+          "zoneId": "zone-4",
+          "item": "8",
+          "itemDescription": "Intervehicular Cable",
+          "procedure": "Connect the trailer's intervehicular (electrical) cable to the towing vehicle's trailer connector. Have an assistant operate the tow vehicle's light switch through all settings — running lights, brake lights, and turn signals — while you walk around the trailer and confirm each trailer light functions correctly. Disconnect the cable if you find damage; do not tow with inoperative lights.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Trailer lights do not operate properly."
+        }
+      ]
+    },
+    {
+      "id": "zone-5",
+      "name": "Rear & Underside",
+      "description": "Post-operation checks: stabilizers, shock absorbers, safety chains",
+      "steps": [
+        {
+          "id": "m1101-b-009",
+          "sequence": 9,
+          "zone": "Rear & Underside",
+          "zoneId": "zone-5",
+          "item": "9",
+          "itemDescription": "Rear Stabilizers",
+          "procedure": "Inspect the rear stabilizer legs for bends, cracks, or other damage. Check that the hinge points rotate freely and that the telescoping sections slide without binding. Confirm all pins, hardware, and locking mechanisms are present and functional.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "Damage or missing parts on rear stabilizers."
+        },
+        {
+          "id": "m1101-b-010",
+          "sequence": 10,
+          "zone": "Rear & Underside",
+          "zoneId": "zone-5",
+          "item": "10",
+          "itemDescription": "Shock Absorbers",
+          "procedure": "Inspect both shock absorbers for fluid leaks — look for wet streaks or oily residue on the body of the shock. Check that all mounting nuts are present and tight. Look for any physical damage to the shock body or mounting brackets.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "Shock absorber leaking fluid, mounting hardware missing, or damage evident."
+        },
+        {
+          "id": "m1101-b-011",
+          "sequence": 11,
+          "zone": "Rear & Underside",
+          "zoneId": "zone-5",
+          "item": "11",
+          "itemDescription": "Safety Chains",
+          "procedure": "Inspect both safety chains for damage — look for broken links, bent hooks, or missing hardware. Both chains must be present and serviceable. Safety chains are required any time the trailer is hitched to a tow vehicle.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "Safety chain damaged or missing."
+        }
+      ]
+    },
+    {
+      "id": "zone-6",
+      "name": "Weekly Checks",
+      "description": "Wheel assemblies, brake lines, lights, cargo body, soft top, and frame",
+      "steps": [
+        {
+          "id": "m1101-b-012",
+          "sequence": 12,
+          "zone": "Weekly Checks",
+          "zoneId": "zone-6",
+          "item": "12",
+          "itemDescription": "Wheel Assemblies (Left)",
+          "procedure": "Check all lug nuts and stud nuts on the left wheel for looseness or missing hardware. Attempt to hand-tighten any that feel loose — if loose, report and properly torque before use. Count missing nuts: losing three or more is a NO-GO.",
+          "conditionSet": "WEEKLY",
+          "isNoGo": true,
+          "noGoCondition": "Three or more lug/stud nuts missing from the left wheel."
+        },
+        {
+          "id": "m1101-b-013",
+          "sequence": 13,
+          "zone": "Weekly Checks",
+          "zoneId": "zone-6",
+          "item": "13",
+          "itemDescription": "Brake Actuator Assembly (Lines)",
+          "procedure": "Inspect all brake lines and hoses connected to the actuator assembly. Check clamps for tightness. Look for cracks, chafing, or kinks in the hose/line material. Inspect all connections for looseness or any signs of leaking brake fluid. Any leak is a NO-GO.",
+          "conditionSet": "WEEKLY",
+          "isNoGo": true,
+          "noGoCondition": "Any brake fluid leak from lines, hoses, or connections."
+        },
+        {
+          "id": "m1101-b-014",
+          "sequence": 14,
+          "zone": "Weekly Checks",
+          "zoneId": "zone-6",
+          "item": "14",
+          "itemDescription": "Lights, Reflectors, and Wiring",
+          "procedure": "Inspect all trailer lights and reflectors: (a) Check for missing or broken lens covers, cracked housings, and loose connectors at each light assembly. (b) Trace the wiring harness along the trailer frame looking for exposed wires, frayed insulation, or damaged sections. Secure any loose wiring to prevent chafing during towing.",
+          "conditionSet": "WEEKLY",
+          "isNoGo": false
+        },
+        {
+          "id": "m1101-b-015",
+          "sequence": 15,
+          "zone": "Weekly Checks",
+          "zoneId": "zone-6",
+          "item": "15",
+          "itemDescription": "Wheel Assemblies (Right)",
+          "procedure": "Check all lug nuts and stud nuts on the right wheel for looseness or missing hardware. Attempt to hand-tighten any that feel loose — if loose, report and properly torque before use. Count missing nuts: losing three or more is a NO-GO.",
+          "conditionSet": "WEEKLY",
+          "isNoGo": true,
+          "noGoCondition": "Three or more lug/stud nuts missing from the right wheel."
+        },
+        {
+          "id": "m1101-b-016",
+          "sequence": 16,
+          "zone": "Weekly Checks",
+          "zoneId": "zone-6",
+          "item": "16",
+          "itemDescription": "Cargo Body",
+          "procedure": "Inspect the cargo bed: (a) Check for missing rivets, damaged or missing tiedown rings/provisions, and any structural damage to the cargo floor or sides. (b) Inspect the tailgate — verify hinges, chains, and latches are present and functional. (c) Check the decontamination bracket for damage or missing parts. (d) Verify identification plates are present and legible. (e) Inspect bows (if installed) for bends or damage.",
+          "conditionSet": "WEEKLY",
+          "isNoGo": false
+        },
+        {
+          "id": "m1101-b-017",
+          "sequence": 17,
+          "zone": "Weekly Checks",
+          "zoneId": "zone-6",
+          "item": "17",
+          "itemDescription": "Soft Top Kit",
+          "procedure": "If the soft top kit is installed or stored on the trailer, inspect the canvas cover for rips, tears, or holes that would allow water intrusion onto cargo. Check all footman loops — the small metal tabs the canvas lashes to — for bending, cracking, or missing hardware. Report damaged or missing footman loops.",
+          "conditionSet": "WEEKLY",
+          "isNoGo": false
+        },
+        {
+          "id": "m1101-b-018",
+          "sequence": 18,
+          "zone": "Weekly Checks",
+          "zoneId": "zone-6",
+          "item": "18",
+          "itemDescription": "Frame and Crossmembers",
+          "procedure": "Walk the full length of the trailer and visually inspect the main frame rails and all crossmembers. Look for cracks, breaks, or bends in the steel — pay attention to weld seams and mounting points where stress concentrates. Check that all fasteners connecting the body to the frame are present and tight.",
+          "conditionSet": "WEEKLY",
+          "isNoGo": true,
+          "noGoCondition": "Cracks, bends, or breaks in the frame or crossmembers."
+        }
+      ]
+    },
+    {
+      "id": "zone-7",
+      "name": "Monthly Checks",
+      "description": "Brake master cylinder fluid level and condition",
+      "steps": [
+        {
+          "id": "m1101-b-019",
+          "sequence": 19,
+          "zone": "Monthly Checks",
+          "zoneId": "zone-7",
+          "item": "19",
+          "itemDescription": "Brake Actuator Assembly (Fluid)",
+          "procedure": "Locate the brake master cylinder on the actuator assembly. Inspect the cap for damage or a missing seal — replace if damaged. Check for any external leaks around the cylinder body and fittings. Remove the cap and check the fluid level: it should be no lower than 1/8 inch below the top of the reservoir. If low, add the correct brake fluid to bring it up to level. Do not overfill. Any leak detected is a NO-GO.",
+          "conditionSet": "MONTHLY",
+          "isNoGo": true,
+          "noGoCondition": "Any leaks from the master cylinder or its fittings."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "name": "pmcs-pro",
+  "private": true,
+  "version": "1.0.0",
+  "workspaces": [
+    "pmcs-app",
+    "pmcs-dashboard"
+  ],
+  "scripts": {
+    "dev:app": "npm run dev -w pmcs-app",
+    "dev:dashboard": "npm run dev -w pmcs-dashboard",
+    "build": "npm run build -w pmcs-app && npm run build -w pmcs-dashboard",
+    "build:app": "npm run build -w pmcs-app",
+    "build:dashboard": "npm run build -w pmcs-dashboard",
+    "test": "npm run test -w pmcs-app && npm run test -w pmcs-dashboard",
+    "test:app": "npm run test -w pmcs-app",
+    "test:dashboard": "npm run test -w pmcs-dashboard",
+    "test:watch": "npm run test:watch -w pmcs-app",
+    "lint": "npm run lint -w pmcs-app",
+    "preview:app": "npm run preview -w pmcs-app",
+    "preview:dashboard": "npm run preview -w pmcs-dashboard"
+  }
+}

@@ -1,0 +1,313 @@
+{
+  "vehicleType": "LMTV_M1078",
+  "tmReference": "TM 9-2320-365-10",
+  "zones": [
+    {
+      "id": "zone-1",
+      "name": "Approach / Exterior Walk-Around",
+      "description": "Exterior inspection before entering the cab",
+      "steps": [
+        {
+          "id": "m1078-b-001",
+          "sequence": 1,
+          "zone": "Approach / Exterior Walk-Around",
+          "zoneId": "zone-1",
+          "item": "1",
+          "itemDescription": "Windshield, Windshield Wipers, and Washer Reservoir",
+          "procedure": "Look at your windshield for cracks or damage that would block your view while driving. Make sure the wiper blades are there and not torn up — if they're missing or trashed, put in a work order. Top off the washer fluid if it's low.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Windshield is cracked sufficiently to impair Operator's vision."
+        },
+        {
+          "id": "m1078-b-002",
+          "sequence": 2,
+          "zone": "Approach / Exterior Walk-Around",
+          "zoneId": "zone-1",
+          "item": "1.1",
+          "itemDescription": "Front and Rear Shackles",
+          "procedure": "Give your front and rear shackle pins a tug — make sure none of them are loose or working their way out.",
+          "conditionSet": "BEFORE",
+          "isNoGo": false
+        },
+        {
+          "id": "m1078-b-003",
+          "sequence": 3,
+          "zone": "Approach / Exterior Walk-Around",
+          "zoneId": "zone-1",
+          "item": "2",
+          "itemDescription": "Exterior of Vehicle",
+          "procedure": "Get down and look under the truck for any puddles or drips — fuel, oil, or coolant. If the ground is wet underneath, figure out what's leaking.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Class III leak is evident."
+        },
+        {
+          "id": "m1078-b-004",
+          "sequence": 4,
+          "zone": "Approach / Exterior Walk-Around",
+          "zoneId": "zone-1",
+          "item": "3",
+          "itemDescription": "Coolant",
+          "procedure": "Look at the radiator overflow tank — coolant should be between the upper and lower sightglass marks with the engine off. Top it off if it's low. Also look for oil floating in the coolant, which means you have a bigger problem. Don't open the radiator cap when the engine is hot — release the pressure slowly first or you'll get burned.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "a. Coolant level below lower sightglass. b. If engine oil is present, notify Unit Maintenance."
+        },
+        {
+          "id": "m1078-b-005",
+          "sequence": 5,
+          "zone": "Approach / Exterior Walk-Around",
+          "zoneId": "zone-1",
+          "item": "4",
+          "itemDescription": "Fuel Tank",
+          "procedure": "Pop the fuel cap, pull the strainer out, and make sure you actually have fuel in the tank — then put the strainer and cap back on. If you need to top off, kill the engine first and don't smoke anywhere near it.",
+          "conditionSet": "BEFORE",
+          "isNoGo": false
+        },
+        {
+          "id": "m1078-b-006",
+          "sequence": 6,
+          "zone": "Approach / Exterior Walk-Around",
+          "zoneId": "zone-1",
+          "item": "5",
+          "itemDescription": "Spare Tire Strap",
+          "procedure": "Make sure the spare tire strap is tight and not torn or frayed. Verify the SPARE TIRE knob is in the RAISE position. Check that the CAB knob (Air Springs) is pushed in — if it's not, push it in and turn it to the right.",
+          "conditionSet": "BEFORE",
+          "isNoGo": false
+        },
+        {
+          "id": "m1078-b-007",
+          "sequence": 7,
+          "zone": "Approach / Exterior Walk-Around",
+          "zoneId": "zone-1",
+          "item": "6",
+          "itemDescription": "Cab Hydraulic Latch",
+          "procedure": "Check the cab hydraulic latch indicator button — it needs to show latched. If it doesn't, your cab isn't secured and you're not going anywhere.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Cab will not securely latch."
+        },
+        {
+          "id": "m1078-b-008",
+          "sequence": 8,
+          "zone": "Approach / Exterior Walk-Around",
+          "zoneId": "zone-1",
+          "item": "7",
+          "itemDescription": "Air/Hydraulic Power Unit",
+          "procedure": "Pull the dipstick on the air/hydraulic power unit and check your oil level. Top it off if it's low.",
+          "conditionSet": "BEFORE",
+          "isNoGo": false
+        }
+      ]
+    },
+    {
+      "id": "zone-2",
+      "name": "Cab Interior",
+      "description": "Driver's compartment inspection before starting engine",
+      "steps": [
+        {
+          "id": "m1078-b-009",
+          "sequence": 9,
+          "zone": "Cab Interior",
+          "zoneId": "zone-2",
+          "item": "8",
+          "itemDescription": "Seat Belts",
+          "procedure": "Click and tug all three seat belts — make sure they latch, retract, and aren't frayed or cut. If your mission calls for three people in the cab, all three belts need to work.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Driver's seat belt and at least one other seat belt not in good working condition."
+        },
+        {
+          "id": "m1078-b-010",
+          "sequence": 10,
+          "zone": "Cab Interior",
+          "zoneId": "zone-2",
+          "item": "9",
+          "itemDescription": "Driver's Seat",
+          "procedure": "Slide your seat forward and back to make sure the adjustment actually works and locks in place.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Forward/backward adjustment is broken or missing."
+        },
+        {
+          "id": "m1078-b-011",
+          "sequence": 11,
+          "zone": "Cab Interior",
+          "zoneId": "zone-2",
+          "item": "10",
+          "itemDescription": "Fire Extinguisher",
+          "procedure": "Make sure the fire extinguisher is there and not beat up. Check the gauge — it should read around 150 PSI and the needle shouldn't be in the discharge band. Verify the seal is intact.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "a. Fire extinguisher is damaged or missing. b. Fire extinguisher pressure gage needle is within discharge band. c. Seal is missing."
+        },
+        {
+          "id": "m1078-b-012",
+          "sequence": 12,
+          "zone": "Cab Interior",
+          "zoneId": "zone-2",
+          "item": "11",
+          "itemDescription": "Lighted Indicator Display",
+          "procedure": "Flip the master power switch on and check that these lights come on: STOP, PARK BRAKE, EMERGENCY BRAKE, REAR BRAKE AIR, FRONT BRAKE AIR, and ENGINE OIL PRESSURE. If PARK BRAKE and EMERGENCY BRAKE don't light up, make sure SYSTEM PARK is pulled out. The REAR and FRONT BRAKE AIR lights won't come on if air pressure is already above 65 PSI, and that's normal.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Any of the listed indicator lights is not illuminated."
+        },
+        {
+          "id": "m1078-b-013",
+          "sequence": 13,
+          "zone": "Cab Interior",
+          "zoneId": "zone-2",
+          "item": "11.1",
+          "itemDescription": "Windshield Wipers and Washer (Operational Check)",
+          "procedure": "Hit the windshield washer and wiper switches to make sure they both work. If either one is dead, put in a work order.",
+          "conditionSet": "BEFORE",
+          "isNoGo": false
+        }
+      ]
+    },
+    {
+      "id": "zone-3",
+      "name": "Engine Running Checks",
+      "description": "Checks performed after starting the engine",
+      "steps": [
+        {
+          "id": "m1078-b-014",
+          "sequence": 14,
+          "zone": "Engine Running Checks",
+          "zoneId": "zone-3",
+          "item": "12",
+          "itemDescription": "OIL PRESS Gage",
+          "procedure": "Start your engine and watch the OIL PRESS gauge — it should read between 15-80 PSI. Oil pressure goes up with RPMs and drops at idle, which is normal. If the oil pressure light doesn't flicker on briefly at startup, or if it comes on and stays on, shut it down and report it.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "a. Gage indicates in red zone and engine oil pressure indicator is illuminated. b. Gage indicates less than 15 psi (103 kPa)."
+        },
+        {
+          "id": "m1078-b-015",
+          "sequence": 15,
+          "zone": "Engine Running Checks",
+          "zoneId": "zone-3",
+          "item": "13",
+          "itemDescription": "Tachometer",
+          "procedure": "If your truck has a tachometer, check that it reads 750-850 RPM at idle. If it's outside that range, put in a work order.",
+          "conditionSet": "BEFORE",
+          "isNoGo": false
+        },
+        {
+          "id": "m1078-b-016",
+          "sequence": 16,
+          "zone": "Engine Running Checks",
+          "zoneId": "zone-3",
+          "item": "14",
+          "itemDescription": "WATER TEMP Gage",
+          "procedure": "Check that the WATER TEMP gauge reads between 160-230°F. It might not reach 160°F at idle, and that's fine. If the high temp light comes on but the gauge is still in the 160-230°F range and the fan isn't running nonstop, you're good to go.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "WATER TEMP gage indicates in red zone and high engine temperature indicator is illuminated."
+        },
+        {
+          "id": "m1078-b-017",
+          "sequence": 17,
+          "zone": "Engine Running Checks",
+          "zoneId": "zone-3",
+          "item": "15",
+          "itemDescription": "AIR FILTER RESTRICTION GAUGE",
+          "procedure": "Check the AIR FILTER RESTRICTION GAUGE. If it's reading in the red (above 25 inches), hit the reset button. If it's still in the red after reset, shut down the engine and service the air filter. Restart and check again — if it's still red, put in a work order.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "AIR FILTER RESTRICTION GAUGE reads greater than 25 in. (in red area)."
+        },
+        {
+          "id": "m1078-b-018",
+          "sequence": 18,
+          "zone": "Engine Running Checks",
+          "zoneId": "zone-3",
+          "item": "16",
+          "itemDescription": "FRONT BRAKE AIR and REAR BRAKE AIR Gages",
+          "procedure": "Check both your FRONT BRAKE AIR and REAR BRAKE AIR gauges — they should read between 65-120 PSI. If either one is low, the warning light and alarm will tell you.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Either gage indicates less than 65 psi (448 kPa), FRONT BRAKE AIR or REAR BRAKE AIR indicators illuminate, or audible alarm sounds."
+        },
+        {
+          "id": "m1078-b-019",
+          "sequence": 19,
+          "zone": "Engine Running Checks",
+          "zoneId": "zone-3",
+          "item": "17",
+          "itemDescription": "VOLTS Gage",
+          "procedure": "Check your VOLTS gauge — it should read between 26 and 30 volts. If it's outside that range, your charging system has a problem.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "VOLTS gage indicates more than 30 volts or less than 26 volts."
+        },
+        {
+          "id": "m1078-b-020",
+          "sequence": 20,
+          "zone": "Engine Running Checks",
+          "zoneId": "zone-3",
+          "item": "18",
+          "itemDescription": "FUEL Gage",
+          "procedure": "Check that your FUEL gauge is actually working — compare what it reads to what you saw when you checked the tank earlier. If they don't match, the gauge is lying to you.",
+          "conditionSet": "BEFORE",
+          "isNoGo": false
+        }
+      ]
+    },
+    {
+      "id": "zone-4",
+      "name": "Driving Checks",
+      "description": "Checks performed before and during initial driving",
+      "steps": [
+        {
+          "id": "m1078-b-021",
+          "sequence": 21,
+          "zone": "Driving Checks",
+          "zoneId": "zone-4",
+          "item": "19",
+          "itemDescription": "SYSTEM PARK Control",
+          "procedure": "With the truck stopped, pull out the SYSTEM PARK control and put the transmission in a forward gear at idle. The truck should not move at all — if it does, your parking brake is bad.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Vehicle moves with SYSTEM PARK control on."
+        },
+        {
+          "id": "m1078-b-022",
+          "sequence": 22,
+          "zone": "Driving Checks",
+          "zoneId": "zone-4",
+          "item": "20",
+          "itemDescription": "WTEC II TEPSS or WTEC III TPSS",
+          "procedure": "Run through all the gears on the transmission shift selector and make sure each one engages properly. Watch the LED display for any service messages that won't clear.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "One gear range does not operate properly or LED display indicates service message which cannot be reset."
+        },
+        {
+          "id": "m1078-b-023",
+          "sequence": 23,
+          "zone": "Driving Checks",
+          "zoneId": "zone-4",
+          "item": "21",
+          "itemDescription": "Turn Signal Control",
+          "procedure": "Flip your turn signals left and right and make sure the indicators on the dash match. Have a buddy confirm the lights are actually blinking outside.",
+          "conditionSet": "BEFORE",
+          "isNoGo": false
+        },
+        {
+          "id": "m1078-b-024",
+          "sequence": 24,
+          "zone": "Driving Checks",
+          "zoneId": "zone-4",
+          "item": "22",
+          "itemDescription": "Hazard Lights Switch",
+          "procedure": "Hit the hazard lights switch and make sure all four corners are flashing. Skip this one if you're in a tactical environment where you wouldn't use hazards.",
+          "conditionSet": "BEFORE",
+          "isNoGo": false
+        }
+      ]
+    }
+  ]
+}

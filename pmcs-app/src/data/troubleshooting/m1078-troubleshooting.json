@@ -1,0 +1,1127 @@
+[
+  {
+    "categoryId": "fluid-leak",
+    "vehicleType": "LMTV_M1078",
+    "tmReference": "TM 9-2320-395-10, Ch. 3",
+    "rootNodeId": "fl-q1",
+    "nodes": {
+      "fl-q1": { "id": "fl-q1", "type": "question", "text": "What color is the fluid?", "options": [ { "label": "Green or orange (coolant)", "nextNodeId": "fl-t1" }, { "label": "Dark brown or black (oil)", "nextNodeId": "fl-q2" }, { "label": "Red or pink (transmission)", "nextNodeId": "fl-t2" }, { "label": "Clear or light brown (brake)", "nextNodeId": "fl-t3" } ] },
+      "fl-q2": { "id": "fl-q2", "type": "question", "text": "How much oil is on the ground?", "options": [ { "label": "Small drops (dampness, no drips)", "nextNodeId": "fl-t4" }, { "label": "Steady drip or puddle", "nextNodeId": "fl-t5" } ] },
+      "fl-t1": { "id": "fl-t1", "type": "terminal", "text": "Coolant leak on LMTV requires maintenance support.", "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Coolant leak — needs maintenance" } },
+      "fl-t2": { "id": "fl-t2", "type": "terminal", "text": "Transmission fluid leak. Do not operate.", "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Transmission fluid leak — NMC" } },
+      "fl-t3": { "id": "fl-t3", "type": "terminal", "text": "Brake fluid leak detected. Safety-critical — do not operate.", "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Brake fluid leak — NMC, safety-critical" } },
+      "fl-t4": { "id": "fl-t4", "type": "terminal", "text": "Minor oil seepage (dampness, no drips) is within normal limits. Note and monitor.", "terminal": { "resolution": "operator-fix", "readiness": "PMC", "summary": "Minor oil seepage — within limits, monitoring" } },
+      "fl-t5": { "id": "fl-t5", "type": "terminal", "text": "Steady oil drip or puddle found. Needs maintenance inspection.", "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Steady oil drip or puddle — needs maintenance" } }
+    }
+  },
+  {
+    "categoryId": "tire-damage",
+    "vehicleType": "LMTV_M1078",
+    "tmReference": "TM 9-2320-395-10, Ch. 3",
+    "rootNodeId": "td-q1",
+    "nodes": {
+      "td-q1": { "id": "td-q1", "type": "question", "text": "What is the tire condition?", "options": [ { "label": "Flat or nearly flat", "nextNodeId": "td-t1" }, { "label": "Low pressure but holds air", "nextNodeId": "td-t2" }, { "label": "Tread worn below minimum", "nextNodeId": "td-t1" }, { "label": "Sidewall cut or bulge", "nextNodeId": "td-t1" } ] },
+      "td-t1": { "id": "td-t1", "type": "terminal", "text": "Tire is unserviceable. Needs replacement.", "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Tire unserviceable — needs replacement" } },
+      "td-t2": { "id": "td-t2", "type": "terminal", "text": "Inflate tire using CTIS or external air. Monitor for leaks.", "terminal": { "resolution": "operator-fix", "readiness": "PMC", "summary": "Low tire pressure — inflated, monitoring" } }
+    }
+  },
+  {
+    "categoryId": "wont-start",
+    "vehicleType": "LMTV_M1078",
+    "tmReference": "TM 9-2320-365-10, Table 3-2, a1/a2/b1/e1/e5",
+    "rootNodeId": "ws-q1",
+    "nodes": {
+      "ws-q1": {
+        "id": "ws-q1",
+        "type": "question",
+        "text": "Does the engine crank when you turn the key to START?",
+        "options": [
+          { "label": "No — engine does not crank at all", "nextNodeId": "ws-q2" },
+          { "label": "Yes — engine cranks but does not start", "nextNodeId": "ws-q5" }
+        ]
+      },
+      "ws-q2": {
+        "id": "ws-q2",
+        "type": "question",
+        "text": "Check battery cable connections. Are they tight and free of corrosion?",
+        "options": [
+          { "label": "Loose or corroded", "nextNodeId": "ws-a1" },
+          { "label": "Cables are tight and clean", "nextNodeId": "ws-q3" }
+        ]
+      },
+      "ws-a1": {
+        "id": "ws-a1",
+        "type": "action",
+        "text": "Clean and tighten battery cables",
+        "actionText": "Disconnect cables (negative first). Clean terminals and cable clamps with a wire brush or battery cleaning tool. Reconnect cables (positive first), tighten securely. Attempt to start.",
+        "tmPage": "3-8",
+        "nextNodeId": "ws-q4"
+      },
+      "ws-q4": {
+        "id": "ws-q4",
+        "type": "question",
+        "text": "Does the engine crank now?",
+        "options": [
+          { "label": "Yes — engine cranks", "nextNodeId": "ws-t1" },
+          { "label": "No — still does not crank", "nextNodeId": "ws-q3" }
+        ]
+      },
+      "ws-q3": {
+        "id": "ws-q3",
+        "type": "question",
+        "text": "Check battery fluid level. Are cells filled to the proper level?",
+        "options": [
+          { "label": "Low — cells visible", "nextNodeId": "ws-a2" },
+          { "label": "Fluid level is OK", "nextNodeId": "ws-t2" }
+        ]
+      },
+      "ws-a2": {
+        "id": "ws-a2",
+        "type": "action",
+        "text": "Add distilled water to batteries",
+        "actionText": "Add distilled water to each cell until the fluid just covers the plates. Do not overfill. Allow 15 minutes, then attempt to start.",
+        "tmPage": "3-8",
+        "nextNodeId": "ws-q4a"
+      },
+      "ws-q4a": {
+        "id": "ws-q4a",
+        "type": "question",
+        "text": "Does the engine crank now?",
+        "options": [
+          { "label": "Yes", "nextNodeId": "ws-t3" },
+          { "label": "No", "nextNodeId": "ws-t2" }
+        ]
+      },
+      "ws-t1": {
+        "id": "ws-t1",
+        "type": "terminal",
+        "text": "Battery cables were corroded/loose. Cleaning and tightening resolved the issue. If engine cranks but does not start, continue troubleshooting fuel system.",
+        "terminal": { "resolution": "operator-fix", "readiness": "PMC", "summary": "Battery cables cleaned/tightened — engine cranks" }
+      },
+      "ws-t2": {
+        "id": "ws-t2",
+        "type": "terminal",
+        "text": "Engine does not crank despite good battery cables and fluid. Notify unit maintenance.",
+        "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Engine won't crank — needs maintenance" }
+      },
+      "ws-t3": {
+        "id": "ws-t3",
+        "type": "terminal",
+        "text": "Battery fluid was low. Topped off and engine now cranks.",
+        "terminal": { "resolution": "operator-fix", "readiness": "PMC", "summary": "Battery fluid topped off — engine cranks" }
+      },
+      "ws-q5": {
+        "id": "ws-q5",
+        "type": "question",
+        "text": "Check the fuel level. Is there fuel in the tank?",
+        "options": [
+          { "label": "Tank is empty or very low", "nextNodeId": "ws-a3" },
+          { "label": "Fuel level is adequate", "nextNodeId": "ws-q6" }
+        ]
+      },
+      "ws-a3": {
+        "id": "ws-a3",
+        "type": "action",
+        "text": "Add fuel to the tank",
+        "actionText": "Fill the fuel tank with JP-8 or diesel. After fueling, prime the fuel/water separator by pumping the primer handle until firm. Attempt to start.",
+        "nextNodeId": "ws-q7"
+      },
+      "ws-q7": {
+        "id": "ws-q7",
+        "type": "question",
+        "text": "Does the engine start now?",
+        "options": [
+          { "label": "Yes", "nextNodeId": "ws-t4" },
+          { "label": "No", "nextNodeId": "ws-q6" }
+        ]
+      },
+      "ws-t4": {
+        "id": "ws-t4",
+        "type": "terminal",
+        "text": "Fuel tank was empty. Refueled and engine starts normally.",
+        "terminal": { "resolution": "operator-fix", "readiness": "FMC", "summary": "Fuel tank was empty — refueled, engine starts" }
+      },
+      "ws-q6": {
+        "id": "ws-q6",
+        "type": "question",
+        "text": "Check fuel/water separator. Does the bowl show water contamination or need priming?",
+        "options": [
+          { "label": "Water visible in bowl or needs priming", "nextNodeId": "ws-a4" },
+          { "label": "Separator looks normal", "nextNodeId": "ws-q8" }
+        ]
+      },
+      "ws-a4": {
+        "id": "ws-a4",
+        "type": "action",
+        "text": "Drain and prime the fuel/water separator",
+        "actionText": "Open the drain valve on the fuel/water separator and drain any water. Close the valve. Pump the manual primer handle until firm resistance is felt. Attempt to start.",
+        "tmPage": "3-8",
+        "nextNodeId": "ws-q9"
+      },
+      "ws-q9": {
+        "id": "ws-q9",
+        "type": "question",
+        "text": "Does the engine start now?",
+        "options": [
+          { "label": "Yes", "nextNodeId": "ws-t5" },
+          { "label": "No", "nextNodeId": "ws-t6" }
+        ]
+      },
+      "ws-t5": {
+        "id": "ws-t5",
+        "type": "terminal",
+        "text": "Fuel/water separator was contaminated. Drained and primed — engine starts.",
+        "terminal": { "resolution": "operator-fix", "readiness": "PMC", "summary": "Fuel/water separator drained and primed — engine starts" }
+      },
+      "ws-q8": {
+        "id": "ws-q8",
+        "type": "question",
+        "text": "Check the glow plug relay/wait-to-start indicator. Did the WAIT TO START light illuminate before cranking?",
+        "options": [
+          { "label": "No — light did not come on", "nextNodeId": "ws-t6" },
+          { "label": "Yes — light worked normally", "nextNodeId": "ws-t6" }
+        ]
+      },
+      "ws-t6": {
+        "id": "ws-t6",
+        "type": "terminal",
+        "text": "Engine cranks but will not start despite fuel and electrical checks. Notify unit maintenance.",
+        "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Engine cranks, won't start — needs maintenance" }
+      }
+    }
+  },
+  {
+    "categoryId": "electrical",
+    "vehicleType": "LMTV_M1078",
+    "tmReference": "TM 9-2320-365-10, Table 3-2, e2/e3/e6-e27",
+    "rootNodeId": "el-q1",
+    "nodes": {
+      "el-q1": {
+        "id": "el-q1",
+        "type": "question",
+        "text": "What's not working?",
+        "options": [
+          { "label": "Nothing works — no lights, no gauges, no start", "nextNodeId": "el-q2" },
+          { "label": "Some things work but others don't", "nextNodeId": "el-q4" },
+          { "label": "A gauge or indicator isn't working", "nextNodeId": "el-q5" }
+        ]
+      },
+      "el-q2": {
+        "id": "el-q2",
+        "type": "question",
+        "text": "Check battery cable connections at batteries and junction block. Are they tight and corrosion-free?",
+        "options": [
+          { "label": "Loose or corroded", "nextNodeId": "el-a1" },
+          { "label": "Cables are tight and clean", "nextNodeId": "el-q3" }
+        ]
+      },
+      "el-a1": {
+        "id": "el-a1",
+        "type": "action",
+        "text": "Clean and tighten battery cables",
+        "actionText": "Disconnect cables (negative first). Clean terminals and clamps with wire brush. Reconnect (positive first) and tighten. Check if circuits restore.",
+        "tmPage": "3-8",
+        "nextNodeId": "el-q6"
+      },
+      "el-q6": {
+        "id": "el-q6",
+        "type": "question",
+        "text": "Are the electrical circuits working now?",
+        "options": [
+          { "label": "Yes", "nextNodeId": "el-t1" },
+          { "label": "No", "nextNodeId": "el-q3" }
+        ]
+      },
+      "el-t1": {
+        "id": "el-t1",
+        "type": "terminal",
+        "text": "Battery cables were corroded or loose. Cleaning and tightening restored power.",
+        "terminal": { "resolution": "operator-fix", "readiness": "PMC", "summary": "Battery cables cleaned/tightened — circuits restored" }
+      },
+      "el-q3": {
+        "id": "el-q3",
+        "type": "question",
+        "text": "Check fuses in the main fuse panel. Are any blown?",
+        "options": [
+          { "label": "Yes — blown fuse found", "nextNodeId": "el-t2" },
+          { "label": "No — all fuses appear good", "nextNodeId": "el-t3" }
+        ]
+      },
+      "el-t2": {
+        "id": "el-t2",
+        "type": "terminal",
+        "text": "Blown fuse found. Notify unit maintenance for replacement and root cause diagnosis.",
+        "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Blown fuse — needs maintenance" }
+      },
+      "el-t3": {
+        "id": "el-t3",
+        "type": "terminal",
+        "text": "Everything still dead despite good cables and fuses. Notify unit maintenance.",
+        "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "All circuits dead — needs maintenance" }
+      },
+      "el-q4": {
+        "id": "el-q4",
+        "type": "question",
+        "text": "Check battery cables at the cable junction under the hood. Are connections tight?",
+        "options": [
+          { "label": "Loose connection found", "nextNodeId": "el-a2" },
+          { "label": "All connections tight", "nextNodeId": "el-t4" }
+        ]
+      },
+      "el-a2": {
+        "id": "el-a2",
+        "type": "action",
+        "text": "Tighten cable connections",
+        "actionText": "Tighten the cable connections at the cable junction under the hood. Check if the affected systems restore.",
+        "nextNodeId": "el-q7"
+      },
+      "el-q7": {
+        "id": "el-q7",
+        "type": "question",
+        "text": "Are the affected systems working now?",
+        "options": [
+          { "label": "Yes", "nextNodeId": "el-t5" },
+          { "label": "No", "nextNodeId": "el-t4" }
+        ]
+      },
+      "el-t5": {
+        "id": "el-t5",
+        "type": "terminal",
+        "text": "Loose cable connection found and tightened. Affected systems restored.",
+        "terminal": { "resolution": "operator-fix", "readiness": "PMC", "summary": "Loose cable tightened — systems restored" }
+      },
+      "el-t4": {
+        "id": "el-t4",
+        "type": "terminal",
+        "text": "Affected systems still not operating despite good connections. Notify unit maintenance.",
+        "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Partial electrical failure — needs maintenance" }
+      },
+      "el-q5": {
+        "id": "el-q5",
+        "type": "question",
+        "text": "Which gauge or indicator has failed?",
+        "options": [
+          { "label": "Speedometer/tachometer", "nextNodeId": "el-t6" },
+          { "label": "Fuel gauge", "nextNodeId": "el-t6" },
+          { "label": "Temperature/oil pressure gauge", "nextNodeId": "el-t7" },
+          { "label": "Warning light stays on or won't illuminate", "nextNodeId": "el-t6" },
+          { "label": "Headlights/turn signals/brake lights", "nextNodeId": "el-t6" }
+        ]
+      },
+      "el-t6": {
+        "id": "el-t6",
+        "type": "terminal",
+        "text": "Individual gauge or indicator failure. Notify unit maintenance.",
+        "terminal": { "resolution": "needs-maintenance", "readiness": "PMC", "summary": "Gauge/indicator failure — needs maintenance" }
+      },
+      "el-t7": {
+        "id": "el-t7",
+        "type": "terminal",
+        "text": "Engine temperature or oil pressure gauge not working. Safety-critical — do not operate without these instruments. Notify unit maintenance.",
+        "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Temp/oil pressure gauge failure — NMC, safety-critical" }
+      }
+    }
+  },
+  {
+    "categoryId": "unusual-noise",
+    "vehicleType": "LMTV_M1078",
+    "tmReference": "TM 9-2320-365-10, Table 3-2, a4/a6/a12/a13/c1",
+    "rootNodeId": "un-q1",
+    "nodes": {
+      "un-q1": {
+        "id": "un-q1",
+        "type": "question",
+        "text": "What type of unusual noise or vibration are you experiencing?",
+        "options": [
+          { "label": "Excessive vibration while running", "nextNodeId": "un-q2" },
+          { "label": "Engine misfires, runs rough, or lacks power", "nextNodeId": "un-q4" },
+          { "label": "Engine stalls at low RPM", "nextNodeId": "un-q6" },
+          { "label": "Unusually noisy exhaust", "nextNodeId": "un-t1" },
+          { "label": "Exhaust fumes in cab", "nextNodeId": "un-t2" }
+        ]
+      },
+      "un-q2": {
+        "id": "un-q2",
+        "type": "question",
+        "text": "Check the air filter. Is it dirty or restricted?",
+        "options": [
+          { "label": "Yes — air filter is dirty", "nextNodeId": "un-a1" },
+          { "label": "No — air filter is clean", "nextNodeId": "un-q3" }
+        ]
+      },
+      "un-a1": {
+        "id": "un-a1",
+        "type": "action",
+        "text": "Clean or replace the air filter",
+        "actionText": "Remove the air filter element. If a dry-type filter, tap gently to remove loose dirt. Reinstall or replace with a clean filter from BII. Check if vibration reduces.",
+        "tmPage": "3-9",
+        "nextNodeId": "un-q3a"
+      },
+      "un-q3a": {
+        "id": "un-q3a",
+        "type": "question",
+        "text": "Is the vibration reduced after cleaning the air filter?",
+        "options": [
+          { "label": "Yes", "nextNodeId": "un-t3" },
+          { "label": "No — still excessive vibration", "nextNodeId": "un-q3" }
+        ]
+      },
+      "un-t3": {
+        "id": "un-t3",
+        "type": "terminal",
+        "text": "Dirty air filter was causing vibration. Cleaned/replaced filter.",
+        "terminal": { "resolution": "operator-fix", "readiness": "PMC", "summary": "Air filter cleaned — vibration reduced" }
+      },
+      "un-q3": {
+        "id": "un-q3",
+        "type": "question",
+        "text": "Visually check the vibration damper mounting bolts. Are any loose or missing?",
+        "options": [
+          { "label": "Loose bolts found", "nextNodeId": "un-t4" },
+          { "label": "Bolts appear tight / cannot determine", "nextNodeId": "un-t4" }
+        ]
+      },
+      "un-t4": {
+        "id": "un-t4",
+        "type": "terminal",
+        "text": "Excessive vibration persists. Notify unit maintenance for inspection of vibration damper and engine mounts.",
+        "terminal": { "resolution": "needs-maintenance", "readiness": "PMC", "summary": "Excessive vibration — needs maintenance" }
+      },
+      "un-q4": {
+        "id": "un-q4",
+        "type": "question",
+        "text": "Check the air filter. Is it dirty or restricted?",
+        "options": [
+          { "label": "Yes — air filter is dirty", "nextNodeId": "un-a2" },
+          { "label": "No — air filter is clean", "nextNodeId": "un-q5" }
+        ]
+      },
+      "un-a2": {
+        "id": "un-a2",
+        "type": "action",
+        "text": "Clean or replace the air filter",
+        "actionText": "Remove the air filter element. Tap gently to remove loose dirt or replace with a clean filter. Reinstall and check engine performance.",
+        "tmPage": "3-9",
+        "nextNodeId": "un-q5a"
+      },
+      "un-q5a": {
+        "id": "un-q5a",
+        "type": "question",
+        "text": "Is the engine running smoother now?",
+        "options": [
+          { "label": "Yes", "nextNodeId": "un-t5" },
+          { "label": "No — still rough", "nextNodeId": "un-q5" }
+        ]
+      },
+      "un-t5": {
+        "id": "un-t5",
+        "type": "terminal",
+        "text": "Dirty air filter was causing rough running. Cleaned/replaced filter.",
+        "terminal": { "resolution": "operator-fix", "readiness": "PMC", "summary": "Air filter cleaned — engine runs smoother" }
+      },
+      "un-q5": {
+        "id": "un-q5",
+        "type": "question",
+        "text": "Check for visible fuel leaks around fuel lines and connections.",
+        "options": [
+          { "label": "Fuel leak found", "nextNodeId": "un-t6" },
+          { "label": "No visible fuel leaks", "nextNodeId": "un-t7" }
+        ]
+      },
+      "un-t6": {
+        "id": "un-t6",
+        "type": "terminal",
+        "text": "Fuel leak found. Do not operate. Notify unit maintenance immediately.",
+        "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Fuel leak causing rough running — NMC" }
+      },
+      "un-t7": {
+        "id": "un-t7",
+        "type": "terminal",
+        "text": "Engine misfires or runs rough with no operator-correctable cause found. Notify unit maintenance.",
+        "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Engine rough/misfire — needs maintenance" }
+      },
+      "un-q6": {
+        "id": "un-q6",
+        "type": "question",
+        "text": "Check the air filter. Is it dirty or restricted?",
+        "options": [
+          { "label": "Yes — air filter is dirty", "nextNodeId": "un-a3" },
+          { "label": "No — air filter is clean", "nextNodeId": "un-q7" }
+        ]
+      },
+      "un-a3": {
+        "id": "un-a3",
+        "type": "action",
+        "text": "Clean or replace the air filter",
+        "actionText": "Remove and clean or replace the air filter element. Reinstall and check if engine holds idle.",
+        "tmPage": "3-9",
+        "nextNodeId": "un-q7a"
+      },
+      "un-q7a": {
+        "id": "un-q7a",
+        "type": "question",
+        "text": "Does the engine hold idle without stalling?",
+        "options": [
+          { "label": "Yes", "nextNodeId": "un-t8" },
+          { "label": "No — still stalls", "nextNodeId": "un-q7" }
+        ]
+      },
+      "un-t8": {
+        "id": "un-t8",
+        "type": "terminal",
+        "text": "Dirty air filter was causing low RPM stall. Cleaned/replaced filter.",
+        "terminal": { "resolution": "operator-fix", "readiness": "PMC", "summary": "Air filter cleaned — engine holds idle" }
+      },
+      "un-q7": {
+        "id": "un-q7",
+        "type": "question",
+        "text": "Check intake and turbo hoses for kinks, cracks, or disconnections.",
+        "options": [
+          { "label": "Kinked or disconnected hose found", "nextNodeId": "un-t9" },
+          { "label": "Hoses look OK", "nextNodeId": "un-t9" }
+        ]
+      },
+      "un-t9": {
+        "id": "un-t9",
+        "type": "terminal",
+        "text": "Engine stalls at low RPM. Notify unit maintenance.",
+        "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Engine stalls at low RPM — needs maintenance" }
+      },
+      "un-t1": {
+        "id": "un-t1",
+        "type": "terminal",
+        "text": "Unusually noisy exhaust indicates exhaust system damage. Notify unit maintenance.",
+        "terminal": { "resolution": "needs-maintenance", "readiness": "PMC", "summary": "Noisy exhaust — needs maintenance" }
+      },
+      "un-t2": {
+        "id": "un-t2",
+        "type": "terminal",
+        "text": "Exhaust fumes in cab are a safety hazard. Stop vehicle immediately. Ventilate cab. Do not operate until repaired. Notify unit maintenance.",
+        "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Exhaust fumes in cab — NMC, safety hazard" }
+      }
+    }
+  },
+  {
+    "categoryId": "engine-overheat",
+    "vehicleType": "LMTV_M1078",
+    "tmReference": "TM 9-2320-365-10, Table 3-2, d1/d3/a9",
+    "rootNodeId": "oh-q1",
+    "nodes": {
+      "oh-q1": {
+        "id": "oh-q1",
+        "type": "question",
+        "text": "Is the engine currently overheating (temp gauge in red) or are you troubleshooting coolant loss?",
+        "options": [
+          { "label": "Engine overheating now", "nextNodeId": "oh-a1" },
+          { "label": "Loss of coolant (not overheating yet)", "nextNodeId": "oh-q3" }
+        ]
+      },
+      "oh-a1": {
+        "id": "oh-a1",
+        "type": "action",
+        "text": "Allow engine to cool",
+        "actionText": "Stop the vehicle in a safe location. Let the engine idle for 2-3 minutes, then shut off. Allow to cool for at least 15 minutes before opening the cooling system. WARNING: Do not remove the radiator cap while engine is hot — risk of severe burns.",
+        "nextNodeId": "oh-q2"
+      },
+      "oh-q2": {
+        "id": "oh-q2",
+        "type": "question",
+        "text": "Once cooled, check the coolant level in the overflow tank. Is it low or empty?",
+        "options": [
+          { "label": "Low or empty", "nextNodeId": "oh-a2" },
+          { "label": "Coolant level is OK", "nextNodeId": "oh-q4" }
+        ]
+      },
+      "oh-a2": {
+        "id": "oh-a2",
+        "type": "action",
+        "text": "Add coolant",
+        "actionText": "Add coolant to the overflow tank up to the FULL mark. If no coolant is available, use clean water as an emergency measure. Check for visible leaks around radiator, hoses, and connections.",
+        "tmPage": "3-11",
+        "nextNodeId": "oh-q3"
+      },
+      "oh-q3": {
+        "id": "oh-q3",
+        "type": "question",
+        "text": "Check the radiator cap. Is it properly seated and does the seal look intact?",
+        "options": [
+          { "label": "Cap is loose or seal looks damaged", "nextNodeId": "oh-a3" },
+          { "label": "Cap is properly sealed", "nextNodeId": "oh-q4" }
+        ]
+      },
+      "oh-a3": {
+        "id": "oh-a3",
+        "type": "action",
+        "text": "Reseat or replace radiator cap",
+        "actionText": "Press down on the radiator cap and turn clockwise until it locks. If the cap seal is visibly damaged, replace with a spare if available.",
+        "nextNodeId": "oh-q4"
+      },
+      "oh-q4": {
+        "id": "oh-q4",
+        "type": "question",
+        "text": "Check the radiator fins. Are they clogged with debris (mud, bugs, leaves)?",
+        "options": [
+          { "label": "Yes — fins are clogged", "nextNodeId": "oh-a4" },
+          { "label": "No — fins are clear", "nextNodeId": "oh-q5" }
+        ]
+      },
+      "oh-a4": {
+        "id": "oh-a4",
+        "type": "action",
+        "text": "Clear debris from radiator fins",
+        "actionText": "Remove debris from the front of the radiator using a soft brush or compressed air (blow from engine side outward). Be careful not to bend the fins.",
+        "nextNodeId": "oh-q5"
+      },
+      "oh-q5": {
+        "id": "oh-q5",
+        "type": "question",
+        "text": "Check all hose connections (upper and lower radiator hoses, heater hoses). Are any loose or leaking?",
+        "options": [
+          { "label": "Loose connection found", "nextNodeId": "oh-a5" },
+          { "label": "All connections are tight", "nextNodeId": "oh-q6" }
+        ]
+      },
+      "oh-a5": {
+        "id": "oh-a5",
+        "type": "action",
+        "text": "Tighten hose clamps",
+        "actionText": "Tighten the loose hose clamp(s) with a screwdriver. Wipe the area dry and watch for continued leaking.",
+        "nextNodeId": "oh-q6"
+      },
+      "oh-q6": {
+        "id": "oh-q6",
+        "type": "question",
+        "text": "After performing all checks above, does the cooling system appear serviceable?",
+        "options": [
+          { "label": "Yes — topped off coolant, cleared fins, tightened hoses", "nextNodeId": "oh-t1" },
+          { "label": "No — still leaking or cannot determine cause", "nextNodeId": "oh-t2" }
+        ]
+      },
+      "oh-t1": {
+        "id": "oh-t1",
+        "type": "terminal",
+        "text": "Cooling system topped off and checked. Monitor temperature gauge closely during operation. If overheating recurs, stop and notify maintenance.",
+        "terminal": { "resolution": "operator-fix", "readiness": "PMC", "summary": "Coolant topped off, cooling system checked — monitor temp" }
+      },
+      "oh-t2": {
+        "id": "oh-t2",
+        "type": "terminal",
+        "text": "Cooling system has an unresolvable issue at operator level. Do not continue operating. Notify unit maintenance.",
+        "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Engine overheat/coolant loss — needs maintenance" }
+      }
+    }
+  },
+  {
+    "categoryId": "engine-oil-pressure",
+    "vehicleType": "LMTV_M1078",
+    "tmReference": "TM 9-2320-365-10, Table 3-2, a3/a8/a14",
+    "rootNodeId": "op-q1",
+    "nodes": {
+      "op-q1": {
+        "id": "op-q1",
+        "type": "question",
+        "text": "What oil-related symptom are you experiencing?",
+        "options": [
+          { "label": "Low oil pressure warning", "nextNodeId": "op-q2" },
+          { "label": "Excessive oil consumption", "nextNodeId": "op-q4" },
+          { "label": "Blue exhaust smoke", "nextNodeId": "op-q5" }
+        ]
+      },
+      "op-q2": {
+        "id": "op-q2",
+        "type": "question",
+        "text": "Stop the engine. Check oil level on the dipstick. What is the level?",
+        "options": [
+          { "label": "Below ADD mark", "nextNodeId": "op-a1" },
+          { "label": "Between ADD and FULL", "nextNodeId": "op-q3" },
+          { "label": "At or above FULL mark", "nextNodeId": "op-q3" }
+        ]
+      },
+      "op-a1": {
+        "id": "op-a1",
+        "type": "action",
+        "text": "Add engine oil",
+        "actionText": "Add the correct weight engine oil (15W-40) until the dipstick reads between ADD and FULL. Do not overfill. Start the engine and check if oil pressure returns to normal.",
+        "tmPage": "3-10",
+        "nextNodeId": "op-q2a"
+      },
+      "op-q2a": {
+        "id": "op-q2a",
+        "type": "question",
+        "text": "Did oil pressure return to normal after adding oil?",
+        "options": [
+          { "label": "Yes — pressure is normal", "nextNodeId": "op-t1" },
+          { "label": "No — still low", "nextNodeId": "op-q3" }
+        ]
+      },
+      "op-t1": {
+        "id": "op-t1",
+        "type": "terminal",
+        "text": "Oil level was low. Topped off and pressure is normal. Monitor for consumption and leaks.",
+        "terminal": { "resolution": "operator-fix", "readiness": "PMC", "summary": "Oil level topped off — pressure normal, monitor" }
+      },
+      "op-q3": {
+        "id": "op-q3",
+        "type": "question",
+        "text": "Check the oil on the dipstick. Does it look milky, foamy, or smell like fuel?",
+        "options": [
+          { "label": "Yes — contaminated (milky/foamy/fuel smell)", "nextNodeId": "op-t2" },
+          { "label": "No — oil looks normal", "nextNodeId": "op-t3" }
+        ]
+      },
+      "op-t2": {
+        "id": "op-t2",
+        "type": "terminal",
+        "text": "Engine oil is contaminated (possible coolant or fuel intrusion). Do not operate. Notify unit maintenance immediately.",
+        "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Contaminated engine oil — NMC, needs maintenance" }
+      },
+      "op-t3": {
+        "id": "op-t3",
+        "type": "terminal",
+        "text": "Low oil pressure with adequate, uncontaminated oil. Possible sensor or pump issue. Do not operate. Notify unit maintenance.",
+        "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Low oil pressure — needs maintenance" }
+      },
+      "op-q4": {
+        "id": "op-q4",
+        "type": "question",
+        "text": "Check oil level on dipstick. Then check around the engine for visible oil leaks — steady drip or puddle under the vehicle.",
+        "options": [
+          { "label": "Visible oil leak found", "nextNodeId": "op-t4" },
+          { "label": "No visible leaks — oil just low", "nextNodeId": "op-a2" }
+        ]
+      },
+      "op-a2": {
+        "id": "op-a2",
+        "type": "action",
+        "text": "Top off engine oil and monitor",
+        "actionText": "Add oil to bring the level between ADD and FULL on the dipstick. Record the mileage and check again in 100 miles to determine consumption rate.",
+        "tmPage": "3-10",
+        "nextNodeId": "op-t5"
+      },
+      "op-t4": {
+        "id": "op-t4",
+        "type": "terminal",
+        "text": "Oil leak causing excessive consumption. Notify unit maintenance.",
+        "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Oil leak — excessive consumption, needs maintenance" }
+      },
+      "op-t5": {
+        "id": "op-t5",
+        "type": "terminal",
+        "text": "Oil topped off. No visible leak found but consumption is high. Notify unit maintenance for further diagnosis.",
+        "terminal": { "resolution": "needs-maintenance", "readiness": "PMC", "summary": "Excessive oil consumption — topped off, needs maintenance" }
+      },
+      "op-q5": {
+        "id": "op-q5",
+        "type": "question",
+        "text": "Blue exhaust smoke indicates oil burning. Check oil level on the dipstick.",
+        "options": [
+          { "label": "Oil is low", "nextNodeId": "op-a3" },
+          { "label": "Oil level is OK", "nextNodeId": "op-t6" }
+        ]
+      },
+      "op-a3": {
+        "id": "op-a3",
+        "type": "action",
+        "text": "Add engine oil",
+        "actionText": "Add engine oil to bring the level between ADD and FULL on the dipstick.",
+        "tmPage": "3-10",
+        "nextNodeId": "op-t6"
+      },
+      "op-t6": {
+        "id": "op-t6",
+        "type": "terminal",
+        "text": "Blue exhaust smoke indicates internal oil burning. Notify unit maintenance.",
+        "terminal": { "resolution": "needs-maintenance", "readiness": "PMC", "summary": "Blue exhaust smoke — oil burning, needs maintenance" }
+      }
+    }
+  },
+  {
+    "categoryId": "engine-smoke",
+    "vehicleType": "LMTV_M1078",
+    "tmReference": "TM 9-2320-365-10, Table 3-2, a5/a10/a11/a15",
+    "rootNodeId": "es-q1",
+    "nodes": {
+      "es-q1": {
+        "id": "es-q1",
+        "type": "question",
+        "text": "What color is the exhaust smoke, or what is the engine symptom?",
+        "options": [
+          { "label": "Black or gray smoke", "nextNodeId": "es-q2" },
+          { "label": "White smoke", "nextNodeId": "es-q4" },
+          { "label": "Engine overspeeds on start", "nextNodeId": "es-t1" },
+          { "label": "Low engine power", "nextNodeId": "es-q5" }
+        ]
+      },
+      "es-q2": {
+        "id": "es-q2",
+        "type": "question",
+        "text": "Black/gray smoke usually means incomplete combustion. Check the air filter — is it dirty or restricted?",
+        "options": [
+          { "label": "Yes — air filter is dirty", "nextNodeId": "es-a1" },
+          { "label": "No — air filter is clean", "nextNodeId": "es-q3" }
+        ]
+      },
+      "es-a1": {
+        "id": "es-a1",
+        "type": "action",
+        "text": "Clean or replace the air filter",
+        "actionText": "Remove the air filter element. Clean or replace it. Reinstall and check if smoke clears during operation.",
+        "tmPage": "3-9",
+        "nextNodeId": "es-q3a"
+      },
+      "es-q3a": {
+        "id": "es-q3a",
+        "type": "question",
+        "text": "Did the smoke clear after cleaning the air filter?",
+        "options": [
+          { "label": "Yes", "nextNodeId": "es-t2" },
+          { "label": "No — still smoking", "nextNodeId": "es-q3" }
+        ]
+      },
+      "es-t2": {
+        "id": "es-t2",
+        "type": "terminal",
+        "text": "Dirty air filter was causing excessive smoke. Cleaned/replaced filter.",
+        "terminal": { "resolution": "operator-fix", "readiness": "PMC", "summary": "Air filter cleaned — smoke cleared" }
+      },
+      "es-q3": {
+        "id": "es-q3",
+        "type": "question",
+        "text": "Check intake and turbo hoses for kinks, cracks, or disconnections.",
+        "options": [
+          { "label": "Kinked or damaged hose found", "nextNodeId": "es-t3" },
+          { "label": "Hoses look OK", "nextNodeId": "es-t3" }
+        ]
+      },
+      "es-t3": {
+        "id": "es-t3",
+        "type": "terminal",
+        "text": "Excessive black/gray exhaust smoke persists. Notify unit maintenance.",
+        "terminal": { "resolution": "needs-maintenance", "readiness": "PMC", "summary": "Black/gray exhaust smoke — needs maintenance" }
+      },
+      "es-q4": {
+        "id": "es-q4",
+        "type": "question",
+        "text": "White smoke can indicate cold start or coolant leak. Check the air filter — is it dirty?",
+        "options": [
+          { "label": "Yes — dirty", "nextNodeId": "es-a2" },
+          { "label": "No — clean", "nextNodeId": "es-t4" }
+        ]
+      },
+      "es-a2": {
+        "id": "es-a2",
+        "type": "action",
+        "text": "Clean or replace the air filter",
+        "actionText": "Remove, clean or replace the air filter element.",
+        "tmPage": "3-9",
+        "nextNodeId": "es-q4a"
+      },
+      "es-q4a": {
+        "id": "es-q4a",
+        "type": "question",
+        "text": "Did white smoke clear after cleaning the air filter?",
+        "options": [
+          { "label": "Yes", "nextNodeId": "es-t5" },
+          { "label": "No", "nextNodeId": "es-t4" }
+        ]
+      },
+      "es-t5": {
+        "id": "es-t5",
+        "type": "terminal",
+        "text": "Air filter was causing white smoke. Cleaned/replaced.",
+        "terminal": { "resolution": "operator-fix", "readiness": "PMC", "summary": "Air filter cleaned — white smoke cleared" }
+      },
+      "es-t4": {
+        "id": "es-t4",
+        "type": "terminal",
+        "text": "White exhaust smoke persists. Possible coolant leak into combustion chamber. Notify unit maintenance.",
+        "terminal": { "resolution": "needs-maintenance", "readiness": "PMC", "summary": "White exhaust smoke — needs maintenance" }
+      },
+      "es-t1": {
+        "id": "es-t1",
+        "type": "terminal",
+        "text": "Engine overspeeds on start — this is a dangerous condition. Shut off immediately. Do not attempt to restart. Notify unit maintenance.",
+        "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Engine overspeeds — NMC, dangerous, needs maintenance" }
+      },
+      "es-q5": {
+        "id": "es-q5",
+        "type": "question",
+        "text": "Low engine power. Check for fuel contamination — is there water or sediment in the fuel/water separator?",
+        "options": [
+          { "label": "Yes — contamination visible", "nextNodeId": "es-a3" },
+          { "label": "No — fuel looks clean", "nextNodeId": "es-q6" }
+        ]
+      },
+      "es-a3": {
+        "id": "es-a3",
+        "type": "action",
+        "text": "Drain fuel/water separator",
+        "actionText": "Open the drain valve on the fuel/water separator and drain contaminated fuel into a container. Close valve. Prime the separator by pumping the handle until firm.",
+        "tmPage": "3-8",
+        "nextNodeId": "es-q6"
+      },
+      "es-q6": {
+        "id": "es-q6",
+        "type": "question",
+        "text": "Check oil level on the dipstick.",
+        "options": [
+          { "label": "Low — below ADD", "nextNodeId": "es-a4" },
+          { "label": "Oil level is OK", "nextNodeId": "es-q7" }
+        ]
+      },
+      "es-a4": {
+        "id": "es-a4",
+        "type": "action",
+        "text": "Add engine oil",
+        "actionText": "Add correct weight engine oil until dipstick reads between ADD and FULL.",
+        "tmPage": "3-10",
+        "nextNodeId": "es-q7"
+      },
+      "es-q7": {
+        "id": "es-q7",
+        "type": "question",
+        "text": "Check the air filter. Is it dirty or restricted?",
+        "options": [
+          { "label": "Yes — dirty", "nextNodeId": "es-a5" },
+          { "label": "No — clean", "nextNodeId": "es-q8" }
+        ]
+      },
+      "es-a5": {
+        "id": "es-a5",
+        "type": "action",
+        "text": "Clean or replace air filter",
+        "actionText": "Remove and clean or replace the air filter element.",
+        "tmPage": "3-9",
+        "nextNodeId": "es-q8"
+      },
+      "es-q8": {
+        "id": "es-q8",
+        "type": "question",
+        "text": "Check intake and turbo hoses for kinks or disconnections.",
+        "options": [
+          { "label": "Problem found with hoses", "nextNodeId": "es-t6" },
+          { "label": "Hoses look OK", "nextNodeId": "es-t6" }
+        ]
+      },
+      "es-t6": {
+        "id": "es-t6",
+        "type": "terminal",
+        "text": "Low engine power persists after operator checks. Notify unit maintenance.",
+        "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Low engine power — needs maintenance" }
+      }
+    }
+  },
+  {
+    "categoryId": "brake-issue",
+    "vehicleType": "LMTV_M1078",
+    "tmReference": "TM 9-2320-365-10, Table 3-2, Brakes",
+    "rootNodeId": "bi-q1",
+    "nodes": {
+      "bi-q1": {
+        "id": "bi-q1",
+        "type": "question",
+        "text": "What brake symptom are you experiencing?",
+        "options": [
+          { "label": "Brakes do not hold / excessive pedal travel", "nextNodeId": "bi-t1" },
+          { "label": "Brakes grab or pull to one side", "nextNodeId": "bi-t1" },
+          { "label": "Parking brake does not hold", "nextNodeId": "bi-t1" },
+          { "label": "Brake warning light on", "nextNodeId": "bi-q2" },
+          { "label": "Unusual noise when braking (grinding, squealing)", "nextNodeId": "bi-t2" }
+        ]
+      },
+      "bi-q2": {
+        "id": "bi-q2",
+        "type": "question",
+        "text": "Check the brake fluid reservoir. Is the fluid level low?",
+        "options": [
+          { "label": "Yes — fluid is low", "nextNodeId": "bi-t3" },
+          { "label": "No — fluid level is OK", "nextNodeId": "bi-t1" }
+        ]
+      },
+      "bi-t1": {
+        "id": "bi-t1",
+        "type": "terminal",
+        "text": "Brake system malfunction. This is safety-critical — do not operate. Notify unit maintenance immediately.",
+        "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Brake system malfunction — NMC, safety-critical" }
+      },
+      "bi-t2": {
+        "id": "bi-t2",
+        "type": "terminal",
+        "text": "Unusual brake noise indicates possible worn pads or hardware issue. Notify unit maintenance.",
+        "terminal": { "resolution": "needs-maintenance", "readiness": "PMC", "summary": "Unusual brake noise — needs maintenance inspection" }
+      },
+      "bi-t3": {
+        "id": "bi-t3",
+        "type": "terminal",
+        "text": "Low brake fluid with warning light. Possible leak in the brake system. Do not operate. Notify unit maintenance.",
+        "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Low brake fluid — NMC, possible leak, needs maintenance" }
+      }
+    }
+  },
+  {
+    "categoryId": "transmission",
+    "vehicleType": "LMTV_M1078",
+    "tmReference": "TM 9-2320-365-10, Table 3-2, Transmission/Transfer",
+    "rootNodeId": "tr-q1",
+    "nodes": {
+      "tr-q1": {
+        "id": "tr-q1",
+        "type": "question",
+        "text": "What transmission or drivetrain symptom are you experiencing?",
+        "options": [
+          { "label": "Transmission will not shift / hard shifting", "nextNodeId": "tr-t1" },
+          { "label": "Transmission slips out of gear", "nextNodeId": "tr-t1" },
+          { "label": "Unusual noise from transmission or transfer case", "nextNodeId": "tr-t1" },
+          { "label": "Transfer case will not engage/disengage", "nextNodeId": "tr-t2" },
+          { "label": "Transmission fluid leak", "nextNodeId": "tr-t3" },
+          { "label": "Transmission overheating", "nextNodeId": "tr-t4" }
+        ]
+      },
+      "tr-t1": {
+        "id": "tr-t1",
+        "type": "terminal",
+        "text": "Transmission malfunction is beyond operator-level repair. Notify unit maintenance.",
+        "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Transmission malfunction — needs maintenance" }
+      },
+      "tr-t2": {
+        "id": "tr-t2",
+        "type": "terminal",
+        "text": "Transfer case engagement issue. Stop and notify unit maintenance.",
+        "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Transfer case issue — needs maintenance" }
+      },
+      "tr-t3": {
+        "id": "tr-t3",
+        "type": "terminal",
+        "text": "Transmission fluid leak detected. Do not operate. Notify unit maintenance.",
+        "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Transmission fluid leak — NMC" }
+      },
+      "tr-t4": {
+        "id": "tr-t4",
+        "type": "terminal",
+        "text": "Transmission overheating. Stop vehicle and allow to cool. Notify unit maintenance.",
+        "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Transmission overheating — NMC, needs maintenance" }
+      }
+    }
+  },
+  {
+    "categoryId": "steering",
+    "vehicleType": "LMTV_M1078",
+    "tmReference": "TM 9-2320-365-10, Table 3-2, Steering",
+    "rootNodeId": "st-q1",
+    "nodes": {
+      "st-q1": {
+        "id": "st-q1",
+        "type": "question",
+        "text": "What steering symptom are you experiencing?",
+        "options": [
+          { "label": "Hard to steer / power steering not working", "nextNodeId": "st-q2" },
+          { "label": "Excessive play in steering wheel", "nextNodeId": "st-t1" },
+          { "label": "Vehicle pulls to one side", "nextNodeId": "st-t1" },
+          { "label": "Steering fluid leak", "nextNodeId": "st-t2" },
+          { "label": "Unusual noise when turning", "nextNodeId": "st-t1" }
+        ]
+      },
+      "st-q2": {
+        "id": "st-q2",
+        "type": "question",
+        "text": "Check the power steering fluid reservoir. Is the fluid level low?",
+        "options": [
+          { "label": "Yes — fluid is low", "nextNodeId": "st-t2" },
+          { "label": "No — fluid level is OK", "nextNodeId": "st-t1" }
+        ]
+      },
+      "st-t1": {
+        "id": "st-t1",
+        "type": "terminal",
+        "text": "Steering system malfunction. This is safety-critical. Notify unit maintenance.",
+        "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Steering malfunction — NMC, safety-critical" }
+      },
+      "st-t2": {
+        "id": "st-t2",
+        "type": "terminal",
+        "text": "Power steering fluid low or leaking. Do not operate without power steering — steering effort is unsafe. Notify unit maintenance.",
+        "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Power steering fluid low/leak — NMC, needs maintenance" }
+      }
+    }
+  },
+  {
+    "categoryId": "fuel-system",
+    "vehicleType": "LMTV_M1078",
+    "tmReference": "TM 9-2320-365-10, Table 3-2, b2/b3/b4",
+    "rootNodeId": "fs-q1",
+    "nodes": {
+      "fs-q1": {
+        "id": "fs-q1",
+        "type": "question",
+        "text": "What fuel system issue are you experiencing?",
+        "options": [
+          { "label": "Fuel consumption too high", "nextNodeId": "fs-q2" },
+          { "label": "Ether starting aid does not work", "nextNodeId": "fs-t1" },
+          { "label": "Accelerator pedal sticks", "nextNodeId": "fs-t2" }
+        ]
+      },
+      "fs-q2": {
+        "id": "fs-q2",
+        "type": "question",
+        "text": "Check around fuel tank, lines, and connections for visible fuel leaks.",
+        "options": [
+          { "label": "Fuel leak found", "nextNodeId": "fs-t3" },
+          { "label": "No visible leaks", "nextNodeId": "fs-t4" }
+        ]
+      },
+      "fs-t1": {
+        "id": "fs-t1",
+        "type": "terminal",
+        "text": "Ether starting aid inoperative. Notify unit maintenance.",
+        "terminal": { "resolution": "needs-maintenance", "readiness": "PMC", "summary": "Ether aid inoperative — needs maintenance" }
+      },
+      "fs-t2": {
+        "id": "fs-t2",
+        "type": "terminal",
+        "text": "Sticking accelerator pedal is a safety hazard. Do not operate. Notify unit maintenance immediately.",
+        "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Accelerator sticks — NMC, safety hazard" }
+      },
+      "fs-t3": {
+        "id": "fs-t3",
+        "type": "terminal",
+        "text": "Fuel leak found. Fire hazard — do not operate. Notify unit maintenance immediately.",
+        "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Fuel leak — NMC, fire hazard" }
+      },
+      "fs-t4": {
+        "id": "fs-t4",
+        "type": "terminal",
+        "text": "High fuel consumption with no visible leaks. Notify unit maintenance for diagnosis.",
+        "terminal": { "resolution": "needs-maintenance", "readiness": "PMC", "summary": "High fuel consumption — needs maintenance" }
+      }
+    }
+  },
+  {
+    "categoryId": "cooling-system",
+    "vehicleType": "LMTV_M1078",
+    "tmReference": "TM 9-2320-365-10, Table 3-2, d2",
+    "rootNodeId": "cs-q1",
+    "nodes": {
+      "cs-q1": {
+        "id": "cs-q1",
+        "type": "question",
+        "text": "Is there oil visible in the cooling system (milky residue in overflow tank or radiator)?",
+        "options": [
+          { "label": "Yes — oil in coolant", "nextNodeId": "cs-t1" },
+          { "label": "No — coolant looks normal", "nextNodeId": "cs-t2" }
+        ]
+      },
+      "cs-t1": {
+        "id": "cs-t1",
+        "type": "terminal",
+        "text": "Oil in cooling system indicates internal engine or oil cooler leak. Do not operate. Notify unit maintenance immediately.",
+        "terminal": { "resolution": "needs-maintenance", "readiness": "NMC", "summary": "Oil in cooling system — NMC, needs maintenance" }
+      },
+      "cs-t2": {
+        "id": "cs-t2",
+        "type": "terminal",
+        "text": "Coolant appears normal. If you are experiencing overheating, use the Engine Overheat troubleshooting tree.",
+        "terminal": { "resolution": "operator-fix", "readiness": "FMC", "summary": "Cooling system appears normal — see engine-overheat if needed" }
+      }
+    }
+  }
+]
