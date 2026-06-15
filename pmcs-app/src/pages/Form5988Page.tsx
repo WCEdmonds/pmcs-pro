@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
-import { Check, Download } from 'lucide-react';
+import { Check, ExternalLink } from 'lucide-react';
 import { useSessionStore } from '../stores/sessionStore';
 import { useHistoryStore } from '../stores/historyStore';
 import { Badge } from '../components/ui/Badge';
@@ -62,74 +62,111 @@ export default function Form5988Page() {
   const hasUncorrectedNMC = sessionFaults.some((f) => f.readiness === 'NMC' && !f.correctedOnSite);
   const missionCapable = !hasUncorrectedNMC;
 
-  const handleSave = async () => {
-    await completeSession(remarks);
-    setSaved(true);
-
-    // Sync to Supabase — wait for result before navigating
-    if (session) {
-      setSyncStatus('syncing');
-      try {
-        await syncInspectionToSupabase(session, sessionFaults);
-        setSyncStatus('synced');
-      } catch (err) {
-        console.warn('Failed to sync to Supabase, queuing for retry:', err);
-        await enqueueSync(session, sessionFaults);
-        setSyncStatus('failed');
-      }
-    }
-
-    setTimeout(() => {
-      clearSession();
-      navigate('/history');
-    }, 2000);
-  };
-
-  const handleDownloadDA2404 = async () => {
+  const handleViewDA2404 = async () => {
     if (!session) return;
     setIsGenerating(true);
     try {
-      // Try server-side generation first (includes prior faults)
-      {
-        const { data: { session: authSession } } = await supabase.auth.getSession();
-        if (authSession) {
-          const { data, error } = await supabase.functions.invoke('generate-da2404', {
-            body: { inspection_id: session.id },
-          });
-          if (!error && data?.url) {
-            window.open(data.url, '_blank');
-            setIsGenerating(false);
-            return;
-          }
-          console.warn('Server generation failed, falling back to client:', error || data?.error);
-        }
-      }
-
-      // Fallback: client-side generation (no prior faults)
-      try {
-        const pdfBytes = await generateDA2404({
-          session,
-          stepResults: sessionStepResults,
-          faults: sessionFaults,
-          supervisorName,
-          supervisorDodId,
-        });
-        const blob = new Blob([pdfBytes as BlobPart], { type: 'application/pdf' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `DA2404_${session.bumperNumber}_${session.date}.pdf`;
-        a.click();
-        URL.revokeObjectURL(url);
-      } catch (clientErr) {
-        console.error('Client-side DA 2404 generation failed:', clientErr);
-        alert('DA 2404 generation requires saving the inspection first. Tap "Save Inspection" then try downloading again.');
-      }
+      const pdfBytes = await generateDA2404({
+        session,
+        stepResults: sessionStepResults,
+        faults: sessionFaults,
+        supervisorName,
+        supervisorDodId,
+      });
+      const blob = new Blob([pdfBytes as BlobPart], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+      window.open(url, '_blank');
+      setTimeout(() => URL.revokeObjectURL(url), 60000);
     } catch (err) {
-      console.error('Failed to generate DA 2404:', err);
+      console.error('DA 2404 generation failed:', err);
     } finally {
       setIsGenerating(false);
     }
+  };
+
+  const handleSaveAndOpenDA2404 = async () => {
+    if (!session) return;
+    setIsGenerating(true);
+
+    // 1. Save locally
+    await completeSession(remarks);
+    setSaved(true);
+
+    // 2. Sync to Supabase — capture the Supabase inspection ID for PDF storage
+    let supabaseInspectionId: string | null = null;
+    setSyncStatus('syncing');
+    try {
+      supabaseInspectionId = await syncInspectionToSupabase(session, sessionFaults);
+      setSyncStatus('synced');
+    } catch (err) {
+      console.warn('Sync failed, queuing for retry:', err);
+      await enqueueSync(session, sessionFaults);
+      setSyncStatus('failed');
+    }
+
+    // 3. Try server-side generation (includes prior faults, stores to generated_forms)
+    if (supabaseInspectionId) {
+      const { data: { session: authSession } } = await supabase.auth.getSession();
+      if (authSession) {
+        const { data, error } = await supabase.functions.invoke('generate-da2404', {
+          body: { inspection_id: supabaseInspectionId },
+        });
+        if (!error && data?.url) {
+          window.open(data.url, '_blank');
+          setIsGenerating(false);
+          setTimeout(() => { clearSession(); navigate('/history'); }, 2000);
+          return;
+        }
+        console.warn('Server-side generation failed, falling back to client:', error || data?.error);
+      }
+    }
+
+    // 4. Client-side generation fallback
+    try {
+      const pdfBytes = await generateDA2404({
+        session,
+        stepResults: sessionStepResults,
+        faults: sessionFaults,
+        supervisorName,
+        supervisorDodId,
+      });
+      const blob = new Blob([pdfBytes as BlobPart], { type: 'application/pdf' });
+
+      // If synced, upload PDF to storage so the dashboard can find it
+      if (supabaseInspectionId) {
+        const storagePath = `da2404/${supabaseInspectionId}.pdf`;
+        const { error: uploadError } = await supabase.storage
+          .from('generated')
+          .upload(storagePath, blob, { contentType: 'application/pdf' });
+        if (!uploadError) {
+          await supabase.from('generated_forms').insert({
+            inspection_id: supabaseInspectionId,
+            pdf_storage_path: storagePath,
+          } as never);
+          const { data: signedData } = await supabase.storage
+            .from('generated')
+            .createSignedUrl(storagePath, 3600);
+          if (signedData?.signedUrl) {
+            window.open(signedData.signedUrl, '_blank');
+            setIsGenerating(false);
+            setTimeout(() => { clearSession(); navigate('/history'); }, 2000);
+            return;
+          }
+        } else {
+          console.warn('Storage upload failed:', uploadError.message);
+        }
+      }
+
+      // Last resort: open as local blob URL
+      const url = URL.createObjectURL(blob);
+      window.open(url, '_blank');
+      setTimeout(() => URL.revokeObjectURL(url), 60000);
+    } catch (clientErr) {
+      console.error('Client-side DA 2404 generation failed:', clientErr);
+    }
+
+    setIsGenerating(false);
+    setTimeout(() => { clearSession(); navigate('/history'); }, 2000);
   };
 
   return (
@@ -141,9 +178,6 @@ export default function Form5988Page() {
             {missionCapable ? 'FMC' : 'NMC'}
           </Badge>
         </div>
-        <Badge variant="amber" className="mt-2">
-          Save to generate DA 2404 with prior faults
-        </Badge>
       </div>
 
       <div className="flex-1 overflow-y-auto px-4 pb-4 flex flex-col gap-3">
@@ -253,22 +287,24 @@ export default function Form5988Page() {
 
       {/* Bottom actions */}
       <div className="px-4 pb-[calc(16px+env(safe-area-inset-bottom))] border-t border-border pt-3 flex-shrink-0 flex flex-col gap-2">
-        <Button
-          variant="secondary"
-          size="lg"
-          fullWidth
-          onClick={handleDownloadDA2404}
-          disabled={isGenerating}
-        >
-          <span className="flex items-center justify-center gap-2">
-            <Download size={18} />
-            {isGenerating ? 'Generating...' : 'Download DA 2404'}
-          </span>
-        </Button>
         {isReadOnly ? (
-          <Button variant="ghost" size="default" fullWidth onClick={() => navigate('/history')}>
-            Back to History
-          </Button>
+          <>
+            <Button
+              variant="secondary"
+              size="lg"
+              fullWidth
+              onClick={handleViewDA2404}
+              disabled={isGenerating}
+            >
+              <span className="flex items-center justify-center gap-2">
+                <ExternalLink size={18} />
+                {isGenerating ? 'Generating...' : 'View DA 2404'}
+              </span>
+            </Button>
+            <Button variant="ghost" size="default" fullWidth onClick={() => navigate('/history')}>
+              Back to History
+            </Button>
+          </>
         ) : saved ? (
           <div className="flex flex-col items-center justify-center gap-1 min-h-[56px]">
             <div className="flex items-center gap-2 text-accent-green font-semibold">
@@ -286,8 +322,11 @@ export default function Form5988Page() {
             </span>
           </div>
         ) : (
-          <Button size="lg" fullWidth onClick={handleSave}>
-            Save Inspection
+          <Button size="lg" fullWidth onClick={handleSaveAndOpenDA2404} disabled={isGenerating}>
+            <span className="flex items-center justify-center gap-2">
+              <ExternalLink size={18} />
+              {isGenerating ? 'Saving...' : 'Save & Open DA 2404'}
+            </span>
           </Button>
         )}
       </div>

@@ -15,7 +15,7 @@ function dataUrlToBlob(dataUrl: string): Blob {
 export async function syncInspectionToSupabase(
   session: InspectionSession,
   faults: Fault[]
-) {
+): Promise<string> {
   // Verify we have an auth session
   const { data: { session: authSession } } = await supabase.auth.getSession();
   if (!authSession) {
@@ -38,12 +38,10 @@ export async function syncInspectionToSupabase(
   } as never, { onConflict: 'bumper_number_normalized,unit' }).select('id').single();
 
   if (vehicleError) {
-    console.error('Sync: Vehicle upsert failed:', vehicleError.message);
-    return;
+    throw new Error(`Sync: Vehicle upsert failed: ${vehicleError.message}`);
   }
   if (!vehicleData) {
-    console.error('Sync: Vehicle upsert returned no data');
-    return;
+    throw new Error('Sync: Vehicle upsert returned no data');
   }
 
   // Step 2: Get profile ID for inspector
@@ -53,8 +51,7 @@ export async function syncInspectionToSupabase(
     .single();
 
   if (profileError || !profile) {
-    console.error('Sync: Profile lookup failed:', profileError?.message);
-    return;
+    throw new Error(`Sync: Profile lookup failed: ${profileError?.message}`);
   }
 
   // Step 3: Insert inspection
@@ -72,8 +69,7 @@ export async function syncInspectionToSupabase(
   } as never, { onConflict: 'client_session_id' }).select('id').single();
 
   if (inspError || !inspection) {
-    console.error('Sync: Inspection upsert failed:', inspError?.message);
-    return;
+    throw new Error(`Sync: Inspection upsert failed: ${inspError?.message}`);
   }
 
   // Step 4: Insert faults
@@ -139,6 +135,7 @@ export async function syncInspectionToSupabase(
   }
 
   console.log('Sync: Inspection synced successfully', { inspectionId: inspection.id, faults: faults.length });
+  return inspection.id;
 }
 
 export async function pullOpenFaultsForVehicle(bumperNumber: string, unit: string) {
