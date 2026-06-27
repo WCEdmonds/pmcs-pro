@@ -7,3 +7,11 @@ dist
 .firebase
 .DS_Store
 *.tsbuildinfo
+
+# --- exclude AI docs/tooling from GitHub (keep README) ---
+*.md
+!README.md
+!**/README.md
+.claude/
+.agents/
+docs/superpowers/
