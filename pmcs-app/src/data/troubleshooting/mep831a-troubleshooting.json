@@ -259,14 +259,19 @@
       },
       "m831e-c5t": {
         "id": "m831e-c5t",
-        "type": "terminal",
-        "text": "Performing steps a-e does not yield results. Refer trouble to field level maintenance. (WP 0010 item 12: if the battery does not power the starter the set is still mission-capable using Manual Starting, WP 0006 — readiness per supervisor.)",
-        "terminal": {
-          "resolution": "needs-maintenance",
-          "readiness": "NMC",
-          "summary": "Engine fails to crank — not corrected by operator checks"
-        },
-        "tmPage": "WP 0008-1"
+        "type": "question",
+        "text": "Performing steps a-e does not yield results. Try Manual Starting (WP 0006). Does the engine start by hand?",
+        "options": [
+          {
+            "label": "Yes — starts with manual start",
+            "nextNodeId": "m831e-c5m"
+          },
+          {
+            "label": "No — will not start",
+            "nextNodeId": "m831e-c5n"
+          }
+        ],
+        "tmPage": "WP 0006"
       },
       "m831e-ht1": {
         "id": "m831e-ht1",
@@ -1364,6 +1369,28 @@
           "summary": "Fails to stop — needs field maintenance"
         },
         "tmPage": "WP 0008-4"
+      },
+      "m831e-c5m": {
+        "id": "m831e-c5m",
+        "type": "terminal",
+        "text": "Engine starts manually. Per WP 0010 item 12 the generator set is still mission-capable using Manual Starting. Refer the starting fault to field level maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "PMC",
+          "summary": "Fails to crank electrically — starts manually, mission-capable; notify field maintenance"
+        },
+        "tmPage": "WP 0008-1"
+      },
+      "m831e-c5n": {
+        "id": "m831e-c5n",
+        "type": "terminal",
+        "text": "Engine will not start electrically or manually. Refer trouble to field level maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Engine fails to crank and will not start manually"
+        },
+        "tmPage": "WP 0008-1"
       }
     }
   },

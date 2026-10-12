@@ -252,7 +252,7 @@
           "procedure": "Inspect cables for damage or loose connections. Inspect output terminals for damage or missing hardware.",
           "conditionSet": "BEFORE",
           "isNoGo": true,
-          "noGoCondition": "Cables damaged, loose, or missing parts. Output terminals damaged or missing hardware."
+          "noGoCondition": "Damaged, loose, or missing parts. Damaged or missing hardware."
         },
         {
           "id": "mep803a-b-020",

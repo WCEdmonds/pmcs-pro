@@ -444,7 +444,7 @@
       "ge-q16": {
         "id": "ge-q16",
         "type": "question",
-        "text": "Is the generator using the correct fuel type (DF-2 diesel or JP-8)?",
+        "text": "Is the generator using the correct fuel type listed for the current temperature in TM WP 0016, Table 1 (e.g. DF-2, DF-1, DF-A, JP-8, JP-5)?",
         "options": [
           {
             "label": "No — wrong fuel type",
@@ -554,7 +554,7 @@
       "ge-q21": {
         "id": "ge-q21",
         "type": "question",
-        "text": "Is the generator using the correct fuel type?",
+        "text": "Is the generator using a fuel listed for the current temperature in TM WP 0016, Table 1?",
         "options": [
           {
             "label": "No — wrong fuel type",
@@ -624,30 +624,19 @@
       },
       "ge-a15": {
         "id": "ge-a15",
-        "type": "action",
-        "text": "Remove foreign objects and secure loose parts",
-        "actionText": "Shut down. Remove foreign objects from the engine compartment. Report loose parts you cannot secure with the tools on hand to the next higher maintenance level. Restart and listen.",
-        "nextNodeId": "ge-q23a"
-      },
-      "ge-q23a": {
-        "id": "ge-q23a",
-        "type": "question",
-        "text": "Is the knocking gone?",
-        "options": [
-          {
-            "label": "Yes — no more knocking",
-            "nextNodeId": "ge-t18"
-          },
-          {
-            "label": "No — still knocking",
-            "nextNodeId": "ge-q24"
-          }
-        ]
+        "type": "terminal",
+        "text": "Loose parts or foreign objects found in the engine compartment (the TM gives no operator action). Do not operate; notify next higher maintenance level.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Engine knocks — loose parts/foreign objects in engine compartment"
+        },
+        "tmPage": "WP 0009-5"
       },
       "ge-q24": {
         "id": "ge-q24",
         "type": "question",
-        "text": "Is the generator using the correct fuel type?",
+        "text": "Is the generator using a fuel listed for the current temperature in TM WP 0016, Table 1?",
         "options": [
           {
             "label": "No — wrong fuel type",
@@ -816,16 +805,6 @@
           "summary": "Low oil caused knock — oil added, knock resolved"
         }
       },
-      "ge-t18": {
-        "id": "ge-t18",
-        "type": "terminal",
-        "text": "Loose parts or foreign objects removed. Knock resolved.",
-        "terminal": {
-          "resolution": "operator-fix",
-          "readiness": "PMC",
-          "summary": "Foreign objects/loose parts removed — knock resolved"
-        }
-      },
       "ge-t19": {
         "id": "ge-t19",
         "type": "terminal",
@@ -976,7 +955,7 @@
       "gx-q2": {
         "id": "gx-q2",
         "type": "question",
-        "text": "Is the generator using the correct fuel type (DF-2 diesel or JP-8)?",
+        "text": "Is the generator using the correct fuel type listed for the current temperature in TM WP 0016, Table 1 (e.g. DF-2, DF-1, DF-A, JP-8, JP-5)?",
         "options": [
           {
             "label": "No — wrong fuel type",
@@ -992,7 +971,7 @@
       "gx-q3": {
         "id": "gx-q3",
         "type": "question",
-        "text": "Is the generator using the correct fuel type?",
+        "text": "Is the generator using a fuel listed for the current temperature in TM WP 0016, Table 1?",
         "options": [
           {
             "label": "No — wrong fuel type",
@@ -1878,7 +1857,7 @@
       "gl-q15": {
         "id": "gl-q15",
         "type": "question",
-        "text": "Check the convenience receptacle fuse. Is it blown?",
+        "text": "On generator sets with contract number DAAK01-88-D-0080 only: check the fuse on the black wire of the GFCI (convenience receptacle). Is it blown?",
         "options": [
           {
             "label": "Yes — fuse is blown",
@@ -1886,6 +1865,10 @@
           },
           {
             "label": "No — fuse is good",
+            "nextNodeId": "gl-t16"
+          },
+          {
+            "label": "Not applicable — different contract number",
             "nextNodeId": "gl-t16"
           }
         ],

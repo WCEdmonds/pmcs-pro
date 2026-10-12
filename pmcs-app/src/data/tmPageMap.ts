@@ -137,7 +137,7 @@ const TRAILER_PAGES: Record<string, number> = {
   '3-3 #11': 56,
 };
 
-// TM 9-6115-642-10 (MEP-803A/813A), 15 September 2010 edition (no changes), 138 PDF pages as
+// TM 9-6115-642-10 (MEP-803A/813A), 15 September 2010 edition (no changes), 137 PDF pages as
 // published by liberatedmanuals.com (sha256 beedf100...bad2; last 2 PDF pages are a non-TM promo page + blank).
 // 'WP 0009-2' = WP 0009 page 2. WP-format, like MEP802A.
 const MEP803A_PAGES: Record<string, number> = {

@@ -2672,14 +2672,14 @@
       "m1030l-kw1": {
         "id": "m1030l-kw1",
         "type": "question",
-        "text": "Observe the DCS for a transient condition. Is the condition less than maximum [kW] output?",
+        "text": "Observe the DCS for a transient condition. Is the load greater than 10% of maximum kilowatt?",
         "options": [
           {
-            "label": "Yes — transient / below maximum",
+            "label": "No — transient, or not more than 10% over maximum kW",
             "nextNodeId": "m1030l-kw2"
           },
           {
-            "label": "No — remains near or above maximum",
+            "label": "Yes — greater than 10% of maximum kW",
             "nextNodeId": "m1030l-kw1t"
           }
         ],
