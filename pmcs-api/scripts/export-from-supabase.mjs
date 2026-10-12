@@ -11,7 +11,8 @@
 // SUPABASE_SERVICE_ROLE_KEY (in Management API mode it is fetched automatically).
 // API_URL=https://pmcs-api.<subdomain>.workers.dev rewrites Supabase storage URLs.
 //
-//   node scripts/export-from-supabase.mjs [out-dir] [--unit-map map.json] [--skip-orphans]
+//   node scripts/export-from-supabase.mjs [out-dir] [--unit-map map.json] [--unit-names names.json] [--skip-orphans]
+//     --unit-names: {"UIC123": "A Co, 1st BN"} sets the display name per UIC (overrides what users typed)
 //   node scripts/export-from-supabase.mjs --freeze     # revoke writes for anon/authenticated
 //   node scripts/export-from-supabase.mjs --unfreeze   # restore them
 //
@@ -132,6 +133,19 @@ export function rewriteStorageUrl(url, supabaseUrl, apiUrl) {
 }
 
 export const normalizeBumper = (s) => String(s).replace(/[-\s]/g, '').toUpperCase();
+
+/** Parses --unit-names: {"UIC123": "A Co, 1st BN"} → Map of upper-cased UIC → trimmed name. */
+export function parseUnitNames(json) {
+  if (typeof json !== 'object' || json === null || Array.isArray(json)) throw new Error('--unit-names must be a JSON object {"UIC123": "Unit name"}');
+  const out = new Map();
+  for (const [k, v] of Object.entries(json)) {
+    const uic = String(k).trim().toUpperCase();
+    if (!UIC_RE.test(uic)) throw new Error(`--unit-names key ${k} is not a 6-character UIC`);
+    if (typeof v !== 'string' || !v.trim()) throw new Error(`--unit-names value for ${k} must be a non-empty string`);
+    out.set(uic, v.trim());
+  }
+  return out;
+}
 
 /** Upper-cases/trims a unit, then applies the operator's --unit-map. */
 export function mapUnit(value, unitMap) {
@@ -297,7 +311,7 @@ const byKeys = (keys) => (a, b) => {
  * Normalises the raw tables in place: units, booleans, arrays, dedupes. Returns
  * a report and a list of errors that must stop the export.
  */
-export function transform(data, { unitMap = new Map(), supabaseUrl = '', apiUrl = '' } = {}) {
+export function transform(data, { unitMap = new Map(), unitNames = new Map(), supabaseUrl = '', apiUrl = '' } = {}) {
   const errors = [];
   const warnings = [];
   const unitCounts = {};
@@ -334,6 +348,11 @@ export function transform(data, { unitMap = new Map(), supabaseUrl = '', apiUrl 
       } else {
         warnings.push(`uic_lookup: ${r.uic} mapped twice; kept "${cur.unit_name}" (newest), dropped "${r.unit_name}"`);
       }
+    }
+    for (const [uic, name] of unitNames) {
+      const cur = best.get(uic);
+      if (cur) { if (cur.unit_name !== name) warnings.push(`uic_lookup: ${uic} name set to "${name}" (was "${cur.unit_name}")`); cur.unit_name = name; }
+      else best.set(uic, { uic, unit_name: name, created_at: new Date().toISOString() });
     }
     data.uic_lookup = [...best.values()];
     for (const r of data.uic_lookup) countUnit('uic_lookup', r.uic);
@@ -627,10 +646,11 @@ export async function dryRunImport(sql, counts) {
 // ---------------------------------------------------------------------------
 
 function parseArgs(argv) {
-  const args = { outDir: 'supabase-export', unitMap: null, skipOrphans: false, freeze: false, unfreeze: false };
+  const args = { outDir: 'supabase-export', unitMap: null, unitNames: null, skipOrphans: false, freeze: false, unfreeze: false };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === '--unit-map') args.unitMap = argv[++i];
+    else if (a === '--unit-names') args.unitNames = argv[++i];
     else if (a === '--skip-orphans') args.skipOrphans = true;
     else if (a === '--freeze') args.freeze = true;
     else if (a === '--unfreeze') args.unfreeze = true;
@@ -669,6 +689,7 @@ async function main() {
     if (args.freeze || args.unfreeze) return await freeze(db, args.freeze);
 
     const unitMap = args.unitMap ? parseUnitMap(JSON.parse(await readFile(args.unitMap, 'utf8'))) : new Map();
+    const unitNames = args.unitNames ? parseUnitNames(JSON.parse(await readFile(args.unitNames, 'utf8'))) : new Map();
     const outDir = args.outDir;
     await mkdir(outDir, { recursive: true });
     const problems = [];
@@ -686,7 +707,7 @@ async function main() {
     if (noPin) warnings.push(`profiles: ${noPin} without an auth user get pin_hash '!' (their owners re-register to claim them)`);
 
     const supabaseUrl = (env.SUPABASE_URL || (env.SUPABASE_PROJECT_REF ? `https://${env.SUPABASE_PROJECT_REF}.supabase.co` : '')).replace(/\/$/, '');
-    const t = transform(data, { unitMap, supabaseUrl, apiUrl: env.API_URL ?? '' });
+    const t = transform(data, { unitMap, unitNames, supabaseUrl, apiUrl: env.API_URL ?? '' });
     warnings.push(...t.warnings);
     problems.push(...t.errors);
     await writeFile(join(outDir, 'unit-report.json'), JSON.stringify(t.unitReport, null, 2) + '\n');

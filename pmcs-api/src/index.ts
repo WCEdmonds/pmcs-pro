@@ -15,6 +15,7 @@ export interface Env {
   ALLOWED_ORIGINS?: string;
   /** Workers rate-limiting binding for /auth/*. Absent in some local setups. */
   LOGIN_LIMITER?: RateLimit;
+  AUTH_IP_LIMITER?: RateLimit;
   /** Resend API key (secret). With NOTIFICATION_EMAIL, every new DA 2404 is emailed. */
   RESEND_API_KEY?: string;
   /** Comma-separated recipients of new DA 2404 PDFs. */
@@ -144,13 +145,17 @@ async function sessionResponse(c: Ctx, profile: Row) {
   return c.json({ token, profile: out(profile) });
 }
 
-/** Cloudflare rate limit for /auth/* keyed on client IP + the given key. No-op without the binding. */
+/**
+ * Cloudflare rate limits for /auth/*: one bucket per client IP + key (vertical guessing on one
+ * DoD ID) and one per client IP alone (spraying many DoD IDs). No-op without the bindings.
+ */
 async function rateLimit(c: Ctx, key: string) {
-  const limiter = c.env.LOGIN_LIMITER;
-  if (!limiter) return;
   const ip = c.req.header('CF-Connecting-IP') ?? 'unknown';
-  const { success } = await limiter.limit({ key: `${ip}|${key}` });
-  if (!success) throw new HttpError(429, 'Too many requests. Wait a minute and try again.');
+  const checks: Array<Promise<{ success: boolean }>> = [];
+  if (c.env.LOGIN_LIMITER) checks.push(c.env.LOGIN_LIMITER.limit({ key: `${ip}|${key}` }));
+  if (c.env.AUTH_IP_LIMITER) checks.push(c.env.AUTH_IP_LIMITER.limit({ key: ip }));
+  const results = await Promise.all(checks);
+  if (results.some((r) => !r.success)) throw new HttpError(429, 'Too many requests. Wait a minute and try again.');
 }
 
 /** Runs work after the response is sent; failures are logged, never surfaced. */

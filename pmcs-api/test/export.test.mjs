@@ -156,3 +156,14 @@ describe('data.sql', () => {
     expect(statSync(join(dir, 'secrets.env')).mode & 0o777).toBe(0o600);
   });
 });
+
+describe('unit names', () => {
+  it('overrides typed names and adds missing UICs', async () => {
+    const { parseUnitNames, transform } = await import('../scripts/export-from-supabase.mjs');
+    const names = parseUnitNames({ wxyza0: ' A Co, 1st BN ', WXYZB0: 'B Det, 1st BN' });
+    const data = { uic_lookup: [{ uic: 'WXYZA0', unit_name: 'typo name', created_at: '2026-01-01' }] };
+    transform(data, { unitNames: names });
+    expect(data.uic_lookup.map((r) => [r.uic, r.unit_name]).sort()).toEqual([['WXYZA0', 'A Co, 1st BN'], ['WXYZB0', 'B Det, 1st BN']]);
+    expect(() => parseUnitNames({ BAD: 'x' })).toThrow(/6-character/);
+  });
+});

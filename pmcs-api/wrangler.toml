@@ -23,6 +23,12 @@ name = "LOGIN_LIMITER"
 namespace_id = "1001"
 simple = { limit = 10, period = 60 }
 
+# Per-IP budget across all DoD IDs (stops spraying guesses over many accounts from one address).
+[[ratelimits]]
+name = "AUTH_IP_LIMITER"
+namespace_id = "1002"
+simple = { limit = 30, period = 60 }
+
 [[d1_databases]]
 binding = "DB"
 database_name = "pmcs-pro"

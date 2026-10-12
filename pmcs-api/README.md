@@ -110,7 +110,7 @@ If the apps are served from domains other than the Firebase defaults, add them t
 **1. Get access to Supabase.** Unpause the project in the dashboard. A paused project can only be restored for 90 days. Then create a **personal access token** (Account → Access Tokens). The export uses the Management API over HTTPS, so no database password or Postgres connection is needed. The service-role key for storage is fetched automatically.
 
 ```sh
-export SUPABASE_ACCESS_TOKEN=sbp_…  SUPABASE_PROJECT_REF=piydlquxibpjqljgtdlu
+export SUPABASE_ACCESS_TOKEN=sbp_…  SUPABASE_PROJECT_REF=<project ref>
 export API_URL=https://pmcs-api.<subdomain>.workers.dev
 ```
 
