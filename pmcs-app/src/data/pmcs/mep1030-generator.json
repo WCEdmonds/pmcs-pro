@@ -1,0 +1,1174 @@
+{
+  "vehicleType": "MEP1030",
+  "tmReference": "TM 9-6115-749-10",
+  "zones": [
+    {
+      "id": "zone-1",
+      "name": "Rear Panel",
+      "description": "Before: ground rod, rear panel, ID plates, DCS, convenience receptacle, flexible sleeve, fuel fill, rear door",
+      "steps": [
+        {
+          "id": "mep1030-b-001",
+          "sequence": 1,
+          "zone": "Rear Panel",
+          "zoneId": "zone-1",
+          "item": "1",
+          "itemDescription": "Ground Rod, Clamp, and Cable",
+          "procedure": "1. Inspect ground rod and cable for missing parts, damaged, or loose connection (WP 0002, Equipment Description and Data, Front Panel, and WP 0005, Operation Under Usual Conditions, Installation of Ground Rod). 2. Notify field maintenance of corroded parts.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Ground rod, clamp, or cable missing, damaged, or connection loose."
+        },
+        {
+          "id": "mep1030-b-002",
+          "sequence": 2,
+          "zone": "Rear Panel",
+          "zoneId": "zone-1",
+          "item": "2",
+          "itemDescription": "Rear Panel",
+          "procedure": "1. Inspect rear panel for damage or corroded parts. 2. Notify field maintenance of minor corrosion or damage.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Rear panel missing or punctured."
+        },
+        {
+          "id": "mep1030-b-003",
+          "sequence": 3,
+          "zone": "Rear Panel",
+          "zoneId": "zone-1",
+          "item": "3",
+          "itemDescription": "ID Plates and Labels",
+          "procedure": "1. Ensure ID plates are present, secure, and legible. Three are required (WP 0005, Operation Under Usual Conditions, Decals and Instructions Plates). 2. Notify field maintenance of missing, loose, or illegible plates.",
+          "conditionSet": "BEFORE",
+          "isNoGo": false
+        },
+        {
+          "id": "mep1030-b-004",
+          "sequence": 4,
+          "zone": "Rear Panel",
+          "zoneId": "zone-1",
+          "item": "4",
+          "itemDescription": "DCS Cover",
+          "procedure": "1. Check cover, hinges, seals, and latch for damage or loose or corroded parts. 2. Secure cover in open position. 3. Notify field maintenance of damage, loose or corroded parts, or cover that cannot be secured.",
+          "conditionSet": "BEFORE",
+          "isNoGo": false
+        },
+        {
+          "id": "mep1030-b-005",
+          "sequence": 5,
+          "zone": "Rear Panel",
+          "zoneId": "zone-1",
+          "item": "5",
+          "itemDescription": "DCS",
+          "procedure": "1. Inspect for damaged, loose, and missing parts. 2. Notify field maintenance of defects.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Damaged, loose, or missing parts."
+        },
+        {
+          "id": "mep1030-b-006",
+          "sequence": 6,
+          "zone": "Rear Panel",
+          "zoneId": "zone-1",
+          "item": "6",
+          "itemDescription": "Convenience Receptacle",
+          "procedure": "1. Check cover and hinge for damage or loose or corroded parts. 2. Check receptacles for damage or corroded parts. 3. Notify field maintenance of defects.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Cover will not close. Receptacles damaged or corroded."
+        },
+        {
+          "id": "mep1030-b-007",
+          "sequence": 7,
+          "zone": "Rear Panel",
+          "zoneId": "zone-1",
+          "item": "7",
+          "itemDescription": "Flexible Sleeve",
+          "procedure": "1. Inspect for tears, loose closure, or separation from rear panel. 2. Tighten loose ties. 3. Notify field maintenance of tears.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Separated from rear panel."
+        },
+        {
+          "id": "mep1030-b-008",
+          "sequence": 8,
+          "zone": "Rear Panel",
+          "zoneId": "zone-1",
+          "item": "8",
+          "itemDescription": "Fuel Fill",
+          "procedure": "1. Clean fuel fill (Figure 1, Item 1) area of dirt and debris (WP 0016, Service Fuel System). 2. Inspect the auxiliary fuel connections for damaged, corroded, or missing parts. 3. Inspect cap and strainer for dirt, wear, and defects. 4. Remove dirt on cap or strainer. 5. Inspect chain and gasket for wear. 6. Notify field maintenance of wear. 7. Inspect grounding stud (fuel fill static ground) for damage or corrosion. 8. Notify field maintenance of minor damage to grounding stud (fuel fill static ground).",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Damaged, corroded, or missing parts. Damaged or missing cap, punctured or missing strainer. Damaged or missing gasket. Grounding stud (fuel fill static ground) missing or corroded."
+        },
+        {
+          "id": "mep1030-b-009",
+          "sequence": 9,
+          "zone": "Rear Panel",
+          "zoneId": "zone-1",
+          "item": "9",
+          "itemDescription": "Rear Door",
+          "procedure": "1. Inspect door, hinges, seals, and latch for damage or loose or corroded parts. 2. Notify field maintenance of damage or loose or corroded parts.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Door cannot be secured."
+        }
+      ]
+    },
+    {
+      "id": "zone-2",
+      "name": "Inside Rear Door",
+      "description": "Before: fuel tank, fuel system hoses, fuel pumps and manifold, electrical connections",
+      "steps": [
+        {
+          "id": "mep1030-b-010",
+          "sequence": 10,
+          "zone": "Inside Rear Door",
+          "zoneId": "zone-2",
+          "item": "10",
+          "itemDescription": "Fuel Tank",
+          "procedure": "1. Open rear door. 2. Check level: by sight and by energizing DCS (Figure 1, Item 2) (WP 0005, Operation Under Usual Conditions) and viewing displayed fuel level. 3. Inspect fuel tank (Figure 1, Items 6) for leaks, damage, and loose or missing parts. 4. Notify field maintenance of defect.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Fuel level is less than 4%. Any classification of fuel leak or damage, or any loose or missing parts."
+        },
+        {
+          "id": "mep1030-b-011",
+          "sequence": 11,
+          "zone": "Inside Rear Door",
+          "zoneId": "zone-2",
+          "item": "11",
+          "itemDescription": "Fuel System Hoses",
+          "procedure": "1. Inspect for leaks and damaged, loose, or missing hardware. 2. Notify field maintenance of defect.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Any classification of fuel leak or damaged, loose, or missing parts."
+        },
+        {
+          "id": "mep1030-b-012",
+          "sequence": 12,
+          "zone": "Inside Rear Door",
+          "zoneId": "zone-2",
+          "item": "12",
+          "itemDescription": "Fuel Pumps and Fuel Manifold",
+          "procedure": "1. Inspect fuel pumps and fuel manifold (Figure 1, Item 5) for leaks or damage. 2. Notify field maintenance of defect.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Any classification of fuel leak or damage."
+        },
+        {
+          "id": "mep1030-b-013",
+          "sequence": 13,
+          "zone": "Inside Rear Door",
+          "zoneId": "zone-2",
+          "item": "13",
+          "itemDescription": "Electrical Connections",
+          "procedure": "1. Inspect (visually only) electrical connectors at relay panel and electrical connections for looseness. 2. Push loose connectors into place. 3. Notify field maintenance of defect. 4. Close rear door.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Connector looseness cannot be resolved."
+        }
+      ]
+    },
+    {
+      "id": "zone-3",
+      "name": "Top Panel",
+      "description": "Before: top panel, grates, ID plate, radiator exterior and interior, muffler",
+      "steps": [
+        {
+          "id": "mep1030-b-014",
+          "sequence": 14,
+          "zone": "Top Panel",
+          "zoneId": "zone-3",
+          "item": "14",
+          "itemDescription": "Top Panel",
+          "procedure": "1. Inspect top panel for damage or corroded parts. 2. Notify field maintenance of minor corrosion or damage. 3. Inspect air intake and exhaust grates for debris. 4. Remove debris from intake and exhaust grates if present. 5. Notify field maintenance of defect.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Top panel missing or punctured. Clogged intake and/or exhaust grates cannot be resolved."
+        },
+        {
+          "id": "mep1030-b-015",
+          "sequence": 15,
+          "zone": "Top Panel",
+          "zoneId": "zone-3",
+          "item": "15",
+          "itemDescription": "ID Plates and Labels",
+          "procedure": "1. Ensure ID plate is present, secure, and legible. One is required (WP 0005, Operation Under Usual Conditions). 2. Notify field maintenance of missing, loose, or illegible plates.",
+          "conditionSet": "BEFORE",
+          "isNoGo": false
+        },
+        {
+          "id": "mep1030-b-016",
+          "sequence": 16,
+          "zone": "Top Panel",
+          "zoneId": "zone-3",
+          "item": "16",
+          "itemDescription": "Radiator, Exterior",
+          "procedure": "1. Inspect for leaks. 2. Notify field maintenance for corrosion and Class I, II, or III leaks.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Any Class III coolant leaks."
+        },
+        {
+          "id": "mep1030-b-017",
+          "sequence": 17,
+          "zone": "Top Panel",
+          "zoneId": "zone-3",
+          "item": "17",
+          "itemDescription": "Radiator, Interior",
+          "procedure": "1. Energize DCS (Figure 1, Item 2) screen (WP 0005, Operation Under Usual Conditions). 2. Check coolant temperature on DCS (Figure 1, Item 2) (WP 0005, Operation Under Usual Conditions). WARNING: Do not remove the radiator cap if the DCS (Figure 1, Item 2) is showing a temperature of 100°F or higher. 3. Remove radiator cap and ensure coolant is visible. 4. Inspect coolant color for contamination. 5. Inspect coolant level and add through overfill bottle as required (WP 0015, Service Cooling System). 6. Notify field maintenance for corrosion and Class I, II, or III leaks.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Milky or dirty color."
+        },
+        {
+          "id": "mep1030-b-018",
+          "sequence": 18,
+          "zone": "Top Panel",
+          "zoneId": "zone-3",
+          "item": "18",
+          "itemDescription": "Muffler",
+          "procedure": "1. Inspect muffler for damage, punctures, or corrosion. 2. Inspect muffler for obstruction. 3. Verify there are no obstructions to exhaust. 4. Inspect muffler rain cap for proper operation, damage, or corrosion. 5. Notify field maintenance of minor corrosion or damage to any part of muffler.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Muffler punctured, damaged, or corroded through to interior. Obstructions present. Rain cap missing or inoperable."
+        }
+      ]
+    },
+    {
+      "id": "zone-4",
+      "name": "Right-Side Panel",
+      "description": "Before: right-side panel, ID plates, skid base, oil drain outlet, output box door, right-side door",
+      "steps": [
+        {
+          "id": "mep1030-b-019",
+          "sequence": 19,
+          "zone": "Right-Side Panel",
+          "zoneId": "zone-4",
+          "item": "19",
+          "itemDescription": "Right-Side Panel",
+          "procedure": "1. Inspect right-side panel for damage or corroded parts. 2. Notify field maintenance of minor corrosion or damage.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Right-side panel missing or punctured."
+        },
+        {
+          "id": "mep1030-b-020",
+          "sequence": 20,
+          "zone": "Right-Side Panel",
+          "zoneId": "zone-4",
+          "item": "20",
+          "itemDescription": "ID Plates and Labels",
+          "procedure": "1. Ensure ID plates are present, secure, and legible. Six are required (WP 0005, Operation Under Usual Conditions). 2. Notify field maintenance of missing, loose, or illegible plates.",
+          "conditionSet": "BEFORE",
+          "isNoGo": false
+        },
+        {
+          "id": "mep1030-b-021",
+          "sequence": 21,
+          "zone": "Right-Side Panel",
+          "zoneId": "zone-4",
+          "item": "21",
+          "itemDescription": "Skid Base",
+          "procedure": "1. Inspect skid base for cracks, dents, and corrosion. 2. Inspect lifting ring for bent, broken, or missing pin. 3. Notify field maintenance of minor corrosion or damage.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Skid base cracked or shows signs of structural damage. If lifting ring shows signs of corrosion, bending, broken, or missing pin."
+        },
+        {
+          "id": "mep1030-b-022",
+          "sequence": 22,
+          "zone": "Right-Side Panel",
+          "zoneId": "zone-4",
+          "item": "22",
+          "itemDescription": "Oil Drain Outlet",
+          "procedure": "1. Inspect oil drain outlet (Figure 2, Item 4) for leaks. 2. Notify field maintenance of Class I, II, or III leaks. 3. Notify field maintenance of missing, loose, or cracked oil drain outlet (Figure 2, Item 4) cap.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Class III leak."
+        },
+        {
+          "id": "mep1030-b-023",
+          "sequence": 23,
+          "zone": "Right-Side Panel",
+          "zoneId": "zone-4",
+          "item": "23",
+          "itemDescription": "Output Box Door",
+          "procedure": "1. Inspect door, hinges, seals, and latch for damage; loose or corroded parts. 2. Notify field maintenance of damage; loose or corroded parts.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Door cannot be secured."
+        },
+        {
+          "id": "mep1030-b-024",
+          "sequence": 24,
+          "zone": "Right-Side Panel",
+          "zoneId": "zone-4",
+          "item": "24",
+          "itemDescription": "Right-Side Door",
+          "procedure": "1. Inspect door, hinges, seals, and latch for damage; loose or corroded parts. 2. Notify field maintenance of damage; loose or corroded parts.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Door cannot be secured."
+        }
+      ]
+    },
+    {
+      "id": "zone-5",
+      "name": "Inside Output Box Door",
+      "description": "Before: output connections, terminal board cover, ID plates, terminal nut wrench",
+      "steps": [
+        {
+          "id": "mep1030-b-025",
+          "sequence": 25,
+          "zone": "Inside Output Box Door",
+          "zoneId": "zone-5",
+          "item": "25",
+          "itemDescription": "Output Connections",
+          "procedure": "1. Open output box door (Figure 2, Item 5). 2. Inspect output box door (Figure 2, Item 5). 3. Open output terminal board cover. 4. Inspect ground and load cable connections and retaining clips for tightness to output load board by pulling gently. 5. Tighten as required (WP 0005, Operation Under Usual Conditions). 6. Inspect terminals, terminal nuts, and retaining clips for damage or corrosion. 7. Notify field maintenance of damage or corrosion to terminals, retaining clips or terminal nuts.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Door cracked, missing, hinges missing or not working properly. Ground and load cable connections are loose. Ground or load cable cannot be secured. Terminals, terminal nuts, damaged, missing, or corroded."
+        },
+        {
+          "id": "mep1030-b-026",
+          "sequence": 26,
+          "zone": "Inside Output Box Door",
+          "zoneId": "zone-5",
+          "item": "26",
+          "itemDescription": "Output Terminal Board Protective Cover",
+          "procedure": "1. Inspect output terminal board protective cover for cracks, corroded, damaged hinge, and/or damaged hinge fasteners. 2. Notify field maintenance of corroded hinge or minor damage. 3. Close output terminal board cover.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Output terminal board protective cover missing, damaged or punctured. Missing or damaged hinge or hinge fasteners."
+        },
+        {
+          "id": "mep1030-b-027",
+          "sequence": 27,
+          "zone": "Inside Output Box Door",
+          "zoneId": "zone-5",
+          "item": "27",
+          "itemDescription": "ID Plates and Labels",
+          "procedure": "1. Ensure ID plates are present, secure, and legible. Two are required (WP 0005, Operation Under Usual Conditions). 2. Notify field maintenance of missing, loose, or illegible plates.",
+          "conditionSet": "BEFORE",
+          "isNoGo": false
+        },
+        {
+          "id": "mep1030-b-028",
+          "sequence": 28,
+          "zone": "Inside Output Box Door",
+          "zoneId": "zone-5",
+          "item": "28",
+          "itemDescription": "Terminal Nut Wrench",
+          "procedure": "1. Inspect terminal nut wrench and rope for damage. 2. Ensure terminal nut wrench is secured properly to rope. 3. Notify field maintenance of damage or missing terminal nut wrench. 4. Close output box door (Figure 2, Item 5).",
+          "conditionSet": "BEFORE",
+          "isNoGo": false
+        }
+      ]
+    },
+    {
+      "id": "zone-6",
+      "name": "Inside Right-Side Door",
+      "description": "Before: engine compartment, exhaust pipe, radiator hoses, winterization kit, oil, fuel, air cleaner, AC generator, storage box",
+      "steps": [
+        {
+          "id": "mep1030-b-029",
+          "sequence": 29,
+          "zone": "Inside Right-Side Door",
+          "zoneId": "zone-6",
+          "item": "29",
+          "itemDescription": "Engine and Compartment Base",
+          "procedure": "1. Open right-side door. 2. Inspect for leaks. 3. Notify field maintenance of any Class I, II, or III oil or coolant leaks.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Any classification of fuel, Class III oil, or coolant leaks."
+        },
+        {
+          "id": "mep1030-b-030",
+          "sequence": 30,
+          "zone": "Inside Right-Side Door",
+          "zoneId": "zone-6",
+          "item": "30",
+          "itemDescription": "Internal Exhaust Pipe",
+          "procedure": "1. Inspect internal exhaust pipe (Figure 2, Item 1) for damage, corrosion, or puncture. 2. Inspect exhaust pipe clamps for looseness or corrosion. 3. Notify field maintenance of loose or missing clamp(s).",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Any puncture to exhaust pipe. Missing clamp or separated exhaust joint."
+        },
+        {
+          "id": "mep1030-b-031",
+          "sequence": 31,
+          "zone": "Inside Right-Side Door",
+          "zoneId": "zone-6",
+          "item": "31",
+          "itemDescription": "Radiator Hoses and Pipes",
+          "procedure": "1. Inspect radiator hoses and pipes (Figure 2, Item 2) and clamps for leaks, looseness, damage, corrosion, or puncture. 2. Notify field maintenance of any Class I, II, or III coolant leaks.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Class III coolant leak, missing clamp, or puncture of hoses or pipes."
+        },
+        {
+          "id": "mep1030-b-032",
+          "sequence": 32,
+          "zone": "Inside Right-Side Door",
+          "zoneId": "zone-6",
+          "item": "32",
+          "itemDescription": "Winterization Kit (If Installed)",
+          "procedure": "1. Inspect winterization kit heater body for leaks. 2. Inspect winterization kit fuel pump and lines for leaks or missing or damaged clamps. 3. Inspect coolant hoses and clamps for leaks, looseness, damage, corrosion, or puncture. 4. Notify field maintenance of any Class I, II, or III coolant leaks.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Any classification of fuel leak or Class III coolant leak. Any fuel leak or missing clamp. Class III coolant leak, missing clamp, or punctured of hoses."
+        },
+        {
+          "id": "mep1030-b-033",
+          "sequence": 33,
+          "zone": "Inside Right-Side Door",
+          "zoneId": "zone-6",
+          "item": "33",
+          "itemDescription": "Oil Drain Line",
+          "procedure": "NOTE: Oil drain line is located at the oil drain assembly at the bottom of the oil pan. 1. Inspect oil drain line for leaks. 2. Notify field maintenance of Class I, II, or III oil leaks. 3. Ensure oil drain line ball valve is in off position. 4. Notify field maintenance of defect.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Class III oil leak."
+        },
+        {
+          "id": "mep1030-b-034",
+          "sequence": 34,
+          "zone": "Inside Right-Side Door",
+          "zoneId": "zone-6",
+          "item": "34",
+          "itemDescription": "Oil Level",
+          "procedure": "1. Check oil level (WP 0017, Service Engine Oil). 2. Add oil as required (WP 0017, Service Engine Oil). 3. Ensure oil fill cap is tightened securely. 4. Notify field maintenance of defect.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Oil fill cap missing."
+        },
+        {
+          "id": "mep1030-b-035",
+          "sequence": 35,
+          "zone": "Inside Right-Side Door",
+          "zoneId": "zone-6",
+          "item": "35",
+          "itemDescription": "Fuel Lines",
+          "procedure": "1. Inspect fuel lines and fittings for leaks or corrosion. 2. Notify field maintenance of corroded fittings.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Any fuel leak."
+        },
+        {
+          "id": "mep1030-b-036",
+          "sequence": 36,
+          "zone": "Inside Right-Side Door",
+          "zoneId": "zone-6",
+          "item": "36",
+          "itemDescription": "Fuel Filter/Water Separator",
+          "procedure": "1. Inspect fuel filter/water separator for leaks, damage, or loose fittings (WP 0016, Service Fuel System). 2. Notify field maintenance of loose fittings or damage. 3. Inspect fuel filter/water separator bowl for water or contaminants (WP 0016, Service Fuel System). 4. Drain water and contaminants from fuel filter/water separator if present (WP 0016, Service Fuel System). 5. Notify field maintenance of defects.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Any fuel leak."
+        },
+        {
+          "id": "mep1030-b-037",
+          "sequence": 37,
+          "zone": "Inside Right-Side Door",
+          "zoneId": "zone-6",
+          "item": "37",
+          "itemDescription": "Air Cleaner Assembly",
+          "procedure": "1. Check air cleaner assembly (Figure 4, Item 2) for damage or restriction (WP 0014, Service Air Cleaner). 2. Open dust ejection valve and remove dust and particles (WP 0014, Service Air Cleaner). 3. Remove or inspect air cleaner element for damage or restriction, replace as required. 4. Notify field maintenance of minor damage to assembly.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Damage that restricts air flow, restriction indicator showing red band."
+        },
+        {
+          "id": "mep1030-b-038",
+          "sequence": 38,
+          "zone": "Inside Right-Side Door",
+          "zoneId": "zone-6",
+          "item": "38",
+          "itemDescription": "AC Generator",
+          "procedure": "1. Inspect AC generator (Figure 2, Item 3) for cracks, breaks, and loose or missing hardware or wiring. 2. Inspect AC generator (Figure 2, Item 3) wiring for corrosion, breaks, and loose or missing wiring. 3. Notify field maintenance of corrosion.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Cracked generator housing, broken, or missing hardware. Loose, broken, or missing wiring."
+        },
+        {
+          "id": "mep1030-b-039",
+          "sequence": 39,
+          "zone": "Inside Right-Side Door",
+          "zoneId": "zone-6",
+          "item": "39",
+          "itemDescription": "Storage Box",
+          "procedure": "1. Inspect storage box for damage, missing or loose hardware, or missing contents. 2. Notify field maintenance of defect. 3. Close right-side door.",
+          "conditionSet": "BEFORE",
+          "isNoGo": false
+        }
+      ]
+    },
+    {
+      "id": "zone-7",
+      "name": "Front Panel",
+      "description": "Before: front panel, ID plate, NATO slave receptacle, grounding rod storage door",
+      "steps": [
+        {
+          "id": "mep1030-b-040",
+          "sequence": 40,
+          "zone": "Front Panel",
+          "zoneId": "zone-7",
+          "item": "40",
+          "itemDescription": "Front Panel",
+          "procedure": "1. Inspect front panel for damage or corroded parts. 2. Inspect access panel for damage, corrosion, or loose fit. 3. Notify field maintenance of minor corrosion, damage, or loose access panel.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Front panel missing or punctured. Access panel missing."
+        },
+        {
+          "id": "mep1030-b-041",
+          "sequence": 41,
+          "zone": "Front Panel",
+          "zoneId": "zone-7",
+          "item": "41",
+          "itemDescription": "ID Plates and Labels",
+          "procedure": "1. Ensure ID plate is present, secure, and legible. One is required (WP 0005, Operation Under Usual Conditions). 2. Notify field maintenance of missing, loose, or illegible plate.",
+          "conditionSet": "BEFORE",
+          "isNoGo": false
+        },
+        {
+          "id": "mep1030-b-042",
+          "sequence": 42,
+          "zone": "Front Panel",
+          "zoneId": "zone-7",
+          "item": "42",
+          "itemDescription": "NATO Slave Receptacle",
+          "procedure": "1. Inspect for missing safety cap. 2. Inspect damaged, loose, or corroded connections. 3. Notify field maintenance of defects.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Safety cap missing. Damaged, loose, or corroded connections."
+        },
+        {
+          "id": "mep1030-b-043",
+          "sequence": 43,
+          "zone": "Front Panel",
+          "zoneId": "zone-7",
+          "item": "43",
+          "itemDescription": "Grounding Rod Storage Door",
+          "procedure": "1. Inspect grounding rod storage door (Figure 3, Item 2) for damage or corrosion. 2. Notify field maintenance of damage or corrosion.",
+          "conditionSet": "BEFORE",
+          "isNoGo": false
+        }
+      ]
+    },
+    {
+      "id": "zone-8",
+      "name": "Left-Side Panel",
+      "description": "Before: left-side panel, fuel drain fitting, skid base, left-side door",
+      "steps": [
+        {
+          "id": "mep1030-b-044",
+          "sequence": 44,
+          "zone": "Left-Side Panel",
+          "zoneId": "zone-8",
+          "item": "44",
+          "itemDescription": "Left-Side Panel",
+          "procedure": "1. Inspect left-side panel for damage or corroded parts. 2. Notify field maintenance of minor corrosion or damage. 3. Inspect air intake grate for debris. 4. Remove debris from intake grate if present. 5. Notify field maintenance of defects.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Left-side panel missing or punctured. Clogged intake grate cannot be resolved."
+        },
+        {
+          "id": "mep1030-b-045",
+          "sequence": 45,
+          "zone": "Left-Side Panel",
+          "zoneId": "zone-8",
+          "item": "45",
+          "itemDescription": "Fuel Drain Fitting",
+          "procedure": "1. Inspect fuel drain for leaks, missing cap, or damage. 2. Notify field maintenance of defects.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Any fuel leak or missing cap."
+        },
+        {
+          "id": "mep1030-b-046",
+          "sequence": 46,
+          "zone": "Left-Side Panel",
+          "zoneId": "zone-8",
+          "item": "46",
+          "itemDescription": "Skid Base",
+          "procedure": "1. Inspect skid base for cracks, dents, and corrosion. 2. Inspect lifting ring for corrosion, bending, broken, or missing pin. 3. Notify field maintenance of minor corrosion or damage.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Skid base cracked, dented, or shows signs of structural damage. Lifting ring corroded, bent, broken, or missing pin."
+        },
+        {
+          "id": "mep1030-b-047",
+          "sequence": 47,
+          "zone": "Left-Side Panel",
+          "zoneId": "zone-8",
+          "item": "47",
+          "itemDescription": "Left-Side Door",
+          "procedure": "1. Inspect door, hinges, seals, and latch for damage; loose or corroded parts. 2. Notify field maintenance of defects.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Door cannot be secured."
+        }
+      ]
+    },
+    {
+      "id": "zone-9",
+      "name": "Inside Left-Side Door",
+      "description": "Before: oil filter, engine compartment, coolant overflow bottle, alternator, batteries, starter, AC generator, radiator hoses, document box",
+      "steps": [
+        {
+          "id": "mep1030-b-048",
+          "sequence": 48,
+          "zone": "Inside Left-Side Door",
+          "zoneId": "zone-9",
+          "item": "48",
+          "itemDescription": "Oil Filter",
+          "procedure": "1. Open left-side door. 2. Inspect oil filter (Figure 4, Item 6) for leaks. 3. Notify field maintenance of Class I, II, or III oil leaks. 4. Check oil filter (Figure 4, Item 6) for dents, cracks or damage. 5. Check oil filter (Figure 4, Item 6) for tightness manually. 6. Turn hand tight if loose. 7. Notify field maintenance if oil filter (Figure 4, Item 6) can be turned by hand.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Class III oil leak. Oil filter cannot be tightened by hand."
+        },
+        {
+          "id": "mep1030-b-049",
+          "sequence": 49,
+          "zone": "Inside Left-Side Door",
+          "zoneId": "zone-9",
+          "item": "49",
+          "itemDescription": "Engine and Compartment Base",
+          "procedure": "1. Inspect for leaks 2. Notify field maintenance of any Class I, II, or III oil or coolant leaks.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Any classification of fuel leak. Class III oil or coolant leaks."
+        },
+        {
+          "id": "mep1030-b-050",
+          "sequence": 50,
+          "zone": "Inside Left-Side Door",
+          "zoneId": "zone-9",
+          "item": "50",
+          "itemDescription": "Coolant Overflow Bottle",
+          "procedure": "1. Inspect for leaks, cracks, loose hoses, or missing cap. 2. Connect loose hoses. 3. Check coolant level (WP 0015, Service Cooling System). 4. Fill cooling system as required (WP 0015, Service Cooling System). 5. Notify field maintenance of defects.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Class III coolant leak. Missing cap. Hose cannot be reconnected."
+        },
+        {
+          "id": "mep1030-b-051",
+          "sequence": 51,
+          "zone": "Inside Left-Side Door",
+          "zoneId": "zone-9",
+          "item": "51",
+          "itemDescription": "Battery-Charging Alternator",
+          "procedure": "1. Inspect for loose wires or cracked housing. 2. Verify presence of belt. 3. Notify field maintenance for loose wires, cracked housing, or frayed, cracked, or loose belt.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Loose wires or cracked housing. Belt missing, loose, frayed, or cracked."
+        },
+        {
+          "id": "mep1030-b-052",
+          "sequence": 52,
+          "zone": "Inside Left-Side Door",
+          "zoneId": "zone-9",
+          "item": "52",
+          "itemDescription": "Batteries",
+          "procedure": "1. Inspect batteries (Figure 4, Item 5) and cables for cracked or swollen casings, corroded terminals, loose connections, or missing plastic terminal covers. 2. Notify field maintenance of corroded terminals, loose connections, or missing plastic terminal covers.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Cracked or swollen casing, corroded terminals, or detached cables."
+        },
+        {
+          "id": "mep1030-b-053",
+          "sequence": 53,
+          "zone": "Inside Left-Side Door",
+          "zoneId": "zone-9",
+          "item": "53",
+          "itemDescription": "Starter",
+          "procedure": "1. Inspect starter (Figure 4, Item 4) for damage, corrosion, or loose wiring. 2. Notify field maintenance if corroded, damaged or loose wires are found. 3. Inspect NATO slave receptacle (Figure 3, Item 1) terminals and wires for loose connections, signs of arcing, corrosion, or other damage. 4. Notify field maintenance of damage, corrosion, loose connections, and signs of arcing, or other damage.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "NATO slave receptacle (Figure 3, Item 1) terminal and wires loose, damaged, corroded, signs of arcing or other damage."
+        },
+        {
+          "id": "mep1030-b-054",
+          "sequence": 54,
+          "zone": "Inside Left-Side Door",
+          "zoneId": "zone-9",
+          "item": "54",
+          "itemDescription": "AC Generator",
+          "procedure": "1. Inspect AC generator (Figure 2, Item 3) and wiring for cracks, breaks, and loose or missing hardware or wiring. 2. Notify field maintenance of corrosion.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Cracked generator housing, or broken, loose, or missing hardware or wiring."
+        },
+        {
+          "id": "mep1030-b-055",
+          "sequence": 55,
+          "zone": "Inside Left-Side Door",
+          "zoneId": "zone-9",
+          "item": "55",
+          "itemDescription": "ID Plates and Labels",
+          "procedure": "1. Ensure ID plates are present, secure, and legible. Two are required (WP 0005, Operation Under Usual Conditions). 2. Notify field maintenance of missing, loose, or illegible plate.",
+          "conditionSet": "BEFORE",
+          "isNoGo": false
+        },
+        {
+          "id": "mep1030-b-056",
+          "sequence": 56,
+          "zone": "Inside Left-Side Door",
+          "zoneId": "zone-9",
+          "item": "56",
+          "itemDescription": "Radiator Hoses and Pipes",
+          "procedure": "1. Inspect radiator hoses and pipes (Figure 4, Item 3) and clamps for leaks, looseness, damage, corrosion, or punctures. 2. Notify field maintenance of any Class I, II, or III coolant leaks.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Class III coolant leak, missing clamp, or puncture of hoses or pipes."
+        },
+        {
+          "id": "mep1030-b-057",
+          "sequence": 57,
+          "zone": "Inside Left-Side Door",
+          "zoneId": "zone-9",
+          "item": "57",
+          "itemDescription": "Document Box",
+          "procedure": "1. Inspect document box for damage, missing or loose hardware, or missing contents. 2. Notify field maintenance of defects. 3. Close left-side door. 4. Start generator set (WP 005, Operation During Usual Conditions)",
+          "conditionSet": "BEFORE",
+          "isNoGo": false
+        }
+      ]
+    },
+    {
+      "id": "zone-10",
+      "name": "During: Rear Panel and Inside Rear Door",
+      "description": "During operation: DCS, engine, ground rod, rear door, convenience receptacle, fuel system, electrical connections",
+      "steps": [
+        {
+          "id": "mep1030-b-058",
+          "sequence": 58,
+          "zone": "During: Rear Panel and Inside Rear Door",
+          "zoneId": "zone-10",
+          "item": "58",
+          "itemDescription": "DCS",
+          "procedure": "1. Inspect indicators for proper operation, erratic display, obvious improper reporting (example: unit overheated, coolant temperature indicates 150°F (65.5°C). 2. Check battery voltage on DCS (Figure 1, Item 2) operator’s main screen (WP 0005, Operation Under Usual Conditions). 3. Ensure circuit interrupter is closed as required. 4. Close as required. 5. Notify field maintenance of defect.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "Indicators not operating properly. Battery voltage is below 16 VDC. Circuit interrupter will not remain closed."
+        },
+        {
+          "id": "mep1030-b-059",
+          "sequence": 59,
+          "zone": "During: Rear Panel and Inside Rear Door",
+          "zoneId": "zone-10",
+          "item": "59",
+          "itemDescription": "Engine",
+          "procedure": "1. Check color of exhaust smoke. 2. Listen for any unusual engine noises. 3. Notify field maintenance of defects.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "Exhaust smoke is black, white, or blue. Unusual, severe engine noises."
+        },
+        {
+          "id": "mep1030-b-060",
+          "sequence": 60,
+          "zone": "During: Rear Panel and Inside Rear Door",
+          "zoneId": "zone-10",
+          "item": "60",
+          "itemDescription": "Ground Rod and Connections",
+          "procedure": "1. Inspect visually for arcing, damage, corrosion, and loose connections. 2. Notify field maintenance of corroded parts.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "Arcing, damage, corrosion, or loose connections."
+        },
+        {
+          "id": "mep1030-b-061",
+          "sequence": 61,
+          "zone": "During: Rear Panel and Inside Rear Door",
+          "zoneId": "zone-10",
+          "item": "61",
+          "itemDescription": "Rear Door",
+          "procedure": "1. Inspect door, hinges, seals, and latch for damage; loose or corroded parts. 2. Notify field maintenance of damage; loose or corroded parts.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "Door cannot be secured."
+        },
+        {
+          "id": "mep1030-b-062",
+          "sequence": 62,
+          "zone": "During: Rear Panel and Inside Rear Door",
+          "zoneId": "zone-10",
+          "item": "62",
+          "itemDescription": "Convenience Receptacle",
+          "procedure": "1. Reset GFCI circuit breaker (WP 0005, Operation Under Usual Conditions). 2. Notify field maintenance if GFCI circuit breaker will not reset.",
+          "conditionSet": "DURING",
+          "isNoGo": false
+        },
+        {
+          "id": "mep1030-b-063",
+          "sequence": 63,
+          "zone": "During: Rear Panel and Inside Rear Door",
+          "zoneId": "zone-10",
+          "item": "63",
+          "itemDescription": "Fuel Tank",
+          "procedure": "1. Open rear door. 2. Inspect fuel tank (Figure 1, Item 6) for leaks, damage, and loose or missing parts. 3. Notify field maintenance of defects.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "Any classification of fuel leak, damage, or any loose or missing parts."
+        },
+        {
+          "id": "mep1030-b-064",
+          "sequence": 64,
+          "zone": "During: Rear Panel and Inside Rear Door",
+          "zoneId": "zone-10",
+          "item": "64",
+          "itemDescription": "Fuel System Hoses",
+          "procedure": "1. Inspect fuel system hoses for leaks and damaged, loose, or missing hardware. 2. Notify field maintenance of defects.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "Any classification of fuel leak or damaged, loose, or missing parts."
+        },
+        {
+          "id": "mep1030-b-065",
+          "sequence": 65,
+          "zone": "During: Rear Panel and Inside Rear Door",
+          "zoneId": "zone-10",
+          "item": "65",
+          "itemDescription": "Fuel Pumps and Fuel Manifold",
+          "procedure": "1. Inspect fuel pumps and fuel manifold (Figure 1, Item 5) for leaks or damage. 2. Notify field maintenance of defects.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "Any classification of fuel leak or damage."
+        },
+        {
+          "id": "mep1030-b-066",
+          "sequence": 66,
+          "zone": "During: Rear Panel and Inside Rear Door",
+          "zoneId": "zone-10",
+          "item": "66",
+          "itemDescription": "Electrical Connections",
+          "procedure": "1. Inspect (visually only) electrical connectors at relay panel and electrical connections for looseness. 2. Notify field maintenance of defects.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "Connector loose."
+        },
+        {
+          "id": "mep1030-b-067",
+          "sequence": 67,
+          "zone": "During: Rear Panel and Inside Rear Door",
+          "zoneId": "zone-10",
+          "item": "67",
+          "itemDescription": "Relay Panel and Electrical Connections",
+          "procedure": "1. Inspect (visually only) relay panel cover and electrical connections for damage. 2. Notify field maintenance of minor damage. 3. Close rear door.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "Relay panel cover punctured."
+        }
+      ]
+    },
+    {
+      "id": "zone-11",
+      "name": "During: Inside Right-Side Door",
+      "description": "During operation: engine compartment, oil drain line, fuel lines, oil level, AC generator",
+      "steps": [
+        {
+          "id": "mep1030-b-068",
+          "sequence": 68,
+          "zone": "During: Inside Right-Side Door",
+          "zoneId": "zone-11",
+          "item": "68",
+          "itemDescription": "Engine and Compartment Base",
+          "procedure": "1. Open right-side door. 2. Inspect for leaks. 3. Notify field maintenance of any Class I, II, or III oil or coolant leaks.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "Any classification of fuel leak. Class III oil or coolant leaks."
+        },
+        {
+          "id": "mep1030-b-069",
+          "sequence": 69,
+          "zone": "During: Inside Right-Side Door",
+          "zoneId": "zone-11",
+          "item": "69",
+          "itemDescription": "Oil Drain Line",
+          "procedure": "NOTE: Oil drain line is located at the oil drain assembly at the bottom of the oil pan. 1. Inspect oil drain line for leaks. 2. Notify field maintenance of Class I, II, or III oil leaks.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "Class III oil leak."
+        },
+        {
+          "id": "mep1030-b-070",
+          "sequence": 70,
+          "zone": "During: Inside Right-Side Door",
+          "zoneId": "zone-11",
+          "item": "70",
+          "itemDescription": "Fuel Lines and Fuel Filter/Water Separator",
+          "procedure": "1. Inspect fuel lines, fittings, and fuel filter/water separator for leaks or corrosion. 2. Notify field maintenance of defect.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "Any fuel leak."
+        },
+        {
+          "id": "mep1030-b-071",
+          "sequence": 71,
+          "zone": "During: Inside Right-Side Door",
+          "zoneId": "zone-11",
+          "item": "71",
+          "itemDescription": "Oil Level",
+          "procedure": "1. Check oil level (WP 0017, Service Engine Oil). 2. Add oil as required (WP 0017, Service Engine Oil). 3. Ensure oil fill cap is tightened securely. 4. Notify field maintenance of defects.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "Oil fill cap missing."
+        },
+        {
+          "id": "mep1030-b-072",
+          "sequence": 72,
+          "zone": "During: Inside Right-Side Door",
+          "zoneId": "zone-11",
+          "item": "72",
+          "itemDescription": "AC Generator",
+          "procedure": "1. Inspect for excessive noise and vibration. 2. Inspect for external damage, arcing, and loose connections. 3. Notify field maintenance of defects. 4. Close right-side door.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "Excessive noise and/or vibration. Signs of damage, arcing, or loose connections."
+        }
+      ]
+    },
+    {
+      "id": "zone-12",
+      "name": "During: Left-Side Panel and Inside Left-Side Door",
+      "description": "During operation: fuel drain, cooling fan, engine compartment, coolant overflow bottle, AC generator",
+      "steps": [
+        {
+          "id": "mep1030-b-073",
+          "sequence": 73,
+          "zone": "During: Left-Side Panel and Inside Left-Side Door",
+          "zoneId": "zone-12",
+          "item": "73",
+          "itemDescription": "Fuel Drain Fitting",
+          "procedure": "1. Inspect fuel drain for leaks, missing cap, or damage. 2. Notify field maintenance of defects.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "Any classification of fuel leak or missing cap."
+        },
+        {
+          "id": "mep1030-b-074",
+          "sequence": 74,
+          "zone": "During: Left-Side Panel and Inside Left-Side Door",
+          "zoneId": "zone-12",
+          "item": "74",
+          "itemDescription": "Cooling Fan",
+          "procedure": "NOTE: Observe fan operation through grate on left-side panel. 1. Inspect visually for obstruction, damage, and looseness. 2. Notify field maintenance of defects.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "Damaged or loose fan."
+        },
+        {
+          "id": "mep1030-b-075",
+          "sequence": 75,
+          "zone": "During: Left-Side Panel and Inside Left-Side Door",
+          "zoneId": "zone-12",
+          "item": "75",
+          "itemDescription": "Engine and Compartment Base",
+          "procedure": "1. Open left-side door. 2. Inspect for leaks. 3. Notify field maintenance of any Class I, II, or III oil or coolant leaks.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "Any classification of fuel leak. Class III oil or coolant leaks."
+        },
+        {
+          "id": "mep1030-b-076",
+          "sequence": 76,
+          "zone": "During: Left-Side Panel and Inside Left-Side Door",
+          "zoneId": "zone-12",
+          "item": "76",
+          "itemDescription": "Coolant Overflow Bottle",
+          "procedure": "1. Inspect for leaks or loose hoses. 2. Check coolant level (WP 0015, Service Cooling System). 3. Notify field maintenance of defects.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "Class III coolant leak or missing cap."
+        },
+        {
+          "id": "mep1030-b-077",
+          "sequence": 77,
+          "zone": "During: Left-Side Panel and Inside Left-Side Door",
+          "zoneId": "zone-12",
+          "item": "77",
+          "itemDescription": "AC Generator",
+          "procedure": "1. Inspect for excessive noise and vibration. 2. Inspect for external damage, arcing, and loose connections. 3. Notify field maintenance of defects. 4. Close left-side door.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "Excessive noise and/or vibration. Signs of damage, arcing, or loose connections."
+        }
+      ]
+    },
+    {
+      "id": "zone-13",
+      "name": "After Operation",
+      "description": "After operation (allow 60 min to cool): fuel fill and tank, output connections, oil, fuel drain, batteries, coolant, grates, radiator",
+      "steps": [
+        {
+          "id": "mep1030-b-078",
+          "sequence": 78,
+          "zone": "After Operation",
+          "zoneId": "zone-13",
+          "item": "78",
+          "itemDescription": "Fuel Fill",
+          "procedure": "NOTE: Allow generator set to cool for 60 min (WP 0005, Operation Under Usual Conditions) before performing After operation PMCS. 1. Clean fuel fill (Figure 1, Item 1) area of dirt and debris (WP 0016, Service Fuel System). 2. Inspect the auxiliary fuel connections for damaged, corroded, or missing parts. 3. Remove fuel fill (Figure 1, Item 1) cap. 4. Inspect cap and strainer for dirt, wear, and defects. 5. Inspect chain and gasket for wear. 6. Replace fuel fill (Figure 1, Item 1) cap. 7. Inspect grounding stud (fuel fill static ground) for damage or corrosion. 8. Notify field maintenance of defect.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "Damaged, corroded, or missing parts. Damaged or missing cap. Punctured or missing strainer. Damaged or missing gasket. Fuel fill cap will not seal. Grounding stud (fuel fill static ground) missing or corroded."
+        },
+        {
+          "id": "mep1030-b-079",
+          "sequence": 79,
+          "zone": "After Operation",
+          "zoneId": "zone-13",
+          "item": "79",
+          "itemDescription": "Fuel Tank",
+          "procedure": "1. Refill fuel tank (Figure 1, Item 6) to capacity (WP 0016, Service Fuel System). 2. Notify field maintenance of defect.",
+          "conditionSet": "AFTER",
+          "isNoGo": false
+        },
+        {
+          "id": "mep1030-b-080",
+          "sequence": 80,
+          "zone": "After Operation",
+          "zoneId": "zone-13",
+          "item": "80",
+          "itemDescription": "Output Connections",
+          "procedure": "1. Inspect ground and load cable connections for tightness to output load board by pulling gently. 2. Tighten as required (WP 0005, Operation Under Usual Conditions). 3. Inspect terminals and terminal nuts for indications of arcing or high temperature. 4. Notify field maintenance of defects.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "Terminal board shows evidence of arcing or high temperature"
+        },
+        {
+          "id": "mep1030-b-081",
+          "sequence": 81,
+          "zone": "After Operation",
+          "zoneId": "zone-13",
+          "item": "81",
+          "itemDescription": "Output Terminal Board Protective Cover",
+          "procedure": "1. Inspect output terminal board protective cover for indications of arcing or high temperature. 2. Notify field maintenance of defects.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "Output terminal board protective cover missing, cracked through, or melted. Missing or damaged hinge or hinge fasteners."
+        },
+        {
+          "id": "mep1030-b-082",
+          "sequence": 82,
+          "zone": "After Operation",
+          "zoneId": "zone-13",
+          "item": "82",
+          "itemDescription": "Oil Drain Outlet",
+          "procedure": "1. Inspect oil drain outlet (Figure 2, Item 4) for leaks. 2. Notify field maintenance of Class I, II, or III leaks. 3. Notify field maintenance of missing, loose, or cracked oil drain outlet (Figure 2, Item 4) cap.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "Class III leak."
+        },
+        {
+          "id": "mep1030-b-083",
+          "sequence": 83,
+          "zone": "After Operation",
+          "zoneId": "zone-13",
+          "item": "83",
+          "itemDescription": "Engine and Compartment Base",
+          "procedure": "1. Inspect for leaks. 2. Inspect fuel lines for fraying due to vibration from generator set. 3. Notify field maintenance of any Class I, II, or III oil or coolant leaks.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "Any classification of fuel leak. Class III oil or coolant leaks."
+        },
+        {
+          "id": "mep1030-b-084",
+          "sequence": 84,
+          "zone": "After Operation",
+          "zoneId": "zone-13",
+          "item": "84",
+          "itemDescription": "Oil Level",
+          "procedure": "1. Check oil level (WP 0017, Service Engine Oil). 2. Add oil as required (WP 0017, Service Engine Oil). 3. Ensure oil fill cap is tightened securely. 4. Notify field maintenance of defects.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "Oil fill cap missing."
+        },
+        {
+          "id": "mep1030-b-085",
+          "sequence": 85,
+          "zone": "After Operation",
+          "zoneId": "zone-13",
+          "item": "85",
+          "itemDescription": "Fuel Drain Fitting",
+          "procedure": "1. Inspect fuel drain for leaks, missing cap, or damage. 2. Ensure fuel fill (Figure 1, Item 1) cap is tightened securely. 3. Notify field maintenance of defects.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "Any fuel leak. Missing cap."
+        },
+        {
+          "id": "mep1030-b-086",
+          "sequence": 86,
+          "zone": "After Operation",
+          "zoneId": "zone-13",
+          "item": "86",
+          "itemDescription": "Batteries",
+          "procedure": "1. Inspect batteries (Figure 4, Item 5) for cracked or swollen casings or corroded terminals. 2. Notify field maintenance of corroded terminals.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "Cracked or swollen casing."
+        },
+        {
+          "id": "mep1030-b-087",
+          "sequence": 87,
+          "zone": "After Operation",
+          "zoneId": "zone-13",
+          "item": "87",
+          "itemDescription": "Battery Cables",
+          "procedure": "1. Inspect battery cables for corrosion or loose connections. 2. Notify field maintenance of corroded or loose connections.",
+          "conditionSet": "AFTER",
+          "isNoGo": false
+        },
+        {
+          "id": "mep1030-b-088",
+          "sequence": 88,
+          "zone": "After Operation",
+          "zoneId": "zone-13",
+          "item": "88",
+          "itemDescription": "Engine and Compartment Base",
+          "procedure": "1. Inspect for leaks. 2. Notify field maintenance of any Class I, II, or III oil or coolant leaks.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "Any classification of fuel leak. Class III oil or coolant leaks."
+        },
+        {
+          "id": "mep1030-b-089",
+          "sequence": 89,
+          "zone": "After Operation",
+          "zoneId": "zone-13",
+          "item": "89",
+          "itemDescription": "Coolant Overflow Bottle",
+          "procedure": "1. Inspect for leaks, cracks, loose hoses, or missing cap. 2. Connect loose hoses. 3. Check coolant level (WP 0015, Service Cooling System). 4. Fill cooling system as required (WP 0015, Service Cooling System). 5. Notify field maintenance of defects.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "Class III coolant leak. Missing cap. Hose cannot be reconnected."
+        },
+        {
+          "id": "mep1030-b-090",
+          "sequence": 90,
+          "zone": "After Operation",
+          "zoneId": "zone-13",
+          "item": "90",
+          "itemDescription": "Intake and Exhaust Grates",
+          "procedure": "1. Clean debris from all intake and exhaust grates. 2. Notify field maintenance of defects.",
+          "conditionSet": "AFTER",
+          "isNoGo": false
+        },
+        {
+          "id": "mep1030-b-091",
+          "sequence": 91,
+          "zone": "After Operation",
+          "zoneId": "zone-13",
+          "item": "91",
+          "itemDescription": "Radiator, Interior",
+          "procedure": "1. Energize DCS (Figure 1, Item 2) and examine coolant temperature indicator (WP 0005, Operation Under Usual Conditions). 2. Do not proceed to step 3 unless coolant temperature is below 100°F (38°C). WARNING: Do not open radiator cap unless coolant temperature is below 100°F (37.8°C). 3. Remove radiator cap. 4. Inspect coolant color for contamination. 5. Inspect coolant level and add as required (WP 0015, Service Cooling System). 6. Replace radiator cap and tighten securely. 7. Notify field maintenance of defects.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "Milky or dirty color. Radiator cap missing or cannot be tightened."
+        }
+      ]
+    }
+  ]
+}
