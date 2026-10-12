@@ -5,7 +5,7 @@ import type { Env } from './index';
 
 /** Must match [triggers] crons in wrangler.toml (here, not in index.ts: the main module may only export handlers). */
 export const DAILY_CRON = '5 4 * * *';
-export const BACKUP_CRON = '17 3 * * 0';
+export const BACKUP_CRON = '17 3 * * SUN';
 
 export const BACKUP_PREFIX = 'backups/';
 export const BACKUP_RETENTION_DAYS = 12 * 7;

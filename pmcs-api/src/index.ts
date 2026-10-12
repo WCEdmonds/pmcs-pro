@@ -10,7 +10,7 @@ import {
 } from './validate';
 import { AUDIT_INSERT, actorOf, actorParams, audit, auditStmt, type Actor, type AuditEntry } from './audit';
 import { recipientsFor, sendEmail, sendJoinEmail, type Member } from './email';
-import { runBackup, BACKUP_CRON } from './backup';
+import { runBackup, DAILY_CRON } from './backup';
 
 export interface Env {
   DB: D1Database;
@@ -1545,10 +1545,11 @@ async function dailySnapshot(env: Env) {
 
 export default {
   fetch: app.fetch,
-  /** Dispatches on the cron expression: weekly R2 backup, otherwise the daily status snapshot. */
+  /** Dispatches on the cron expression: the daily status snapshot, otherwise the weekly R2 backup
+   *  (matched loosely because Cloudflare may hand back the weekly expression in a normalized form). */
   async scheduled(event: ScheduledController, env: Env) {
     try {
-      if (event.cron === BACKUP_CRON) await runBackup(env);
+      if (event.cron !== DAILY_CRON) await runBackup(env);
       else await dailySnapshot(env);
     } catch (err) {
       console.error({ route: `cron ${event.cron}`, status: 500, message: (err as Error)?.message });

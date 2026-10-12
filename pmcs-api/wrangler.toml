@@ -47,10 +47,10 @@ binding = "FILES"
 bucket_name = "pmcs-pro-files"
 
 # "5 4 * * *": daily readiness snapshot (vehicle_status_history).
-# "17 3 * * 0": weekly D1 backup to R2 backups/YYYY-MM-DD.json.gz (Sundays), keeps 12 weeks.
+# "17 3 * * SUN": weekly D1 backup to R2 backups/YYYY-MM-DD.json.gz (Sundays), keeps 12 weeks.
 # scheduled() dispatches on the expression (DAILY_CRON / BACKUP_CRON in src/index.ts): keep them in sync.
 [triggers]
-crons = ["5 4 * * *", "17 3 * * 0"]
+crons = ["5 4 * * *", "17 3 * * SUN"]
 
 # Secrets (set with `npx wrangler secret put JWT_SECRET`):
 #   JWT_SECRET            random 32+ byte string used to sign sessions and file links
@@ -96,4 +96,4 @@ binding = "FILES"
 bucket_name = "pmcs-pro-files-staging"
 
 [env.staging.triggers]
-crons = ["5 4 * * *", "17 3 * * 0"]
+crons = ["5 4 * * *", "17 3 * * SUN"]

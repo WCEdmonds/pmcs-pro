@@ -137,7 +137,7 @@ npx wrangler d1 time-travel restore pmcs-pro --timestamp 2026-10-12T08:00:00Z  #
 
 The restore prints a bookmark of the state it replaced, so `time-travel restore pmcs-pro --bookmark <that>` undoes it. Everything written after the chosen time is lost, so freeze writes (or tell users) first.
 
-**Weekly snapshots in R2** (older than 30 days, or a copy outside D1): the cron `17 3 * * 0` (Sundays 03:17 UTC) writes every table, plus the schema, as gzipped JSON to `pmcs-pro-files` at `backups/YYYY-MM-DD.json.gz`, and deletes snapshots older than **12 weeks**. The snapshot includes PIN hashes, so `/files` never serves `backups/`. To restore one, load it into an **empty** database that has the migrations applied (for example a new D1, which you then point `wrangler.toml` at, or the emptied original):
+**Weekly snapshots in R2** (older than 30 days, or a copy outside D1): the cron `17 3 * * SUN` (Sundays 03:17 UTC) writes every table, plus the schema, as gzipped JSON to `pmcs-pro-files` at `backups/YYYY-MM-DD.json.gz`, and deletes snapshots older than **12 weeks**. The snapshot includes PIN hashes, so `/files` never serves `backups/`. To restore one, load it into an **empty** database that has the migrations applied (for example a new D1, which you then point `wrangler.toml` at, or the emptied original):
 
 ```sh
 npx wrangler r2 object get pmcs-pro-files/backups/2026-10-11.json.gz --file backup.json.gz --remote
