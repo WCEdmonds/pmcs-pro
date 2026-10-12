@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useUserStore } from '../stores/userStore';
 import { useSessionStore } from '../stores/sessionStore';
@@ -6,14 +6,19 @@ import { loadPmcsData } from '../utils/loadPmcsData';
 import { VEHICLE_REGISTRY } from '../data/vehicles';
 import type { RosterVehicle } from '../data/vehicleRoster';
 import { ALL_RANKS } from '../data/ranks';
-import { getUnitName, saveUicMapping } from '../utils/uicLookup';
+import { saveUicMapping, validateUic, normalizeUic, type UicLookup } from '../utils/uicLookup';
 import { api } from '../utils/api';
+import { db } from '../utils/db';
+import { localDateString, parseOdometer } from '../utils/format';
+import { availableInspectionTypes, stepsForInspection, INSPECTION_TYPE_LABELS } from '../utils/inspectionTypes';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { Select } from '../components/ui/Select';
+import { Modal } from '../components/ui/Modal';
 import { SegmentedControl } from '../components/ui/SegmentedControl';
+import { UicField } from '../components/ui/UicField';
 import { UicUnitPrompt } from '../components/ui/UicUnitPrompt';
-import type { InspectionType, VehicleType } from '../types';
+import type { InspectionSession, InspectionType, PmcsVehicleData, VehicleType } from '../types';
 
 // Map server vehicle_type strings to app VehicleType
 function toVehicleType(model: string | null): VehicleType | null {
@@ -27,24 +32,36 @@ function toVehicleType(model: string | null): VehicleType | null {
 }
 
 
+type PickerVehicle = RosterVehicle & { vehicleType: VehicleType };
+
+/** "M1083A1 · IEW · SN 12345" — skips empty parts and app-internal type ids. */
+function rosterLabel(rv: PickerVehicle): string {
+  const registry = VEHICLE_REGISTRY.find((v) => v.type === rv.model);
+  const model = registry ? registry.name : rv.model;
+  const parts = [model || rv.description, rv.section, rv.serialNumber ? `SN ${rv.serialNumber}` : ''];
+  return parts.map((p) => (p || '').trim()).filter(Boolean).join(' · ');
+}
+
 export default function SessionSetupPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const initialVehicleType = (searchParams.get('vehicle') || 'M1151') as VehicleType;
   const user = useUserStore((s) => s.user);
   const startSession = useSessionStore((s) => s.startSession);
+  const restoreSession = useSessionStore((s) => s.restoreSession);
+  const discardSession = useSessionStore((s) => s.discardSession);
 
   // Vehicle picker state
-  const [selectedRosterVehicle, setSelectedRosterVehicle] = useState<RosterVehicle & { vehicleType: VehicleType } | null>(null);
+  const [selectedRosterVehicle, setSelectedRosterVehicle] = useState<PickerVehicle | null>(null);
   const [isManualEntry, setIsManualEntry] = useState(false);
   const [vehicleSearch, setVehicleSearch] = useState('');
-  const [pmcsVehicles, setPmcsVehicles] = useState<(RosterVehicle & { vehicleType: VehicleType })[]>([]);
+  const [pmcsVehicles, setPmcsVehicles] = useState<PickerVehicle[]>([]);
   const [rosterLoaded, setRosterLoaded] = useState(false);
 
-  // Load vehicles from the server for the soldier's unit. If empty, soldier uses manual entry.
+  // Vehicles for the soldier's unit (server scopes to the user's unit). If empty, manual entry.
   useEffect(() => {
+    let cancelled = false;
     async function loadRoster() {
-      if (!user?.unit) { setRosterLoaded(true); return; }
       try {
         const data = await api<Array<{
           bumper_number: string | null;
@@ -52,16 +69,17 @@ export default function SessionSetupPage() {
           serial_number: string | null;
           section: string | null;
           description: string | null;
-        }>>('GET', '/vehicles', { query: { unit: user.unit } });
-        if (data && data.length > 0) {
+          nomenclature?: string | null;
+        }>>('GET', '/vehicles');
+        if (!cancelled && Array.isArray(data) && data.length > 0) {
           const mapped = data
-            .map((v): (RosterVehicle & { vehicleType: VehicleType }) | null => {
+            .map((v): PickerVehicle | null => {
               const vt = toVehicleType(v.vehicle_type);
-              if (!vt) return null;
+              if (!vt || !v.bumper_number) return null;
               return {
-                bumperNumber: v.bumper_number || '',
+                bumperNumber: v.bumper_number,
                 model: v.vehicle_type || '',
-                description: v.description || v.vehicle_type || '',
+                description: v.description || v.nomenclature || '',
                 serialNumber: v.serial_number || '',
                 nsn: '',
                 lin: '',
@@ -69,38 +87,59 @@ export default function SessionSetupPage() {
                 vehicleType: vt,
               };
             })
-            .filter((v): v is RosterVehicle & { vehicleType: VehicleType } => v !== null);
+            .filter((v): v is PickerVehicle => v !== null);
           setPmcsVehicles(mapped);
         }
       } catch {
         // Offline — no roster, soldier uses manual entry
       }
-      setRosterLoaded(true);
+      if (!cancelled) setRosterLoaded(true);
     }
     loadRoster();
+    return () => { cancelled = true; };
   }, [user?.unit]);
 
-  // Derived vehicle type: from roster selection, or from URL param for manual entry
   const vehicleType = selectedRosterVehicle?.vehicleType ?? initialVehicleType;
   const vehicle = VEHICLE_REGISTRY.find((v) => v.type === vehicleType);
+
+  // PMCS data for this vehicle → which inspection types actually have items
+  const [vehicleData, setVehicleData] = useState<{ type: VehicleType; data: PmcsVehicleData } | null>(null);
+  const [dataError, setDataError] = useState('');
+  useEffect(() => {
+    let cancelled = false;
+    loadPmcsData(vehicleType)
+      .then((data) => { if (!cancelled) { setVehicleData({ type: vehicleType, data }); setDataError(''); } })
+      .catch(() => { if (!cancelled) setDataError('Could not load the PMCS checklist for this vehicle.'); });
+    return () => { cancelled = true; };
+  }, [vehicleType]);
+  const currentData = vehicleData?.type === vehicleType ? vehicleData.data : null;
+  const typeOptions = useMemo(() => (currentData ? availableInspectionTypes(currentData) : []), [currentData]);
 
   const [bumperNumber, setBumperNumber] = useState('');
   const [serialNumber, setSerialNumber] = useState('');
   const [odometer, setOdometer] = useState('');
+  const [odometerTouched, setOdometerTouched] = useState(false);
   const [error, setError] = useState('');
   const [rank, setRank] = useState(user?.rank || '');
   const [inspectorName, setInspectorName] = useState(
-    user ? `${user.firstName} ${user.lastName}` : ''
+    user ? `${user.firstName} ${user.lastName}`.trim() : ''
   );
-  const [unit, setUnit] = useState(user?.unit || '');
-  const [inspectionType, setInspectionType] = useState<InspectionType>(
-    user?.defaultInspectionType || '30_DAY'
-  );
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+  const [unit, setUnit] = useState(normalizeUic(user?.unit));
+  const [uicLookup, setUicLookup] = useState<UicLookup | null>(null);
+  const [chosenType, setChosenType] = useState<InspectionType | null>(null);
+  const [date, setDate] = useState(() => localDateString());
   const [isLoading, setIsLoading] = useState(false);
   const [showUicPrompt, setShowUicPrompt] = useState(false);
+  const [inProgress, setInProgress] = useState<InspectionSession | null>(null);
+  const startingRef = useRef(false);
 
-  // Filter roster by the vehicle type selected on the home page, then by search text
+  // Selected type must be one this vehicle has; otherwise fall back to the default/first.
+  const inspectionType: InspectionType | null = useMemo(() => {
+    if (chosenType && typeOptions.includes(chosenType)) return chosenType;
+    if (user?.defaultInspectionType && typeOptions.includes(user.defaultInspectionType)) return user.defaultInspectionType;
+    return typeOptions[0] ?? null;
+  }, [chosenType, typeOptions, user?.defaultInspectionType]);
+
   const filteredRosterVehicles = useMemo(() => {
     const typeFiltered = pmcsVehicles.filter((v) => v.vehicleType === initialVehicleType);
     if (!vehicleSearch.trim()) return typeFiltered;
@@ -113,8 +152,9 @@ export default function SessionSetupPage() {
         v.section.toUpperCase().includes(q)
     );
   }, [pmcsVehicles, vehicleSearch, initialVehicleType]);
+  const rosterForType = pmcsVehicles.filter((v) => v.vehicleType === initialVehicleType);
 
-  const handleSelectRosterVehicle = (rv: RosterVehicle & { vehicleType: VehicleType }) => {
+  const handleSelectRosterVehicle = (rv: PickerVehicle) => {
     setSelectedRosterVehicle(rv);
     setBumperNumber(rv.bumperNumber);
     setSerialNumber(rv.serialNumber);
@@ -137,60 +177,90 @@ export default function SessionSetupPage() {
     setSerialNumber('');
   };
 
-  const isValid = bumperNumber.trim() && odometer.trim();
+  const odo = parseOdometer(odometer);
+  const odometerError = odometerTouched && 'error' in odo ? odo.error : undefined;
+  const uicCheck = validateUic(unit);
+  const isValid = !!bumperNumber.trim() && 'value' in odo && uicCheck.valid && !!inspectionType && !!date;
 
-  const handleStart = async () => {
-    if (!isValid) return;
-
-    // Check if UIC is known
-    if (unit.trim()) {
-      const existingName = await getUnitName(unit.trim());
-      if (!existingName) {
-        setShowUicPrompt(true);
-        return;
-      }
-    }
-
-    await doStart();
-  };
-
-  const handleUicSave = async (unitName: string) => {
-    await saveUicMapping(unit.trim(), unitName);
-    setShowUicPrompt(false);
-    await doStart();
-  };
-
-  const doStart = async () => {
+  const doStart = useCallback(async () => {
+    if (!inspectionType || !('value' in odo)) return;
     setIsLoading(true);
-
+    setError('');
     try {
+      const data = currentData ?? await loadPmcsData(vehicleType);
+      if (stepsForInspection(data, inspectionType).length === 0) {
+        throw new Error(`This vehicle has no ${INSPECTION_TYPE_LABELS[inspectionType]} PMCS items. Pick another inspection type.`);
+      }
       const sessionId = crypto.randomUUID();
-      const vehicleData = await loadPmcsData(vehicleType);
-
-      const session = {
+      const bumper = bumperNumber.trim().toUpperCase();
+      const session: InspectionSession = {
         id: sessionId,
         date,
-        vehicleId: `${vehicleType}-${bumperNumber.trim()}`,
+        vehicleId: `${vehicleType}-${bumper}`,
         vehicleType,
-        bumperNumber: bumperNumber.trim(),
+        bumperNumber: bumper,
         serialNumber: serialNumber.trim() || undefined,
-        odometer: parseInt(odometer, 10),
-        inspectorDodId: user?.dodId || 'anonymous',
+        odometer: odo.value,
+        inspectorDodId: user!.dodId,
         inspectorRank: rank,
         inspectorName: inspectorName.trim(),
-        unit: unit.trim(),
+        unit: uicCheck.value,
         inspectionType,
-        status: 'IN_PROGRESS' as const,
+        status: 'IN_PROGRESS',
         createdAt: new Date().toISOString(),
       };
-
-      startSession(session, vehicleData);
+      await startSession(session, data);
       navigate(`/session/${sessionId}/prior-faults`);
     } catch (err) {
       console.error('Failed to start session:', err);
       setError(err instanceof Error ? err.message : String(err));
       setIsLoading(false);
+      startingRef.current = false;
     }
+  }, [inspectionType, odo, currentData, vehicleType, bumperNumber, date, serialNumber, user, rank, inspectorName, uicCheck.value, startSession, navigate]);
+
+  const proceed = useCallback(async () => {
+    if (uicLookup?.status === 'new') {
+      setShowUicPrompt(true);
+      return;
+    }
+    await doStart();
+  }, [uicLookup, doStart]);
+
+  const handleStart = async () => {
+    setOdometerTouched(true);
+    if (!isValid || startingRef.current || !user) return;
+    startingRef.current = true;
+    // One in-progress inspection at a time per soldier: resume or discard it first.
+    const existing = (await db.sessions.where('inspectorDodId').equals(user.dodId).toArray())
+      .find((s) => s.status === 'IN_PROGRESS');
+    if (existing) {
+      setInProgress(existing);
+      startingRef.current = false;
+      return;
+    }
+    await proceed();
+  };
+
+  const handleResumeExisting = async () => {
+    if (!inProgress) return;
+    const ok = await restoreSession(inProgress.id);
+    setInProgress(null);
+    if (ok) navigate(`/session/${inProgress.id}/pmcs`);
+  };
+
+  const handleDiscardExisting = async () => {
+    if (!inProgress || startingRef.current) return;
+    startingRef.current = true;
+    await discardSession(inProgress.id);
+    setInProgress(null);
+    await proceed();
+  };
+
+  const handleUicSave = async (unitName: string) => {
+    setShowUicPrompt(false);
+    await saveUicMapping(uicCheck.value, unitName);
+    await doStart();
   };
 
   return (
@@ -211,24 +281,23 @@ export default function SessionSetupPage() {
       </div>
 
       <div className="flex-1 flex flex-col gap-4 overflow-y-auto pb-4">
-        {/* ── Vehicle Picker (only shown when roster has vehicles) ── */}
-        {!isManualEntry && !selectedRosterVehicle && rosterLoaded && pmcsVehicles.length > 0 && (
+        {!isManualEntry && !selectedRosterVehicle && rosterLoaded && rosterForType.length > 0 && (
           <div className="flex flex-col gap-2">
-            <label className="text-sm font-medium text-text-secondary">
+            <label htmlFor="vehicle-search" className="text-sm font-medium text-text-secondary">
               Select Vehicle
             </label>
             <input
+              id="vehicle-search"
               type="text"
               value={vehicleSearch}
               onChange={(e) => setVehicleSearch(e.target.value)}
               placeholder="Search bumper #, model, or section..."
-              autoFocus
-              className="min-h-[48px] px-3 text-base bg-bg-tertiary text-text-primary border border-border rounded-[var(--radius-md)] placeholder:text-text-secondary/50 focus:outline-none focus:ring-2 focus:ring-accent-blue focus:border-transparent"
+              className="min-h-[48px] px-3 text-base bg-bg-tertiary text-text-primary border border-border rounded-[var(--radius-md)] placeholder:text-text-secondary/70 focus:outline-none focus:ring-2 focus:ring-accent-blue focus:border-transparent"
             />
             <div className="max-h-52 overflow-y-auto rounded-[var(--radius-md)] border border-border bg-bg-secondary">
-              {filteredRosterVehicles.map((rv) => (
+              {filteredRosterVehicles.map((rv, i) => (
                 <button
-                  key={rv.bumperNumber}
+                  key={`${rv.bumperNumber}-${i}`}
                   type="button"
                   onClick={() => handleSelectRosterVehicle(rv)}
                   className="w-full text-left px-3 py-3 min-h-[48px] border-b border-border last:border-b-0 active:bg-bg-tertiary"
@@ -236,9 +305,9 @@ export default function SessionSetupPage() {
                   <span className="font-display font-bold text-text-primary">
                     {rv.bumperNumber}
                   </span>
-                  <span className="text-text-secondary text-sm ml-2">
-                    {rv.model} &middot; {rv.section}
-                  </span>
+                  {rosterLabel(rv) && (
+                    <span className="text-text-secondary text-sm ml-2">{rosterLabel(rv)}</span>
+                  )}
                 </button>
               ))}
               {filteredRosterVehicles.length === 0 && (
@@ -257,13 +326,12 @@ export default function SessionSetupPage() {
           </div>
         )}
 
-        {/* ── Selected Roster Vehicle ── */}
         {selectedRosterVehicle && (
           <div className="flex flex-col gap-2">
             <div className="flex items-center justify-between">
-              <label className="text-sm font-medium text-text-secondary">
+              <span className="text-sm font-medium text-text-secondary">
                 Vehicle
-              </label>
+              </span>
               <button
                 type="button"
                 onClick={handleSwitchToRoster}
@@ -276,9 +344,9 @@ export default function SessionSetupPage() {
               <p className="font-display font-bold text-text-primary">
                 {selectedRosterVehicle.bumperNumber}
               </p>
-              <p className="text-sm text-text-secondary">
-                {selectedRosterVehicle.model} &middot; {selectedRosterVehicle.section} &middot; SN {selectedRosterVehicle.serialNumber}
-              </p>
+              {rosterLabel(selectedRosterVehicle) && (
+                <p className="text-sm text-text-secondary">{rosterLabel(selectedRosterVehicle)}</p>
+              )}
               <p className="text-xs text-text-secondary mt-1">
                 PMCS type: {vehicle?.name}
               </p>
@@ -286,14 +354,13 @@ export default function SessionSetupPage() {
           </div>
         )}
 
-        {/* ── Manual entry fields (shown when "Not in list", no roster, or roster empty) ── */}
-        {(isManualEntry || (rosterLoaded && pmcsVehicles.length === 0 && !selectedRosterVehicle)) && (
+        {(isManualEntry || (rosterLoaded && rosterForType.length === 0 && !selectedRosterVehicle)) && (
           <>
             <div className="flex items-center justify-between">
-              <label className="text-sm font-medium text-text-secondary">
-                {pmcsVehicles.length > 0 ? 'Manual Entry' : 'Select Vehicle'}
-              </label>
-              {pmcsVehicles.length > 0 && (
+              <span className="text-sm font-medium text-text-secondary">
+                {rosterForType.length > 0 ? 'Manual Entry' : 'Vehicle'}
+              </span>
+              {rosterForType.length > 0 && (
                 <button
                   type="button"
                   onClick={handleSwitchToRoster}
@@ -322,9 +389,11 @@ export default function SessionSetupPage() {
           label="Odometer (miles)"
           value={odometer}
           onChange={(e) => setOdometer(e.target.value)}
+          onBlur={() => setOdometerTouched(true)}
           inputMode="numeric"
-          pattern="[0-9]*"
           placeholder="e.g., 34218"
+          maxLength={12}
+          error={odometerError}
         />
 
         <div className="flex gap-3">
@@ -346,20 +415,21 @@ export default function SessionSetupPage() {
           </div>
         </div>
 
-        <Input
-          label="UIC"
-          value={unit}
-          onChange={(e) => setUnit(e.target.value)}
-          placeholder="e.g., WABC12"
-        />
+        <UicField label="UIC" id="session-uic" value={unit} onChange={setUnit} onLookup={setUicLookup} />
 
-        <SegmentedControl
-          label="Inspection Type"
-          options={['30_DAY', 'BEFORE', 'DURING', 'AFTER'] as const}
-          value={inspectionType}
-          onChange={setInspectionType}
-          displayLabels={{ '30_DAY': '30-Day', BEFORE: 'Before', DURING: 'During', AFTER: 'After' }}
-        />
+        {typeOptions.length > 0 && inspectionType ? (
+          <SegmentedControl
+            label="Inspection Type"
+            options={typeOptions}
+            value={inspectionType}
+            onChange={setChosenType}
+            displayLabels={INSPECTION_TYPE_LABELS}
+          />
+        ) : currentData ? (
+          <p className="text-sm text-accent-red">This vehicle has no PMCS items yet.</p>
+        ) : (
+          <p className="text-sm text-text-secondary">{dataError || 'Loading checklist…'}</p>
+        )}
 
         <Input
           label="Date"
@@ -378,15 +448,28 @@ export default function SessionSetupPage() {
         >
           {isLoading ? 'Loading...' : 'Start Inspection'}
         </Button>
-        {error && <p className="text-accent-red text-sm mt-2 text-center">{error}</p>}
+        {error && <p className="text-accent-red text-sm mt-2 text-center" role="alert">{error}</p>}
       </div>
 
       <UicUnitPrompt
-        uic={unit.trim().toUpperCase()}
+        uic={uicCheck.value}
         open={showUicPrompt}
         onSave={handleUicSave}
         onCancel={() => { setShowUicPrompt(false); doStart(); }}
       />
+
+      <Modal open={!!inProgress} onClose={() => setInProgress(null)} title="Inspection already in progress">
+        {inProgress && (
+          <p className="text-text-secondary text-sm mb-4">
+            You have an unfinished inspection of <span className="font-display font-bold text-text-primary">{inProgress.bumperNumber}</span> from {inProgress.date}. Resume it, or discard it and start this one?
+          </p>
+        )}
+        <div className="flex flex-col gap-2">
+          <Button fullWidth onClick={handleResumeExisting}>Resume it</Button>
+          <Button variant="danger" fullWidth onClick={handleDiscardExisting}>Discard it and start new</Button>
+          <Button variant="ghost" fullWidth onClick={() => setInProgress(null)}>Cancel</Button>
+        </div>
+      </Modal>
     </div>
   );
 }

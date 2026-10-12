@@ -1,115 +1,249 @@
 // Client for the PMCS Pro API (Cloudflare Worker in /pmcs-api).
-// Keep in sync with pmcs-app/src/utils/api.ts.
+// Semantics are kept in step with pmcs-app/src/utils/api.ts (timeout, non-JSON
+// handling, 401 sign-out, multi-tab sign-out, sliding session refresh).
 
-const API_URL = (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/$/, '') ?? '';
-const TOKEN_KEY = 'pmcs-api-token';
+const API_URL = (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/$/, '') ?? ''
+const TOKEN_KEY = 'pmcs-api-token'
+const REQUEST_TIMEOUT_MS = 20_000
+const TOKEN_TTL_SECONDS = 60 * 60 * 24 * 30
+const REFRESH_AFTER_MS = 24 * 60 * 60 * 1000
 
 if (!API_URL) {
-  console.error('FATAL: API URL not configured. Set VITE_API_URL.');
+  console.error('FATAL: API URL not configured. Set VITE_API_URL.')
 }
 
 export interface ApiProfile {
-  id: string;
-  dod_id: string;
-  rank: string | null;
-  last_name: string | null;
-  first_name: string | null;
-  mi: string | null;
-  unit: string | null;
-  created_at: string;
+  id: string
+  dod_id: string
+  rank: string | null
+  last_name: string | null
+  first_name: string | null
+  mi: string | null
+  unit: string | null
+  created_at: string
+  /** Units this user may view (own unit + approved watched units). Optional until the API ships it. */
+  visible_units?: string[]
 }
 
 export class ApiError extends Error {
-  readonly status: number;
+  /** HTTP status, or 0 for network failures and timeouts. */
+  readonly status: number
   constructor(message: string, status: number) {
-    super(message);
-    this.status = status;
+    super(message)
+    this.name = 'ApiError'
+    this.status = status
   }
 }
 
-type AuthListener = (signedIn: boolean) => void;
-const listeners = new Set<AuthListener>();
+/**
+ * Thrown when a request was cancelled on purpose: the caller aborted it (a newer
+ * load superseded it, the page unmounted) or the user signed out while it was in
+ * flight. Callers should ignore it rather than show an error.
+ */
+export class AbortedError extends Error {
+  constructor() {
+    super('Request cancelled')
+    this.name = 'AbortedError'
+  }
+}
+
+export function isAbortedError(err: unknown): err is AbortedError {
+  return err instanceof AbortedError
+}
+
+/** User-facing message for any error thrown by api(). */
+export function errorMessage(err: unknown): string {
+  if (err instanceof Error && err.message) return err.message
+  return 'Something went wrong'
+}
+
+type AuthListener = (signedIn: boolean) => void
+const listeners = new Set<AuthListener>()
+
+/** Aborted (and replaced) whenever the session ends, cancelling in-flight requests. */
+let sessionController = new AbortController()
 
 function readToken(): string | null {
   try {
-    return localStorage.getItem(TOKEN_KEY);
+    return localStorage.getItem(TOKEN_KEY)
   } catch {
-    return null;
+    return null
   }
+}
+
+function notify(signedIn: boolean) {
+  if (!signedIn) {
+    sessionController.abort()
+    sessionController = new AbortController()
+  }
+  listeners.forEach((l) => l(signedIn))
 }
 
 function writeToken(token: string | null) {
   try {
-    if (token) localStorage.setItem(TOKEN_KEY, token);
-    else localStorage.removeItem(TOKEN_KEY);
+    if (token) localStorage.setItem(TOKEN_KEY, token)
+    else localStorage.removeItem(TOKEN_KEY)
   } catch {
-    // Storage unavailable — session lasts for this page load only
+    // Storage unavailable: the session lasts for this page load only
   }
-  listeners.forEach((l) => l(!!token));
+  notify(!!token)
 }
 
-function decodeClaims(token: string): { sub: string; exp: number } | null {
+// Sign-in / sign-out in another tab.
+if (typeof window !== 'undefined') {
+  window.addEventListener('storage', (e) => {
+    if (e.key !== TOKEN_KEY && e.key !== null) return
+    notify(!!readToken())
+  })
+}
+
+interface Claims {
+  sub: string
+  exp: number
+  iat?: number
+}
+
+function decodeClaims(token: string): Claims | null {
   try {
-    const payload = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
-    return JSON.parse(atob(payload));
+    const payload = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')
+    return JSON.parse(atob(payload))
   } catch {
-    return null;
+    return null
   }
 }
 
 /** Returns the signed-in user's id if a non-expired session token is stored (works offline). */
 export function getSessionUserId(): string | null {
-  const token = readToken();
-  const claims = token ? decodeClaims(token) : null;
-  if (!claims || claims.exp * 1000 < Date.now()) return null;
-  return claims.sub;
+  const token = readToken()
+  const claims = token ? decodeClaims(token) : null
+  if (!claims || claims.exp * 1000 < Date.now()) return null
+  return claims.sub
 }
 
 export function onAuthChange(listener: AuthListener): () => void {
-  listeners.add(listener);
-  return () => listeners.delete(listener);
+  listeners.add(listener)
+  return () => {
+    listeners.delete(listener)
+  }
 }
 
-type Query = Record<string, string | number | boolean | string[] | null | undefined>;
+type Query = Record<string, string | number | boolean | string[] | null | undefined>
 
-export async function api<T = unknown>(
-  method: string,
-  path: string,
-  opts: { query?: Query; body?: unknown; raw?: Blob } = {},
-): Promise<T> {
-  const url = new URL(API_URL + path, window.location.origin);
+export interface ApiOptions {
+  query?: Query
+  body?: unknown
+  raw?: Blob
+  signal?: AbortSignal
+  /** Overrides the default 20 s timeout. */
+  timeoutMs?: number
+}
+
+const AUTH_PATHS = new Set(['/auth/login', '/auth/signup'])
+
+export async function api<T = unknown>(method: string, path: string, opts: ApiOptions = {}): Promise<T> {
+  const url = new URL(API_URL + path, window.location.origin)
   for (const [k, v] of Object.entries(opts.query ?? {})) {
-    if (v == null) continue;
-    for (const item of Array.isArray(v) ? v : [v]) url.searchParams.append(k, String(item));
+    if (v == null) continue
+    for (const item of Array.isArray(v) ? v : [v]) url.searchParams.append(k, String(item))
   }
 
-  const headers: Record<string, string> = {};
-  const token = readToken();
-  if (token) headers.Authorization = `Bearer ${token}`;
-  let body: BodyInit | undefined;
+  const headers: Record<string, string> = { Accept: 'application/json' }
+  const token = readToken()
+  if (token) headers.Authorization = `Bearer ${token}`
+  let body: BodyInit | undefined
   if (opts.raw) {
-    body = opts.raw;
-    headers['Content-Type'] = opts.raw.type || 'application/octet-stream';
+    body = opts.raw
+    headers['Content-Type'] = opts.raw.type || 'application/octet-stream'
   } else if (opts.body !== undefined) {
-    body = JSON.stringify(opts.body);
-    headers['Content-Type'] = 'application/json';
+    body = JSON.stringify(opts.body)
+    headers['Content-Type'] = 'application/json'
   }
 
-  const res = await fetch(url, { method, headers, body });
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) {
-    if (res.status === 401 && token) writeToken(null);
-    throw new ApiError((data as { error?: string }).error || `Request failed (${res.status})`, res.status);
+  // One controller fed by the timeout, the caller's signal and the session.
+  const controller = new AbortController()
+  let timedOut = false
+  const timer = setTimeout(() => {
+    timedOut = true
+    controller.abort()
+  }, opts.timeoutMs ?? REQUEST_TIMEOUT_MS)
+  const session = sessionController.signal
+  const forward = () => controller.abort()
+  if (opts.signal?.aborted || (token && session.aborted)) controller.abort()
+  opts.signal?.addEventListener('abort', forward)
+  if (token) session.addEventListener('abort', forward)
+
+  const cancelled = () => !timedOut && (opts.signal?.aborted || (!!token && session.aborted))
+
+  try {
+    let res: Response
+    try {
+      res = await fetch(url, { method, headers, body, signal: controller.signal })
+    } catch {
+      if (cancelled()) throw new AbortedError()
+      if (timedOut) throw new ApiError('The server took too long to respond. Check your connection and retry.', 0)
+      throw new ApiError('Could not reach the server. Check your connection and retry.', 0)
+    }
+
+    const isJson = (res.headers.get('content-type') ?? '').includes('application/json')
+    let data: unknown = undefined
+    if (isJson) {
+      try {
+        data = await res.json()
+      } catch {
+        if (cancelled()) throw new AbortedError()
+        data = undefined
+      }
+    }
+
+    if (!res.ok) {
+      if (res.status === 401 && !AUTH_PATHS.has(path)) {
+        // A 401 for a token that has since been replaced or cleared is stale: stay quiet.
+        if (token && readToken() !== token) throw new AbortedError()
+        if (token) writeToken(null)
+        else notify(false)
+        throw new AbortedError()
+      }
+      const msg = (data as { error?: string } | undefined)?.error
+      throw new ApiError(msg || `Request failed (${res.status})`, res.status)
+    }
+
+    if (cancelled()) throw new AbortedError()
+    if (res.status === 204) return undefined as T
+    if (!isJson || data === undefined) {
+      // e.g. a missing VITE_API_URL makes requests hit the SPA's index.html
+      throw new ApiError('Unexpected response from the server (not JSON). Is the API URL configured?', res.status)
+    }
+    return data as T
+  } finally {
+    clearTimeout(timer)
+    opts.signal?.removeEventListener('abort', forward)
+    session.removeEventListener('abort', forward)
   }
-  return data as T;
+}
+
+/** Splits `ids` into chunks of at most `size` (the API binds at most ~90 ids per query). */
+export function chunk<T>(ids: T[], size = 90): T[][] {
+  const out: T[][] = []
+  for (let i = 0; i < ids.length; i += size) out.push(ids.slice(i, i + size))
+  return out
+}
+
+/** GET with an id-list query, split into URL-safe chunks and concatenated. */
+export async function getByIds<T>(path: string, key: string, ids: string[], opts: ApiOptions = {}): Promise<T[]> {
+  const unique = [...new Set(ids)]
+  if (unique.length === 0) return []
+  const parts = await Promise.all(
+    chunk(unique).map((c) => api<T[]>('GET', path, { ...opts, query: { ...opts.query, [key]: c } })),
+  )
+  return parts.flat()
 }
 
 export async function signIn(dodId: string, pin: string): Promise<ApiProfile> {
   const { token, profile } = await api<{ token: string; profile: ApiProfile }>('POST', '/auth/login', {
     body: { dod_id: dodId, pin },
-  });
-  writeToken(token);
-  return profile;
+  })
+  writeToken(token)
+  return profile
 }
 
 export async function signUp(
@@ -119,11 +253,39 @@ export async function signUp(
 ): Promise<ApiProfile> {
   const res = await api<{ token: string; profile: ApiProfile }>('POST', '/auth/signup', {
     body: { dod_id: dodId, pin, ...profile },
-  });
-  writeToken(res.token);
-  return res.profile;
+  })
+  writeToken(res.token)
+  return res.profile
 }
 
 export function signOut() {
-  writeToken(null);
+  writeToken(null)
+}
+
+let refreshing: Promise<void> | null = null
+
+/**
+ * Sliding session: when the stored token is more than about a day old, swap it
+ * for a fresh one. Safe to call often; it only hits the network when needed.
+ */
+export function maybeRefreshSession(): Promise<void> {
+  if (refreshing) return refreshing
+  const token = readToken()
+  const claims = token ? decodeClaims(token) : null
+  if (!token || !claims || claims.exp * 1000 < Date.now()) return Promise.resolve()
+  const issuedMs = (claims.iat ?? claims.exp - TOKEN_TTL_SECONDS) * 1000
+  if (Date.now() - issuedMs < REFRESH_AFTER_MS) return Promise.resolve()
+
+  refreshing = api<{ token: string }>('POST', '/auth/refresh')
+    .then(({ token: next }) => {
+      // Only replace the token we refreshed (the user may have signed out meanwhile).
+      if (next && readToken() === token) writeToken(next)
+    })
+    .catch((err) => {
+      if (!isAbortedError(err)) console.warn('Session refresh failed:', err)
+    })
+    .finally(() => {
+      refreshing = null
+    })
+  return refreshing
 }

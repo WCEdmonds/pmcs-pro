@@ -54,6 +54,7 @@ export function DiagnosisStepper({ categoryLabel, vehicleType, onComplete, onSki
           {trail.length > 0 && (
             <button
               onClick={goBack}
+              aria-label="Previous diagnosis step"
               className="min-w-[44px] min-h-[44px] flex items-center justify-center text-text-secondary"
             >
               <ArrowLeft size={20} />

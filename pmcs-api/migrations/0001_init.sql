@@ -1,8 +1,14 @@
 -- PMCS Pro schema for Cloudflare D1 (SQLite).
 -- Ported from the Supabase Postgres schema. Differences:
---   * uuid/timestamptz are TEXT (uuids generated in the Worker, ISO-8601 timestamps)
+--   * uuid/timestamptz are TEXT (uuids generated in the Worker, ISO-8601 UTC timestamps)
 --   * text[] / jsonb columns are JSON-encoded TEXT
---   * auth.users is folded into profiles.pin_hash
+--   * booleans are INTEGER 0/1
+--   * auth.users is folded into profiles.pin_hash ('!' = imported profile with no
+--     auth user; it can be claimed through /auth/signup)
+--   * units (profiles.unit, vehicles.unit, uic_lookup.uic) are stored trimmed and
+--     upper-case; the API compares them with plain equality
+--   * access (see visibleUnits() in src/index.ts): reads cover the caller's own unit
+--     plus the UICs in their dashboard_watched_uics rows; writes cover the own unit only
 
 CREATE TABLE profiles (
   id TEXT PRIMARY KEY,
@@ -17,6 +23,7 @@ CREATE TABLE profiles (
   unit TEXT,
   created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
 );
+CREATE INDEX idx_profiles_unit ON profiles (unit);
 
 CREATE TABLE vehicles (
   id TEXT PRIMARY KEY,
@@ -50,7 +57,8 @@ CREATE TABLE inspections (
   date TEXT,
   started_at TEXT,
   completed_at TEXT,
-  client_session_id TEXT UNIQUE
+  client_session_id TEXT UNIQUE,
+  created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
 );
 CREATE INDEX idx_inspections_vehicle ON inspections (vehicle_id, completed_at);
 
@@ -58,6 +66,9 @@ CREATE TABLE faults (
   id TEXT PRIMARY KEY,
   inspection_id TEXT NOT NULL REFERENCES inspections(id) ON DELETE CASCADE,
   vehicle_id TEXT NOT NULL REFERENCES vehicles(id) ON DELETE CASCADE,
+  -- Id the field app gave the fault; makes /inspections/sync retries idempotent
+  -- and maps local photos to the stored fault. NULL for imported/legacy faults.
+  client_fault_id TEXT,
   item TEXT,
   item_description TEXT,
   zone TEXT,
@@ -75,7 +86,8 @@ CREATE TABLE faults (
   photo_urls TEXT NOT NULL DEFAULT '[]',
   resolved_at TEXT,
   resolved_by TEXT,
-  created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
+  created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
+  UNIQUE (inspection_id, client_fault_id)
 );
 CREATE INDEX idx_faults_vehicle ON faults (vehicle_id, resolution_status);
 CREATE INDEX idx_faults_inspection ON faults (inspection_id);
@@ -100,11 +112,14 @@ CREATE TABLE generated_forms (
   id TEXT PRIMARY KEY,
   inspection_id TEXT NOT NULL REFERENCES inspections(id) ON DELETE CASCADE,
   vehicle_id TEXT REFERENCES vehicles(id) ON DELETE CASCADE,
+  -- Path inside the `generated` bucket; the R2 key is `generated/<path>`.
   pdf_storage_path TEXT,
   generated_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
 );
 CREATE INDEX idx_generated_forms_inspection ON generated_forms (inspection_id);
 
+-- Dashboard "watched UICs": self-service read access to other units (battalion
+-- and higher staff overseeing several companies). Grants READ access only.
 CREATE TABLE dashboard_watched_uics (
   id TEXT PRIMARY KEY,
   user_id TEXT NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
@@ -115,26 +130,39 @@ CREATE TABLE dashboard_watched_uics (
 
 CREATE TABLE uic_lookup (
   uic TEXT PRIMARY KEY,
-  unit_name TEXT NOT NULL
+  unit_name TEXT NOT NULL,
+  created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
 );
 
 CREATE TABLE vehicle_status_history (
   id TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
   vehicle_id TEXT NOT NULL REFERENCES vehicles(id) ON DELETE CASCADE,
   status TEXT NOT NULL,
-  recorded_at TEXT NOT NULL,
+  recorded_at TEXT NOT NULL, -- YYYY-MM-DD (UTC)
   UNIQUE (vehicle_id, recorded_at)
 );
 CREATE INDEX idx_vehicle_status_history_recorded ON vehicle_status_history (recorded_at);
 
--- Vehicle status follows open NMC faults (port of update_vehicle_status_on_fault()).
+-- Key/value settings. Supabase's app_config held notification_email and
+-- resend_api_key; those now live in Worker vars/secrets (NOTIFICATION_EMAIL,
+-- RESEND_API_KEY), so the export writes them to secrets.env, not here.
+CREATE TABLE app_config (
+  key TEXT PRIMARY KEY,
+  value TEXT
+);
+
+-- Vehicle status is computed from open (not CORRECTED) faults:
+--   NMC if any open NMC fault, else PMC if any open PMC fault, else FMC.
+-- (A manually set DEADLINE is overwritten on the next fault change; there is no UI for it.)
+-- scripts/export-from-supabase.mjs copies every CREATE TRIGGER below into data.sql
+-- (dropped before the import, recreated after it), so keep each one ending in `END;`.
 CREATE TRIGGER faults_vehicle_status_insert AFTER INSERT ON faults
 BEGIN
   UPDATE vehicles SET
-    status = CASE WHEN EXISTS (
-      SELECT 1 FROM faults
-      WHERE vehicle_id = NEW.vehicle_id AND resolution_status != 'CORRECTED' AND readiness = 'NMC'
-    ) THEN 'NMC' ELSE 'FMC' END,
+    status = CASE
+      WHEN EXISTS (SELECT 1 FROM faults WHERE vehicle_id = NEW.vehicle_id AND resolution_status != 'CORRECTED' AND readiness = 'NMC') THEN 'NMC'
+      WHEN EXISTS (SELECT 1 FROM faults WHERE vehicle_id = NEW.vehicle_id AND resolution_status != 'CORRECTED' AND readiness = 'PMC') THEN 'PMC'
+      ELSE 'FMC' END,
     updated_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
   WHERE id = NEW.vehicle_id;
 END;
@@ -142,10 +170,10 @@ END;
 CREATE TRIGGER faults_vehicle_status_update AFTER UPDATE OF resolution_status, readiness, vehicle_id ON faults
 BEGIN
   UPDATE vehicles SET
-    status = CASE WHEN EXISTS (
-      SELECT 1 FROM faults
-      WHERE vehicle_id = vehicles.id AND resolution_status != 'CORRECTED' AND readiness = 'NMC'
-    ) THEN 'NMC' ELSE 'FMC' END,
+    status = CASE
+      WHEN EXISTS (SELECT 1 FROM faults WHERE vehicle_id = vehicles.id AND resolution_status != 'CORRECTED' AND readiness = 'NMC') THEN 'NMC'
+      WHEN EXISTS (SELECT 1 FROM faults WHERE vehicle_id = vehicles.id AND resolution_status != 'CORRECTED' AND readiness = 'PMC') THEN 'PMC'
+      ELSE 'FMC' END,
     updated_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
   WHERE id IN (NEW.vehicle_id, OLD.vehicle_id);
 END;
@@ -153,10 +181,10 @@ END;
 CREATE TRIGGER faults_vehicle_status_delete AFTER DELETE ON faults
 BEGIN
   UPDATE vehicles SET
-    status = CASE WHEN EXISTS (
-      SELECT 1 FROM faults
-      WHERE vehicle_id = OLD.vehicle_id AND resolution_status != 'CORRECTED' AND readiness = 'NMC'
-    ) THEN 'NMC' ELSE 'FMC' END,
+    status = CASE
+      WHEN EXISTS (SELECT 1 FROM faults WHERE vehicle_id = OLD.vehicle_id AND resolution_status != 'CORRECTED' AND readiness = 'NMC') THEN 'NMC'
+      WHEN EXISTS (SELECT 1 FROM faults WHERE vehicle_id = OLD.vehicle_id AND resolution_status != 'CORRECTED' AND readiness = 'PMC') THEN 'PMC'
+      ELSE 'FMC' END,
     updated_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
   WHERE id = OLD.vehicle_id;
 END;

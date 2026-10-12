@@ -1,5 +1,8 @@
 import { useMemo, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Navigate } from 'react-router-dom';
+import { useSessionLoader } from '../hooks/useSessionLoader';
+import { SessionGate } from '../components/ui/NotFound';
+import { isNotMissionCapable } from '../stores/historyStore';
 import { motion } from 'framer-motion';
 import { Check, OctagonAlert } from 'lucide-react';
 import { useSessionStore } from '../stores/sessionStore';
@@ -11,18 +14,26 @@ import { Input } from '../components/ui/Input';
 export default function SummaryPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { stepResults, faults, currentSession, steps, jumpToStep } = useSessionStore();
-  const [remarks, setRemarks] = useState(currentSession?.remarks || '');
-  const [supervisorName, setSupervisorName] = useState('');
-  const [supervisorDodId, setSupervisorDodId] = useState('');
+  const loadStatus = useSessionLoader(id);
+  const { stepResults, faults, currentSession, steps, jumpToStep, updateSession } = useSessionStore();
+  // Draft fields live on the session in Dexie, so a reload keeps them.
+  const [draft, setDraft] = useState<{ id: string; remarks: string; supervisorName: string; supervisorDodId: string } | null>(null);
+  const fields = draft?.id === currentSession?.id && draft ? draft : {
+    id: currentSession?.id ?? '',
+    remarks: currentSession?.remarks ?? '',
+    supervisorName: currentSession?.supervisorName ?? '',
+    supervisorDodId: currentSession?.supervisorDodId ?? '',
+  };
+  const setField = (k: 'remarks' | 'supervisorName' | 'supervisorDodId', v: string) => setDraft({ ...fields, [k]: v });
+  const { remarks, supervisorName, supervisorDodId } = fields;
+  const [continuing, setContinuing] = useState(false);
 
   const stats = useMemo(() => {
     const total = stepResults.length;
     const checked = stepResults.filter((r) => r.status !== 'NOT_CHECKED').length;
     const go = stepResults.filter((r) => r.status === 'GO').length;
     const fault = stepResults.filter((r) => r.status === 'FAULT').length;
-    const hasNmc = faults.some((f) => f.readiness === 'NMC' && !f.correctedOnSite);
-    return { total, checked, go, fault, missionCapable: !hasNmc };
+    return { total, checked, go, fault, missionCapable: !isNotMissionCapable(faults) };
   }, [stepResults, faults]);
 
   const faultsByZone = useMemo(() => {
@@ -42,13 +53,20 @@ export default function SummaryPage() {
     }
   };
 
-  if (!currentSession) {
-    return (
-      <div className="flex items-center justify-center h-full text-text-secondary">
-        No active session.
-      </div>
-    );
-  }
+  const handleContinue = async () => {
+    if (continuing) return;
+    setContinuing(true);
+    await updateSession({
+      remarks: remarks.trim() || undefined,
+      supervisorName: supervisorName.trim() || undefined,
+      supervisorDodId: supervisorDodId.trim() || undefined,
+    });
+    navigate(`/session/${id}/5988`);
+  };
+
+  if (loadStatus !== 'ready') return <SessionGate status={loadStatus} />;
+  if (!currentSession) return <SessionGate status="notfound" />;
+  if (currentSession.status === 'COMPLETED') return <Navigate to={`/session/${id}/5988`} replace />;
 
   return (
     <div className="flex flex-col h-full">
@@ -122,7 +140,8 @@ export default function SummaryPage() {
           <TextArea
             label="Additional Remarks"
             value={remarks}
-            onChange={(e) => setRemarks(e.target.value)}
+            onChange={(e) => setField('remarks', e.target.value)}
+            onBlur={() => updateSession({ remarks: remarks.trim() || undefined })}
             placeholder="Overall vehicle comments..."
           />
 
@@ -132,13 +151,13 @@ export default function SummaryPage() {
               <Input
                 label="Supervisor Name"
                 value={supervisorName}
-                onChange={(e) => setSupervisorName(e.target.value)}
+                onChange={(e) => setField('supervisorName', e.target.value)}
                 placeholder="e.g., SSG Smith"
               />
               <Input
                 label="Supervisor DOD ID"
                 value={supervisorDodId}
-                onChange={(e) => setSupervisorDodId(e.target.value)}
+                onChange={(e) => setField('supervisorDodId', e.target.value.replace(/\D/g, '').slice(0, 10))}
                 inputMode="numeric"
                 placeholder="10-digit DOD ID"
               />
@@ -152,7 +171,8 @@ export default function SummaryPage() {
         <Button
           size="lg"
           fullWidth
-          onClick={() => navigate(`/session/${id}/5988`, { state: { remarks, supervisorName, supervisorDodId } })}
+          onClick={handleContinue}
+          disabled={continuing}
         >
           Review & Generate DA 2404
         </Button>

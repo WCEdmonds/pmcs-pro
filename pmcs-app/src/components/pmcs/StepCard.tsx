@@ -1,15 +1,16 @@
 import { Badge } from '../ui/Badge';
 import { VehicleDiagram } from '../vehicle/VehicleDiagram';
 import { AskAI } from './AskAI';
-import type { PmcsStepData, StepResult, VehicleType } from '../../types';
+import type { InspectionType, PmcsStepData, StepResult, VehicleType } from '../../types';
 
 interface StepCardProps {
   step: PmcsStepData;
   stepResult: StepResult;
   vehicleType?: VehicleType;
+  inspectionType?: InspectionType;
 }
 
-export function StepCard({ step, vehicleType }: StepCardProps) {
+export function StepCard({ step, vehicleType, inspectionType }: StepCardProps) {
   return (
     <div className="flex flex-col gap-3 px-4 overflow-y-auto flex-1">
       <VehicleDiagram
@@ -51,10 +52,10 @@ export function StepCard({ step, vehicleType }: StepCardProps) {
       )}
 
       {/* Ask AI */}
-      <AskAI step={step} vehicleType={vehicleType || 'M1151'} />
+      <AskAI step={step} vehicleType={vehicleType || 'M1151'} inspectionType={inspectionType} />
 
       {/* TM Reference */}
-      <p className="text-xs text-text-secondary/60 font-display">
+      <p className="text-xs text-text-secondary font-display">
         {step.conditionSet} — Item {step.item}
       </p>
     </div>

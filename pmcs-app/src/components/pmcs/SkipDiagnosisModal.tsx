@@ -30,6 +30,7 @@ export function SkipDiagnosisModal({ onConfirm, onCancel }: SkipDiagnosisModalPr
           <h3 className="text-base font-bold font-display text-text-primary">Skip Diagnosis</h3>
           <button
             onClick={onCancel}
+            aria-label="Close"
             className="min-w-[44px] min-h-[44px] flex items-center justify-center text-text-secondary"
           >
             <X size={22} />

@@ -3,10 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { PlayCircle, ChevronLeft } from 'lucide-react';
 import { useUserStore } from '../stores/userStore';
+import { useLiveQuery } from 'dexie-react-hooks';
 import { useSessionStore, getPersistedSession } from '../stores/sessionStore';
 import { db } from '../utils/db';
 import { Button } from '../components/ui/Button';
-import type { InspectionSession, VehicleType } from '../types';
+import { SyncBanner } from '../components/sync/SyncStatus';
+import type { VehicleType } from '../types';
 
 import m1151Home from '../assets/images/m1151/m1151-home.jpg';
 import m1078Home from '../assets/images/m1078/m1078-home.jpg';
@@ -93,48 +95,50 @@ export default function HomePage() {
   const navigate = useNavigate();
   const user = useUserStore((s) => s.user);
   const restoreSession = useSessionStore((s) => s.restoreSession);
-  const clearSession = useSessionStore((s) => s.clearSession);
+  const discardSession = useSessionStore((s) => s.discardSession);
 
-  const [pendingSession, setPendingSession] = useState<InspectionSession | null>(null);
   const [isRestoring, setIsRestoring] = useState(false);
   const [selectedFamily, setSelectedFamily] = useState<VehicleFamily | null>(null);
+  const [confirmDiscard, setConfirmDiscard] = useState(false);
 
-  useEffect(() => {
+  // Only this soldier's in-progress inspection (devices are shared)
+  const pendingSession = useLiveQuery(async () => {
+    if (!user) return null;
+    const mine = await db.sessions.where('inspectorDodId').equals(user.dodId)
+      .filter((s) => s.status === 'IN_PROGRESS').toArray();
+    if (mine.length === 0) return null;
     const persisted = getPersistedSession();
-    if (!persisted) return;
-    db.sessions.get(persisted.sessionId).then((session) => {
-      if (session && session.status === 'IN_PROGRESS') {
-        setPendingSession(session);
-      } else {
-        clearSession();
-      }
-    });
-  }, [clearSession]);
+    return mine.find((s) => s.id === persisted?.sessionId)
+      ?? mine.sort((a, b) => b.createdAt.localeCompare(a.createdAt))[0];
+  }, [user?.dodId]) ?? null;
+
+  // A family with a single variant goes straight to setup (navigate in an effect, never during render)
+  useEffect(() => {
+    if (selectedFamily && selectedFamily.variants.length === 1) {
+      navigate(`/session/new?vehicle=${selectedFamily.variants[0].type}`);
+    }
+  }, [selectedFamily, navigate]);
 
   const handleResume = async () => {
     if (!pendingSession) return;
     setIsRestoring(true);
-    const restored = await restoreSession(pendingSession.id);
+    const restored = await restoreSession(pendingSession.id).catch(() => false);
     if (restored) {
       navigate(`/session/${pendingSession.id}/pmcs`);
     } else {
-      setPendingSession(null);
       setIsRestoring(false);
     }
   };
 
-  const handleDiscard = () => {
-    clearSession();
-    setPendingSession(null);
+  const handleDiscard = async () => {
+    if (!pendingSession) return;
+    await discardSession(pendingSession.id);
+    setConfirmDiscard(false);
   };
 
   // Step 2: variant selection
   if (selectedFamily) {
-    // If only one variant, skip straight to session setup
-    if (selectedFamily.variants.length === 1) {
-      navigate(`/session/new?vehicle=${selectedFamily.variants[0].type}`);
-      return null;
-    }
+    if (selectedFamily.variants.length === 1) return null;
 
     return (
       <div className="flex flex-col h-full px-4 pt-6 pb-4 overflow-y-auto">
@@ -142,7 +146,7 @@ export default function HomePage() {
           onClick={() => setSelectedFamily(null)}
           className="flex items-center gap-1 text-accent-blue text-sm mb-4 min-h-[44px]"
         >
-          <ChevronLeft size={18} />
+          <ChevronLeft size={18} aria-hidden="true" />
           Back
         </button>
 
@@ -172,7 +176,7 @@ export default function HomePage() {
               <p className="text-text-secondary text-sm mt-1">
                 {variant.hint}
               </p>
-              <p className="text-text-secondary/70 text-xs mt-2">
+              <p className="text-text-secondary text-xs mt-2">
                 ~{variant.itemCount} check items
               </p>
             </motion.button>
@@ -196,14 +200,17 @@ export default function HomePage() {
         )}
       </div>
 
+      <SyncBanner compact />
+
       {pendingSession && (
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           className="bg-accent-blue/10 border border-accent-blue/30 rounded-[var(--radius-lg)] p-4 mb-4"
+          data-testid="resume-banner"
         >
           <div className="flex items-start gap-3">
-            <PlayCircle size={24} className="text-accent-blue flex-shrink-0 mt-0.5" />
+            <PlayCircle size={24} className="text-accent-blue flex-shrink-0 mt-0.5" aria-hidden="true" />
             <div className="flex-1">
               <p className="text-sm font-semibold text-text-primary">
                 Inspection in progress
@@ -213,14 +220,24 @@ export default function HomePage() {
               </p>
             </div>
           </div>
-          <div className="flex gap-2 mt-3">
-            <Button variant="secondary" size="default" fullWidth onClick={handleDiscard}>
-              Discard
-            </Button>
-            <Button size="default" fullWidth onClick={handleResume} disabled={isRestoring}>
-              {isRestoring ? 'Restoring...' : 'Resume'}
-            </Button>
-          </div>
+          {confirmDiscard ? (
+            <div className="mt-3">
+              <p className="text-sm text-accent-red mb-2">Delete this unfinished inspection? This can't be undone.</p>
+              <div className="flex gap-2">
+                <Button variant="secondary" fullWidth onClick={() => setConfirmDiscard(false)}>Keep</Button>
+                <Button variant="danger" fullWidth onClick={handleDiscard}>Delete</Button>
+              </div>
+            </div>
+          ) : (
+            <div className="flex gap-2 mt-3">
+              <Button variant="secondary" size="default" fullWidth onClick={() => setConfirmDiscard(true)}>
+                Discard
+              </Button>
+              <Button size="default" fullWidth onClick={handleResume} disabled={isRestoring}>
+                {isRestoring ? 'Restoring...' : 'Resume'}
+              </Button>
+            </div>
+          )}
         </motion.div>
       )}
 
@@ -238,7 +255,7 @@ export default function HomePage() {
             <div className="h-44 overflow-hidden">
               <img
                 src={family.image}
-                alt={family.name}
+                alt=""
                 className="w-full h-full object-cover"
               />
             </div>
@@ -246,7 +263,7 @@ export default function HomePage() {
               <h2 className="text-lg font-bold font-display text-text-primary">
                 {family.name}
               </h2>
-              <p className="text-text-secondary/70 text-xs mt-1">
+              <p className="text-text-secondary text-xs mt-1">
                 {family.variants.length === 1
                   ? family.variants[0].name
                   : `${family.variants.length} variants`

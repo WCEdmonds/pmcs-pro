@@ -10,6 +10,19 @@ rules = [{ type = "Data", globs = ["**/*.pdf"], fallthrough = false }]
 # Firebase Hosting origins of the field app and dashboard.
 ALLOWED_ORIGINS = "https://pmcs-pro.web.app,https://pmcs-pro.firebaseapp.com,https://pmcs-dashboard.web.app,https://pmcs-dashboard.firebaseapp.com"
 
+# Recipients of newly generated DA 2404 PDFs (comma-separated). Emails are sent only
+# when RESEND_API_KEY is also set. NOTIFICATION_FROM must be a sender on a domain
+# verified in Resend (the default onboarding@resend.dev only reaches the Resend account owner).
+# NOTIFICATION_EMAIL = "motorpool@example.mil"
+# NOTIFICATION_FROM = "PMCS Pro <pmcs@your-verified-domain>"
+
+# Rate limit for /auth/* (signup, login, exists), keyed on client IP + DoD ID.
+# namespace_id is any account-unique integer string.
+[[ratelimits]]
+name = "LOGIN_LIMITER"
+namespace_id = "1001"
+simple = { limit = 10, period = 60 }
+
 [[d1_databases]]
 binding = "DB"
 database_name = "pmcs-pro"
@@ -25,4 +38,5 @@ bucket_name = "pmcs-pro-files"
 crons = ["5 4 * * *"]
 
 # Secrets (set with `npx wrangler secret put JWT_SECRET`):
-#   JWT_SECRET  random 32+ byte string used to sign sessions and file links
+#   JWT_SECRET      random 32+ byte string used to sign sessions and file links
+#   RESEND_API_KEY  optional; enables emailing new DA 2404s to NOTIFICATION_EMAIL

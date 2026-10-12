@@ -1,260 +1,242 @@
-import { useEffect, useRef, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts'
-import { Truck, AlertCircle, CheckCircle2, Filter } from 'lucide-react'
-import { api } from '../lib/api'
-import { useRealtimeRefresh } from '../hooks/useRealtimeRefresh'
-import { useWatchedUics } from '../hooks/useWatchedUics'
-import type { Vehicle } from '../types/database'
+import { Truck, AlertCircle, CheckCircle2, Filter, Building2 } from 'lucide-react'
+import { api, errorMessage, isAbortedError } from '../lib/api'
+import { useLoader } from '../hooks/useLoader'
+import { unitLabel, unitQuery, useUnits } from '../hooks/useUnits'
+import { buildReadinessSeries, countStatuses, statusBucket } from '../lib/readiness'
+import { pmcsCompliance } from '../lib/compliance'
+import { addLocalDays, formatDay, localDateKey } from '../lib/dates'
+import { ErrorState, StaleBanner, StatusBadge } from '../components/Feedback'
+import { UnitSelector } from '../components/UnitSelector'
+import type { Fault, LastInspection, Vehicle, VehicleStatusSnapshot } from '../types/database'
 
-type FilterMode = 'all' | 'nmc' | 'overdue'
+type FilterMode = 'all' | 'nmc' | 'pmc' | 'overdue'
 
-interface VehicleRow extends Vehicle {
-  openFaultCount: number
-  lastPmcsDate: string | null
+const FILTER_LABELS: Record<FilterMode, string> = {
+  all: 'All',
+  nmc: 'NMC Only',
+  pmc: 'PMC Only',
+  overdue: 'PMCS Overdue',
 }
 
-interface ReadinessPoint {
-  date: string
-  FMC: number
-  PMC: number
-  NMC: number
+const CHART_DAYS = 30
+
+interface FleetData {
+  vehicles: Vehicle[]
+  openFaults: Pick<Fault, 'id' | 'vehicle_id'>[]
+  lastInspections: LastInspection[]
+  history: VehicleStatusSnapshot[] | null
+  historyError: string | null
 }
 
-interface FaultRecord {
-  id: string
-  vehicle_id: string
-}
-
-interface InspectionRecord {
-  id: string
-  vehicle_id: string
-  completed_at: string | null
-  status: string | null
+async function loadFleet(unit: string[] | undefined, signal: AbortSignal): Promise<FleetData> {
+  const since = localDateKey(addLocalDays(new Date(), -(CHART_DAYS - 1)))
+  const historyReq = api<VehicleStatusSnapshot[]>('GET', '/vehicle-status-history', { query: { since, unit }, signal })
+    .then((h) => ({ history: h, historyError: null }))
+    .catch((err: unknown) => {
+      if (isAbortedError(err)) throw err
+      return { history: null, historyError: errorMessage(err) }
+    })
+  const [vehicles, openFaults, lastInspections, hist] = await Promise.all([
+    api<Vehicle[]>('GET', '/vehicles', { query: { unit }, signal }),
+    api<Fault[]>('GET', '/faults', { query: { open: 1, unit }, signal }),
+    api<LastInspection[]>('GET', '/vehicles/last-inspections', { query: { unit }, signal }),
+    historyReq,
+  ])
+  return { vehicles, openFaults, lastInspections, ...hist }
 }
 
 export function FleetOverview() {
   const navigate = useNavigate()
-  const { uics, loading: uicsLoading } = useWatchedUics()
-  const [vehicles, setVehicles] = useState<VehicleRow[]>([])
-  const [readinessData, setReadinessData] = useState<ReadinessPoint[]>([])
+  const { units, unitsKey, unitNames, selectedUnit, setSelectedUnit, loading: unitsLoading } = useUnits()
   const [filter, setFilter] = useState<FilterMode>('all')
-  const [loading, setLoading] = useState(true)
-  const isInitialLoad = useRef(true)
 
-  useEffect(() => {
-    loadData()
-  }, [uics, uicsLoading])
+  const key = unitsLoading ? null : `fleet|${unitsKey}|${selectedUnit}`
+  const { data, error, loading, updatedAt, reload } = useLoader(key, (signal) => loadFleet(unitQuery(selectedUnit), signal))
 
-  useRealtimeRefresh(['vehicles', 'faults', 'inspections'], loadData)
-
-  async function loadData() {
-    if (uicsLoading) return
-    if (isInitialLoad.current) setLoading(true)
-
-    const logError = (what: string) => (err: Error) => {
-      console.error(`${what} query error:`, err)
-      return []
-    }
-    const [allVehicles, inspections] = await Promise.all([
-      api<Vehicle[]>('GET', '/vehicles', { query: { unit: uics } }).catch(logError('Vehicles')),
-      api<InspectionRecord[]>('GET', '/inspections', { query: { status: 'COMPLETED' } }).catch(logError('Inspections')),
-    ])
-
-    const vehicleIds = allVehicles.map((v) => v.id)
-    const openFaults = vehicleIds.length > 0
-      ? await api<FaultRecord[]>('GET', '/faults', { query: { vehicle_id: vehicleIds, open: 1 } }).catch(logError('Faults'))
-      : []
-
-    console.log('Fleet data loaded:', { vehicles: allVehicles.length, faults: openFaults.length, inspections: inspections.length })
-
-    // Count open faults per vehicle
-    const faultCounts = new Map<string, number>()
-    for (const f of openFaults) {
-      faultCounts.set(f.vehicle_id, (faultCounts.get(f.vehicle_id) ?? 0) + 1)
-    }
-
-    // Last inspection per vehicle
-    const lastInspection = new Map<string, string>()
-    for (const ins of inspections) {
-      if (!lastInspection.has(ins.vehicle_id) && ins.completed_at) {
-        lastInspection.set(ins.vehicle_id, ins.completed_at)
-      }
-    }
-
-    const rows: VehicleRow[] = allVehicles.map((v) => ({
-      ...v,
-      openFaultCount: faultCounts.get(v.id) ?? 0,
-      lastPmcsDate: lastInspection.get(v.id) ?? null,
-    }))
-
-    setVehicles(rows)
-
-    // Build readiness chart from historical status snapshots
-    await buildReadinessChart(allVehicles)
-    isInitialLoad.current = false
-    setLoading(false)
-  }
-
-  async function buildReadinessChart(allVehicles: Vehicle[]) {
-    const total = allVehicles.length
-    if (total === 0) {
-      setReadinessData([])
-      return
-    }
-
+  const view = useMemo(() => {
+    if (!data) return null
     const now = new Date()
-    const thirtyDaysAgo = new Date(now)
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
+    const faultCounts = new Map<string, number>()
+    for (const f of data.openFaults) faultCounts.set(f.vehicle_id, (faultCounts.get(f.vehicle_id) ?? 0) + 1)
+    const last = new Map(data.lastInspections.map((l) => [l.vehicle_id, l.last_completed_at]))
 
-    const history = await api<{ vehicle_id: string; status: string; recorded_at: string }[]>('GET', '/vehicle-status-history', {
-      query: { since: thirtyDaysAgo.toISOString().slice(0, 10) },
-    }).catch(() => [])
+    const rows = data.vehicles.map((v) => {
+      const lastPmcs = last.get(v.id) ?? null
+      return { ...v, openFaultCount: faultCounts.get(v.id) ?? 0, lastPmcs, compliance: pmcsCompliance(lastPmcs, now) }
+    })
 
-    // Group snapshots by date
-    const byDate = new Map<string, Map<string, string>>()
-    for (const h of history) {
-      const date = h.recorded_at.slice(0, 10)
-      if (!byDate.has(date)) byDate.set(date, new Map())
-      byDate.get(date)!.set(h.vehicle_id, h.status)
+    const byUnit = new Map<string, typeof rows>()
+    for (const r of rows) {
+      const u = r.unit ?? '---'
+      if (!byUnit.has(u)) byUnit.set(u, [])
+      byUnit.get(u)!.push(r)
     }
-
-    // Build chart: for each day, use the snapshot if available, otherwise carry forward
-    const points: ReadinessPoint[] = []
-    const lastKnown = new Map<string, string>()
-    // Initialize with current status as fallback
-    for (const v of allVehicles) {
-      lastKnown.set(v.id, v.status ?? 'FMC')
-    }
-
-    for (let i = 30; i >= 0; i--) {
-      const day = new Date(now)
-      day.setDate(day.getDate() - i)
-      const dayStr = day.toISOString().slice(0, 10)
-
-      // Apply any snapshots for this day
-      const daySnapshots = byDate.get(dayStr)
-      if (daySnapshots) {
-        for (const [vid, status] of daySnapshots) {
-          lastKnown.set(vid, status)
+    const unitBreakdown = [...byUnit.entries()]
+      .map(([unit, list]) => {
+        const c = countStatuses(list.map((r) => r.status))
+        return {
+          unit,
+          total: list.length,
+          ...c,
+          pct: list.length ? Math.round((c.FMC / list.length) * 100) : 0,
+          overdue: list.filter((r) => r.compliance.status === 'overdue').length,
         }
-      }
-
-      const statuses = Array.from(lastKnown.values())
-      points.push({
-        date: dayStr,
-        FMC: statuses.filter((s) => s === 'FMC').length,
-        PMC: statuses.filter((s) => s === 'PMC').length,
-        NMC: statuses.filter((s) => s === 'NMC' || s === 'DEADLINE').length,
       })
-    }
+      .sort((a, b) => a.unit.localeCompare(b.unit))
 
-    setReadinessData(points)
+    return {
+      rows,
+      counts: countStatuses(rows.map((r) => r.status)),
+      unitBreakdown,
+      chart: data.history ? buildReadinessSeries(data.vehicles, data.history, now, CHART_DAYS) : [],
+    }
+  }, [data])
+
+  if (loading) return <div className="text-text-secondary">Loading fleet data...</div>
+  if (!view) {
+    return <ErrorState title="Couldn't load fleet data" message={error ?? 'Unknown error'} onRetry={reload} />
   }
 
-  const fmcCount = vehicles.filter((v) => v.status === 'FMC').length
-  const pmcCount = vehicles.filter((v) => v.status === 'PMC').length
-  const nmcCount = vehicles.filter((v) => v.status === 'NMC' || v.status === 'DEADLINE').length
-  const totalCount = vehicles.length
-  const fmcPct = totalCount > 0 ? Math.round((fmcCount / totalCount) * 100) : 0
+  const { rows, counts, unitBreakdown, chart } = view
+  const totalCount = rows.length
+  const fmcPct = totalCount > 0 ? Math.round((counts.FMC / totalCount) * 100) : 0
+  const multiUnit = units.length > 1
 
-  const now = new Date()
-  const sevenDaysAgo = new Date(now)
-  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
-
-  const filtered = vehicles.filter((v) => {
-    if (filter === 'nmc') return v.status !== 'FMC'
-    if (filter === 'overdue') {
-      if (!v.lastPmcsDate) return true
-      return new Date(v.lastPmcsDate) < sevenDaysAgo
-    }
+  const filtered = rows.filter((v) => {
+    if (filter === 'nmc') return statusBucket(v.status) === 'NMC'
+    if (filter === 'pmc') return statusBucket(v.status) === 'PMC'
+    if (filter === 'overdue') return v.compliance.status === 'overdue'
     return true
   })
 
-  function statusBadge(status: string | null) {
-    if (status === 'FMC') return <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-accent-green/20 text-accent-green">FMC</span>
-    if (status === 'PMC') return <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-accent-amber/20 text-accent-amber">PMC</span>
-    if (status === 'DEADLINE') return <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-accent-red/20 text-accent-red">DEADLINE</span>
-    return <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-accent-red/20 text-accent-red">NMC</span>
-  }
-
-  if (loading) {
-    return <div className="text-text-secondary">Loading fleet data...</div>
-  }
+  const chartStartsLate = chart.length > 0 && chart.length < CHART_DAYS
 
   return (
     <div className="space-y-8">
-      {/* Header */}
-      <div>
-        <h1 className="font-display text-2xl font-bold text-text-primary">Fleet Overview</h1>
-        <p className="text-text-secondary mt-1">Unit readiness at a glance</p>
-      </div>
-
-      {/* Readiness card */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-bg-secondary border border-border rounded-xl p-6 flex flex-col items-center justify-center">
-          <p className="text-text-secondary text-sm mb-2">Fleet Readiness</p>
-          <p className="font-display text-5xl font-bold text-accent-green">{fmcPct}%</p>
-          <p className="text-text-secondary text-sm mt-2">
-            <span className="text-text-primary font-semibold">{fmcCount}</span> / {totalCount} FMC
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h1 className="font-display text-2xl font-bold text-text-primary">Fleet Overview</h1>
+          <p className="text-text-secondary mt-1">
+            {selectedUnit ? unitLabel(selectedUnit, unitNames) : multiUnit ? `All my units (${units.length})` : 'Unit readiness at a glance'}
           </p>
         </div>
+        <UnitSelector />
+      </div>
 
+      {error && <StaleBanner message={error} updatedAt={updatedAt} onRetry={reload} />}
+
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4" data-testid="kpis">
+        <div className="bg-bg-secondary border border-border rounded-xl p-6 flex flex-col items-center justify-center">
+          <p className="text-text-secondary text-sm mb-2">Fleet Readiness</p>
+          <p className="font-display text-5xl font-bold text-accent-green" data-testid="kpi-pct">{fmcPct}%</p>
+          <p className="text-text-secondary text-sm mt-2">
+            <span className="text-text-primary font-semibold">{counts.FMC}</span> / {totalCount} FMC
+          </p>
+        </div>
         <div className="bg-bg-secondary border border-border rounded-xl p-6 flex flex-col items-center justify-center">
           <CheckCircle2 className="w-8 h-8 text-accent-green mb-2" />
-          <p className="font-display text-3xl font-bold text-accent-green">{fmcCount}</p>
+          <p className="font-display text-3xl font-bold text-accent-green" data-testid="kpi-fmc">{counts.FMC}</p>
           <p className="text-text-secondary text-sm mt-1">FMC</p>
         </div>
-
         <div className="bg-bg-secondary border border-border rounded-xl p-6 flex flex-col items-center justify-center">
           <AlertCircle className="w-8 h-8 text-accent-amber mb-2" />
-          <p className="font-display text-3xl font-bold text-accent-amber">{pmcCount}</p>
+          <p className="font-display text-3xl font-bold text-accent-amber" data-testid="kpi-pmc">{counts.PMC}</p>
           <p className="text-text-secondary text-sm mt-1">PMC</p>
         </div>
-
         <div className="bg-bg-secondary border border-border rounded-xl p-6 flex flex-col items-center justify-center">
           <AlertCircle className="w-8 h-8 text-accent-red mb-2" />
-          <p className="font-display text-3xl font-bold text-accent-red">{nmcCount}</p>
+          <p className="font-display text-3xl font-bold text-accent-red" data-testid="kpi-nmc">{counts.NMC}</p>
           <p className="text-text-secondary text-sm mt-1">NMC</p>
         </div>
       </div>
 
-      {/* Readiness chart */}
-      {readinessData.length > 0 && (
-        <div className="bg-bg-secondary border border-border rounded-xl p-6">
-          <h2 className="font-display text-lg font-semibold text-text-primary mb-4">
-            Vehicle Status Trend (30 Days)
-          </h2>
-          <ResponsiveContainer width="100%" height={250}>
-            <LineChart data={readinessData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-              <XAxis
-                dataKey="date"
-                stroke="#94A3B8"
-                fontSize={12}
-                tickFormatter={(val: string) => val.slice(5)}
-              />
-              <YAxis
-                stroke="#94A3B8"
-                fontSize={12}
-                allowDecimals={false}
-              />
-              <Tooltip
-                contentStyle={{ backgroundColor: '#1A1F25', border: '1px solid #334155', borderRadius: '8px' }}
-                labelStyle={{ color: '#F1F5F9' }}
-              />
-              <Legend />
-              <Line type="monotone" dataKey="FMC" stroke="#22C55E" strokeWidth={2} dot={false} />
-              <Line type="monotone" dataKey="PMC" stroke="#F59E0B" strokeWidth={2} dot={false} />
-              <Line type="monotone" dataKey="NMC" stroke="#EF4444" strokeWidth={2} dot={false} />
-            </LineChart>
-          </ResponsiveContainer>
+      {multiUnit && !selectedUnit && unitBreakdown.length > 0 && (
+        <div className="bg-bg-secondary border border-border rounded-xl" data-testid="unit-breakdown">
+          <div className="flex items-center gap-3 p-6 border-b border-border">
+            <Building2 className="w-5 h-5 text-text-secondary" />
+            <h2 className="font-display text-lg font-semibold text-text-primary">Readiness by Unit</h2>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="text-left text-xs text-text-secondary uppercase tracking-wider">
+                  <th className="px-6 py-3">Unit</th>
+                  <th className="px-6 py-3">Readiness</th>
+                  <th className="px-6 py-3">FMC</th>
+                  <th className="px-6 py-3">PMC</th>
+                  <th className="px-6 py-3">NMC</th>
+                  <th className="px-6 py-3">Vehicles</th>
+                  <th className="px-6 py-3">PMCS Overdue</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {unitBreakdown.map((u) => (
+                  <tr
+                    key={u.unit}
+                    onClick={() => setSelectedUnit(u.unit)}
+                    className="hover:bg-bg-tertiary cursor-pointer transition-colors"
+                  >
+                    <td className="px-6 py-3 font-display text-sm font-semibold text-text-primary">{unitLabel(u.unit, unitNames)}</td>
+                    <td className="px-6 py-3 font-display text-sm font-semibold text-accent-green">{u.pct}%</td>
+                    <td className="px-6 py-3 text-sm text-text-secondary">{u.FMC}</td>
+                    <td className="px-6 py-3 text-sm text-text-secondary">{u.PMC}</td>
+                    <td className="px-6 py-3 text-sm text-text-secondary">{u.NMC}</td>
+                    <td className="px-6 py-3 text-sm text-text-secondary">{u.total}</td>
+                    <td className="px-6 py-3 text-sm text-text-secondary">{u.overdue}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 
-      {/* Vehicle table */}
+      {totalCount > 0 && (
+        <div
+          className="bg-bg-secondary border border-border rounded-xl p-6"
+          data-testid="readiness-chart"
+          data-first={chart.length ? JSON.stringify(chart[0]) : undefined}
+          data-last={chart.length ? JSON.stringify(chart[chart.length - 1]) : undefined}
+          data-points={chart.length}
+        >
+          <h2 className="font-display text-lg font-semibold text-text-primary mb-1">Vehicle Status Trend (30 Days)</h2>
+          {data?.historyError ? (
+            <p className="text-sm text-accent-red">Couldn't load status history: {data.historyError}</p>
+          ) : (
+            <>
+              <p className="text-xs text-text-secondary mb-4">
+                {chartStartsLate
+                  ? chart.length === 1
+                    ? 'No daily snapshots yet: showing today only. History builds up from the first daily snapshot.'
+                    : `History starts ${formatDay(chart[0].date)}. Today shows live status.`
+                  : 'Daily snapshots; today shows live status.'}
+              </p>
+              <ResponsiveContainer width="100%" height={250}>
+                <LineChart data={chart}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                  <XAxis dataKey="date" stroke="#94A3B8" fontSize={12} tickFormatter={(val: string) => val.slice(5)} />
+                  <YAxis stroke="#94A3B8" fontSize={12} allowDecimals={false} />
+                  <Tooltip
+                    contentStyle={{ backgroundColor: '#1A1F25', border: '1px solid #334155', borderRadius: '8px' }}
+                    labelStyle={{ color: '#F1F5F9' }}
+                    labelFormatter={(val) => formatDay(String(val))}
+                  />
+                  <Legend />
+                  <Line type="monotone" dataKey="FMC" stroke="#22C55E" strokeWidth={2} dot={chart.length < 3} isAnimationActive={false} />
+                  <Line type="monotone" dataKey="PMC" stroke="#F59E0B" strokeWidth={2} dot={chart.length < 3} isAnimationActive={false} />
+                  <Line type="monotone" dataKey="NMC" stroke="#EF4444" strokeWidth={2} dot={chart.length < 3} isAnimationActive={false} />
+                </LineChart>
+              </ResponsiveContainer>
+            </>
+          )}
+        </div>
+      )}
+
       <div className="bg-bg-secondary border border-border rounded-xl">
-        <div className="flex items-center justify-between p-6 border-b border-border">
+        <div className="flex flex-wrap items-center justify-between gap-3 p-6 border-b border-border">
           <div className="flex items-center gap-3">
             <Truck className="w-5 h-5 text-text-secondary" />
             <h2 className="font-display text-lg font-semibold text-text-primary">Vehicles</h2>
@@ -262,27 +244,28 @@ export function FleetOverview() {
           </div>
           <div className="flex items-center gap-2">
             <Filter className="w-4 h-4 text-text-secondary" />
-            {(['all', 'nmc', 'overdue'] as FilterMode[]).map((f) => (
+            {(Object.keys(FILTER_LABELS) as FilterMode[]).map((f) => (
               <button
                 key={f}
                 onClick={() => setFilter(f)}
+                aria-pressed={filter === f}
+                title={f === 'overdue' ? 'No completed PMCS in more than 14 days (or never)' : undefined}
                 className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                  filter === f
-                    ? 'bg-bg-tertiary text-text-primary'
-                    : 'text-text-secondary hover:bg-bg-tertiary'
+                  filter === f ? 'bg-bg-tertiary text-text-primary' : 'text-text-secondary hover:bg-bg-tertiary'
                 }`}
               >
-                {f === 'all' ? 'All' : f === 'nmc' ? 'NMC Only' : 'Overdue'}
+                {FILTER_LABELS[f]}
               </button>
             ))}
           </div>
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table className="w-full" data-testid="vehicle-table">
             <thead>
               <tr className="text-left text-xs text-text-secondary uppercase tracking-wider">
                 <th className="px-6 py-3">Bumper #</th>
+                {multiUnit && <th className="px-6 py-3">Unit</th>}
                 <th className="px-6 py-3">Type</th>
                 <th className="px-6 py-3">Status</th>
                 <th className="px-6 py-3">Open Faults</th>
@@ -291,20 +274,11 @@ export function FleetOverview() {
             </thead>
             <tbody className="divide-y divide-border">
               {filtered.map((v) => (
-                <tr
-                  key={v.id}
-                  onClick={() => navigate(`/vehicle/${v.id}`)}
-                  className="hover:bg-bg-tertiary cursor-pointer transition-colors"
-                >
-                  <td className="px-6 py-4 font-display font-semibold text-text-primary">
-                    {v.bumper_number ?? '---'}
-                  </td>
-                  <td className="px-6 py-4 text-text-secondary text-sm">
-                    {v.vehicle_type ?? '---'}
-                  </td>
-                  <td className="px-6 py-4">
-                    {statusBadge(v.status)}
-                  </td>
+                <tr key={v.id} onClick={() => navigate(`/vehicle/${v.id}`)} className="hover:bg-bg-tertiary cursor-pointer transition-colors">
+                  <td className="px-6 py-4 font-display font-semibold text-text-primary">{v.bumper_number ?? '---'}</td>
+                  {multiUnit && <td className="px-6 py-4 text-sm text-text-secondary">{v.unit ?? '---'}</td>}
+                  <td className="px-6 py-4 text-text-secondary text-sm">{v.vehicle_type ?? '---'}</td>
+                  <td className="px-6 py-4"><StatusBadge status={v.status} /></td>
                   <td className="px-6 py-4">
                     {v.openFaultCount > 0 ? (
                       <span className="text-accent-red font-semibold">{v.openFaultCount}</span>
@@ -312,14 +286,14 @@ export function FleetOverview() {
                       <span className="text-text-secondary">0</span>
                     )}
                   </td>
-                  <td className="px-6 py-4 text-sm text-text-secondary">
-                    {v.lastPmcsDate ? new Date(v.lastPmcsDate).toLocaleDateString() : 'Never'}
+                  <td className={`px-6 py-4 text-sm ${v.compliance.status === 'overdue' ? 'text-accent-red' : 'text-text-secondary'}`}>
+                    {v.lastPmcs ? formatDay(v.lastPmcs) : 'Never'}
                   </td>
                 </tr>
               ))}
               {filtered.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="px-6 py-12 text-center text-text-secondary">
+                  <td colSpan={multiUnit ? 6 : 5} className="px-6 py-12 text-center text-text-secondary">
                     No vehicles found
                   </td>
                 </tr>

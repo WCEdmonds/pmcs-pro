@@ -5,7 +5,7 @@
     {
       "id": "zone-1",
       "name": "Exterior Walk-Around",
-      "description": "Left side, front, right side checks",
+      "description": "BEFORE: left side, rear, right side and front checks",
       "steps": [
         {
           "id": "m1152-b-001",
@@ -13,11 +13,11 @@
           "zone": "Exterior Walk-Around",
           "zoneId": "zone-1",
           "item": "1",
-          "itemDescription": "Left Front/Side Exterior",
-          "procedure": "Get down and look under the left front of your truck for fresh puddles or drips — oil, coolant, brake fluid, or fuel. Also walk the left side and check for any body damage, loose panels, or cracked glass that would keep you from operating safely.",
+          "itemDescription": "Left Front, Side Exterior",
+          "procedure": "CAUTION: If leaks are detected in the area of the transfer case oil cooler, do not attempt to tighten retaining nuts; internal damage to the transfer case oil cooler may result. Notify unit maintenance. If leakage is detected, further investigation is needed to determine the location and cause of the leak (classify leaks per TM para 2-7). a. Visually check underneath vehicle for any evidence of fluid leakage. b. Visually check front and left side of vehicle for obvious damage that would impair operation.",
           "conditionSet": "BEFORE",
           "isNoGo": true,
-          "noGoCondition": "Any brake fluid leaks. Class III leak of oil, fuel, or coolant. Any damage that prevents operation."
+          "noGoCondition": "a. Any brake fluid leaks; class III leak of oil, fuel, or coolant. b. Any damage prevents operation."
         },
         {
           "id": "m1152-b-002",
@@ -26,7 +26,7 @@
           "zoneId": "zone-1",
           "item": "2",
           "itemDescription": "Left Side Tires",
-          "procedure": "Check both left side tires for low air, bald spots, sidewall cuts or bulges, and anything stuck in the tread. Make sure they aren't flat or obviously underinflated.",
+          "procedure": "WARNING: Operating a vehicle with a tire in an underinflated condition or with a questionable defect may lead to premature tire failure and may cause equipment damage and injury or death to personnel. NOTE: The radial tire is a bidirectional tire and the tread may be positioned in either direction. Visually check tires for underinflation and defects.",
           "conditionSet": "BEFORE",
           "isNoGo": true,
           "noGoCondition": "Tire missing, deflated, or unserviceable."
@@ -38,10 +38,10 @@
           "zoneId": "zone-1",
           "item": "3",
           "itemDescription": "Rear Exterior",
-          "procedure": "Walk around to the rear and look underneath for fluid leaks. Check the rear of the vehicle for obvious damage. If you're planning to tow a trailer, inspect the bumper supports for cracks.",
+          "procedure": "If leakage is detected, further investigation is needed to determine the location and cause of the leak (classify leaks per TM para 2-7). a. Visually check underneath vehicle for evidence of fluid leakage. b. Visually check rear of vehicle for obvious damage that would impair operation. c. Inspect bumper supports for cracks before towing trailer.",
           "conditionSet": "BEFORE",
           "isNoGo": true,
-          "noGoCondition": "Any brake fluid leaks. Class III leak of oil, fuel, or coolant. Bumper support damage that would prevent towing operations."
+          "noGoCondition": "a. Any brake fluid leaks; class III leak of oil, fuel, or coolant. b. Any damage prevents operation. c. Any damage that would prevent operation."
         },
         {
           "id": "m1152-b-004",
@@ -49,11 +49,11 @@
           "zone": "Exterior Walk-Around",
           "zoneId": "zone-1",
           "item": "4",
-          "itemDescription": "Right Front/Side Exterior",
-          "procedure": "Check underneath the right front and side for fluid leaks — same as the left side. Walk down the right side looking for body damage, loose panels, or anything that would impair operation.",
+          "itemDescription": "Right Front, Side Exterior",
+          "procedure": "If leakage is detected, further investigation is needed to determine the location and cause of the leak (classify leaks per TM para 2-7). a. Visually check underneath vehicle for evidence of fluid leakage. b. Visually check front and right side of vehicle for obvious damage that would impair operation.",
           "conditionSet": "BEFORE",
           "isNoGo": true,
-          "noGoCondition": "Any brake fluid leaks. Class III leak of oil, fuel, or coolant. Any damage that prevents operation."
+          "noGoCondition": "a. Any brake fluid leaks; class III leak of oil, fuel, or coolant. b. Any damage prevents operation."
         },
         {
           "id": "m1152-b-005",
@@ -62,7 +62,7 @@
           "zoneId": "zone-1",
           "item": "5",
           "itemDescription": "Right Side Tires",
-          "procedure": "Check both right side tires for low air, bald spots, sidewall cuts or bulges, and anything stuck in the tread. Make sure they aren't flat or obviously underinflated.",
+          "procedure": "WARNING: Operating a vehicle with a tire in an underinflated condition or with a questionable defect may lead to premature tire failure and may cause equipment damage and injury or death to personnel. NOTE: The radial tire is a bidirectional tire and the tread may be positioned in either direction. Visually check tires for underinflation and defects.",
           "conditionSet": "BEFORE",
           "isNoGo": true,
           "noGoCondition": "Tire missing, deflated, or unserviceable."
@@ -73,18 +73,18 @@
           "zone": "Exterior Walk-Around",
           "zoneId": "zone-1",
           "item": "6",
-          "itemDescription": "Front of Vehicle",
-          "procedure": "Check the front of your truck for obvious damage that would keep you from driving. Look underneath the front for any fluid leaks — oil, coolant, brake fluid, or fuel.",
+          "itemDescription": "Front",
+          "procedure": "If leakage is detected, investigation is needed to determine the location and cause of the leak. a. Visually check front of vehicle for obvious damage that would impair operation. b. Visually check underneath vehicle for evidence of fluid leakage.",
           "conditionSet": "BEFORE",
           "isNoGo": true,
-          "noGoCondition": "Any damage that prevents operation. Any brake fluid leaks. Class III leak of oil, fuel, or coolant."
+          "noGoCondition": "a. Any damage prevents operation. b. Any brake fluid leaks; class III leak of oil, fuel, or coolant."
         }
       ]
     },
     {
       "id": "zone-2",
       "name": "Under Hood",
-      "description": "Engine compartment and fluids",
+      "description": "BEFORE: power steering, drivebelt, coolant",
       "steps": [
         {
           "id": "m1152-b-007",
@@ -92,8 +92,8 @@
           "zone": "Under Hood",
           "zoneId": "zone-2",
           "item": "6.1",
-          "itemDescription": "Power Steering Reservoir (RCSK 18330)",
-          "procedure": "Check your power steering fluid level. It should be between the HOT and COLD marks. If it's below COLD, add fluid. Keep dirt and dust out of the reservoir when you open it, and don't overfill it.",
+          "itemDescription": "Power Steering Reservoir (P/N RCSK 18330)",
+          "procedure": "CAUTION: Do not permit dirt, dust, or grit to enter power steering reservoir; do not overfill power steering reservoir. Damage to power steering system will result. Check fluid in power steering reservoir (para. 3-20). Fluid should be between HOT and COLD marks. Add fluid if level is below COLD mark.",
           "conditionSet": "BEFORE",
           "isNoGo": false
         },
@@ -103,8 +103,8 @@
           "zone": "Under Hood",
           "zoneId": "zone-2",
           "item": "6.2",
-          "itemDescription": "Power Steering Reservoir (94252A)",
-          "procedure": "If your truck has the 94252A power steering reservoir, check the fluid level between the HOT and COLD marks. Add fluid if it's below COLD. Keep it clean and don't overfill.",
+          "itemDescription": "Power Steering Reservoir (P/N 94252A)",
+          "procedure": "CAUTION: Do not permit dirt, dust, or grit to enter power steering reservoir; do not overfill power steering reservoir. Damage to power steering system will result. Check fluid in power steering reservoir (para. 3-20.1). Fluid should be between HOT and COLD marks. Add fluid if level is below COLD mark.",
           "conditionSet": "BEFORE",
           "isNoGo": false
         },
@@ -115,10 +115,10 @@
           "zoneId": "zone-2",
           "item": "7",
           "itemDescription": "Serpentine Drivebelt and Pulleys",
-          "procedure": "Check the drive and idler pulleys for wear or misalignment. Look at the serpentine belt for cracks, fraying, looseness, or splitting. If you see deep cracks or long frays, that belt needs to go.",
+          "procedure": "a. Visually check drive and idler pulleys for evidence of excessive wear or misalignment. b. Check if serpentine drivebelt is missing, broken, cracked, frayed, loose, misaligned, or split.",
           "conditionSet": "BEFORE",
           "isNoGo": true,
-          "noGoCondition": "Pulleys worn, broken, or misaligned. Serpentine drivebelt missing or broken. Belt fiber has more than one crack 1/8 in. in depth or 50%, or frays more than 2 in. long. Belt is loose or misaligned off one or more grooves on any pulley."
+          "noGoCondition": "a. Pulleys worn, broken, or misaligned. b. Serpentine drivebelt is missing or broken. Drivebelt fiber has more than one crack 1/8 in. (3.2 mm) in depth or 50%, or frays more than 2-in. (5.1-cm) long. Drivebelt is loose or misaligned (off one or more grooves on any pulley)."
         },
         {
           "id": "m1152-b-010",
@@ -127,7 +127,7 @@
           "zoneId": "zone-2",
           "item": "8",
           "itemDescription": "Cooling System",
-          "procedure": "Check the coolant level in the surge tank — it should be at or above the FULL COLD line. Add coolant if it's low. Do NOT open the radiator cap if the engine has been running recently — you'll get a steam burn.",
+          "procedure": "WARNING: If engine has been recently operated, do not remove radiator cap to check coolant level. Cooling system is under pressure, and escaping steam or coolant can cause burns. CAUTION: Type 1, ethylene glycol (green), and Type 2, propylene glycol (purple), should never be mixed. Check coolant level in coolant tank. Level should be at or above the FULL COLD line. Add coolant if below the FULL line.",
           "conditionSet": "BEFORE",
           "isNoGo": false
         }
@@ -136,7 +136,7 @@
     {
       "id": "zone-3",
       "name": "Cab Interior",
-      "description": "Instruments, controls, seat belts, fire extinguisher",
+      "description": "BEFORE: doors, seats, fire extinguishers, shift levers",
       "steps": [
         {
           "id": "m1152-b-011",
@@ -144,11 +144,11 @@
           "zone": "Cab Interior",
           "zoneId": "zone-3",
           "item": "8.2",
-          "itemDescription": "Armored Doors",
-          "procedure": "Check your armored doors for proper operation — they should open and close without needing excessive force. Make sure each door latch works correctly and the combat locks engage and disengage properly.",
+          "itemDescription": "Doors (Frag 5/Armored) (M1152A1 ONLY)",
+          "procedure": "M1152A1 ONLY: a. Check door for proper operation. b. Check door latch for proper operation. c. Check combat lock for proper operation.",
           "conditionSet": "BEFORE",
           "isNoGo": true,
-          "noGoCondition": "Excessive force required to operate door. Door does not latch. Combat lock does not lock."
+          "noGoCondition": "a. Excessive force is required to operate. b. Door does not latch. c. Combat lock does not lock."
         },
         {
           "id": "m1152-b-012",
@@ -157,10 +157,10 @@
           "zoneId": "zone-3",
           "item": "9",
           "itemDescription": "Seat and Seatbelts",
-          "procedure": "Check all seatbelts — pull them out, let them retract, and click each buckle to make sure it holds. Look for fraying or cuts in the webbing. Check that the driver's seat adjustment moves and locks properly.",
+          "procedure": "NOTE: Vehicle operation with inoperative seatbelts may violate AR 385-55. a. Check all seatbelts for security, damage, and operation of buckle and clasp ends. b. Check operation of seat adjusting mechanism (driver's seat only).",
           "conditionSet": "BEFORE",
           "isNoGo": true,
-          "noGoCondition": "Seat adjustment lock broken or missing."
+          "noGoCondition": "b. Seat adjustment lock broken or missing."
         },
         {
           "id": "m1152-b-013",
@@ -169,10 +169,10 @@
           "zoneId": "zone-3",
           "item": "10",
           "itemDescription": "Fire Extinguisher",
-          "procedure": "Make sure the fire extinguisher is there and not damaged. Check the gauge — it should read about 150 psi with the needle out of the recharge area. Confirm the seal is intact and not broken or missing.",
+          "procedure": "a. Check for missing or damaged fire extinguisher. b. Check gauge for proper pressure of about 150 psi (1,034 kPa). c. Check for damaged or missing seal.",
           "conditionSet": "BEFORE",
           "isNoGo": true,
-          "noGoCondition": "Fire extinguisher missing or damaged. Pressure gauge needle in recharge area. Seal broken or missing."
+          "noGoCondition": "a. Fire extinguisher missing or damaged. b. Pressure gauge needle in recharge area. c. Seal broken or missing."
         },
         {
           "id": "m1152-b-014",
@@ -181,10 +181,10 @@
           "zoneId": "zone-3",
           "item": "10.1",
           "itemDescription": "Automatic Fire Extinguisher System (AFES)",
-          "procedure": "Check both AFES extinguisher pressure gauges — they should read at or above the minimum pressure on the label. Check the wiring harness and sensors for damage. Make sure the extinguisher, manual lever lock pin, and tube assembly are all present and secure. Turn the rotary switch to RUN and confirm the control module shows a steady green LED. Check each fire sensor LED for a steady green light and make sure the sensors are clean.",
+          "procedure": "NOTE: Smoking or large, high-intensity spotlights may activate the sensor and cause the system to discharge. CAUTION: Do not handle the fire extinguisher unless the anti-recoil plug is installed in the valve outlet port and the manual lever lock pin is installed. WARNING: Do not remove manual lever lock pin. a. Check that pressure gauges on both fire extinguishers read at or above minimum pressure on extinguisher label using the chart (e.g., 810 psig min at 68°F/20°C; 730 psig at 32°F/0°C; 905 psig at 104°F/40°C). b. Check system wiring harness and sensors for presence, security and damage. c. Check for loose, improperly installed, or missing fire extinguisher, manual lever lock pin or tube assembly. d. Check that anti-recoil plugs are properly stowed. e. Turn rotary switch to RUN position, check control module LED indicator for a continuous ON green light to see if system is fully functional. f. Check fire sensors LED for continuous green light and cleanliness.",
           "conditionSet": "BEFORE",
           "isNoGo": true,
-          "noGoCondition": "Pressure gauge reads below pressure shown on label. Wiring harness or sensor box disconnected, improperly installed, damaged, or missing. Fire extinguisher, manual lever lock pin, or tube assembly missing. Green LED indicator light is off, steady blink, slow blink, or double blink. Sensor LED does not come on, is blinking, or covered with dust or foreign object."
+          "noGoCondition": "a. Pressure gauge reads below pressure shown on label. b. Wiring harness or sensor box is disconnected, improperly installed, damaged or missing. c. Fire extinguisher, manual lever lock pin or tube assembly missing. e. Green LED indicator light is off, steady blink, slow blink, or double blink. f. LED light does not come on, is blinking, or covered with dust or any foreign object."
         },
         {
           "id": "m1152-b-015",
@@ -193,77 +193,655 @@
           "zoneId": "zone-3",
           "item": "11",
           "itemDescription": "Gear Shifter Lever",
-          "procedure": "Shift the transmission lever through all the ranges — it should move freely without binding. Then with the transmission in N, shift the transfer case lever through all positions. Both should move smoothly through every range.",
+          "procedure": "a. Check transmission shift lever operation. Shift transmission lever through all operating ranges. Lever should move freely through all range positions. b. Check transfer shift lever operation. With transmission in N, shift transfer lever through all range positions. Lever should move freely through all range positions.",
           "conditionSet": "BEFORE",
           "isNoGo": true,
-          "noGoCondition": "Transmission lever inoperable or binds between range detents. Transfer lever inoperable or does not engage in all ranges with engine not running."
-        },
-        {
-          "id": "m1152-b-016",
-          "sequence": 16,
-          "zone": "Cab Interior",
-          "zoneId": "zone-3",
-          "item": "13",
-          "itemDescription": "Lights",
-          "procedure": "Check all your lights — service drive, turn signals, blackout marker, marker, blackout drive, and side marker lights. Make sure each one works and the lenses aren't cracked or missing.",
-          "conditionSet": "BEFORE",
-          "isNoGo": true,
-          "noGoCondition": "Any required light inoperative. Headlights inoperative."
-        },
-        {
-          "id": "m1152-b-017",
-          "sequence": 17,
-          "zone": "Cab Interior",
-          "zoneId": "zone-3",
-          "item": "14",
-          "itemDescription": "Horn, Windshield and Wipers",
-          "procedure": "Hit the horn and make sure it actually works. Check the windshield for cracks that would block your view. Turn on the wipers and run them through all speeds — look for torn blades. Hit the washer fluid to make sure it sprays.",
-          "conditionSet": "BEFORE",
-          "isNoGo": true,
-          "noGoCondition": "Windshield cracked, broken, or missing to extent that impairs operator's vision."
+          "noGoCondition": "a. Lever inoperable or binds between range detents. b. Lever inoperable or does not engage in all ranges with engine not running."
         }
       ]
     },
     {
       "id": "zone-4",
       "name": "Engine Running",
-      "description": "Start engine, gauges, brakes",
+      "description": "BEFORE: instrument panel, steering, brakes, weapon station",
       "steps": [
         {
           "id": "m1152-b-018",
-          "sequence": 18,
+          "sequence": 16,
           "zone": "Engine Running",
           "zoneId": "zone-4",
           "item": "12",
-          "itemDescription": "Instrument Panel — Pre-Start",
-          "procedure": "Turn the rotary switch to RUN but don't start the engine yet. The wait-to-start light should come on (if engine is cold) and the brake warning light should illuminate. If the wait-to-start light stays on continuously or the brake warning light doesn't come on, report it.",
+          "itemDescription": "Instrument Panel",
+          "procedure": "WARNING: If gauges, instruments, or instrument lights are inoperable or not within ranges described in these checks, immediately shut off engine and notify your supervisor or unit maintenance. NOTE: If engine is warm, wait-to-start light may not come on. During cranking or after starting, light may go on and off a few times. a. Check wait-to-start light and brake warning light. Turn rotary switch to RUN. Wait-to-start and brake warning light should come on. b. Start engine and check the following: c. Engine oil pressure gauge. d. Voltmeter. e. Air restriction gauge. f. Brake warning light should go off when hand brake is released. g. Check fuel gauge. h. Check coolant temperature gauge.",
           "conditionSet": "BEFORE",
           "isNoGo": true,
-          "noGoCondition": "Wait-to-start light does not come on when engine is cold, or stays on continually. Brake warning light does not come on."
+          "noGoCondition": "a. Wait-to-start light does not come on when engine is cold, or wait light stays on continually. Brake warning light does not come on. b. Engine will not start. c. Oil pressure is less than 6 psi (41 kPa) at idle or 15 psi (103 kPa) under load. d. Voltmeter needle stays in yellow or red range. e. Air restriction indicator reaches red zone. f. Brake warning light stays on after hand brake is released or comes on while driving. h. Coolant temperature gauge inoperative or reads greater than 250°F (120°C) and/or overheat lamp illuminates."
         },
         {
-          "id": "m1152-b-019",
+          "id": "m1152-b-022",
+          "sequence": 17,
+          "zone": "Engine Running",
+          "zoneId": "zone-4",
+          "item": "13",
+          "itemDescription": "Steering",
+          "procedure": "Check steering wheel for operation. With engine running, turn steering wheel from left to right. Steering wheel should move freely.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Steering wheel inoperable or binds."
+        },
+        {
+          "id": "m1152-b-023",
+          "sequence": 18,
+          "zone": "Engine Running",
+          "zoneId": "zone-4",
+          "item": "14",
+          "itemDescription": "Brakes",
+          "procedure": "NOTE: Engine must be warmed up and idling, transmission in D (overdrive), transfer in H (high), and parking brake released to perform the following check. a. Check brake pedal travel. With vehicle at idle, transfer in H, and transmission in D, allow vehicle to move forward. As vehicle moves, slowly depress brake pedal. Pedal should travel 1 to 1-1/2 in. (2.5 to 3.8 cm) before brakes take hold. After brakes take hold, pedal may exceed the 1 to 1-1/2 in. travel. This is normal. b. Check parking brake. With parking brake fully applied, transmission in D or R, and transfer in H, vehicle should not move. c. Check parking brake lever safety mechanism to ensure that it latches when parking brake is applied.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "a. Brakes will not stop the vehicle. b. Parking brake inoperable or unable to hold vehicle. c. Parking brake lever safety mechanism is not functioning properly."
+        }
+      ]
+    },
+    {
+      "id": "zone-5",
+      "name": "During Operation",
+      "description": "DURING: checks performed while the vehicle is in operation",
+      "steps": [
+        {
+          "id": "m1152-b-026",
           "sequence": 19,
-          "zone": "Engine Running",
-          "zoneId": "zone-4",
-          "item": "12b",
-          "itemDescription": "Instrument Panel — Engine Start",
-          "procedure": "Start the engine. If it won't start, report it. Once running, check the oil pressure gauge — it should read above 6 psi at idle and 15 psi under load. Check the voltmeter — the needle should be in the green, not yellow or red.",
-          "conditionSet": "BEFORE",
+          "zone": "During Operation",
+          "zoneId": "zone-5",
+          "item": "16",
+          "itemDescription": "Controls and Indicators",
+          "procedure": "a. Monitor fuel gauge. b. Monitor engine oil pressure gauge. c. Monitor coolant temperature gauge. d. Monitor air restriction gauge. e. Monitor voltmeter. f. Monitor brake warning light. g. Check speedometer operation.",
+          "conditionSet": "DURING",
           "isNoGo": true,
-          "noGoCondition": "Engine will not start. Oil pressure less than 6 psi at idle or 15 psi under load. Voltmeter needle stays in yellow or red range."
+          "noGoCondition": "b. Engine oil pressure gauge reads less than approximately 30 psi (207 kPa) under normal driving conditions or less than 10 psi (69 kPa) at idle. c. Coolant temperature gauge reads greater than 250°F (120°C) and/or overheat lamp illuminates. d. Air restriction gauge indicates restriction in the air cleaner. e. Voltmeter indicates a loss of voltage. f. If light stays lit, brakes may not function properly. g. Speedometer needle does not move, jerks unevenly during sustained speeds, or appears stuck."
         },
         {
-          "id": "m1152-b-020",
+          "id": "m1152-b-027",
           "sequence": 20,
-          "zone": "Engine Running",
-          "zoneId": "zone-4",
-          "item": "12c",
-          "itemDescription": "Instrument Panel — Gauges",
-          "procedure": "Check the air restriction gauge — if it's in the red zone, your air filter needs service. Confirm the brake warning light goes off when you release the hand brake. Check the fuel gauge. Check the coolant temp gauge — it should stay below 250 degrees F and the overheat lamp should stay off.",
-          "conditionSet": "BEFORE",
+          "zone": "During Operation",
+          "zoneId": "zone-5",
+          "item": "17",
+          "itemDescription": "Brakes",
+          "procedure": "Check brakes for pulling or grabbing.",
+          "conditionSet": "DURING",
           "isNoGo": true,
-          "noGoCondition": "Air restriction indicator reaches red zone. Brake warning light stays on after hand brake is released or comes on while driving. Coolant temperature gauge inoperative or reads greater than 250°F and/or overheat lamp illuminates."
+          "noGoCondition": "Brakes pull or grab."
+        },
+        {
+          "id": "m1152-b-028",
+          "sequence": 21,
+          "zone": "During Operation",
+          "zoneId": "zone-5",
+          "item": "18",
+          "itemDescription": "Steering",
+          "procedure": "Be alert for vibration, excessive sway, leaning to one side, or unstable handling. Check steering response for unusual free play, binding, or shimmy.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "Handling is unstable; turning is difficult or free play, binding, or shimmy detected."
+        },
+        {
+          "id": "m1152-b-029",
+          "sequence": 22,
+          "zone": "During Operation",
+          "zoneId": "zone-5",
+          "item": "18.1",
+          "itemDescription": "Accelerator Pedal",
+          "procedure": "Check response to accelerator feed. Check for sticking or binding pedal.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "Pedal sticking or binding."
+        },
+        {
+          "id": "m1152-b-030",
+          "sequence": 23,
+          "zone": "During Operation",
+          "zoneId": "zone-5",
+          "item": "19",
+          "itemDescription": "Powertrain",
+          "procedure": "Be alert for unusual noises or vibrations from engine, transmission, transfer, differentials, propeller shafts, axle shafts, or wheels.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "Unusual noise or vibration detected."
+        },
+        {
+          "id": "m1152-b-031",
+          "sequence": 24,
+          "zone": "During Operation",
+          "zoneId": "zone-5",
+          "item": "20",
+          "itemDescription": "Transmission",
+          "procedure": "Check transmission for proper operation.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "Transmission slips or will not shift."
+        },
+        {
+          "id": "m1152-b-032",
+          "sequence": 25,
+          "zone": "During Operation",
+          "zoneId": "zone-5",
+          "item": "21",
+          "itemDescription": "Air Conditioner",
+          "procedure": "NOTE: Perform the following inspection only if the air conditioner is required for climatic conditions. Turn air conditioner on (para. 2-35.1). Wait 5 minutes to allow temperature to stabilize. Check vents for cool air. If air is not cooler than ambient temperature, notify your supervisor and record on DA Form 2404.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "Climatic conditions require air-conditioning and A/C is inoperable, or outlet duct air is not cooler than ambient temperature."
+        }
+      ]
+    },
+    {
+      "id": "zone-6",
+      "name": "After Operation",
+      "description": "AFTER: checks performed upon completion of mission",
+      "steps": [
+        {
+          "id": "m1152-b-033",
+          "sequence": 26,
+          "zone": "After Operation",
+          "zoneId": "zone-6",
+          "item": "21.2",
+          "itemDescription": "Gear Shifter Lever",
+          "procedure": "a. Start engine and check transmission shift lever operation. Shift transmission through all operating ranges. Lever should move freely through all range positions. b. Check transfer shift lever operation. With transmission in N, shift transfer lever through all range positions. Lever should move freely through all range positions.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "a. Lever inoperable or binds between range detents. b. Lever inoperable or does not engage in all ranges with engine not running."
+        },
+        {
+          "id": "m1152-b-034",
+          "sequence": 27,
+          "zone": "After Operation",
+          "zoneId": "zone-6",
+          "item": "22",
+          "itemDescription": "Transmission Fluid",
+          "procedure": "CAUTION: Do not permit dirt, dust, fluid or grit to enter transmission oil dipstick tube. Do not overfill transmission. An over-full transmission can also indicate a transfer case fluid leak; notify unit maintenance if transmission fluid is above crosshatch mark. NOTE: Check with engine running, parking brake set, shift lever in P, vehicle on level ground, after idling three minutes with all accessories off; engine operating temperature of 185-250°F (85-120°C) must be reached before performing AFTER checks. Check transmission fluid level. Apply brake and move shift lever through each gear range. Pause for about three seconds in each range, ending in P. If level is below the crosshatch marks, add sufficient fluid to bring the level to the crosshatch marks.",
+          "conditionSet": "AFTER",
+          "isNoGo": false
+        },
+        {
+          "id": "m1152-b-035",
+          "sequence": 28,
+          "zone": "After Operation",
+          "zoneId": "zone-6",
+          "item": "23",
+          "itemDescription": "Fuel Filter",
+          "procedure": "WARNING: Do not perform fuel system checks, inspections, or maintenance while smoking or near fire, flames, or sparks. NOTE: A rubber hose can be attached to drainvalve to catch fuel in container. If fuel is clear, put fuel back in fuel tank. a. Check fuel for contamination. With engine running, open drainvalve. Allow fuel to drain into suitable container until it runs clear. Close valve. Wipe drainvalve with rag until excess fuel is removed (fuel retained in the drainvalve may drip with vehicle vibration; this is normal and is not a leak). b. Check for leaks. c. Stop engine and remove rubber hose from drainvalve, if installed.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "a. Fuel is not clear after draining 1 pt. (0.47 L). b. Class III leakage evident."
+        },
+        {
+          "id": "m1152-b-036",
+          "sequence": 29,
+          "zone": "After Operation",
+          "zoneId": "zone-6",
+          "item": "24",
+          "itemDescription": "Left Side Tires",
+          "procedure": "WARNING: Operating a vehicle with a tire in an underinflated condition or with a questionable defect may lead to premature tire failure and may cause equipment damage and injury or death to personnel. Visually check tires for underinflation, cuts, gouges, cracks, or bulges. Remove all penetrating objects.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "Tire deflated or otherwise unserviceable."
+        },
+        {
+          "id": "m1152-b-037",
+          "sequence": 30,
+          "zone": "After Operation",
+          "zoneId": "zone-6",
+          "item": "25",
+          "itemDescription": "Mirror (Left Side)",
+          "procedure": "NOTE: Vehicle operation with damaged or missing outside rearview mirrors may violate AR 385-55. Check mirror for defects, cracks, and serviceability.",
+          "conditionSet": "AFTER",
+          "isNoGo": false
+        },
+        {
+          "id": "m1152-b-038",
+          "sequence": 31,
+          "zone": "After Operation",
+          "zoneId": "zone-6",
+          "item": "26",
+          "itemDescription": "Left Front, Side Exterior",
+          "procedure": "If leakage is detected, further investigation is needed to determine the location and cause of the leak (classify leaks per TM para 2-7). a. Visually check underneath vehicle for evidence of fluid leakage. b. Visually check halfshaft cv boots and ball joint boots for rips, tears, or cuts. c. Inspect frame crossmembers and underbody support for missing hardware, cracks, bends, and breaks. Notify unit maintenance if rust is present, but the base metal is sound. d. Visually check for body damage that would impair operation of vehicle.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "a. Any brake fluid leaks; class III leak of oil, fuel, or coolant. c. Crossmembers or underbody support are missing any hardware, are cracked, broken, or bent or rusted-through condition is present that would affect vehicle operation. d. Any damage will prevent operation."
+        },
+        {
+          "id": "m1152-b-039",
+          "sequence": 32,
+          "zone": "After Operation",
+          "zoneId": "zone-6",
+          "item": "27",
+          "itemDescription": "Rear Exterior",
+          "procedure": "If leakage is detected, further investigation is needed to determine the location and cause of the leak (classify leaks per TM para 2-7). a. Visually check underneath vehicle for evidence of fluid leakage. b. Visually check halfshaft cv boots and ball joint boots for rips, tears, or cuts. c. Inspect frame crossmembers and underbody support for missing hardware, cracks, bends, and breaks. Notify unit maintenance if rust is present, but the base metal is sound. d. Inspect bumper or crossmember and inner braces in area around towing pintle for cracks or breaks.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "a. Any brake fluid leaks; class III leak of oil, fuel, or coolant. c. Crossmembers or underbody support are missing any hardware, are cracked, broken, or bent or rusted-through condition is present that would affect vehicle operation. d. Bumper, crossmember or an inner brace is cracked or broken."
+        },
+        {
+          "id": "m1152-b-040",
+          "sequence": 33,
+          "zone": "After Operation",
+          "zoneId": "zone-6",
+          "item": "28",
+          "itemDescription": "Right Side Tires",
+          "procedure": "WARNING: Operating a vehicle with a tire in an underinflated condition or with a questionable defect may lead to premature tire failure and may cause equipment damage and injury or death to personnel. Visually check tires for underinflation, cuts, gouges, cracks, or bulges. Remove all penetrating objects.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "Tire deflated or otherwise unserviceable."
+        },
+        {
+          "id": "m1152-b-041",
+          "sequence": 34,
+          "zone": "After Operation",
+          "zoneId": "zone-6",
+          "item": "29",
+          "itemDescription": "Mirror (Right Side)",
+          "procedure": "NOTE: Vehicle operation with damaged or missing outside rearview mirrors may violate AR 385-55. Check mirror for defects, cracks, and serviceability.",
+          "conditionSet": "AFTER",
+          "isNoGo": false
+        },
+        {
+          "id": "m1152-b-042",
+          "sequence": 35,
+          "zone": "After Operation",
+          "zoneId": "zone-6",
+          "item": "30",
+          "itemDescription": "Right Front, Side Exterior",
+          "procedure": "If leakage is detected, further investigation is needed to determine the location and cause of the leak (classify leaks per TM para 2-7). a. Visually check underneath vehicle for evidence of fluid leakage. b. Visually check halfshaft cv boots and ball joint boots for rips, tears, or cuts. c. Inspect frame crossmembers and underbody support for missing hardware, cracks, bends, and breaks. Notify unit maintenance if rust is present, but the base metal is sound. d. Visually check front and right side of vehicle for obvious damage that would impair operation.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "a. Any brake fluid leaks; class III leak of oil, fuel, or coolant. c. Crossmembers or underbody support are missing any hardware, are cracked, broken, or bent or rusted-through condition is present that would affect vehicle operation. d. Any damage will prevent operation."
+        },
+        {
+          "id": "m1152-b-043",
+          "sequence": 36,
+          "zone": "After Operation",
+          "zoneId": "zone-6",
+          "item": "31",
+          "itemDescription": "Engine Oil",
+          "procedure": "CAUTION: Do not permit dirt, dust, or grit to enter engine oil dipstick tube. Do not overfill engine crankcase. Damage to engine will result. Check engine oil level. Level should be between ADD and FULL. If level is below ADD, add oil to bring level between the ADD and FULL marks.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "Oil appears milky."
+        },
+        {
+          "id": "m1152-b-044",
+          "sequence": 37,
+          "zone": "After Operation",
+          "zoneId": "zone-6",
+          "item": "32",
+          "itemDescription": "Power Steering Lines and Fittings",
+          "procedure": "CAUTION: Notify unit maintenance if power steering system has class III leak. Loss of power assist could occur if this condition exists. Check power steering lines and fittings for leaks.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "Class III leakage evident."
+        },
+        {
+          "id": "m1152-b-045",
+          "sequence": 38,
+          "zone": "After Operation",
+          "zoneId": "zone-6",
+          "item": "33",
+          "itemDescription": "Cooling System",
+          "procedure": "Inspect radiator hoses for leakage.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "Class III leakage evident."
+        },
+        {
+          "id": "m1152-b-046",
+          "sequence": 39,
+          "zone": "After Operation",
+          "zoneId": "zone-6",
+          "item": "34",
+          "itemDescription": "Master Cylinder",
+          "procedure": "Visually check master cylinder lines for leaks and security of cover.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "Any leak, or cover missing."
+        },
+        {
+          "id": "m1152-b-016",
+          "sequence": 40,
+          "zone": "After Operation",
+          "zoneId": "zone-6",
+          "item": "35",
+          "itemDescription": "Lights",
+          "procedure": "CAUTION: Never set the rotary switch to RUN to check the lights. This drains the batteries and can burn out the glow plugs and control box. NOTE: Vehicle operation with damaged or inoperable headlights may violate AR 385-55. a. Check for presence and operation of service drive, turn signal, blackout marker, marker, blackout drive, and side marker lights. b. Check operation of tail/stoplights. Push down brake pedal approximately 1/4 in. (6.4 mm). Tail/stoplights should come on.",
+          "conditionSet": "AFTER",
+          "isNoGo": false
+        },
+        {
+          "id": "m1152-b-047",
+          "sequence": 41,
+          "zone": "After Operation",
+          "zoneId": "zone-6",
+          "item": "36",
+          "itemDescription": "Horn",
+          "procedure": "NOTE: Vehicle operation with inoperative horn may violate AR 385-55. Check operation of horn if tactical situation permits.",
+          "conditionSet": "AFTER",
+          "isNoGo": false
+        },
+        {
+          "id": "m1152-b-017",
+          "sequence": 42,
+          "zone": "After Operation",
+          "zoneId": "zone-6",
+          "item": "37",
+          "itemDescription": "Windshield and Wipers",
+          "procedure": "NOTE: Vehicle operation with damaged windshield or inoperative wipers may violate AR 385-55. a. Check windshield for damage that would impair operator's vision. b. Check windshield wiper, blade, and washer fluid reservoir for defects, damage, and proper operation. c. Check windshield wiper motor for proper operation. d. Check washer reservoir fluid level. e. Inspect inner surface of windshield glass (spall liner) for complete breaks, delamination, scratches, gouges, tape, decals, adhesives, or blurred vision. f. Inspect outer surface of windshield glass for a complete break.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "a. Windshield is cracked, broken, or discolored (cloudy) sufficiently to impair operator's vision. e. The bond between glass and frame is separated from glass or frame. Any complete break on inner surface of glass. Any digs, gouges, or scratches on inner surface of glass. f. Any complete break on the outer surface of windshield glass."
+        },
+        {
+          "id": "m1152-b-048",
+          "sequence": 43,
+          "zone": "After Operation",
+          "zoneId": "zone-6",
+          "item": "38",
+          "itemDescription": "Light Switches",
+          "procedure": "NOTE: Failure to turn switches to the OFF position when not in use will drain the batteries. Check and ensure all switches are in the OFF position.",
+          "conditionSet": "AFTER",
+          "isNoGo": false
+        }
+      ]
+    },
+    {
+      "id": "zone-7",
+      "name": "Weekly",
+      "description": "WEEKLY: checks performed once every 7 days",
+      "steps": [
+        {
+          "id": "m1152-b-049",
+          "sequence": 44,
+          "zone": "Weekly",
+          "zoneId": "zone-7",
+          "item": "38.1",
+          "itemDescription": "Hand Throttle",
+          "procedure": "a. Check hand throttle and mounting bracket for security. Check throttle release button to ensure hand throttle cable operates properly. b. Check hand throttle cable for corrosion, nicks, breaks, or burns.",
+          "conditionSet": "WEEKLY",
+          "isNoGo": false
+        },
+        {
+          "id": "m1152-b-050",
+          "sequence": 45,
+          "zone": "Weekly",
+          "zoneId": "zone-7",
+          "item": "39",
+          "itemDescription": "Tires",
+          "procedure": "WARNING: Do not exceed 50 psi (345 kPa) cold radial tire inflation pressure. Load Range D valves and tires are not compatible with Load Range E wheels, and Load Range E valves and tires are not compatible with Load Range D wheels. NOTE: Refer to tables 1-15 and 1-15.1 for vehicle tire pressures. a. Check tire tread depth. Tread should not be worn beyond level of wear bar (1/16 in. (1.59 mm) or less). Wear bars are molded across the tread pattern in the valley between the center rib and lugs; TWI letters (or a diamond) on the sidewall locate the wear bar. Wear bars are not evident on new or very low mileage tires. b. Check for missing or loose wheel stud nuts and lug nuts. Tighten loose lug nuts and have unit maintenance tighten stud nuts and lug nuts to proper torque. c. Gauge tires for correct air pressure using tire inflation gauge. Adjust as necessary.",
+          "conditionSet": "WEEKLY",
+          "isNoGo": true,
+          "noGoCondition": "a. Any tread is worn even to height of tread wear indicator (1/16 in. (1.59 mm) or less). Any cut, gouge, or crack that extends to the cord body or any bulges. Tires exhibit excessive inner and outer wear or balance. b. Any wheel stud nut or lug nut is broken or missing."
+        },
+        {
+          "id": "m1152-b-051",
+          "sequence": 46,
+          "zone": "Weekly",
+          "zoneId": "zone-7",
+          "item": "40",
+          "itemDescription": "Exhaust System",
+          "procedure": "Check exhaust system for security of all mounts, tightness of clamps and bolts, rusted conditions, damaged pipes, and any indication of an exhaust leak.",
+          "conditionSet": "WEEKLY",
+          "isNoGo": true,
+          "noGoCondition": "Any mounts are broken, pipes are rusted through or broken, or any indication of an exhaust leak."
+        },
+        {
+          "id": "m1152-b-052",
+          "sequence": 47,
+          "zone": "Weekly",
+          "zoneId": "zone-7",
+          "item": "41",
+          "itemDescription": "Shock Absorbers",
+          "procedure": "Visually inspect shock absorbers for leaks, damage, and security of mounting.",
+          "conditionSet": "WEEKLY",
+          "isNoGo": true,
+          "noGoCondition": "Class III leakage or damage is evident; mounting damaged or loose."
+        },
+        {
+          "id": "m1152-b-053",
+          "sequence": 48,
+          "zone": "Weekly",
+          "zoneId": "zone-7",
+          "item": "42",
+          "itemDescription": "Doors and Windows (M1152 ONLY, NOT M1152A1)",
+          "procedure": "M1152 ONLY, NOT M1152A1: a. Check operation of doors and windows. b. Check crew door assembly for visible cracks that would make door unserviceable or unable to secure properly. c. Check crew door assembly latch, hinges, and door handle for damage, looseness, or missing parts.",
+          "conditionSet": "WEEKLY",
+          "isNoGo": true,
+          "noGoCondition": "b. Visible cracks or door does not secure properly. c. Loose, missing, or unserviceable parts."
+        },
+        {
+          "id": "m1152-b-054",
+          "sequence": 49,
+          "zone": "Weekly",
+          "zoneId": "zone-7",
+          "item": "42.1",
+          "itemDescription": "Doors and Windows (M1152A1 ONLY)",
+          "procedure": "M1152A1 ONLY: a. Inspect crew door locks for proper operation. b. Inspect inner surface of door glass (spall liner) for complete breaks, delamination, scratches, gouges, tape, decals, adhesives, or blurred vision. c. Inspect outer surface of door glass for a complete break. d. Inspect door armor for cracks. If cracks are found notify unit maintenance.",
+          "conditionSet": "WEEKLY",
+          "isNoGo": false
+        },
+        {
+          "id": "m1152-b-055",
+          "sequence": 50,
+          "zone": "Weekly",
+          "zoneId": "zone-7",
+          "item": "43",
+          "itemDescription": "Tailgate",
+          "procedure": "Check operation of tailgate. Check that tailgate latches securely and operates properly.",
+          "conditionSet": "WEEKLY",
+          "isNoGo": false
+        },
+        {
+          "id": "m1152-b-057",
+          "sequence": 51,
+          "zone": "Weekly",
+          "zoneId": "zone-7",
+          "item": "44.1",
+          "itemDescription": "Geared Fan Drive (SERIAL NUMBERS 3000000 AND ABOVE ONLY)",
+          "procedure": "SERIAL NUMBERS 3000000 AND ABOVE ONLY: Check for missing grease fittings.",
+          "conditionSet": "WEEKLY",
+          "isNoGo": true,
+          "noGoCondition": "One or more grease fittings missing."
+        },
+        {
+          "id": "m1152-b-058",
+          "sequence": 52,
+          "zone": "Weekly",
+          "zoneId": "zone-7",
+          "item": "45",
+          "itemDescription": "Vehicular Heater (VEHICLE W/VEHICULAR WINTERIZATION KIT)",
+          "procedure": "VEHICLE W/VEHICULAR WINTERIZATION KIT: (Vehicle w/Vehicular Winterization Kit) a. Check heater and heater controls for proper operation. b. Check fuel lines and fittings for leaks, cracks, or breaks. c. Check electrical cables and connections for security, or frayed or broken wires. d. Check heater exhaust pipe for damage, security of mounting, and missing components. e. Check fuel filter for leaks or damage.",
+          "conditionSet": "WEEKLY",
+          "isNoGo": true,
+          "noGoCondition": "a. Heater inoperable and mission requires heater. b. Class III fuel leakage is evident and mission requires heater. c. Wires frayed or broken. d. Heater exhaust damaged or components missing. e. Class III leak evident."
+        },
+        {
+          "id": "m1152-b-059",
+          "sequence": 53,
+          "zone": "Weekly",
+          "zoneId": "zone-7",
+          "item": "46",
+          "itemDescription": "Air Cleaner",
+          "procedure": "WARNING: If NBC exposure is suspected, all air filter media should be handled by personnel wearing protective equipment; consult your unit NBC officer or NBC NCO. Check air cleaner weathercap, air cleaner assembly, air intake hose, and air horn for security of mounting and damage.",
+          "conditionSet": "WEEKLY",
+          "isNoGo": true,
+          "noGoCondition": "Damage to air cleaner weathercap, body, air intake hose, or mounting allows unfiltered air to enter the engine."
+        },
+        {
+          "id": "m1152-b-060",
+          "sequence": 54,
+          "zone": "Weekly",
+          "zoneId": "zone-7",
+          "item": "47",
+          "itemDescription": "Alternator Brackets",
+          "procedure": "Visually check power steering and alternator brackets for cracks, damage, or loose bolts.",
+          "conditionSet": "WEEKLY",
+          "isNoGo": true,
+          "noGoCondition": "Bracket is cracked or bolts damaged or loose."
+        },
+        {
+          "id": "m1152-b-061",
+          "sequence": 55,
+          "zone": "Weekly",
+          "zoneId": "zone-7",
+          "item": "48",
+          "itemDescription": "Cooling System",
+          "procedure": "a. Check fan and fan pulley for damage. b. Check radiator for leaks, clogged or damaged fins, and loose or damaged hoses to and from the engine. c. Check support mounts, side brackets, and side bracket weldments on radiator for missing hardware, damage, or broken welds. (d. Deleted.) e. Check fan shroud for damage. f. Check engine oil cooler and hoses for damage and leaks.",
+          "conditionSet": "WEEKLY",
+          "isNoGo": true,
+          "noGoCondition": "a. Fan blade or pulley is bent, broken, cracked, or loose. b. Class III leakage evident. c. Support mounts broken, damaged, or missing hardware. Side brackets damaged or two or more weldments broken, allowing movement of radiator. e. Fan shroud broken, cracked, or loose. f. Class III leak evident."
+        },
+        {
+          "id": "m1152-b-062",
+          "sequence": 56,
+          "zone": "Weekly",
+          "zoneId": "zone-7",
+          "item": "49",
+          "itemDescription": "Batteries",
+          "procedure": "WARNING: Do not smoke, have open flames, or make sparks around batteries, especially if the caps are off. Remove all jewelry. a. Remove companion seat and check batteries for damaged casing, terminal posts, and security of mounting. Notify unit maintenance if any defects are found. b. Electrolyte should be filled to the level/split ring in the battery filler opening (vent). If fluid is low, fill with distilled water to split ring. If fluid is gassing (boiling), notify unit maintenance. c. Check battery box for corrosion or water on bottom of battery tray (if water is present, clean debris from battery box drain holes).",
+          "conditionSet": "WEEKLY",
+          "isNoGo": true,
+          "noGoCondition": "a. One or more batteries missing, unserviceable, or leaking; terminal or cables loose, corroded, or holddowns not secure."
+        },
+        {
+          "id": "m1152-b-065",
+          "sequence": 57,
+          "zone": "Weekly",
+          "zoneId": "zone-7",
+          "item": "51",
+          "itemDescription": "Tiedowns",
+          "procedure": "a. Inspect stored equipment footman loops for presence and security of mounting. Inspect straps for tears or frays. b. Inspect stowage brackets, footman loops, and tiedowns for security of mounting, damage, and missing components. c. Inspect all tiedown strap assemblies for proper operation, frays, damage, cleanliness, and security of mounting.",
+          "conditionSet": "WEEKLY",
+          "isNoGo": false
+        },
+        {
+          "id": "m1152-b-066",
+          "sequence": 58,
+          "zone": "Weekly",
+          "zoneId": "zone-7",
+          "item": "52",
+          "itemDescription": "Tow Pintle",
+          "procedure": "Check pintle hook for looseness, damaged locking mechanism, and presence of cotter pin.",
+          "conditionSet": "WEEKLY",
+          "isNoGo": false
+        },
+        {
+          "id": "m1152-b-067",
+          "sequence": 59,
+          "zone": "Weekly",
+          "zoneId": "zone-7",
+          "item": "54",
+          "itemDescription": "Parking Brake",
+          "procedure": "Check combination service/parking brake assemblies; inspect parking brake for obstruction of the actuating lever or broken or missing spring.",
+          "conditionSet": "WEEKLY",
+          "isNoGo": true,
+          "noGoCondition": "Actuating lever or spring is broken or missing."
+        },
+        {
+          "id": "m1152-b-068",
+          "sequence": 60,
+          "zone": "Weekly",
+          "zoneId": "zone-7",
+          "item": "54.1",
+          "itemDescription": "Steering Gear Mounting",
+          "procedure": "With vehicle running, observe steering gear mounting area for movement while assistant turns steering wheel left and right.",
+          "conditionSet": "WEEKLY",
+          "isNoGo": true,
+          "noGoCondition": "Any movement observed in steering gear mounting area."
+        },
+        {
+          "id": "m1152-b-069",
+          "sequence": 61,
+          "zone": "Weekly",
+          "zoneId": "zone-7",
+          "item": "55",
+          "itemDescription": "Windshield Washer",
+          "procedure": "a. Visually check windshield washer reservoir for damage. b. Check windshield washer fluid level.",
+          "conditionSet": "WEEKLY",
+          "isNoGo": false
+        },
+        {
+          "id": "m1152-b-070",
+          "sequence": 62,
+          "zone": "Weekly",
+          "zoneId": "zone-7",
+          "item": "55.1",
+          "itemDescription": "Rear Troop/Cargo Heater (VEHICLE W/TROOP/CARGO WINTERIZATION KIT)",
+          "procedure": "VEHICLE W/TROOP/CARGO WINTERIZATION KIT: (Vehicle w/Troop/Cargo Winterization Kit) a. Check heater and heater controls for proper operation. b. Check fuel lines and fittings for leaks, cracks, or breaks. c. Check electrical cables and connections for security and frayed or broken wires. d. Check heater exhaust pipe for damage, security of mounting, and missing components. e. Check fuel filter for leaks or damage.",
+          "conditionSet": "WEEKLY",
+          "isNoGo": true,
+          "noGoCondition": "a. Heater inoperable and mission requires heater. b. Class III fuel leakage is evident and mission requires heater. c. Frayed or broken wires. d. Heater exhaust damaged or components missing. e. Class III leak evident."
+        },
+        {
+          "id": "m1152-b-071",
+          "sequence": 63,
+          "zone": "Weekly",
+          "zoneId": "zone-7",
+          "item": "55.2",
+          "itemDescription": "Deep Water Fording Kit (IF INSTALLED)",
+          "procedure": "IF INSTALLED: Inspect vent lines and connectors for security, cracks, and deterioration.",
+          "conditionSet": "WEEKLY",
+          "isNoGo": true,
+          "noGoCondition": "Vent lines cracked, plugged, or missing."
+        }
+      ]
+    },
+    {
+      "id": "zone-8",
+      "name": "Monthly",
+      "description": "MONTHLY: checks performed once every 30 days",
+      "steps": [
+        {
+          "id": "m1152-b-072",
+          "sequence": 64,
+          "zone": "Monthly",
+          "zoneId": "zone-8",
+          "item": "56",
+          "itemDescription": "Corrosion",
+          "procedure": "Visually inspect vehicle for indication of corrosion or cracks and/or breaks.",
+          "conditionSet": "MONTHLY",
+          "isNoGo": true,
+          "noGoCondition": "Any corroded-through condition, cracks or breaks that would affect vehicle operation."
+        },
+        {
+          "id": "m1152-b-073",
+          "sequence": 65,
+          "zone": "Monthly",
+          "zoneId": "zone-8",
+          "item": "57",
+          "itemDescription": "Tailgate",
+          "procedure": "Check tailgate for corroded-through condition and/or damage. If tailgate does not latch securely or is damaged, notify unit maintenance.",
+          "conditionSet": "MONTHLY",
+          "isNoGo": true,
+          "noGoCondition": "Any corroded-through condition, or damage that would affect vehicle operation."
+        },
+        {
+          "id": "m1152-b-074",
+          "sequence": 66,
+          "zone": "Monthly",
+          "zoneId": "zone-8",
+          "item": "58",
+          "itemDescription": "Winch",
+          "procedure": "a. Check winch controls for proper operation. b. Check winch cable for kinks, frays, or breaks. c. Inspect tree saver strap for cuts and abrasions. If red safety thread is visible in main body of strap, notify unit maintenance for replacement of strap. d. If it is known the strap has been overloaded, notify unit maintenance for replacement of strap. e. Wrap winch cable (para. 2-28.1).",
+          "conditionSet": "MONTHLY",
+          "isNoGo": false
+        },
+        {
+          "id": "m1152-b-075",
+          "sequence": 67,
+          "zone": "Monthly",
+          "zoneId": "zone-8",
+          "item": "59",
+          "itemDescription": "Zippers",
+          "procedure": "a. Check canvas top and door zippers for corrosion and/or damage. b. Clean zippers with toothbrush. Apply interlock lubricant (appendix D, item 19) to canvas top, door zippers, and threads that hold zipper in place.",
+          "conditionSet": "MONTHLY",
+          "isNoGo": false
         }
       ]
     }

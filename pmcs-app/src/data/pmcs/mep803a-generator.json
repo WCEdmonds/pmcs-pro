@@ -40,7 +40,7 @@
           "procedure": "Inspect skid base for cracks and/or corrosion.",
           "conditionSet": "BEFORE",
           "isNoGo": true,
-          "noGoCondition": "Cracked or shows signs of structural damage."
+          "noGoCondition": "Skid base is cracked or shows signs of structural damage."
         },
         {
           "id": "mep803a-b-004",
@@ -91,7 +91,7 @@
           "zoneId": "zone-2",
           "item": "7",
           "itemDescription": "Fuel Filter/Water Separator",
-          "procedure": "Inspect for leaks, cracks, damage, proper mounting, loose or missing parts. Drain water from the fuel filter/water separator.",
+          "procedure": "Inspect for leaks, cracks, damage, proper mounting, loose or missing parts. Drain water from the fuel filter/water separator (para 3-3.6.2).",
           "conditionSet": "BEFORE",
           "isNoGo": true,
           "noGoCondition": "Any fuel leaks. Water not drained."
@@ -103,10 +103,10 @@
           "zoneId": "zone-2",
           "item": "8",
           "itemDescription": "Lubrication System",
-          "procedure": "Inspect for leaks, damage, loose or missing parts. Inspect oil level on the dipstick. Inspect for contamination (milky or gritty oil).",
+          "procedure": "Inspect for leaks, damage, loose or missing parts. Inspect the oil level (dipstick). Inspect for contamination.",
           "conditionSet": "BEFORE",
           "isNoGo": true,
-          "noGoCondition": "Class III leaks, low oil, or contamination."
+          "noGoCondition": "Class III leaks, damage, loose or missing parts. Oil level is low. Oil shows signs of contamination."
         },
         {
           "id": "mep803a-b-009",
@@ -142,7 +142,7 @@
           "procedure": "Inspect for obstruction, damage, or looseness. Inspect for unusual noise in fan area.",
           "conditionSet": "BEFORE",
           "isNoGo": true,
-          "noGoCondition": "Damaged or loose. Unusual noise."
+          "noGoCondition": "Damaged or loose. Unusual noise from area."
         },
         {
           "id": "mep803a-b-012",
@@ -194,7 +194,7 @@
           "zoneId": "zone-3",
           "item": "15",
           "itemDescription": "Air Cleaner Assembly",
-          "procedure": "Inspect for loose, damage, or missing parts. Inspect restriction indicator for clogged air cleaner element.",
+          "procedure": "Inspect for loose, damaged, or missing parts. Inspect the restriction indicator for a clogged air cleaner element (para 3-3.3).",
           "conditionSet": "BEFORE",
           "isNoGo": true,
           "noGoCondition": "Loose or missing parts. Clogged air cleaner element."
@@ -252,7 +252,7 @@
           "procedure": "Inspect cables for damage or loose connections. Inspect output terminals for damage or missing hardware.",
           "conditionSet": "BEFORE",
           "isNoGo": true,
-          "noGoCondition": "Damaged, loose, or missing parts/hardware."
+          "noGoCondition": "Cables damaged, loose, or missing parts. Output terminals damaged or missing hardware."
         },
         {
           "id": "mep803a-b-020",
@@ -319,7 +319,7 @@
           "procedure": "Inspect for leaks, damage, loose, or missing hardware.",
           "conditionSet": "DURING",
           "isNoGo": true,
-          "noGoCondition": "Any fuel leaks."
+          "noGoCondition": "Any fuel leaks, damage, loose, or missing parts."
         },
         {
           "id": "mep803a-b-025",
@@ -331,7 +331,7 @@
           "procedure": "Inspect for leaks, damage, loose or missing parts. Inspect for contamination.",
           "conditionSet": "DURING",
           "isNoGo": true,
-          "noGoCondition": "Class III leaks or contamination."
+          "noGoCondition": "Class III leaks, damage, loose or missing parts. Oil shows signs of contamination."
         },
         {
           "id": "mep803a-b-026",
@@ -343,7 +343,7 @@
           "procedure": "Inspect for obstruction, damage, or looseness. Inspect for unusual noise.",
           "conditionSet": "DURING",
           "isNoGo": true,
-          "noGoCondition": "Damaged or loose."
+          "noGoCondition": "Damaged or loose. Unusual noise from area."
         },
         {
           "id": "mep803a-b-027",
@@ -367,7 +367,7 @@
           "procedure": "Inspect for damage, corrosion, loose connections.",
           "conditionSet": "DURING",
           "isNoGo": true,
-          "noGoCondition": "Damaged, corroded, or loose."
+          "noGoCondition": "Damaged, corroded, or loose connections."
         },
         {
           "id": "mep803a-b-029",
@@ -379,7 +379,7 @@
           "procedure": "Inspect that indicators are operating properly.",
           "conditionSet": "DURING",
           "isNoGo": true,
-          "noGoCondition": "Indicators not operating properly."
+          "noGoCondition": "Indicators are not operating properly."
         }
       ]
     },
@@ -395,7 +395,7 @@
           "zoneId": "zone-6",
           "item": "30",
           "itemDescription": "Housing",
-          "procedure": "Check door panels, hinges, latches for damage.",
+          "procedure": "Check door panels, hinges, and latches for damage, loose, or corroded items.",
           "conditionSet": "AFTER",
           "isNoGo": true,
           "noGoCondition": "Cannot secure door."
@@ -421,7 +421,7 @@
           "procedure": "Inspect for cracks and/or corrosion.",
           "conditionSet": "AFTER",
           "isNoGo": true,
-          "noGoCondition": "Cracked or structural damage."
+          "noGoCondition": "Skid base is cracked or shows signs of structural damage."
         },
         {
           "id": "mep803a-b-033",
@@ -433,7 +433,7 @@
           "procedure": "Inspect for loose, damaged, or missing hardware.",
           "conditionSet": "AFTER",
           "isNoGo": true,
-          "noGoCondition": "Any loose, damaged, or missing hardware."
+          "noGoCondition": "Loose, damaged, or missing hardware."
         },
         {
           "id": "mep803a-b-034",
@@ -445,7 +445,7 @@
           "procedure": "Inspect for leaks, damage, loose, or missing hardware.",
           "conditionSet": "AFTER",
           "isNoGo": true,
-          "noGoCondition": "Any fuel leaks."
+          "noGoCondition": "Any fuel leaks, damage, loose or missing parts."
         },
         {
           "id": "mep803a-b-035",
@@ -454,7 +454,7 @@
           "zoneId": "zone-6",
           "item": "35",
           "itemDescription": "Fuel Filter/Water Separator",
-          "procedure": "Inspect for leaks, cracks, damage. Drain water from the fuel filter/water separator.",
+          "procedure": "Inspect for leaks, cracks, damage, proper mounting, loose or missing parts. Drain water (para 3-3.6.2).",
           "conditionSet": "AFTER",
           "isNoGo": true,
           "noGoCondition": "Any fuel leaks. Water not drained."
@@ -469,7 +469,7 @@
           "procedure": "Inspect for leaks, damage, loose or missing parts. Inspect oil level on the dipstick. Inspect for contamination.",
           "conditionSet": "AFTER",
           "isNoGo": true,
-          "noGoCondition": "Class III leaks, low oil, or contamination."
+          "noGoCondition": "Class III leaks, damage, loose or missing parts. Oil level is low. Oil shows signs of contamination."
         },
         {
           "id": "mep803a-b-037",

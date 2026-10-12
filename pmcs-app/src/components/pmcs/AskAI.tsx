@@ -1,14 +1,15 @@
 import { useState } from 'react';
 import { MessageCircleQuestion, Send, Loader2 } from 'lucide-react';
-import { askAboutStep, getApiKey } from '../../utils/ai';
+import { askAboutStep, getApiKey, friendlyAiError } from '../../utils/ai';
 import type { PmcsStepData } from '../../types';
 
 interface AskAIProps {
   step: PmcsStepData;
   vehicleType: string;
+  inspectionType?: string;
 }
 
-export function AskAI({ step, vehicleType }: AskAIProps) {
+export function AskAI({ step, vehicleType, inspectionType }: AskAIProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
@@ -25,6 +26,7 @@ export function AskAI({ step, vehicleType }: AskAIProps) {
     try {
       const response = await askAboutStep(question.trim(), {
         vehicleType,
+        inspectionType,
         zone: step.zone,
         item: step.item,
         itemDescription: step.itemDescription,
@@ -34,7 +36,7 @@ export function AskAI({ step, vehicleType }: AskAIProps) {
       });
       setAnswer(response);
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Failed to get answer');
+      setError(friendlyAiError(e));
     } finally {
       setIsLoading(false);
     }
@@ -71,11 +73,13 @@ export function AskAI({ step, vehicleType }: AskAIProps) {
               onChange={(e) => setQuestion(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleAsk()}
               placeholder="e.g., What does milky oil look like?"
-              className="flex-1 min-h-[44px] px-3 text-base bg-bg-secondary text-text-primary border border-border rounded-[var(--radius-md)] placeholder:text-text-secondary/50 focus:outline-none focus:ring-2 focus:ring-accent-blue"
+              aria-label="Your question"
+              className="flex-1 min-h-[44px] px-3 text-base bg-bg-secondary text-text-primary border border-border rounded-[var(--radius-md)] placeholder:text-text-secondary/70 focus:outline-none focus:ring-2 focus:ring-accent-blue"
             />
             <button
               onClick={handleAsk}
               disabled={!question.trim() || isLoading}
+              aria-label="Ask"
               className="min-w-[44px] min-h-[44px] flex items-center justify-center bg-accent-blue text-white rounded-[var(--radius-md)] disabled:opacity-40"
             >
               {isLoading ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} />}

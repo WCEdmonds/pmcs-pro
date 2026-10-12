@@ -9,7 +9,7 @@
   --color-accent-red: #EF4444;
   --color-accent-blue: #3B82F6;
   --color-text-primary: #F1F5F9;
-  --color-text-secondary: #94A3B8;
+  --color-text-secondary: #A8B5C7;
   --color-border: #334155;
   --font-display: "JetBrains Mono", monospace;
   --font-body: "IBM Plex Sans", sans-serif;
@@ -23,7 +23,7 @@ html:not(.dark) {
   --color-bg-secondary: #FFFFFF;
   --color-bg-tertiary: #F1F5F9;
   --color-text-primary: #0F172A;
-  --color-text-secondary: #64748B;
+  --color-text-secondary: #475569;
   --color-border: #CBD5E1;
 }
 

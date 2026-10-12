@@ -5,7 +5,13 @@ import type { InspectionSession, Fault, StepResult } from '../types';
 export interface HistoryEntry {
   session: InspectionSession;
   faultCount: number;
+  /** NMC faults that were NOT corrected on site (matches Summary / DA 2404). */
   nogoCount: number;
+}
+
+/** Same rule as Summary and the 5988 page. */
+export function isNotMissionCapable(faults: Pick<Fault, 'readiness' | 'correctedOnSite'>[]): boolean {
+  return faults.some((f) => f.readiness === 'NMC' && !f.correctedOnSite);
 }
 
 interface HistoryState {
@@ -15,7 +21,6 @@ interface HistoryState {
   getSession: (id: string) => Promise<InspectionSession | undefined>;
   getSessionFaults: (sessionId: string) => Promise<Fault[]>;
   getSessionStepResults: (sessionId: string) => Promise<StepResult[]>;
-  deleteSession: (id: string) => Promise<void>;
 }
 
 export const useHistoryStore = create<HistoryState>((set) => ({
@@ -24,24 +29,27 @@ export const useHistoryStore = create<HistoryState>((set) => ({
 
   loadHistory: async (dodId) => {
     set({ isLoading: true });
-    let sessions: InspectionSession[];
-    if (dodId) {
-      sessions = await db.sessions.where('inspectorDodId').equals(dodId).reverse().sortBy('date');
-    } else {
-      sessions = await db.sessions.reverse().sortBy('date');
+    try {
+      const sessions = dodId
+        ? await db.sessions.where('inspectorDodId').equals(dodId).toArray()
+        : await db.sessions.toArray();
+      sessions.sort((a, b) =>
+        (b.date || '').localeCompare(a.date || '') || (b.createdAt || '').localeCompare(a.createdAt || ''));
+      const entries: HistoryEntry[] = await Promise.all(
+        sessions.map(async (session) => {
+          const faults = await db.faults.where('sessionId').equals(session.id).toArray();
+          return {
+            session,
+            faultCount: faults.length,
+            nogoCount: faults.filter((f) => f.readiness === 'NMC' && !f.correctedOnSite).length,
+          };
+        })
+      );
+      set({ entries, isLoading: false });
+    } catch (err) {
+      console.error('Loading history failed:', err);
+      set({ entries: [], isLoading: false });
     }
-    const completed = sessions.filter((s) => s.status === 'COMPLETED');
-    const entries: HistoryEntry[] = await Promise.all(
-      completed.map(async (session) => {
-        const faults = await db.faults.where('sessionId').equals(session.id).toArray();
-        return {
-          session,
-          faultCount: faults.length,
-          nogoCount: faults.filter((f) => f.readiness === 'NMC').length,
-        };
-      })
-    );
-    set({ entries, isLoading: false });
   },
 
   getSession: async (id) => db.sessions.get(id),
@@ -51,12 +59,4 @@ export const useHistoryStore = create<HistoryState>((set) => ({
 
   getSessionStepResults: async (sessionId) =>
     db.stepResults.where('sessionId').equals(sessionId).toArray(),
-
-  deleteSession: async (id) => {
-    await db.stepResults.where('sessionId').equals(id).delete();
-    await db.faults.where('sessionId').equals(id).delete();
-    await db.photos.where('sessionId').equals(id).delete();
-    await db.sessions.delete(id);
-    set((s) => ({ entries: s.entries.filter((e) => e.session.id !== id) }));
-  },
 }));

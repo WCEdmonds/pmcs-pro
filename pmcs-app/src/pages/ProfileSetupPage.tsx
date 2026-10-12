@@ -1,100 +1,99 @@
-import { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useState, useRef } from 'react';
+import { useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { useUserStore } from '../stores/userStore';
 import { remoteSignUp } from '../utils/auth';
-import { getUnitName, saveUicMapping } from '../utils/uicLookup';
+import { ApiError, isNetworkError } from '../utils/api';
+import { saveUicMapping, validateUic, type UicLookup } from '../utils/uicLookup';
 import { Button } from '../components/ui/Button';
 import { UicUnitPrompt } from '../components/ui/UicUnitPrompt';
+import { UicField } from '../components/ui/UicField';
 import { Input } from '../components/ui/Input';
 import { Select } from '../components/ui/Select';
 import { ALL_RANKS } from '../data/ranks';
 
+const PIN_RE = /^\d{6,12}$/;
+
 export default function ProfileSetupPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const dodId = (location.state as { dodId?: string })?.dodId || '';
-  const createUser = useUserStore((s) => s.createUser);
+  const dodId = (location.state as { dodId?: string } | null)?.dodId || '';
+  const setFromProfile = useUserStore((s) => s.setFromProfile);
 
   const [rank, setRank] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [mi, setMi] = useState('');
   const [unit, setUnit] = useState('');
+  const [uicLookup, setUicLookup] = useState<UicLookup | null>(null);
   const [pin, setPin] = useState('');
   const [pinConfirm, setPinConfirm] = useState('');
   const [error, setError] = useState('');
+  const [alreadyRegistered, setAlreadyRegistered] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showUicPrompt, setShowUicPrompt] = useState(false);
+  const busyRef = useRef(false);
 
-  const isValid = rank && firstName.trim() && lastName.trim() && unit.trim() && pin.length >= 4;
+  if (!/^\d{10}$/.test(dodId)) return <Navigate to="/login" replace />;
+
+  const uic = validateUic(unit);
+  const pinValid = PIN_RE.test(pin);
   const pinsMatch = pin === pinConfirm;
+  const isValid = !!rank && !!firstName.trim() && !!lastName.trim() && uic.valid && pinValid && pinsMatch;
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!isValid) return;
-    if (!pinsMatch) {
-      setError('PINs do not match');
-      return;
-    }
-
-    // Check if UIC is known — if not, prompt for unit name
-    const existingName = await getUnitName(unit.trim());
-    if (!existingName) {
-      setShowUicPrompt(true);
-      return;
-    }
-
-    await doSubmit();
-  };
-
-  const handleUicSave = async (unitName: string) => {
-    await saveUicMapping(unit.trim(), unitName);
-    setShowUicPrompt(false);
-    await doSubmit();
-  };
-
-  const doSubmit = async () => {
+  const handleSubmit = async (e?: React.FormEvent) => {
+    e?.preventDefault();
+    if (!isValid || busyRef.current) return;
+    busyRef.current = true;
     setIsLoading(true);
     setError('');
+    setAlreadyRegistered(false);
 
     try {
-      // Register with the server
-      await remoteSignUp(dodId, pin, {
+      // 1. Create the account on the server. No server account → no local account.
+      const profile = await remoteSignUp(dodId, pin, {
         rank,
         last_name: lastName.trim(),
         first_name: firstName.trim(),
-        mi: mi.trim(),
-        unit: unit.trim(),
+        mi: mi.trim().toUpperCase(),
+        unit: uic.value,
       });
-    } catch (err: any) {
-      console.warn('Server signup failed, continuing with local only:', err);
-      // Don't block — local auth still works
+      await setFromProfile(profile);
+      // 2. Now that we have a token, name a brand-new UIC.
+      if (uicLookup?.status === 'new') {
+        setShowUicPrompt(true);
+        setIsLoading(false);
+        return;
+      }
+      navigate('/', { replace: true });
+    } catch (err) {
+      if (err instanceof ApiError && err.status === 409) {
+        setAlreadyRegistered(true);
+        setError('This DOD ID already has an account. Sign in with your PIN instead.');
+      } else if (isNetworkError(err)) {
+        setError("Can't reach the server. Your account was not created — check your connection and try again.");
+      } else {
+        setError(err instanceof Error && err.message ? `Account not created: ${err.message}` : 'Account not created. Try again.');
+      }
+      setIsLoading(false);
+    } finally {
+      busyRef.current = false;
     }
+  };
 
-    // Also save locally in Dexie
-    await createUser({
-      dodId,
-      rank,
-      firstName: firstName.trim(),
-      lastName: lastName.trim(),
-      mi: mi.trim(),
-      unit: unit.trim(),
-    });
-
-    setIsLoading(false);
-    navigate('/');
+  const finishUic = async (unitName?: string) => {
+    setShowUicPrompt(false);
+    if (unitName) await saveUicMapping(uic.value, unitName);
+    navigate('/', { replace: true });
   };
 
   return (
     <div className="flex flex-col h-full px-4">
       <div className="pt-8 pb-4">
         <h1 className="text-2xl font-bold font-display text-text-primary">Set Up Profile</h1>
-        <p className="mt-1 text-text-secondary text-sm">
-          {dodId ? `DOD ID: ${dodId}` : 'Create your profile'}
-        </p>
+        <p className="mt-1 text-text-secondary text-sm">DOD ID: {dodId}</p>
       </div>
 
-      <form onSubmit={handleSubmit} className="flex-1 flex flex-col gap-4 overflow-y-auto pb-4">
+      <form onSubmit={handleSubmit} noValidate className="flex-1 flex flex-col gap-4 overflow-y-auto pb-4">
         <Select
           label="Rank"
           options={ALL_RANKS}
@@ -126,48 +125,53 @@ export default function ProfileSetupPage() {
           onChange={(e) => setLastName(e.target.value)}
           autoComplete="family-name"
         />
+        <UicField value={unit} onChange={setUnit} onLookup={setUicLookup} id="profile-uic" />
         <Input
-          label="UIC (Unit Identification Code)"
-          value={unit}
-          onChange={(e) => setUnit(e.target.value)}
-          placeholder="e.g., WABC12"
-          autoComplete="organization"
-        />
-        <Input
-          label="Choose a PIN (4-6 digits)"
+          label="Choose a PIN (6-12 digits)"
           value={pin}
-          onChange={(e) => setPin(e.target.value)}
+          onChange={(e) => setPin(e.target.value.replace(/\D/g, '').slice(0, 12))}
           inputMode="numeric"
-          pattern="[0-9]*"
           type="password"
-          placeholder="e.g., 1234"
-          maxLength={6}
+          placeholder="6 to 12 digits"
+          maxLength={12}
+          autoComplete="new-password"
+          error={pin && !pinValid ? 'PIN must be 6 to 12 digits' : undefined}
         />
         <Input
           label="Confirm PIN"
           value={pinConfirm}
-          onChange={(e) => setPinConfirm(e.target.value)}
+          onChange={(e) => setPinConfirm(e.target.value.replace(/\D/g, '').slice(0, 12))}
           inputMode="numeric"
-          pattern="[0-9]*"
           type="password"
           placeholder="Re-enter PIN"
-          maxLength={6}
+          maxLength={12}
+          autoComplete="new-password"
           error={pinConfirm && !pinsMatch ? 'PINs do not match' : undefined}
         />
-        {error && <p className="text-sm text-accent-red">{error}</p>}
+        {error && (
+          <div role="alert" className="flex flex-col gap-2">
+            <p className="text-sm text-accent-red">{error}</p>
+            {alreadyRegistered && (
+              <Button type="button" variant="secondary" onClick={() => navigate('/login', { replace: true })}>Go to sign in</Button>
+            )}
+          </div>
+        )}
       </form>
 
-      <div className="pb-[calc(16px+env(safe-area-inset-bottom))]">
-        <Button size="lg" fullWidth onClick={handleSubmit} disabled={!isValid || !pinsMatch || isLoading}>
+      <div className="pb-[calc(16px+env(safe-area-inset-bottom))] flex flex-col gap-2">
+        <Button size="lg" fullWidth onClick={() => handleSubmit()} disabled={!isValid || isLoading}>
           {isLoading ? 'Creating Account...' : 'Save & Continue'}
+        </Button>
+        <Button variant="ghost" fullWidth onClick={() => navigate('/login', { replace: true })}>
+          Back
         </Button>
       </div>
 
       <UicUnitPrompt
-        uic={unit.trim().toUpperCase()}
+        uic={uic.value}
         open={showUicPrompt}
-        onSave={handleUicSave}
-        onCancel={() => { setShowUicPrompt(false); doSubmit(); }}
+        onSave={(name) => finishUic(name)}
+        onCancel={() => finishUic()}
       />
     </div>
   );

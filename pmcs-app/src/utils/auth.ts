@@ -1,4 +1,6 @@
-import { api, signIn, signUp, signOut, getSessionUserId, type ApiProfile } from './api';
+import { api, signIn, signUp, signOut, getSessionUserId, ApiError, type ApiProfile } from './api';
+import type { User } from '../types';
+import { normalizeUic } from './uicLookup';
 
 export async function remoteSignUp(dodId: string, pin: string, profile: {
   rank: string;
@@ -18,24 +20,51 @@ export function remoteSignOut() {
   signOut();
 }
 
+/** GET /me. Throws NetworkError / ApiError so callers can tell offline from signed-out. */
+export async function fetchRemoteProfile(): Promise<ApiProfile> {
+  return api<ApiProfile>('GET', '/me');
+}
+
+/** Best-effort /me that returns null on any failure. */
 export async function getRemoteProfile(): Promise<ApiProfile | null> {
   if (!getSessionUserId()) return null;
   try {
-    return await api<ApiProfile>('GET', '/me');
+    return await fetchRemoteProfile();
   } catch {
     return null;
   }
 }
 
-export async function checkDodIdExists(dodId: string): Promise<boolean> {
+export type DodIdCheck = { status: 'exists' } | { status: 'new' } | { status: 'error'; message: string };
+
+/** Distinguishes "new user" from "can't tell" so a network error never routes an existing user to signup. */
+export async function checkDodIdExists(dodId: string): Promise<DodIdCheck> {
   try {
     const { exists } = await api<{ exists: boolean }>('GET', `/auth/exists/${encodeURIComponent(dodId)}`);
-    return exists;
-  } catch {
-    return false;
+    if (typeof exists !== 'boolean') return { status: 'error', message: 'Unexpected response from the server' };
+    return exists ? { status: 'exists' } : { status: 'new' };
+  } catch (err) {
+    if (err instanceof ApiError) {
+      return { status: 'error', message: err.status === 429 ? err.message : `Server error: ${err.message}` };
+    }
+    return { status: 'error', message: "Can't reach the server. Check your connection and try again." };
   }
 }
 
 export function hasRemoteSession(): boolean {
   return getSessionUserId() !== null;
 }
+
+export function profileToUser(profile: ApiProfile, existing?: Partial<User> | null): User {
+  return {
+    ...(existing ?? {}),
+    dodId: profile.dod_id,
+    rank: profile.rank ?? '',
+    firstName: profile.first_name ?? '',
+    lastName: profile.last_name ?? '',
+    mi: profile.mi ?? '',
+    unit: normalizeUic(profile.unit ?? ''),
+  };
+}
+
+export { normalizeUic };

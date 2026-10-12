@@ -1,7 +1,9 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useEffect, useState, lazy, Suspense } from 'react'
-import { getSessionUserId, onAuthChange } from './lib/api'
+import { getSessionUserId, maybeRefreshSession, onAuthChange } from './lib/api'
+import { UnitsProvider } from './components/UnitsProvider'
 import { DashboardLayout } from './components/DashboardLayout'
+import { ErrorBoundary } from './components/ErrorBoundary'
 
 const LoginPage = lazy(() => import('./pages/LoginPage').then(m => ({ default: m.LoginPage })))
 const FleetOverview = lazy(() => import('./pages/FleetOverview').then(m => ({ default: m.FleetOverview })))
@@ -15,16 +17,29 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
 
   useEffect(() => onAuthChange(() => setUser(getSessionUserId())), [])
 
+  // Sliding session: refresh a token older than ~1 day on start and when the tab returns.
+  useEffect(() => {
+    if (!user) return
+    maybeRefreshSession()
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') maybeRefreshSession()
+    }
+    document.addEventListener('visibilitychange', onVisible)
+    return () => document.removeEventListener('visibilitychange', onVisible)
+  }, [user])
+
   if (!user) {
     return <Navigate to="/login" replace />
   }
 
-  return <>{children}</>
+  // Keyed by user so a different sign-in starts from fresh state.
+  return <UnitsProvider key={user}>{children}</UnitsProvider>
 }
 
 export default function App() {
   return (
     <BrowserRouter>
+      <ErrorBoundary>
       <Suspense fallback={
         <div className="flex items-center justify-center h-screen bg-bg-primary">
           <div className="text-text-secondary font-display text-lg">Loading...</div>
@@ -51,6 +66,7 @@ export default function App() {
           />
         </Routes>
       </Suspense>
+      </ErrorBoundary>
     </BrowserRouter>
   )
 }

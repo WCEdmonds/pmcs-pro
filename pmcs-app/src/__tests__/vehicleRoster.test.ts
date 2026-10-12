@@ -41,11 +41,11 @@ describe('VEHICLE_ROSTER', () => {
     }
   });
 
-  it('MEP802A generators map to MEP803A', () => {
+  it('MEP802A generators have no PMCS mapping (5 kW set, not covered by TM 9-6115-642-10)', () => {
     const gens = VEHICLE_ROSTER.filter((v) => v.model === 'MEP802A');
     expect(gens.length).toBeGreaterThan(0);
     for (const v of gens) {
-      expect(v.vehicleType, `${v.bumperNumber} should map to MEP803A`).toBe('MEP803A');
+      expect(v.vehicleType, `${v.bumperNumber} should not map to a PMCS checklist`).toBeNull();
     }
   });
 

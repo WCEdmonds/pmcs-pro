@@ -36,7 +36,8 @@ export function goBackTrail(trail: DiagnosisStep[]): DiagnosisStep[] {
  * Short description for the DA 2404 form — just the terminal summary.
  * The full diagnosis trail lives in the diagnosisAttempts table for the dashboard.
  */
-export function buildFaultDescription(_trail: DiagnosisStep[], terminalSummary: string): string {
+export function buildFaultDescription(trail: DiagnosisStep[], terminalSummary: string): string {
+  void trail;
   return terminalSummary;
 }
 
@@ -54,4 +55,17 @@ export function getNextNodeId(node: TreeNode, selectedOption: string): string | 
     return node.nextNodeId;
   }
   return undefined;
+}
+
+/**
+ * Default readiness for a new fault: a step with a TM "not mission capable if"
+ * criterion defaults to NMC; otherwise the category default (PMC if none).
+ */
+export function defaultReadiness(
+  step: { isNoGo?: boolean; noGoCondition?: string },
+  category?: FaultCategory | null,
+): Readiness {
+  if (step.isNoGo || step.noGoCondition?.trim()) return 'NMC';
+  const fromCategory = category ? getReadinessForCategory(category) : undefined;
+  return fromCategory ?? 'PMC';
 }

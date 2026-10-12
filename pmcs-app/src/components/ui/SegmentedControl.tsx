@@ -16,14 +16,15 @@ export function SegmentedControl<T extends string>({
   return (
     <div className="flex flex-col gap-1.5">
       <span className="text-sm font-medium text-text-secondary">{label}</span>
-      <div className="flex bg-bg-tertiary rounded-[var(--radius-md)] border border-border p-1 gap-1">
+      <div className="flex flex-wrap bg-bg-tertiary rounded-[var(--radius-md)] border border-border p-1 gap-1" role="group" aria-label={label}>
         {options.map((opt) => (
           <button
             key={opt}
             type="button"
+            aria-pressed={value === opt}
             onClick={() => onChange(opt)}
             className={`
-              flex-1 min-h-[44px] rounded-[var(--radius-sm)] text-base font-medium transition-colors
+              flex-1 min-w-[28%] min-h-[44px] rounded-[var(--radius-sm)] text-base font-medium transition-colors
               ${value === opt
                 ? 'bg-accent-blue text-white'
                 : 'text-text-secondary active:bg-bg-secondary'

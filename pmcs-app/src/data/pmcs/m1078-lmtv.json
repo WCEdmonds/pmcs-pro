@@ -161,7 +161,7 @@
           "zoneId": "zone-2",
           "item": "11.1",
           "itemDescription": "Windshield Wipers and Washer (Operational Check)",
-          "procedure": "Hit the windshield washer and wiper switches to make sure they both work. If either one is dead, put in a work order.",
+          "procedure": "Check the windshield washer switch and the windshield wiper switch for proper operation. Notify Unit Maintenance if either switch is inoperative.",
           "conditionSet": "BEFORE",
           "isNoGo": false
         }
@@ -182,7 +182,7 @@
           "procedure": "Start your engine and watch the OIL PRESS gauge — it should read between 15-80 PSI. Oil pressure goes up with RPMs and drops at idle, which is normal. If the oil pressure light doesn't flicker on briefly at startup, or if it comes on and stays on, shut it down and report it.",
           "conditionSet": "BEFORE",
           "isNoGo": true,
-          "noGoCondition": "a. Gage indicates in red zone and engine oil pressure indicator is illuminated. b. Gage indicates less than 15 psi (103 kPa)."
+          "noGoCondition": "a. Gage indicates in red zone and engine oil pressure indicator is illuminated. b. Gage indicates less than 15 psi (103 kPa). (CAUTION, TM p. 2-42.1: if the engine oil pressure indicator does not illuminate momentarily at start, or illuminates and stays on, the vehicle is not fully mission capable.)"
         },
         {
           "id": "m1078-b-015",
@@ -306,6 +306,771 @@
           "procedure": "Hit the hazard lights switch and make sure all four corners are flashing. Skip this one if you're in a tactical environment where you wouldn't use hazards.",
           "conditionSet": "BEFORE",
           "isNoGo": false
+        }
+      ]
+    },
+    {
+      "id": "zone-5",
+      "name": "M1078 Cargo — Before (Table 2-2)",
+      "description": "M1078/M1081-specific BEFORE check (TM Table 2-2)",
+      "steps": [
+        {
+          "id": "m1078-b-025",
+          "sequence": 25,
+          "zone": "M1078 Cargo — Before (Table 2-2)",
+          "zoneId": "zone-5",
+          "item": "T2-2 #1",
+          "itemDescription": "Troop Transport Alarm Switch (If Equipped)",
+          "procedure": "Only if equipped with the troop transport alarm. (a) Check that the attaching knobs are tight. (b) Master power switch ON (para 2-21a or b). (c) Troop transport alarm switch to ON (para 2-9a). (d) Verify the audible alarm sounds in the cab. (e) Troop transport alarm switch to OFF. (f) Master power switch OFF (para 2-21f). TM Table 2-2 item 1.",
+          "conditionSet": "BEFORE",
+          "isNoGo": false
+        }
+      ]
+    },
+    {
+      "id": "zone-6",
+      "name": "During Operation",
+      "description": "Monitor while the vehicle is being operated (TM Table 2-1 items 23-28)",
+      "steps": [
+        {
+          "id": "m1078-b-026",
+          "sequence": 26,
+          "zone": "During Operation",
+          "zoneId": "zone-6",
+          "item": "23",
+          "itemDescription": "Controls and Indicators",
+          "procedure": "Monitor all gages, warning lights, and warning buzzers during operation. All gages must keep the normal readings listed in the BEFORE checks; operating for an extended time with any gage outside normal limits may damage the equipment.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "Warning lights or buzzers indicate a malfunction and immediate corrective action by the Operator will not correct the problem."
+        },
+        {
+          "id": "m1078-b-027",
+          "sequence": 27,
+          "zone": "During Operation",
+          "zoneId": "zone-6",
+          "item": "24",
+          "itemDescription": "Engine Operation",
+          "procedure": "Check for excessive exhaust smoke, unusual engine noise, rough running, or misfiring engine.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "Any of these conditions are found (excessive exhaust smoke, unusual engine noise, rough running, or misfiring)."
+        },
+        {
+          "id": "m1078-b-028",
+          "sequence": 28,
+          "zone": "During Operation",
+          "zoneId": "zone-6",
+          "item": "25",
+          "itemDescription": "CTIS",
+          "procedure": "Check operation of the Central Tire Inflation System (CTIS) (para 2-23).",
+          "conditionSet": "DURING",
+          "isNoGo": false
+        },
+        {
+          "id": "m1078-b-029",
+          "sequence": 29,
+          "zone": "During Operation",
+          "zoneId": "zone-6",
+          "item": "26",
+          "itemDescription": "Air Dryer",
+          "procedure": "Listen for the air dryer discharge when system air pressure reaches approximately 120 psi (827 kPa). The sound of the air dryer discharging is normal.",
+          "conditionSet": "DURING",
+          "isNoGo": false
+        },
+        {
+          "id": "m1078-b-030",
+          "sequence": 30,
+          "zone": "During Operation",
+          "zoneId": "zone-6",
+          "item": "27",
+          "itemDescription": "Steering",
+          "procedure": "Check for any unusual steering noise, binding, or difficulty in turning during operation.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "Steering binds or is unresponsive."
+        },
+        {
+          "id": "m1078-b-031",
+          "sequence": 31,
+          "zone": "During Operation",
+          "zoneId": "zone-6",
+          "item": "28",
+          "itemDescription": "Service Brakes",
+          "procedure": "(a) Check that the service brakes stop the vehicle. (b) Check whether the service brakes pull the vehicle to one side when applied. (c) Listen for unusual noises (chattering, grinding, groaning, or excessive squealing) during braking; notify Unit Maintenance if unusual noises are present.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "a. Service brakes do not stop vehicle. b. Vehicle pulls to one side when service brakes are applied."
+        },
+        {
+          "id": "m1078-b-032",
+          "sequence": 32,
+          "zone": "During Operation",
+          "zoneId": "zone-6",
+          "item": "T2-2 #2",
+          "itemDescription": "LMHC (If Equipped)",
+          "procedure": "Only if equipped with the Light Material Handling Crane; checked during operation when required by the mission. (a) Check for loose, missing, or damaged drive motor mounting bolts; tighten loose bolts. If bolts are missing, damaged, or cannot be tightened, notify Unit Maintenance. (b) Using the LMHC remote control, check that the cable pays out and reels in properly (para 2-24). (c) Rotate the LMHC right and left, checking for binding or restriction of all LMHC components (para 2-24). (d) WARNING: wear heavy leather-palmed gloves when handling wire rope. Check the cable for kinks, frays, and breaks. TM Table 2-2 item 2.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "d. Evidence of kinks, frays, or breaks in the LMHC cable."
+        }
+      ]
+    },
+    {
+      "id": "zone-7",
+      "name": "After Operation",
+      "description": "Checks performed immediately after operating the vehicle (TM Table 2-1 items 29-41)",
+      "steps": [
+        {
+          "id": "m1078-b-033",
+          "sequence": 33,
+          "zone": "After Operation",
+          "zoneId": "zone-7",
+          "item": "29",
+          "itemDescription": "Hydraulic Manifold",
+          "procedure": "Inspect the hydraulic manifold for leakage.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "Class III leak is evident."
+        },
+        {
+          "id": "m1078-b-034",
+          "sequence": 34,
+          "zone": "After Operation",
+          "zoneId": "zone-7",
+          "item": "30",
+          "itemDescription": "Cab Hydraulic Cylinder",
+          "procedure": "(a) Raise the cab (para 2-22a). (b) Check the cab hydraulic cylinder for oil leaks or damage. (c) Check the linkage for damage and missing hardware.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "b. Class III leak is evident or cab will not raise or lower. c. Linkage is damaged or missing hardware."
+        },
+        {
+          "id": "m1078-b-035",
+          "sequence": 35,
+          "zone": "After Operation",
+          "zoneId": "zone-7",
+          "item": "31",
+          "itemDescription": "Cab Hydraulic Latch",
+          "procedure": "Check the cab hydraulic latch for damage and the hoses for oil leaks.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "Class III leak is evident and cab will not latch."
+        },
+        {
+          "id": "m1078-b-036",
+          "sequence": 36,
+          "zone": "After Operation",
+          "zoneId": "zone-7",
+          "item": "32",
+          "itemDescription": "Fuel/Water Separator",
+          "procedure": "WARNING: no smoking, fire, or sparks near the fuel/water separator. (a) Check the fuel/water separator for leaks or damage. (b) Check for water in the bowl. If there is water: (1) turn the knurled nut to the left to open the drain valve, (2) drain into a container until only pure fuel comes out, (3) close the drain valve by turning the knurled nut to the right.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "a. Class III leak is evident."
+        },
+        {
+          "id": "m1078-b-037",
+          "sequence": 37,
+          "zone": "After Operation",
+          "zoneId": "zone-7",
+          "item": "33",
+          "itemDescription": "Engine Compartment",
+          "procedure": "Visually inspect the engine compartment for obvious damage that would impair operation.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "Class III leak is evident."
+        },
+        {
+          "id": "m1078-b-038",
+          "sequence": 38,
+          "zone": "After Operation",
+          "zoneId": "zone-7",
+          "item": "34",
+          "itemDescription": "Engine Oil",
+          "procedure": "WARNING: the dipstick is close to the 24 VDC starter solenoid connectors; avoid shorting across them. CAUTION: do not overfill. (a) Check the engine oil dipstick; level should be between the ADD and FULL lines. (b) Add oil as required (Appendix F). (c) Lower the cab (para 2-22b).",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "Engine oil is over the FULL line, discolored, or milky (notify Unit Maintenance)."
+        },
+        {
+          "id": "m1078-b-039",
+          "sequence": 39,
+          "zone": "After Operation",
+          "zoneId": "zone-7",
+          "item": "35",
+          "itemDescription": "Transmission Oil",
+          "procedure": "Perform with the engine at normal operating temperature, 160-230°F (71-110°C). (a) Start the engine (para 2-21a or b). (b) Check the TRANSMISSION OIL DIPSTICK; level should be between the HOT ADD and HOT FULL lines. (c) Add oil as required (Appendix F). (d) Shut down the engine (para 2-21f).",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "Transmission oil is over the HOT FULL line, discolored, or milky (notify Unit Maintenance)."
+        },
+        {
+          "id": "m1078-b-040",
+          "sequence": 40,
+          "zone": "After Operation",
+          "zoneId": "zone-7",
+          "item": "36",
+          "itemDescription": "Hydraulic Reservoir (If Equipped)",
+          "procedure": "Only if equipped with the hydraulic reservoir. Check the hydraulic fluid level (Appendix F). During a cold check, the oil level gage should read two marks past the 3/4 mark.",
+          "conditionSet": "AFTER",
+          "isNoGo": false
+        },
+        {
+          "id": "m1078-b-041",
+          "sequence": 41,
+          "zone": "After Operation",
+          "zoneId": "zone-7",
+          "item": "37",
+          "itemDescription": "Air Tanks",
+          "procedure": "(a) With the vehicle parked and the engine shut down, listen for air leaks around the air tanks. (b) Open the air tank drain valves and drain moisture.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "a. Air leak(s) heard around air tanks."
+        },
+        {
+          "id": "m1078-b-042",
+          "sequence": 42,
+          "zone": "After Operation",
+          "zoneId": "zone-7",
+          "item": "38",
+          "itemDescription": "Tires",
+          "procedure": "Check for missing or improperly inflated tires. Check the tires for cuts, gouges, cracks, and unusual bulges. Remove any object that could penetrate a tire.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "Tire missing, deflated, or worn to wear bar."
+        },
+        {
+          "id": "m1078-b-043",
+          "sequence": 43,
+          "zone": "After Operation",
+          "zoneId": "zone-7",
+          "item": "39",
+          "itemDescription": "Horn Button",
+          "procedure": "Check the horn button for proper operation. (Safety task that would not be performed in a tactical mission; see AR 385-55.)",
+          "conditionSet": "AFTER",
+          "isNoGo": false
+        },
+        {
+          "id": "m1078-b-044",
+          "sequence": 44,
+          "zone": "After Operation",
+          "zoneId": "zone-7",
+          "item": "40",
+          "itemDescription": "Lights",
+          "procedure": "Check headlights, turn signals, taillights, stoplights, marker lights, blackout drive, and blackout marker lights for damage and proper operation (para 2-21c). (Safety task that would not be performed in a tactical mission; operating with damaged or inoperable headlights may violate AR 385-55.)",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "One or more headlights, turn signals, taillights, or stoplights are missing, damaged, or not operational."
+        },
+        {
+          "id": "m1078-b-045",
+          "sequence": 45,
+          "zone": "After Operation",
+          "zoneId": "zone-7",
+          "item": "41",
+          "itemDescription": "Light Switches",
+          "procedure": "Place all light switches in the OFF position (para 2-21c) so the batteries do not discharge.",
+          "conditionSet": "AFTER",
+          "isNoGo": false
+        }
+      ]
+    },
+    {
+      "id": "zone-8",
+      "name": "Weekly",
+      "description": "Weekly checks (TM Table 2-1 items 41.1-65; Table 2-2 items 3 and 5)",
+      "steps": [
+        {
+          "id": "m1078-b-046",
+          "sequence": 46,
+          "zone": "Weekly",
+          "zoneId": "zone-8",
+          "item": "41.1",
+          "itemDescription": "Front Gladhands",
+          "procedure": "(a) Check the front gladhands for damage and air leaks. (b) Remove the dummy couplings and check for obstructions. (c) Inspect and lubricate the coupler seals (Appendix F).",
+          "conditionSet": "WEEKLY",
+          "isNoGo": true,
+          "noGoCondition": "a. Air leaks are heard. b. Gladhands are obstructed. c. Coupler seals are faulty."
+        },
+        {
+          "id": "m1078-b-047",
+          "sequence": 47,
+          "zone": "Weekly",
+          "zoneId": "zone-8",
+          "item": "42",
+          "itemDescription": "Mounting/Coupling Hardware and Hoses/Tubes (Engine Systems)",
+          "procedure": "Check bolts, nuts, clamps, hoses, and tubes for looseness and missing, broken, or leaking conditions. Tighten loose bolts, nuts, and clamps. If any are missing, broken, cannot be tightened, or damaged to the point of leaking, notify Unit Maintenance. Check: the radiator and radiator overflow tank (as illustrated); the transmission cooling system; the air intake system (air filter, particle extraction hose, charge air cooler tubes/hoses, air compressor); the air system (air dryer and air tanks); the fuel system (fuel return hose and fuel/water separator drain hose).",
+          "conditionSet": "WEEKLY",
+          "isNoGo": false
+        },
+        {
+          "id": "m1078-b-048",
+          "sequence": 48,
+          "zone": "Weekly",
+          "zoneId": "zone-8",
+          "item": "43",
+          "itemDescription": "Mounting/Coupling Hardware and Hoses/Tubes (Chassis)",
+          "procedure": "Check nuts, bolts, clamps, hoses, and tubes for looseness and missing, broken, or leaking conditions. If damage is found, notify Unit Maintenance. Check: (a) suspension, including springs and U-bolts; (b) axles, including vent hoses, CTIS hoses, and clamps; (c) exhaust system, including muffler and tailpipe; (d) engine mounts (front); (e) engine/transmission supports (cradle mounts); (f) drive shaft bearing cup screws.",
+          "conditionSet": "WEEKLY",
+          "isNoGo": false
+        },
+        {
+          "id": "m1078-b-049",
+          "sequence": 49,
+          "zone": "Weekly",
+          "zoneId": "zone-8",
+          "item": "44",
+          "itemDescription": "11K SRW Operation (If Equipped)",
+          "procedure": "Only if equipped with the 11K self-recovery winch. WARNING: wear heavy leather-palmed gloves; never let moving cable slide through your hands. (a) Check the 11K SRW for proper operation in both directions (para 2-54). (b) Check the cable for kinks, frays, and breaks. (c) Check the cable end for a missing or damaged pin or cotter pin.",
+          "conditionSet": "WEEKLY",
+          "isNoGo": false
+        },
+        {
+          "id": "m1078-b-050",
+          "sequence": 50,
+          "zone": "Weekly",
+          "zoneId": "zone-8",
+          "item": "45",
+          "itemDescription": "Heater/Defrost Controls",
+          "procedure": "Check the FAN switch, HEAT control, VENT control, and DEFR (defrost) control for proper operation (para 2-25).",
+          "conditionSet": "WEEKLY",
+          "isNoGo": false
+        },
+        {
+          "id": "m1078-b-051",
+          "sequence": 51,
+          "zone": "Weekly",
+          "zoneId": "zone-8",
+          "item": "46",
+          "itemDescription": "Wheels and Tires",
+          "procedure": "(a) Check tire tread depth; tread should not be worn beyond the level of the wear bar. (b) Check the wheel assembly for damage; if damaged, check the wheel for cracked, broken, or bent surfaces. (c) Check wheel studs and nuts for obvious looseness, bent or broken studs, and missing or loose nuts; notify Unit Maintenance if any nuts are loose or missing or any studs are broken or bent. (d) Check tire pressures with a tire gage for each CTIS setting; notify Unit Maintenance if not within ±3 psi (21 kPa) of: HWY 55 psi (379 kPa), X-C 33 psi (228 kPa), SAND 20 psi (138 kPa), EMER 14 psi (97 kPa).",
+          "conditionSet": "WEEKLY",
+          "isNoGo": true,
+          "noGoCondition": "a. Tire tread is worn even to height of tread bar (depth 1/8 in. (3 mm) or less); any cut, gouge, or crack that extends to cord body, or any unusual bulges. b. Wheel is cracked, broken, or bent. c. Two or more nuts or studs on same wheel are missing, loose, or broken."
+        },
+        {
+          "id": "m1078-b-052",
+          "sequence": 52,
+          "zone": "Weekly",
+          "zoneId": "zone-8",
+          "item": "47",
+          "itemDescription": "Hydraulic Reservoir (If Equipped)",
+          "procedure": "Only if equipped with the hydraulic reservoir. (a) Check the hydraulic reservoir, oil hoses, and connections for leaks and/or damage. (b) Check for a clogged, damaged, or missing reservoir strainer: (1) remove the reservoir cap, (2) wipe out the inside of the strainer with a clean rag, (3) install the cap.",
+          "conditionSet": "WEEKLY",
+          "isNoGo": true,
+          "noGoCondition": "a. Class III leak is evident."
+        },
+        {
+          "id": "m1078-b-053",
+          "sequence": 53,
+          "zone": "Weekly",
+          "zoneId": "zone-8",
+          "item": "48",
+          "itemDescription": "Batteries",
+          "procedure": "WARNING: battery gases can explode — no smoking, flames, or sparks; remove jewelry. Above 90°F (32°C), battery fluid levels must be checked daily. (a) Open the battery cover (para 3-8a). (b) Check batteries for damaged casing, terminal posts, and security of mounting; check that battery cable clamps are secure. Notify Unit Maintenance if any defects are found. (c) Test battery fluid level (para 3-8b); if the level is low or the fluid is gassing (boiling), notify Unit Maintenance. (d) Check the battery box for corrosion and clean debris from the drain holes. (e) Close the battery cover (para 3-8c).",
+          "conditionSet": "WEEKLY",
+          "isNoGo": true,
+          "noGoCondition": "b. One or more batteries are missing, unserviceable, or leaking. Battery cable clamps are loose."
+        },
+        {
+          "id": "m1078-b-054",
+          "sequence": 54,
+          "zone": "Weekly",
+          "zoneId": "zone-8",
+          "item": "49",
+          "itemDescription": "Air Dryer",
+          "procedure": "Check the air dryer for damage and loose mounting.",
+          "conditionSet": "WEEKLY",
+          "isNoGo": false
+        },
+        {
+          "id": "m1078-b-055",
+          "sequence": 55,
+          "zone": "Weekly",
+          "zoneId": "zone-8",
+          "item": "50",
+          "itemDescription": "Underneath Vehicle",
+          "procedure": "(a) Check underneath for obvious damage to leaf springs, engine, transmission, frame rails, and crossmembers. (b) Check air hoses and fittings for obvious damage and leakage. (c) Check shock absorbers for leaks, missing or loose hardware, and loose shock absorbers. (d) Check drive shafts for loose hardware. (e) Inspect the drive shaft for excessive play; if excessive, notify Unit Maintenance to perform a hinging check.",
+          "conditionSet": "WEEKLY",
+          "isNoGo": true,
+          "noGoCondition": "a. Any loose or broken frame rails, crossmembers, broken welds, or broken screws. b. Any air leaks or damage to hoses or fittings. c. Any shock absorber oil leak greater than Class I, missing or loose hardware, or loose shock absorbers. d. Any loose drive shaft hardware."
+        },
+        {
+          "id": "m1078-b-056",
+          "sequence": 56,
+          "zone": "Weekly",
+          "zoneId": "zone-8",
+          "item": "51",
+          "itemDescription": "Electrical Connectors",
+          "procedure": "Check electrical connectors for damage.",
+          "conditionSet": "WEEKLY",
+          "isNoGo": false
+        },
+        {
+          "id": "m1078-b-057",
+          "sequence": 57,
+          "zone": "Weekly",
+          "zoneId": "zone-8",
+          "item": "52",
+          "itemDescription": "Rear Gladhands",
+          "procedure": "(a) Check the rear gladhands for damage and air leaks. (b) Lubricate the coupler seals (Appendix F).",
+          "conditionSet": "WEEKLY",
+          "isNoGo": true,
+          "noGoCondition": "a. Air leaks are heard."
+        },
+        {
+          "id": "m1078-b-058",
+          "sequence": 58,
+          "zone": "Weekly",
+          "zoneId": "zone-8",
+          "item": "53",
+          "itemDescription": "Reflectors",
+          "procedure": "Check for missing or damaged reflectors.",
+          "conditionSet": "WEEKLY",
+          "isNoGo": false
+        },
+        {
+          "id": "m1078-b-059",
+          "sequence": 59,
+          "zone": "Weekly",
+          "zoneId": "zone-8",
+          "item": "54",
+          "itemDescription": "Pintle Hook",
+          "procedure": "Check the pintle hook for looseness and/or a damaged locking mechanism.",
+          "conditionSet": "WEEKLY",
+          "isNoGo": false
+        },
+        {
+          "id": "m1078-b-060",
+          "sequence": 60,
+          "zone": "Weekly",
+          "zoneId": "zone-8",
+          "item": "55",
+          "itemDescription": "Shackles",
+          "procedure": "Check the shackles for damage. Check the mounting pin for damage.",
+          "conditionSet": "WEEKLY",
+          "isNoGo": false
+        },
+        {
+          "id": "m1078-b-061",
+          "sequence": 61,
+          "zone": "Weekly",
+          "zoneId": "zone-8",
+          "item": "56",
+          "itemDescription": "11K SRW Rollers (If Equipped)",
+          "procedure": "Only if equipped with the 11K SRW. Check that the cable guides and roller fairleads are mounted securely and rotate smoothly.",
+          "conditionSet": "WEEKLY",
+          "isNoGo": false
+        },
+        {
+          "id": "m1078-b-062",
+          "sequence": 62,
+          "zone": "Weekly",
+          "zoneId": "zone-8",
+          "item": "57",
+          "itemDescription": "11K SRW (If Equipped)",
+          "procedure": "Only if equipped with the 11K SRW. Inspect the winch for loose parts, oil leaks, and obvious external damage.",
+          "conditionSet": "WEEKLY",
+          "isNoGo": false
+        },
+        {
+          "id": "m1078-b-063",
+          "sequence": 63,
+          "zone": "Weekly",
+          "zoneId": "zone-8",
+          "item": "58",
+          "itemDescription": "Fuel Tank",
+          "procedure": "WARNING: diesel fuel is flammable. (a) Check the fuel tank for a clogged, damaged, or missing fuel strainer. (b) Check that the fuel cap is not loose or damaged. (c) Check the fuel tank, fuel hoses, and connections for leaks and damage.",
+          "conditionSet": "WEEKLY",
+          "isNoGo": true,
+          "noGoCondition": "c. Class III leak is evident."
+        },
+        {
+          "id": "m1078-b-064",
+          "sequence": 64,
+          "zone": "Weekly",
+          "zoneId": "zone-8",
+          "item": "59",
+          "itemDescription": "Door, Window, and Mirror",
+          "procedure": "Check the condition and operation of doors, windows, and mirrors.",
+          "conditionSet": "WEEKLY",
+          "isNoGo": false
+        },
+        {
+          "id": "m1078-b-065",
+          "sequence": 65,
+          "zone": "Weekly",
+          "zoneId": "zone-8",
+          "item": "60",
+          "itemDescription": "Drive Belts, Fan, and Pulleys",
+          "procedure": "WARNING: let the engine cool; the engine compartment has a partially exposed fan blade. (a) Raise the cab (para 2-22a). (b) Check drive belts for cracking, fraying, and breaks. (c) Check drive belt tightness; play should be about 1/2 in. (13 mm). Notify Unit Maintenance to tighten drive belts.",
+          "conditionSet": "WEEKLY",
+          "isNoGo": true,
+          "noGoCondition": "b. Any drive belt has more than one crack 1/8 in. (3 mm) deep or 50 percent of belt thickness, or frays more than 2 in. (51 mm) long. c. Any drive belt has excessive play."
+        },
+        {
+          "id": "m1078-b-066",
+          "sequence": 66,
+          "zone": "Weekly",
+          "zoneId": "zone-8",
+          "item": "61",
+          "itemDescription": "Fan Clutch",
+          "procedure": "Check the fan clutch for missing or loose mounting hardware.",
+          "conditionSet": "WEEKLY",
+          "isNoGo": true,
+          "noGoCondition": "Missing or loose mounting hardware is found."
+        },
+        {
+          "id": "m1078-b-067",
+          "sequence": 67,
+          "zone": "Weekly",
+          "zoneId": "zone-8",
+          "item": "62",
+          "itemDescription": "Radiator Hoses",
+          "procedure": "(a) Check radiator hoses for cracks and excessive wear that may cause leakage, and for loose hose clamps. (b) Check the radiator for leaks and damaged fins.",
+          "conditionSet": "WEEKLY",
+          "isNoGo": true,
+          "noGoCondition": "a./b. Class III leak is evident."
+        },
+        {
+          "id": "m1078-b-068",
+          "sequence": 68,
+          "zone": "Weekly",
+          "zoneId": "zone-8",
+          "item": "63",
+          "itemDescription": "Fuel Filter",
+          "procedure": "Check the fuel filter for leaks or damage.",
+          "conditionSet": "WEEKLY",
+          "isNoGo": true,
+          "noGoCondition": "Class III leak is evident."
+        },
+        {
+          "id": "m1078-b-069",
+          "sequence": 69,
+          "zone": "Weekly",
+          "zoneId": "zone-8",
+          "item": "64",
+          "itemDescription": "Power Steering Reservoir",
+          "procedure": "CAUTION: do not overfill. (a) Check the power steering reservoir for leaks or obvious damage. (b) Check that the reservoir is filled to the proper level — between the maximum and minimum marks on the dipstick. Add oil as required (Appendix F). If the level is over the full mark, notify Unit Maintenance.",
+          "conditionSet": "WEEKLY",
+          "isNoGo": true,
+          "noGoCondition": "a. Class III leak is evident."
+        },
+        {
+          "id": "m1078-b-070",
+          "sequence": 70,
+          "zone": "Weekly",
+          "zoneId": "zone-8",
+          "item": "65",
+          "itemDescription": "Charge Air",
+          "procedure": "(a) Check for missing or loose clamps at: (1) intake air filter, (2) turbocharger inlet coupling, (3) charge air cooler, (4) charge air cooler to air inlet elbow tubes. (b) Check the intake air hoses at the same four locations for damage.",
+          "conditionSet": "WEEKLY",
+          "isNoGo": true,
+          "noGoCondition": "a. Any clamp missing or unable to be tightened. b. Any hose with damage."
+        },
+        {
+          "id": "m1078-b-071",
+          "sequence": 71,
+          "zone": "Weekly",
+          "zoneId": "zone-8",
+          "item": "T2-2 #3",
+          "itemDescription": "LMHC (If Equipped)",
+          "procedure": "Only if equipped with the LMHC; checked before operation when required by the mission. (a) Check the boom assembly, turret, winch assembly, and mast assembly for damage or broken welds. (b) Check the LMHC power cord for damage or cracks in insulation. (c) Check that these pins are present and not damaged: (1) pin securing mast to cargo bed, (2) pin securing boom in raised and lowered positions, (3) pin securing boom in extended and retracted positions. TM Table 2-2 item 3.",
+          "conditionSet": "WEEKLY",
+          "isNoGo": true,
+          "noGoCondition": "a. Boom assembly, turret, winch assembly, or mast assembly damaged, or broken welds found. b. Any damage or cracks in power cord insulation which expose bare wire. c. One or more pins are missing or damaged."
+        },
+        {
+          "id": "m1078-b-072",
+          "sequence": 72,
+          "zone": "Weekly",
+          "zoneId": "zone-8",
+          "item": "T2-2 #5",
+          "itemDescription": "Cargo Bed",
+          "procedure": "(a) Check that the cargo bed mounting screws on both sides are not broken or missing. (b) Check the inside panel stowage compartments under the cargo bed for obvious damage. (c) Check the lift beam on both sides for damage; check that the lift beam lock pin is not missing or damaged. (d) Check the spreader bar on both sides for damage. (e) Check for missing or damaged cargo bed tiedown rings. TM Table 2-2 item 5.",
+          "conditionSet": "WEEKLY",
+          "isNoGo": true,
+          "noGoCondition": "a. One or more cargo bed mounting screws are broken or missing. c. Lift beam is damaged or lock pin is missing or damaged and lift beam is required for vehicle mission."
+        }
+      ]
+    },
+    {
+      "id": "zone-9",
+      "name": "Monthly",
+      "description": "Monthly checks (TM Table 2-1 items 66-75; Table 2-2 items 6-10)",
+      "steps": [
+        {
+          "id": "m1078-b-073",
+          "sequence": 73,
+          "zone": "Monthly",
+          "zoneId": "zone-9",
+          "item": "66",
+          "itemDescription": "Spare Tire",
+          "procedure": "(a) Check that the spare tire lowers properly (para 3-5). (b) Check the spare for cuts, gouges, and cracks; remove any object that could penetrate the tire. (c) Check that the spare has not worn beyond the wear bar; replace it (para 3-5) if it has. (d) Check air pressure; inflate to 60 psi (414 kPa) if low. (e) Secure the spare tire retainer; ensure it is securely stowed in the up position.",
+          "conditionSet": "MONTHLY",
+          "isNoGo": true,
+          "noGoCondition": "b. Tire tread is worn even to height of tread bar (1/8 in. (3 mm) or less); any cut, gouge, or crack that extends to cord body, or any unusual bulges. e. Spare tire retainer fails to lock in its up position."
+        },
+        {
+          "id": "m1078-b-074",
+          "sequence": 74,
+          "zone": "Monthly",
+          "zoneId": "zone-9",
+          "item": "67",
+          "itemDescription": "Ether Starting Aid",
+          "procedure": "Check the ether cylinder for loose or damaged mounts and hardware. Check the ether cylinder and injection valve for damage.",
+          "conditionSet": "MONTHLY",
+          "isNoGo": false
+        },
+        {
+          "id": "m1078-b-075",
+          "sequence": 75,
+          "zone": "Monthly",
+          "zoneId": "zone-9",
+          "item": "68",
+          "itemDescription": "Rifle Stowage Mount",
+          "procedure": "(a) Check that the rifle stowage top and lower mount bolts are not broken or missing. (b) Check the mount latches for excessive looseness or binding.",
+          "conditionSet": "MONTHLY",
+          "isNoGo": false
+        },
+        {
+          "id": "m1078-b-076",
+          "sequence": 76,
+          "zone": "Monthly",
+          "zoneId": "zone-9",
+          "item": "69",
+          "itemDescription": "Amber Warning Light (If Equipped)",
+          "procedure": "Only if equipped. Check the amber warning light for proper operation (para 2-21). (Safety task that would not be performed in a tactical mission; see AR 385-55.)",
+          "conditionSet": "MONTHLY",
+          "isNoGo": false
+        },
+        {
+          "id": "m1078-b-077",
+          "sequence": 77,
+          "zone": "Monthly",
+          "zoneId": "zone-9",
+          "item": "70",
+          "itemDescription": "Hydraulic Manifold",
+          "procedure": "Inspect the hydraulic manifold for leakage.",
+          "conditionSet": "MONTHLY",
+          "isNoGo": true,
+          "noGoCondition": "Class III leak is evident."
+        },
+        {
+          "id": "m1078-b-078",
+          "sequence": 78,
+          "zone": "Monthly",
+          "zoneId": "zone-9",
+          "item": "71",
+          "itemDescription": "Back-up Hydraulic Pump",
+          "procedure": "(a) Remove the handle from the tool box and install it in the back-up hydraulic pump. (b) Pump the back-up hydraulic pump 5-8 cycles to lubricate the seals.",
+          "conditionSet": "MONTHLY",
+          "isNoGo": false
+        },
+        {
+          "id": "m1078-b-079",
+          "sequence": 79,
+          "zone": "Monthly",
+          "zoneId": "zone-9",
+          "item": "72",
+          "itemDescription": "Tool Box",
+          "procedure": "Check inside the tool box for water or other obvious damage. Clean the inside with a wiping rag as necessary.",
+          "conditionSet": "MONTHLY",
+          "isNoGo": false
+        },
+        {
+          "id": "m1078-b-080",
+          "sequence": 80,
+          "zone": "Monthly",
+          "zoneId": "zone-9",
+          "item": "73",
+          "itemDescription": "11K SRW Cable (If Equipped)",
+          "procedure": "Only if equipped with the 11K SRW. WARNING: wear heavy leather-palmed gloves. (a) Pay out the cable completely and inspect for kinks, sharp bends, abrasions, and broken wires (para 2-54). (b) Check for kinking, crushing, or other damage that distorts the cable structure. (c) Check the security of the winch mounting hardware.",
+          "conditionSet": "MONTHLY",
+          "isNoGo": true,
+          "noGoCondition": "a. Six randomly distributed broken wires in any 6 in. (152 mm) section of cable, or three broken wires in one bundle in a 6 in. (152 mm) section."
+        },
+        {
+          "id": "m1078-b-081",
+          "sequence": 81,
+          "zone": "Monthly",
+          "zoneId": "zone-9",
+          "item": "74",
+          "itemDescription": "Springs",
+          "procedure": "After the initial 1000 mi (1609 km), notify Unit Maintenance to tighten the spring U-bolts to 390-510 lb-ft (529-692 N·m).",
+          "conditionSet": "MONTHLY",
+          "isNoGo": false
+        },
+        {
+          "id": "m1078-b-082",
+          "sequence": 82,
+          "zone": "Monthly",
+          "zoneId": "zone-9",
+          "item": "75",
+          "itemDescription": "Cab Lift Cylinder",
+          "procedure": "Lubricate the grease fitting (Appendix F).",
+          "conditionSet": "MONTHLY",
+          "isNoGo": false
+        },
+        {
+          "id": "m1078-b-083",
+          "sequence": 83,
+          "zone": "Monthly",
+          "zoneId": "zone-9",
+          "item": "T2-2 #6",
+          "itemDescription": "Cargo Bed Sides and Tailgate",
+          "procedure": "(a) Check that the cargo bed sides and tailgate are not bent or damaged. (b) Check the side and tailgate hinges for damage and broken welds. (c) Check the sides and tailgate for missing or damaged latches; ensure the latches securely lock the sides and tailgate in the raised position. TM Table 2-2 item 6.",
+          "conditionSet": "MONTHLY",
+          "isNoGo": true,
+          "noGoCondition": "b. Cargo bed side or tailgate hinge is damaged or weld is broken. c. Latch is missing, damaged, or does not securely lock cargo bed side or tailgate in raised position."
+        },
+        {
+          "id": "m1078-b-084",
+          "sequence": 84,
+          "zone": "Monthly",
+          "zoneId": "zone-9",
+          "item": "T2-2 #7",
+          "itemDescription": "Ladder",
+          "procedure": "(a) Remove the ladder from the stowage compartment (para 2-26a). (b) Check the ladder for cracked or broken welds. (c) Stow the ladder (para 2-26b). TM Table 2-2 item 7.",
+          "conditionSet": "MONTHLY",
+          "isNoGo": false
+        },
+        {
+          "id": "m1078-b-085",
+          "sequence": 85,
+          "zone": "Monthly",
+          "zoneId": "zone-9",
+          "item": "T2-2 #8",
+          "itemDescription": "Troopseats (If Equipped)",
+          "procedure": "Only if equipped; checked before operation only as required by the mission. (a) Check that the troopseat drop legs are not bent or damaged. (b) Check that the drop leg hinge pins are not missing or damaged. (c) Check the seat assembly and backrest for damage. (d) Check that the belts are not missing or damaged. (e) Check that the belt keeps the seat assembly securely in the raised and lowered positions. TM Table 2-2 item 8.",
+          "conditionSet": "MONTHLY",
+          "isNoGo": true,
+          "noGoCondition": "a. Drop leg(s) is bent or damaged. b. One or more drop leg hinge pins are missing. c. Seat assembly and/or backrest are damaged."
+        },
+        {
+          "id": "m1078-b-086",
+          "sequence": 86,
+          "zone": "Monthly",
+          "zoneId": "zone-9",
+          "item": "T2-2 #9",
+          "itemDescription": "Cargo Cover",
+          "procedure": "Checked before operation only if required by the mission. (a) Check for missing, damaged, or bent bows and braces. (b) Check the cover for tears and ripped seams that would interfere with proper operation. (c) Check that the hooks that secure the cover tiedown straps are secure and not damaged. (d) Check that the safety straps are not missing or damaged. TM Table 2-2 item 9.",
+          "conditionSet": "MONTHLY",
+          "isNoGo": true,
+          "noGoCondition": "d. Any safety straps are missing or damaged."
+        },
+        {
+          "id": "m1078-b-087",
+          "sequence": 87,
+          "zone": "Monthly",
+          "zoneId": "zone-9",
+          "item": "T2-2 #10",
+          "itemDescription": "LMHC (If Equipped)",
+          "procedure": "Only if equipped with the LMHC. WARNING: wear heavy leather-palmed gloves when handling wire rope. (a) Check the LMHC for corrosion, cracks, and security of mounting hardware. (b) Pay out the cable completely and inspect for kinks, sharp bends, abrasions, and broken wires (para 2-24). (e) Check the security of the electrical connectors on the overload shutdown box. (f) Inspect electrical cables for cracking, fraying, and chafing. TM Table 2-2 item 10.",
+          "conditionSet": "MONTHLY",
+          "isNoGo": true,
+          "noGoCondition": "a. LMHC is damaged or not securely mounted. b. Cable is damaged or excessively worn — six randomly distributed broken wires in any 6 in. (150 mm) section or three broken wires in one bundle in a 6 in. section; kinking, crushing, or other distortion of the cable structure. f. Wiring is frayed, cracked, or excessively worn."
         }
       ]
     }

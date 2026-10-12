@@ -17,6 +17,8 @@ export interface VehicleRegistryEntry {
   nickname: string;
   tmReference: string;
   itemCount: number;
+  /** TM publication date as YYYYMMDD (for DA 2404 block 5b), when known. */
+  tmDate?: string;
 }
 
 export interface Vehicle {
@@ -29,7 +31,7 @@ export interface Vehicle {
   unitAssigned?: string;
 }
 
-export type InspectionType = 'BEFORE' | 'DURING' | 'AFTER' | '30_DAY';
+export type InspectionType = 'BEFORE' | 'DURING' | 'AFTER' | 'WEEKLY' | 'MONTHLY' | '30_DAY';
 export type StepStatus = 'NOT_CHECKED' | 'GO' | 'FAULT';
 export type SessionStatus = 'IN_PROGRESS' | 'COMPLETED';
 

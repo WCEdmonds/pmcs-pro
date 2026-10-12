@@ -56,13 +56,14 @@ export function VehicleDiagram({ vehicleType, zone, itemNumber, className = '' }
 
       {/* Full-screen expanded view */}
       {expanded && (
-        <div className="fixed inset-0 z-[60] bg-white flex flex-col" onClick={() => setExpanded(false)}>
+        <div className="fixed inset-0 z-[60] bg-white flex flex-col" role="dialog" aria-modal="true" aria-label={`Diagram: ${zone}, Item ${itemNumber}`}>
           <div className="flex items-center justify-between h-11 px-4 bg-bg-primary border-b border-border flex-shrink-0">
             <span className="text-sm font-display text-text-primary">
               {zone} — Item {itemNumber}
             </span>
             <button
               onClick={() => setExpanded(false)}
+              aria-label="Close diagram"
               className="min-w-[44px] min-h-[44px] flex items-center justify-center text-accent-blue"
             >
               <X size={24} />
@@ -73,7 +74,7 @@ export function VehicleDiagram({ vehicleType, zone, itemNumber, className = '' }
               src={imageUrl}
               alt={`TM diagram: ${zone}, Item ${itemNumber}`}
               className="max-w-full max-h-full object-contain"
-              style={{ touchAction: 'pinch-zoom' }}
+              style={{ touchAction: 'pinch-zoom pan-x pan-y' }}
             />
           </div>
           <div className="text-center py-2 text-xs text-gray-400 bg-bg-primary flex-shrink-0">

@@ -3,10 +3,78 @@
     {
       "site": "pmcs-pro",
       "public": "pmcs-app/dist",
-      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-      "rewrites": [
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "cleanUrls": false,
+      "headers": [
         {
           "source": "**",
+          "headers": [
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "strict-origin-when-cross-origin"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "DENY"
+            },
+            {
+              "key": "Permissions-Policy",
+              "value": "camera=(self), microphone=(), geolocation=(), payment=(), usb=()"
+            },
+            {
+              "key": "Content-Security-Policy",
+              "value": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://*.workers.dev; connect-src 'self' https://*.workers.dev https://generativelanguage.googleapis.com; frame-src 'self' blob:; object-src 'self' blob:; worker-src 'self' blob:; manifest-src 'self'; media-src 'self' blob:; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
+            }
+          ]
+        },
+        {
+          "regex": "^/([^a].*|a([^s].*)?|as([^s].*)?|ass([^e].*)?|asse([^t].*)?|asset([^s].*)?|assets([^/].*)?)?$",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-cache"
+            }
+          ]
+        },
+        {
+          "source": "/assets/**",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=31536000, immutable"
+            }
+          ]
+        },
+        {
+          "source": "**/*.html",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-cache"
+            }
+          ]
+        },
+        {
+          "source": "**/@(sw.js|manifest.json|manifest.webmanifest|*.webmanifest)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-cache"
+            }
+          ]
+        }
+      ],
+      "rewrites": [
+        {
+          "regex": "^/([^a].*|a([^s].*)?|as([^s].*)?|ass([^e].*)?|asse([^t].*)?|asset([^s].*)?|assets([^/].*)?)?$",
           "destination": "/index.html"
         }
       ]
@@ -14,10 +82,78 @@
     {
       "site": "pmcs-dashboard",
       "public": "pmcs-dashboard/dist",
-      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-      "rewrites": [
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "cleanUrls": false,
+      "headers": [
         {
           "source": "**",
+          "headers": [
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "strict-origin-when-cross-origin"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "DENY"
+            },
+            {
+              "key": "Permissions-Policy",
+              "value": "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+            },
+            {
+              "key": "Content-Security-Policy",
+              "value": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://*.workers.dev; connect-src 'self' https://*.workers.dev; frame-src 'none'; object-src 'none'; worker-src 'self'; manifest-src 'self'; media-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
+            }
+          ]
+        },
+        {
+          "regex": "^/([^a].*|a([^s].*)?|as([^s].*)?|ass([^e].*)?|asse([^t].*)?|asset([^s].*)?|assets([^/].*)?)?$",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-cache"
+            }
+          ]
+        },
+        {
+          "source": "/assets/**",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=31536000, immutable"
+            }
+          ]
+        },
+        {
+          "source": "**/*.html",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-cache"
+            }
+          ]
+        },
+        {
+          "source": "**/@(sw.js|manifest.json|manifest.webmanifest|*.webmanifest)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-cache"
+            }
+          ]
+        }
+      ],
+      "rewrites": [
+        {
+          "regex": "^/([^a].*|a([^s].*)?|as([^s].*)?|ass([^e].*)?|asse([^t].*)?|asset([^s].*)?|assets([^/].*)?)?$",
           "destination": "/index.html"
         }
       ]

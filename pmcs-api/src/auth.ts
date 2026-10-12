@@ -105,3 +105,14 @@ export async function verifyFileUrl(secret: string, key: string, exp: string | u
   const expected = await hmac(secret, `${key}:${exp}`);
   return timingSafeEqual(enc.encode(expected), enc.encode(sig));
 }
+
+let dummyHash: Promise<string> | null = null;
+
+/**
+ * Burns roughly the same time as verifying a real PIN, so an unknown DoD ID
+ * can't be told apart from a wrong PIN by timing.
+ */
+export async function dummyVerifyPin(pin: string): Promise<void> {
+  dummyHash ??= hashPin('000000');
+  await verifyPin(pin, await dummyHash);
+}

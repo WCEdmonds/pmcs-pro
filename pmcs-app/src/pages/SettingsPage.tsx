@@ -1,148 +1,247 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useLiveQuery } from 'dexie-react-hooks';
 import { useUserStore } from '../stores/userStore';
+import { useSessionStore } from '../stores/sessionStore';
 import { db } from '../utils/db';
-import { getApiKey, setApiKey, clearApiKey } from '../utils/ai';
+import { getApiKey, setApiKey, clearApiKey, GEMINI_KEY } from '../utils/ai';
+import { TOKEN_KEY, isNetworkError } from '../utils/api';
+import { validateUic } from '../utils/uicLookup';
+import { getSavedTheme, saveTheme } from '../utils/theme';
+import { INSPECTION_TYPE_ORDER, INSPECTION_TYPE_LABELS, inspectionTypeLabel } from '../utils/inspectionTypes';
 import { Input } from '../components/ui/Input';
 import { Select } from '../components/ui/Select';
 import { Toggle } from '../components/ui/Toggle';
 import { SegmentedControl } from '../components/ui/SegmentedControl';
 import { Button } from '../components/ui/Button';
 import { Modal } from '../components/ui/Modal';
+import { UicField } from '../components/ui/UicField';
+import { SyncBadge, SyncBanner } from '../components/sync/SyncStatus';
+import { useUnsynced } from '../hooks/useSync';
 import { ALL_RANKS } from '../data/ranks';
-import type { InspectionType } from '../types';
+import type { InspectionType, User } from '../types';
+
+const LOCAL_KEYS = [TOKEN_KEY, 'pmcs-api-token-issued', GEMINI_KEY, 'pmcs_active_session', 'pmcs_last_dodid'];
+
+function ProfileForm({ user }: { user: User }) {
+  const updateProfile = useUserStore((s) => s.updateProfile);
+  const [rank, setRank] = useState(user.rank);
+  const [firstName, setFirstName] = useState(user.firstName);
+  const [mi, setMi] = useState(user.mi);
+  const [lastName, setLastName] = useState(user.lastName);
+  const [unit, setUnit] = useState(user.unit);
+  const [status, setStatus] = useState<{ kind: 'ok' | 'error'; text: string } | null>(null);
+  const [saving, setSaving] = useState(false);
+
+  const uic = validateUic(unit);
+  const dirty = rank !== user.rank || firstName !== user.firstName || mi !== user.mi || lastName !== user.lastName || uic.value !== user.unit;
+  const valid = !!firstName.trim() && !!lastName.trim() && uic.valid;
+
+  const handleSave = async () => {
+    if (saving || !dirty || !valid) return;
+    setSaving(true);
+    setStatus(null);
+    try {
+      await updateProfile({ rank, firstName, mi, lastName, unit: uic.value });
+      setStatus({ kind: 'ok', text: 'Profile saved.' });
+    } catch (err) {
+      setStatus({
+        kind: 'error',
+        text: isNetworkError(err)
+          ? "Can't reach the server — profile not saved. Try again when online."
+          : `Profile not saved: ${(err as Error).message}`,
+      });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className="flex flex-col gap-3">
+      <Select label="Rank" options={ALL_RANKS} value={rank} onChange={(e) => setRank(e.target.value)} />
+      <div className="flex gap-3">
+        <div className="flex-1">
+          <Input label="First Name" id="settings-first" value={firstName} onChange={(e) => setFirstName(e.target.value)} autoComplete="given-name" />
+        </div>
+        <div className="w-16">
+          <Input label="MI" id="settings-mi" value={mi} onChange={(e) => setMi(e.target.value.toUpperCase())} maxLength={1} />
+        </div>
+      </div>
+      <Input label="Last Name" id="settings-last" value={lastName} onChange={(e) => setLastName(e.target.value)} autoComplete="family-name" />
+      <UicField label="UIC" id="settings-uic" value={unit} onChange={setUnit} />
+      {status && (
+        <p className={`text-sm ${status.kind === 'ok' ? 'text-accent-green' : 'text-accent-red'}`} role="status">{status.text}</p>
+      )}
+      <Button onClick={handleSave} disabled={!dirty || !valid || saving}>
+        {saving ? 'Saving…' : 'Save Profile'}
+      </Button>
+    </div>
+  );
+}
 
 export default function SettingsPage() {
   const navigate = useNavigate();
-  const { user, updateUser, logout } = useUserStore();
+  const { user, updateUser, signOut } = useUserStore();
+  const clearSession = useSessionStore((s) => s.clearSession);
   const [showClearModal, setShowClearModal] = useState(false);
+  const [showSignOutModal, setShowSignOutModal] = useState(false);
+  const [isDark, setIsDark] = useState(getSavedTheme() === 'dark');
+  const [clearing, setClearing] = useState(false);
 
-  const [isDark, setIsDark] = useState(
-    document.documentElement.classList.contains('dark')
-  );
+  const unsynced = useUnsynced(user?.dodId);
+  const unsentCount = unsynced?.sessions.length ?? 0;
+  const deviceUnsent = useLiveQuery(async () => {
+    const states = await db.syncState.where('status').anyOf('pending', 'failed').primaryKeys();
+    return states.length;
+  }, []) ?? 0;
+  const pendingResolutions = useLiveQuery(() => db.pendingFaultResolutions.count(), []) ?? 0;
 
   if (!user) return null;
 
   const handleThemeToggle = (dark: boolean) => {
     setIsDark(dark);
-    if (dark) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
+    saveTheme(dark ? 'dark' : 'light');
     updateUser({ theme: dark ? 'dark' : 'light' });
   };
 
+  const handleSignOut = () => {
+    setShowSignOutModal(false);
+    clearSession();
+    signOut();
+    navigate('/login', { replace: true });
+  };
+
   const handleClearData = async () => {
-    await db.delete();
-    logout();
-    localStorage.removeItem('pmcs_last_dodid');
-    navigate('/login');
+    if (clearing) return;
+    setClearing(true);
+    try {
+      clearSession();
+      await db.delete();
+      await db.open();
+    } catch (err) {
+      console.error('Clearing data failed:', err);
+    }
+    for (const k of LOCAL_KEYS) {
+      try {
+        localStorage.removeItem(k);
+      } catch {
+        // ignore
+      }
+    }
+    clearApiKey();
+    signOut();
+    window.location.replace('/login');
   };
 
   return (
     <div className="flex flex-col h-full px-4 pt-6 pb-4 overflow-y-auto">
       <h1 className="text-2xl font-bold font-display text-text-primary mb-6">Settings</h1>
 
-      <div className="flex flex-col gap-5">
-        <section>
-          <h2 className="text-xs font-semibold text-text-secondary font-display mb-3">PROFILE</h2>
-          <div className="flex flex-col gap-3">
-            <Select
-              label="Rank"
-              options={ALL_RANKS}
-              value={user.rank}
-              onChange={(e) => updateUser({ rank: e.target.value })}
-            />
-            <div className="flex gap-3">
-              <div className="flex-1">
-                <Input
-                  label="First Name"
-                  value={user.firstName}
-                  onBlur={(e) => updateUser({ firstName: e.target.value })}
-                  onChange={() => {}}
-                  defaultValue={user.firstName}
-                />
-              </div>
-              <div className="w-16">
-                <Input
-                  label="MI"
-                  value={user.mi}
-                  onBlur={(e) => updateUser({ mi: e.target.value })}
-                  onChange={() => {}}
-                  defaultValue={user.mi}
-                  maxLength={1}
-                />
-              </div>
-            </div>
-            <Input
-              label="Last Name"
-              defaultValue={user.lastName}
-              onBlur={(e) => updateUser({ lastName: e.target.value })}
-            />
-            <Input
-              label="UIC"
-              defaultValue={user.unit}
-              onBlur={(e) => updateUser({ unit: e.target.value })}
-              placeholder="e.g., WABC12"
-            />
-          </div>
+      <div className="flex flex-col gap-6">
+        <section aria-labelledby="sync-heading">
+          <h2 id="sync-heading" className="text-xs font-semibold text-text-secondary font-display mb-3">SYNC STATUS</h2>
+          <SyncBanner />
+          {unsentCount === 0 ? (
+            <p className="text-sm text-accent-green" data-testid="all-synced">All your completed inspections are on the server.</p>
+          ) : (
+            <ul className="flex flex-col gap-2" aria-label="Unsent inspections">
+              {unsynced!.sessions.map((s) => (
+                <li key={s.id} className="bg-bg-secondary border border-border rounded-[var(--radius-md)] p-3">
+                  <p className="text-sm font-semibold text-text-primary">
+                    {s.bumperNumber} <span className="text-xs text-text-secondary font-normal">{s.date} · {inspectionTypeLabel(s.inspectionType)}</span>
+                  </p>
+                  <SyncBadge state={unsynced!.states.get(s.id)} />
+                </li>
+              ))}
+            </ul>
+          )}
+          {deviceUnsent > unsentCount && (
+            <p className="text-xs text-text-secondary mt-2">
+              {deviceUnsent - unsentCount} unsent inspection{deviceUnsent - unsentCount === 1 ? '' : 's'} on this device belong to other soldiers. They will send when those soldiers sign in here.
+            </p>
+          )}
+          {pendingResolutions > 0 && (
+            <p className="text-xs text-text-secondary mt-2">{pendingResolutions} prior-fault update{pendingResolutions === 1 ? '' : 's'} waiting to send.</p>
+          )}
         </section>
 
-        <section>
-          <h2 className="text-xs font-semibold text-text-secondary font-display mb-3">DEFAULTS</h2>
+        <section aria-labelledby="profile-heading">
+          <h2 id="profile-heading" className="text-xs font-semibold text-text-secondary font-display mb-3">PROFILE</h2>
+          <ProfileForm key={`${user.dodId}-${user.unit}-${user.firstName}-${user.lastName}-${user.mi}-${user.rank}`} user={user} />
+        </section>
+
+        <section aria-labelledby="defaults-heading">
+          <h2 id="defaults-heading" className="text-xs font-semibold text-text-secondary font-display mb-3">DEFAULTS</h2>
           <SegmentedControl
             label="Default Inspection Type"
-            options={['30_DAY', 'BEFORE', 'DURING', 'AFTER'] as const}
-            value={user.defaultInspectionType || '30_DAY'}
+            options={INSPECTION_TYPE_ORDER}
+            value={user.defaultInspectionType || 'BEFORE'}
             onChange={(v) => updateUser({ defaultInspectionType: v as InspectionType })}
-            displayLabels={{ '30_DAY': '30-Day', BEFORE: 'Before', DURING: 'During', AFTER: 'After' }}
+            displayLabels={INSPECTION_TYPE_LABELS}
           />
         </section>
 
-        <section>
-          <h2 className="text-xs font-semibold text-text-secondary font-display mb-3">AI ASSISTANT</h2>
+        <section aria-labelledby="ai-heading">
+          <h2 id="ai-heading" className="text-xs font-semibold text-text-secondary font-display mb-3">AI ASSISTANT</h2>
           <p className="text-xs text-text-secondary mb-2">Gemini API key for "Ask AI" on each PMCS step. Get one free at ai.google.dev.</p>
-          <div className="flex gap-2">
-            <div className="flex-1">
-              <Input
-                label="Gemini API Key"
-                type="password"
-                defaultValue={getApiKey() || ''}
-                placeholder="AIza..."
-                onBlur={(e) => {
-                  const val = e.target.value.trim();
-                  if (val) setApiKey(val);
-                  else clearApiKey();
-                }}
-              />
-            </div>
-          </div>
+          <Input
+            label="Gemini API Key"
+            type="password"
+            defaultValue={getApiKey() || ''}
+            placeholder="AIza..."
+            onBlur={(e) => {
+              const val = e.target.value.trim();
+              if (val) setApiKey(val);
+              else clearApiKey();
+            }}
+          />
         </section>
 
-        <section>
-          <h2 className="text-xs font-semibold text-text-secondary font-display mb-3">APPEARANCE</h2>
+        <section aria-labelledby="appearance-heading">
+          <h2 id="appearance-heading" className="text-xs font-semibold text-text-secondary font-display mb-3">APPEARANCE</h2>
           <Toggle label="Dark Theme" checked={isDark} onChange={handleThemeToggle} />
         </section>
 
-        <section>
-          <h2 className="text-xs font-semibold text-text-secondary font-display mb-3">DATA</h2>
+        <section aria-labelledby="account-heading">
+          <h2 id="account-heading" className="text-xs font-semibold text-text-secondary font-display mb-3">ACCOUNT</h2>
           <p className="text-xs text-text-secondary mb-2">DOD ID: {user.dodId}</p>
-          <Button variant="danger" fullWidth onClick={() => setShowClearModal(true)}>
-            Clear All Saved Data
-          </Button>
+          <div className="flex flex-col gap-2">
+            <Button variant="secondary" fullWidth onClick={() => setShowSignOutModal(true)}>Sign Out</Button>
+            <Button variant="danger" fullWidth onClick={() => setShowClearModal(true)}>Clear All Saved Data</Button>
+          </div>
         </section>
 
-        <p className="text-xs text-text-secondary/50 text-center mt-4">PMCS Pro v0.1.0</p>
+        <p className="text-xs text-text-secondary text-center mt-4">PMCS Pro v0.2.0</p>
       </div>
 
+      <Modal open={showSignOutModal} onClose={() => setShowSignOutModal(false)} title="Sign out?">
+        {unsentCount > 0 ? (
+          <p className="text-accent-amber text-sm mb-4" role="alert">
+            {unsentCount} of your inspection{unsentCount === 1 ? ' has' : 's have'} not been sent to the server yet. They stay on this phone and will send the next time you sign in here.
+          </p>
+        ) : (
+          <p className="text-text-secondary text-sm mb-4">Your inspections stay on this device.</p>
+        )}
+        <div className="flex gap-3">
+          <Button variant="secondary" fullWidth onClick={() => setShowSignOutModal(false)}>Cancel</Button>
+          <Button fullWidth onClick={handleSignOut}>Sign Out</Button>
+        </div>
+      </Modal>
+
       <Modal open={showClearModal} onClose={() => setShowClearModal(false)} title="Clear All Data?">
+        {deviceUnsent > 0 && (
+          <p className="text-accent-red text-sm font-semibold mb-2" role="alert">
+            Warning: {deviceUnsent} inspection{deviceUnsent === 1 ? ' has' : 's have'} NOT been sent to the server and will be lost forever.
+          </p>
+        )}
         <p className="text-text-secondary text-sm mb-4">
-          This will delete all inspections, vehicles, and your profile. This cannot be undone.
+          This deletes every inspection, photo and profile on this device and signs you out. This cannot be undone.
         </p>
         <div className="flex gap-3">
           <Button variant="secondary" fullWidth onClick={() => setShowClearModal(false)}>Cancel</Button>
-          <Button variant="danger" fullWidth onClick={handleClearData}>Delete Everything</Button>
+          <Button variant="danger" fullWidth onClick={handleClearData} disabled={clearing}>
+            {clearing ? 'Deleting…' : 'Delete Everything'}
+          </Button>
         </div>
       </Modal>
     </div>

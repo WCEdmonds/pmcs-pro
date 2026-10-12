@@ -1,9 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Check, HelpCircle, AlertTriangle } from 'lucide-react';
 import { api } from '../utils/api';
 import { useSessionStore } from '../stores/sessionStore';
+import { useUserStore } from '../stores/userStore';
+import { useSessionLoader } from '../hooks/useSessionLoader';
+import { queueFaultResolution } from '../utils/syncEngine';
+import { SessionGate } from '../components/ui/NotFound';
 import { Button } from '../components/ui/Button';
 import { Badge } from '../components/ui/Badge';
 
@@ -19,86 +23,96 @@ interface OpenFault {
 
 type FaultDecision = 'still_open' | 'resolved' | 'idk';
 
+const LOOKUP_TIMEOUT_MS = 10_000;
+
 export default function PriorFaultReviewPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const loadStatus = useSessionLoader(id);
   const currentSession = useSessionStore((s) => s.currentSession);
+  const dodId = useUserStore((s) => s.user?.dodId);
 
   const [faults, setFaults] = useState<OpenFault[]>([]);
   const [decisions, setDecisions] = useState<Record<string, FaultDecision>>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [notice, setNotice] = useState('');
+
+  const bumper = currentSession?.id === id ? currentSession?.bumperNumber : undefined;
+
+  const goToPmcs = useCallback(() => navigate(`/session/${id}/pmcs`, { replace: true }), [navigate, id]);
 
   useEffect(() => {
-    loadOpenFaults();
-  }, []);
-
-  async function loadOpenFaults() {
-    if (!currentSession) {
-      setLoading(false);
-      return;
+    if (loadStatus !== 'ready' || !bumper) return;
+    let cancelled = false;
+    async function loadOpenFaults(bumperNumber: string) {
+      const bumperNormalized = bumperNumber.replace(/[-\s]/g, '').toUpperCase();
+      try {
+        const rows = await api<{ id: string }[]>('GET', '/vehicles', {
+          query: { bumper_normalized: bumperNormalized },
+          timeoutMs: LOOKUP_TIMEOUT_MS,
+        });
+        const vehicle = rows?.[0];
+        const openFaults = vehicle
+          ? await api<OpenFault[]>('GET', '/faults', {
+            query: { vehicle_id: vehicle.id, open: 1, order: 'asc' },
+            timeoutMs: LOOKUP_TIMEOUT_MS,
+          })
+          : [];
+        if (cancelled) return;
+        const list = Array.isArray(openFaults) ? openFaults : [];
+        setFaults(list);
+        setDecisions(Object.fromEntries(list.map((f) => [f.id, 'still_open' as FaultDecision])));
+      } catch {
+        // Offline or slow server — prior faults are optional
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
     }
+    loadOpenFaults(bumper);
+    return () => { cancelled = true; };
+  }, [loadStatus, bumper]);
 
-    // Find the vehicle by normalized bumper number
-    const bumperNormalized = currentSession.bumperNumber.replace(/[-\s]/g, '').toUpperCase();
-    const vehicle = await api<{ id: string }[]>('GET', '/vehicles', {
-      query: { bumper_normalized: bumperNormalized, unit: currentSession.unit },
-    }).then((rows) => rows[0] ?? null).catch(() => null);
-
-    if (!vehicle) {
-      setLoading(false);
-      return;
-    }
-
-    const openFaults = await api<OpenFault[]>('GET', '/faults', {
-      query: { vehicle_id: vehicle.id, open: 1, order: 'asc' },
-    }).catch(() => [] as OpenFault[]);
-
-    setFaults((openFaults || []) as OpenFault[]);
-
-    // Default all to 'still_open'
-    const defaults: Record<string, FaultDecision> = {};
-    for (const f of (openFaults || [])) {
-      defaults[f.id] = 'still_open';
-    }
-    setDecisions(defaults);
-    setLoading(false);
-  }
+  // No open faults — go straight to the walkthrough (in an effect, never during render)
+  useEffect(() => {
+    if (loadStatus === 'ready' && !loading && faults.length === 0) goToPmcs();
+  }, [loadStatus, loading, faults.length, goToPmcs]);
 
   const handleDecision = (faultId: string, decision: FaultDecision) => {
     setDecisions((prev) => ({ ...prev, [faultId]: decision }));
   };
 
   const handleContinue = async () => {
+    if (saving) return;
     setSaving(true);
-
-    // Mark resolved faults on the server
     const resolvedIds = Object.entries(decisions)
       .filter(([, d]) => d === 'resolved')
-      .map(([id]) => id);
+      .map(([fid]) => fid);
 
     if (resolvedIds.length > 0) {
-      await api('PATCH', '/faults', {
-        body: { ids: resolvedIds, resolution_status: 'CORRECTED' },
-      }).catch((err) => console.warn('Failed to resolve prior faults:', err));
+      try {
+        await api('PATCH', '/faults', { body: { ids: resolvedIds, resolution_status: 'CORRECTED' } });
+      } catch (err) {
+        // Don't lose it: queue and retry with the inspection sync
+        console.warn('Resolving prior faults failed, queued:', err);
+        if (dodId) await queueFaultResolution(resolvedIds, 'CORRECTED', dodId);
+        setNotice('No connection — the fixed faults will be updated when you are back online.');
+        setTimeout(goToPmcs, 1500);
+        return;
+      }
     }
-
-    setSaving(false);
-    navigate(`/session/${id}/pmcs`);
+    goToPmcs();
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-full text-text-secondary font-display">
-        Checking prior faults...
-      </div>
-    );
-  }
+  if (loadStatus !== 'ready') return <SessionGate status={loadStatus} />;
 
-  // No open faults — skip straight to walkthrough
-  if (faults.length === 0) {
-    navigate(`/session/${id}/pmcs`, { replace: true });
-    return null;
+  if (loading || faults.length === 0) {
+    return (
+      <main className="flex flex-col items-center justify-center h-full gap-4 text-text-secondary font-display px-4 text-center">
+        <h1 className="text-base">Checking prior faults…</h1>
+        <Button variant="secondary" onClick={goToPmcs}>Skip</Button>
+      </main>
+    );
   }
 
   const resolvedCount = Object.values(decisions).filter((d) => d === 'resolved').length;
@@ -116,7 +130,7 @@ export default function PriorFaultReviewPage() {
       </div>
 
       {/* Fault list */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-3">
+      <main className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-3">
         {faults.map((fault, i) => {
           const decision = decisions[fault.id] || 'still_open';
           return (
@@ -138,7 +152,7 @@ export default function PriorFaultReviewPage() {
                   {fault.readiness === 'NMC' ? 'NMC' : 'PMC'}
                 </Badge>
               </div>
-              <p className="text-xs text-text-secondary/60 mb-3">
+              <p className="text-xs text-text-secondary mb-3">
                 Reported {new Date(fault.created_at).toLocaleDateString()}
               </p>
 
@@ -181,10 +195,11 @@ export default function PriorFaultReviewPage() {
             </motion.div>
           );
         })}
-      </div>
+      </main>
 
       {/* Bottom action */}
       <div className="px-4 pb-[calc(16px+env(safe-area-inset-bottom))] border-t border-border pt-3 flex-shrink-0">
+        {notice && <p className="text-xs text-accent-amber text-center mb-2" role="status">{notice}</p>}
         {resolvedCount > 0 && (
           <p className="text-xs text-accent-green text-center mb-2">
             {resolvedCount} fault{resolvedCount !== 1 ? 's' : ''} will be marked as resolved

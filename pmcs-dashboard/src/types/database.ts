@@ -1,3 +1,6 @@
+// Shapes returned by the PMCS Pro API (pmcs-api). SQLite 0/1 flags arrive as
+// booleans and JSON columns (photo_urls, steps_completed) arrive parsed.
+
 export type VehicleStatus = 'FMC' | 'PMC' | 'NMC' | 'DEADLINE'
 
 export type InspectionStatus = 'IN_PROGRESS' | 'COMPLETED'
@@ -15,11 +18,25 @@ export interface Profile {
   mi: string | null
   unit: string | null
   created_at: string
+  /** Own unit first, then watched units (GET /me). */
+  visible_units?: string[]
+}
+
+/** Editable profile fields (PATCH /me). */
+export type ProfileUpdate = Partial<Pick<Profile, 'rank' | 'last_name' | 'first_name' | 'mi' | 'unit'>>
+
+/** Public subset returned by GET /profiles?id= */
+export interface ProfileSummary {
+  id: string
+  rank: string | null
+  last_name: string | null
+  first_name: string | null
 }
 
 export interface Vehicle {
   id: string
   bumper_number: string | null
+  bumper_number_normalized?: string | null
   vehicle_type: string | null
   serial_number: string | null
   registration_number: string | null
@@ -27,6 +44,10 @@ export interface Vehicle {
   unit: string | null
   current_odometer: number | null
   status: VehicleStatus | null
+  section?: string | null
+  lin_number?: string | null
+  nsn?: string | null
+  description?: string | null
   created_at: string
   updated_at: string
 }
@@ -39,10 +60,17 @@ export interface Inspection {
   status: InspectionStatus | null
   odometer_reading: number | null
   remarks: string | null
+  /** Inspection calendar day (YYYY-MM-DD) as entered in the field app. */
   date: string | null
   started_at: string | null
   completed_at: string | null
   client_session_id: string | null
+}
+
+/** GET /vehicles/last-inspections */
+export interface LastInspection {
+  vehicle_id: string
+  last_completed_at: string | null
 }
 
 export interface Fault {
@@ -56,12 +84,14 @@ export interface Fault {
   category_id: string | null
   description: string | null
   corrective_action: string | null
-  part_needed: string | null
+  part_needed: boolean | null
   part_description: string | null
   nsn: string | null
   corrected_on_site: boolean | null
+  needs_maintenance: boolean | null
   resolution_status: ResolutionStatus | null
   gcss_work_order: string | null
+  /** When the fault reached the server (sync time), not when it was found. */
   created_at: string
   photo_urls: string[] | null
   resolved_at: string | null
@@ -69,18 +99,24 @@ export interface Fault {
 }
 
 export interface GeneratedForm {
-  id: string
   inspection_id: string
-  vehicle_id: string
   pdf_storage_path: string | null
-  generated_at: string
+  id?: string
+  vehicle_id?: string | null
+  generated_at?: string
 }
 
-export interface DashboardWatchedUic {
+export interface WatchedUic {
   id: string
-  user_id: string
   uic: string
-  created_at: string
+  created_at?: string
+}
+
+export interface VehicleStatusSnapshot {
+  vehicle_id: string
+  status: VehicleStatus
+  /** Snapshot day (YYYY-MM-DD). */
+  recorded_at: string
 }
 
 export interface DiagnosisStep {
@@ -100,46 +136,4 @@ export interface DiagnosisAttempt {
   skip_reason: string | null
   readiness_result: Readiness
   completed_at: string
-}
-
-export interface Database {
-  public: {
-    Tables: {
-      profiles: {
-        Row: Profile
-        Insert: Omit<Profile, 'created_at'>
-        Update: Partial<Omit<Profile, 'id'>>
-      }
-      vehicles: {
-        Row: Vehicle
-        Insert: Omit<Vehicle, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<Vehicle, 'id'>>
-      }
-      inspections: {
-        Row: Inspection
-        Insert: Omit<Inspection, 'id'>
-        Update: Partial<Omit<Inspection, 'id'>>
-      }
-      faults: {
-        Row: Fault
-        Insert: Omit<Fault, 'id' | 'created_at'>
-        Update: Partial<Omit<Fault, 'id'>>
-      }
-      generated_forms: {
-        Row: GeneratedForm
-        Insert: Omit<GeneratedForm, 'id'>
-        Update: Partial<Omit<GeneratedForm, 'id'>>
-      }
-      diagnosis_attempts: {
-        Row: DiagnosisAttempt
-        Insert: Omit<DiagnosisAttempt, 'id'>
-        Update: Partial<Omit<DiagnosisAttempt, 'id'>>
-      }
-      dashboard_watched_uics: {
-        Row: DashboardWatchedUic
-        Insert: Omit<DashboardWatchedUic, 'id' | 'created_at'>
-        Update: Partial<Omit<DashboardWatchedUic, 'id'>>
-      }
-    }
-  }
 }

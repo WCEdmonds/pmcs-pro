@@ -1,11 +1,13 @@
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import { type ReactNode, useEffect, useState, lazy, Suspense, useRef } from 'react';
+import { type ReactNode, useEffect, useState, lazy, Suspense } from 'react';
 import { useUserStore } from './stores/userStore';
+import { useSessionStore } from './stores/sessionStore';
 import { onAuthChange } from './utils/api';
-import { getRemoteProfile, hasRemoteSession } from './utils/auth';
 import { AppLayout } from './components/layout/AppLayout';
 import { ErrorBoundary } from './components/ui/ErrorBoundary';
-import { startSyncListener } from './utils/syncQueue';
+import { LoadingScreen } from './components/ui/NotFound';
+import { UpdateBanner } from './components/layout/UpdateBanner';
+import { startSyncListener, syncAll } from './utils/syncEngine';
 
 const LoginPage = lazy(() => import('./pages/LoginPage'));
 const ProfileSetupPage = lazy(() => import('./pages/ProfileSetupPage'));
@@ -28,64 +30,48 @@ function AuthGuard({ children }: { children: ReactNode }) {
   return <>{children}</>;
 }
 
+/** Signed-in users who open /login go home (checked once on entry, so sign-in can redirect itself). */
+function GuestOnly({ children }: { children: ReactNode }) {
+  const [signedInOnEntry] = useState(() => !!useUserStore.getState().user);
+  if (signedInOnEntry) return <Navigate to="/" replace />;
+  return <>{children}</>;
+}
+
 function AppRoutes() {
   const [ready, setReady] = useState(false);
-  const setUser = useUserStore((s) => s.setUser);
-  const syncCleanup = useRef<(() => void) | null>(null);
+  const dodId = useUserStore((s) => s.user?.dodId);
 
-  // Restore session from the stored API token (the only source of truth)
   useEffect(() => {
-    const restore = async () => {
-      if (hasRemoteSession()) {
-        const profile = await getRemoteProfile();
-        if (profile) {
-          setUser({
-            dodId: profile.dod_id,
-            rank: profile.rank ?? '',
-            firstName: profile.first_name ?? '',
-            lastName: profile.last_name ?? '',
-            mi: profile.mi ?? '',
-            unit: profile.unit ?? '',
-          });
-        }
-      }
-    };
+    // Restore the user from the stored token: /me online, Dexie cache offline. Only a 401 logs out.
+    useUserStore.getState().restore().finally(() => setReady(true));
 
-    restore().finally(() => setReady(true));
-
-    // Start sync queue listener (flushes pending syncs when coming online)
-    syncCleanup.current = startSyncListener();
-
-    // Listen for auth changes (sign in / sign out)
+    const stopSync = startSyncListener();
     const unsubscribeAuth = onAuthChange((signedIn) => {
-      if (!signedIn) {
+      if (!signedIn && useUserStore.getState().user) {
+        useSessionStore.getState().clearSession();
         useUserStore.getState().logout();
       }
     });
 
     return () => {
       unsubscribeAuth();
-      syncCleanup.current?.();
+      stopSync();
     };
   }, []);
 
-  if (!ready) {
-    return (
-      <div className="flex items-center justify-center h-full">
-        <div className="text-text-secondary font-display">Loading...</div>
-      </div>
-    );
-  }
+  // App start and every sign-in: send everything this soldier hasn't sent yet.
+  useEffect(() => {
+    if (ready && dodId) syncAll({ force: true });
+  }, [ready, dodId]);
+
+  if (!ready) return <LoadingScreen />;
 
   return (
-    <Suspense fallback={
-      <div className="flex items-center justify-center h-full">
-        <div className="text-text-secondary font-display">Loading...</div>
-      </div>
-    }>
+    <Suspense fallback={<LoadingScreen />}>
+      <UpdateBanner />
       <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/profile-setup" element={<ProfileSetupPage />} />
+        <Route path="/login" element={<GuestOnly><LoginPage /></GuestOnly>} />
+        <Route path="/profile-setup" element={<GuestOnly><ProfileSetupPage /></GuestOnly>} />
         <Route path="/" element={<AuthGuard><AppLayout><HomePage /></AppLayout></AuthGuard>} />
         <Route path="/session/new" element={<AuthGuard><AppLayout><SessionSetupPage /></AppLayout></AuthGuard>} />
         <Route path="/session/:id/prior-faults" element={<AuthGuard><PriorFaultReviewPage /></AuthGuard>} />

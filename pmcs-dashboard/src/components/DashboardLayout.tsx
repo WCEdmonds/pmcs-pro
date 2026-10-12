@@ -1,8 +1,7 @@
 import { NavLink, useNavigate } from 'react-router-dom'
-import { useEffect, useState } from 'react'
 import { LayoutDashboard, AlertTriangle, ClipboardCheck, LogOut, Shield, Settings } from 'lucide-react'
-import { api, signOut } from '../lib/api'
-import type { Profile } from '../types/database'
+import { signOut } from '../lib/api'
+import { useUnits } from '../hooks/useUnits'
 
 const navItems = [
   { to: '/', icon: LayoutDashboard, label: 'Fleet Overview' },
@@ -13,22 +12,11 @@ const navItems = [
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate()
-  const [profile, setProfile] = useState<Profile | null>(null)
+  const { profile, ownUnit } = useUnits()
 
-  useEffect(() => {
-    async function loadProfile() {
-      try {
-        setProfile(await api<Profile>('GET', '/me'))
-      } catch {
-        // Signed out or offline — header shows no name
-      }
-    }
-    loadProfile()
-  }, [])
-
-  async function handleLogout() {
+  function handleLogout() {
     signOut()
-    navigate('/login')
+    navigate('/login', { replace: true })
   }
 
   const displayName = profile
@@ -76,7 +64,10 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
         {/* User info + logout */}
         <div className="p-4 border-t border-border">
           {displayName && (
-            <p className="text-sm text-text-secondary mb-3 truncate">{displayName}</p>
+            <p className="text-sm text-text-secondary mb-3 truncate" data-testid="user-name">
+              {displayName}
+              {ownUnit && <span className="block text-xs font-display">{ownUnit}</span>}
+            </p>
           )}
           <button
             onClick={handleLogout}

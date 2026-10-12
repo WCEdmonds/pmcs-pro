@@ -1,4 +1,5 @@
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
+import { toWinAnsi } from './winansi';
 // Same blank form the field app uses for client-side generation (bundled as binary by wrangler).
 import template from '../../pmcs-app/public/da2404-template.pdf';
 
@@ -27,20 +28,25 @@ export interface Da2404Input {
   inspectorDodId: string | null;
   supervisorName?: string | null;
   supervisorDodId?: string | null;
+  /** Inspector's local time as 'HHMM'; defaults to the current UTC time + 'Z'. */
+  localTime?: string | null;
   faults: Da2404Fault[];
 }
 
 // Keyed by the app's VehicleType and by roster model numbers.
-const TM_BY_TYPE: Array<{ match: string[]; tm: string; tmDate: string }> = [
-  { match: ['M1101', 'M1102'], tm: 'TM 9-2330-392-14P', tmDate: '' },
-  { match: ['MEP'], tm: 'TM 9-6115-642-10', tmDate: '' },
-  { match: ['LMTV', 'M1078', 'M1083', 'M1085'], tm: 'TM 9-2320-365-10', tmDate: '19981001' },
-  { match: ['M1151', 'M1152', 'M1113', 'M1097', 'M1165'], tm: 'TM 9-2320-387-10', tmDate: '20060901' },
+const norm = (s: string) => s.toUpperCase().replace(/[\s-]/g, '');
+// Which TM covers which model (verified against each TM's cover page). Dates are the latest change.
+const TM_BY_TYPE: Array<{ test: (m: string) => boolean; tm: string; tmDate: string }> = [
+  { test: (m) => /^M110[12]/.test(m), tm: 'TM 9-2330-392-14&P', tmDate: '20010427' },
+  { test: (m) => /^MEP(803|813)/.test(m), tm: 'TM 9-6115-642-10', tmDate: '19961030' },
+  { test: (m) => /^M1078(?!A)/.test(m) || m === 'LMTVM1078' || m === 'LMTV_M1078', tm: 'TM 9-2320-365-10', tmDate: '20010531' },
+  { test: (m) => /^(M1151|M1152|M1113|M1165)/.test(m), tm: 'TM 9-2320-387-10', tmDate: '20090630' },
 ];
 
 function tmFor(vehicleType: string | null) {
   if (!vehicleType) return { tm: '', tmDate: '' };
-  return TM_BY_TYPE.find((t) => t.match.some((m) => vehicleType.includes(m))) ?? { tm: '', tmDate: '' };
+  const m = norm(vehicleType);
+  return TM_BY_TYPE.find((t) => t.test(m)) ?? { tm: '', tmDate: '' };
 }
 
 function formatInspectionType(type: string | null): string {
@@ -58,7 +64,7 @@ export async function fillDa2404(input: Da2404Input): Promise<Uint8Array> {
   const form = pdfDoc.getForm();
   const setField = (name: string, value: string) => {
     try {
-      form.getTextField(name).setText(value);
+      form.getTextField(name).setText(toWinAnsi(value));
     } catch {
       // Field missing or not a text field — skip
     }
@@ -73,7 +79,7 @@ export async function fillDa2404(input: Da2404Input): Promise<Uint8Array> {
   setField('form1[0].Page1[0].TYPEINSPEC[0]', formatInspectionType(input.inspectionType));
   setField('form1[0].Page1[0].TMNUM_A[0]', tm);
   setField('form1[0].Page1[0].TMDATE_A[0]', tmDate);
-  setField('form1[0].Page1[0].TIME_A[0]', new Date().toISOString().slice(11, 16));
+  setField('form1[0].Page1[0].TIME_A[0]', input.localTime || `${new Date().toISOString().slice(11, 16).replace(':', '')}Z`);
 
   const rows = input.faults.length === 0
     ? [{ tmItem: '', status: '/', deficiency: 'PMCS COMPLETED — NO DEFICIENCIES FOUND', corrective: '' }]
@@ -108,15 +114,16 @@ export async function fillDa2404(input: Da2404Input): Promise<Uint8Array> {
   const page = pdfDoc.getPages()[0];
   const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
   const h = page.getHeight();
-  page.drawText(input.inspectorName, { x: 42, y: h - 360, size: 9, font, color: rgb(0, 0, 0) });
+  const drawText = (text: string, opts: Parameters<typeof page.drawText>[1]) => page.drawText(toWinAnsi(text), opts);
+  drawText(input.inspectorName, { x: 42, y: h - 360, size: 9, font, color: rgb(0, 0, 0) });
   if (input.inspectorDodId) {
-    page.drawText(`DOD ID: ${input.inspectorDodId}`, { x: 42, y: h - 372, size: 7, font, color: rgb(0.3, 0.3, 0.3) });
+    drawText(`DOD ID: ${input.inspectorDodId}`, { x: 42, y: h - 372, size: 7, font, color: rgb(0.3, 0.3, 0.3) });
   }
 
   if (input.supervisorName) {
-    page.drawText(input.supervisorName, { x: 287, y: h - 360, size: 9, font, color: rgb(0, 0, 0) });
+    drawText(input.supervisorName, { x: 287, y: h - 360, size: 9, font, color: rgb(0, 0, 0) });
     if (input.supervisorDodId) {
-      page.drawText(`DOD ID: ${input.supervisorDodId}`, { x: 287, y: h - 372, size: 7, font, color: rgb(0.3, 0.3, 0.3) });
+      drawText(`DOD ID: ${input.supervisorDodId}`, { x: 287, y: h - 372, size: 7, font, color: rgb(0.3, 0.3, 0.3) });
     }
   }
 
