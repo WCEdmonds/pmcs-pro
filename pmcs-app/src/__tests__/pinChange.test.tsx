@@ -285,6 +285,7 @@ describe('Login after a revoked session', () => {
     fireEvent.submit(screen.getByLabelText('DOD ID Number').closest('form')!);
     const pin = await screen.findByLabelText('PIN');
     expect(pin.getAttribute('aria-describedby')).toBe('forgot-pin-note');
-    expect(screen.getByText(/Forgot your PIN\? Ask your unit's PMCS Pro admin to reset it\. You'll get a temporary PIN\./)).toBeTruthy();
+    expect(screen.getByText(/Forgot your PIN\? Reset it with a code sent to your confirmed email, or ask your unit's PMCS Pro admin to\s+reset it\. You'll get a temporary PIN\./)).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Forgot PIN?' })).toBeTruthy();
   });
 });

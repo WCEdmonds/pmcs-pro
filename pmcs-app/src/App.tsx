@@ -20,6 +20,7 @@ const HistoryPage = lazy(() => import('./pages/HistoryPage'));
 const SettingsPage = lazy(() => import('./pages/SettingsPage'));
 const PriorFaultReviewPage = lazy(() => import('./pages/PriorFaultReviewPage'));
 const SetNewPinPage = lazy(() => import('./pages/SetNewPinPage'));
+const ForgotPinPage = lazy(() => import('./pages/ForgotPinPage'));
 
 function AuthGuard({ children }: { children: ReactNode }) {
   const user = useUserStore((s) => s.user);
@@ -88,6 +89,7 @@ function AppRoutes() {
       <UpdateBanner />
       <Routes>
         <Route path="/login" element={<GuestOnly><LoginPage /></GuestOnly>} />
+        <Route path="/forgot-pin" element={<GuestOnly><ForgotPinPage /></GuestOnly>} />
         <Route path="/profile-setup" element={<GuestOnly><ProfileSetupPage /></GuestOnly>} />
         <Route path="/" element={<AuthGuard><AppLayout><HomePage /></AppLayout></AuthGuard>} />
         <Route path="/session/new" element={<AuthGuard><AppLayout><SessionSetupPage /></AppLayout></AuthGuard>} />

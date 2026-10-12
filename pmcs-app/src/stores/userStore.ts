@@ -43,6 +43,17 @@ interface UserState {
    * are signed out by the server). Clears the PIN-change lock. Local data is untouched.
    */
   changePin: (currentPin: string, newPin: string) => Promise<void>;
+  /**
+   * Sets the personal email (unconfirmed) and has the server email a 6-digit code.
+   * Returns false when no code was sent (hourly cap, or the address was already confirmed).
+   */
+  setEmail: (email: string) => Promise<boolean>;
+  /** Emails a new confirmation code to the unconfirmed address. */
+  resendEmailCode: () => Promise<void>;
+  /** Confirms the email with the emailed code. */
+  verifyEmail: (code: string) => Promise<void>;
+  /** Removes the email (PIN reset by email stops working). */
+  removeEmail: () => Promise<void>;
   /** Signs out every session of this soldier, this device included. Local data is kept. */
   signOutEverywhere: () => Promise<void>;
   /** Clears the token and the in-memory user. Local inspection data is kept. */
@@ -151,6 +162,36 @@ export const useUserStore = create<UserState>((set, get) => ({
       await cacheUser(updated);
       set({ user: updated, offlineProfile: false });
     }
+  },
+
+  setEmail: async (email) => {
+    const res = await api<ApiProfile & { email_code_sent?: boolean }>('PUT', '/me/email', { body: { email: email.trim() } });
+    const { email_code_sent: sent, ...profile } = res;
+    await get().setFromProfile(profile);
+    return sent === true;
+  },
+
+  resendEmailCode: async () => {
+    try {
+      await api<{ ok: boolean }>('POST', '/me/email/resend');
+    } catch (err) {
+      // 409: already confirmed (e.g. on another device) — pick up the current profile.
+      if (err instanceof ApiError && err.status === 409) {
+        const profile = await fetchRemoteProfile().catch(() => null);
+        if (profile) await get().setFromProfile(profile);
+      }
+      throw err;
+    }
+  },
+
+  verifyEmail: async (code) => {
+    const profile = await api<ApiProfile>('POST', '/me/email/verify', { body: { code: code.replace(/\s/g, '') } });
+    await get().setFromProfile(profile);
+  },
+
+  removeEmail: async () => {
+    const profile = await api<ApiProfile>('DELETE', '/me/email');
+    await get().setFromProfile(profile);
   },
 
   signOutEverywhere: async () => {

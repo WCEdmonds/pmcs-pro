@@ -2,13 +2,23 @@ import { ApiError, isNetworkError } from './api';
 
 export const NEW_PIN_RE = /^\d{6,12}$/;
 
+/** Keeps digits only, at most 12 (the longest PIN). */
+export const pinDigits = (v: string) => v.replace(/\D/g, '').slice(0, 12);
+
+/** Field-level checks for a new PIN entered twice. Returns an error per field, empty when valid. */
+export function validateNewPin(next: string, confirm: string): { next?: string; confirm?: string } {
+  const errors: { next?: string; confirm?: string } = {};
+  if (!NEW_PIN_RE.test(next)) errors.next = 'New PIN must be 6 to 12 digits.';
+  else if (confirm !== next) errors.confirm = "The PINs don't match.";
+  return errors;
+}
+
 /** Field-level checks for a PIN change. Returns an error per field, empty when valid. */
 export function validatePinChange(current: string, next: string, confirm: string): { current?: string; next?: string; confirm?: string } {
   const errors: { current?: string; next?: string; confirm?: string } = {};
   if (!/^\d{4,12}$/.test(current)) errors.current = 'Enter your current PIN (digits only).';
-  if (!NEW_PIN_RE.test(next)) errors.next = 'New PIN must be 6 to 12 digits.';
-  else if (next === current) errors.next = 'Choose a PIN different from the current one.';
-  if (!errors.next && confirm !== next) errors.confirm = "The PINs don't match.";
+  if (NEW_PIN_RE.test(next) && next === current) errors.next = 'Choose a PIN different from the current one.';
+  else Object.assign(errors, validateNewPin(next, confirm));
   return errors;
 }
 

@@ -55,6 +55,8 @@ export default function LoginPage() {
     }
   };
 
+  const goToForgotPin = () => navigate('/forgot-pin', { state: { dodId: cleanDodId } });
+
   const handlePinSubmit = async (e?: React.FormEvent) => {
     e?.preventDefault();
     if (!pin || busyRef.current) return;
@@ -114,6 +116,13 @@ export default function LoginPage() {
               autoComplete="off"
             />
             {error && <p className="text-sm text-accent-red" role="alert">{error}</p>}
+            <button
+              type="button"
+              onClick={goToForgotPin}
+              className="text-accent-blue text-sm min-h-[44px] self-start"
+            >
+              Forgot PIN?
+            </button>
           </form>
         ) : (
           <form onSubmit={handlePinSubmit} className="w-full max-w-sm flex flex-col gap-4">
@@ -131,9 +140,17 @@ export default function LoginPage() {
               aria-describedby="forgot-pin-note"
             />
             <p id="forgot-pin-note" className="text-xs text-text-secondary">
-              Forgot your PIN? Ask your unit's PMCS Pro admin to reset it. You'll get a temporary PIN.
+              Forgot your PIN? Reset it with a code sent to your confirmed email, or ask your unit's PMCS Pro admin to
+              reset it. You'll get a temporary PIN.
             </p>
             {error && <p className="text-sm text-accent-red" role="alert">{error}</p>}
+            <button
+              type="button"
+              onClick={goToForgotPin}
+              className="text-accent-blue text-sm min-h-[44px]"
+            >
+              Forgot PIN?
+            </button>
             <button
               type="button"
               onClick={() => { setStep('dodid'); setPin(''); setError(''); }}

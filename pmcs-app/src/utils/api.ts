@@ -24,6 +24,10 @@ export interface ApiProfile {
   role?: 'member' | 'admin';
   /** 1 while the soldier must replace a temporary PIN an admin set. */
   must_change_pin?: number | boolean;
+  /** Personal email for self-service PIN reset (absent on older API versions). */
+  email?: string | null;
+  /** Set once the email was confirmed with an emailed code. */
+  email_verified_at?: string | null;
 }
 
 /** Error code the API returns (403) on every non-auth route until a temporary PIN is replaced. */
@@ -327,11 +331,36 @@ export async function signOutEverywhere(): Promise<void> {
 export async function signUp(
   dodId: string,
   pin: string,
-  profile: { rank: string; last_name: string; first_name: string; mi: string; unit: string },
+  profile: { rank: string; last_name: string; first_name: string; mi: string; unit: string; email?: string },
 ): Promise<ApiProfile> {
   const res = await api<{ token: string; profile: ApiProfile }>('POST', '/auth/signup', {
     body: { dod_id: dodId, pin, ...profile },
   });
+  writeToken(res.token);
+  return res.profile;
+}
+
+/**
+ * POST /auth/pin-reset/request: emails a reset code if the account has a confirmed email.
+ * The server answers the same either way, so this never says whether a code was sent.
+ */
+export async function requestPinReset(dodId: string): Promise<void> {
+  await api<{ ok: boolean }>('POST', '/auth/pin-reset/request', { body: { dod_id: dodId } });
+}
+
+/**
+ * POST /auth/pin-reset/confirm: the emailed code plus a new PIN. Signs in like a login
+ * (the server signs out every other session) and stores the new token.
+ */
+export async function confirmPinReset(dodId: string, code: string, newPin: string): Promise<ApiProfile> {
+  const res = await api<{ token: string; profile: ApiProfile }>('POST', '/auth/pin-reset/confirm', {
+    body: { dod_id: dodId, code, new_pin: newPin },
+    credentialCheck: true,
+  });
+  if (!res || typeof res.token !== 'string' || !res.token) {
+    throw new ApiError('Unexpected response from the server', 200);
+  }
+  clearSignOutNotice();
   writeToken(res.token);
   return res.profile;
 }

@@ -1,10 +1,9 @@
-import { useId, useRef, useState } from 'react';
-import { changePinErrorMessage, validatePinChange } from '../../utils/pin';
+import { useRef, useState } from 'react';
+import { changePinErrorMessage, pinDigits, validatePinChange } from '../../utils/pin';
 import { useUserStore } from '../../stores/userStore';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
-
-const digits = (v: string) => v.replace(/\D/g, '').slice(0, 12);
+import { NewPinFields } from './NewPinFields';
 
 interface ChangePinFormProps {
   /** The current PIN is a temporary one an admin gave the soldier. */
@@ -24,7 +23,6 @@ export function ChangePinForm({ temporary = false, submitLabel = 'Change PIN', i
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
   const busy = useRef(false);
-  const hintId = useId();
 
   const handleSubmit = async (e?: React.FormEvent) => {
     e?.preventDefault();
@@ -55,7 +53,7 @@ export function ChangePinForm({ temporary = false, submitLabel = 'Change PIN', i
         id={`${idPrefix}-current`}
         label={temporary ? 'Temporary PIN' : 'Current PIN'}
         value={current}
-        onChange={(e) => setCurrent(digits(e.target.value))}
+        onChange={(e) => setCurrent(pinDigits(e.target.value))}
         type="password"
         inputMode="numeric"
         pattern="[0-9]*"
@@ -64,33 +62,14 @@ export function ChangePinForm({ temporary = false, submitLabel = 'Change PIN', i
         error={fieldErrors.current}
         aria-invalid={!!fieldErrors.current}
       />
-      <Input
-        id={`${idPrefix}-new`}
-        label="New PIN"
-        value={next}
-        onChange={(e) => setNext(digits(e.target.value))}
-        type="password"
-        inputMode="numeric"
-        pattern="[0-9]*"
-        autoComplete="off"
-        error={fieldErrors.next}
-        aria-invalid={!!fieldErrors.next}
-        aria-describedby={hintId}
-      />
-      <p id={hintId} className="text-xs text-text-secondary -mt-1">
-        6 to 12 digits{temporary ? ". Don't reuse the temporary PIN." : '.'}
-      </p>
-      <Input
-        id={`${idPrefix}-confirm`}
-        label="Confirm New PIN"
-        value={confirm}
-        onChange={(e) => setConfirm(digits(e.target.value))}
-        type="password"
-        inputMode="numeric"
-        pattern="[0-9]*"
-        autoComplete="off"
-        error={fieldErrors.confirm}
-        aria-invalid={!!fieldErrors.confirm}
+      <NewPinFields
+        idPrefix={idPrefix}
+        next={next}
+        confirm={confirm}
+        onNextChange={setNext}
+        onConfirmChange={setConfirm}
+        errors={fieldErrors}
+        hintExtra={temporary ? "Don't reuse the temporary PIN." : undefined}
       />
       {error && <p className="text-sm text-accent-red" role="alert">{error}</p>}
       <Button type="submit" fullWidth disabled={saving || !current || !next || !confirm}>

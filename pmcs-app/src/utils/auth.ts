@@ -8,6 +8,7 @@ export async function remoteSignUp(dodId: string, pin: string, profile: {
   first_name: string;
   mi: string;
   unit: string;
+  email?: string;
 }) {
   return signUp(dodId, pin, profile);
 }
@@ -66,6 +67,10 @@ export function profileToUser(profile: ApiProfile, existing?: Partial<User> | nu
     unit: normalizeUic(profile.unit ?? ''),
     role: profile.role === 'admin' ? 'admin' : 'member',
     mustChangePin: profile.must_change_pin === 1 || profile.must_change_pin === true,
+    // Older API versions don't send the email fields: keep whatever was cached.
+    ...(profile.email !== undefined
+      ? { email: profile.email ?? null, emailVerifiedAt: profile.email_verified_at ?? null }
+      : {}),
   };
 }
 

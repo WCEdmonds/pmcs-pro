@@ -10,6 +10,7 @@ import { UicField } from '../components/ui/UicField';
 import { Input } from '../components/ui/Input';
 import { Select } from '../components/ui/Select';
 import { ALL_RANKS } from '../data/ranks';
+import { isLikelyEmail } from '../utils/email';
 
 const PIN_RE = /^\d{6,12}$/;
 
@@ -27,6 +28,8 @@ export default function ProfileSetupPage() {
   const [uicLookup, setUicLookup] = useState<UicLookup | null>(null);
   const [pin, setPin] = useState('');
   const [pinConfirm, setPinConfirm] = useState('');
+  const [email, setEmail] = useState('');
+  const [emailTouched, setEmailTouched] = useState(false);
   const [error, setError] = useState('');
   const [alreadyRegistered, setAlreadyRegistered] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -38,7 +41,9 @@ export default function ProfileSetupPage() {
   const uic = validateUic(unit);
   const pinValid = PIN_RE.test(pin);
   const pinsMatch = pin === pinConfirm;
-  const isValid = !!rank && !!firstName.trim() && !!lastName.trim() && uic.valid && pinValid && pinsMatch;
+  const cleanEmail = email.trim();
+  const emailValid = !cleanEmail || isLikelyEmail(cleanEmail);
+  const isValid = !!rank && !!firstName.trim() && !!lastName.trim() && uic.valid && pinValid && pinsMatch && emailValid;
 
   const handleSubmit = async (e?: React.FormEvent) => {
     e?.preventDefault();
@@ -56,6 +61,7 @@ export default function ProfileSetupPage() {
         first_name: firstName.trim(),
         mi: mi.trim().toUpperCase(),
         unit: uic.value,
+        ...(cleanEmail ? { email: cleanEmail } : {}),
       });
       await setFromProfile(profile);
       // 2. Now that we have a token, name a brand-new UIC.
@@ -148,6 +154,26 @@ export default function ProfileSetupPage() {
           autoComplete="new-password"
           error={pinConfirm && !pinsMatch ? 'PINs do not match' : undefined}
         />
+        <Input
+          id="profile-email"
+          label="Email (for PIN reset)"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          onBlur={() => setEmailTouched(true)}
+          inputMode="email"
+          autoComplete="email"
+          autoCapitalize="none"
+          spellCheck={false}
+          placeholder="Optional"
+          maxLength={254}
+          aria-describedby="profile-email-hint"
+          error={emailTouched && !emailValid ? 'Enter a valid email address' : undefined}
+        />
+        <p id="profile-email-hint" className="text-xs text-text-secondary -mt-2">
+          Optional. A .mil or personal address both work. We'll email a code to confirm it, so you can reset a
+          forgotten PIN yourself.
+        </p>
         {error && (
           <div role="alert" className="flex flex-col gap-2">
             <p className="text-sm text-accent-red">{error}</p>

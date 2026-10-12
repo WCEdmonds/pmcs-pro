@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useUserStore } from '../stores/userStore';
 import { useSessionStore } from '../stores/sessionStore';
@@ -17,6 +17,7 @@ import { Button } from '../components/ui/Button';
 import { Modal } from '../components/ui/Modal';
 import { UicField } from '../components/ui/UicField';
 import { ChangePinForm } from '../components/account/ChangePinForm';
+import { EmailSettings } from '../components/account/EmailSettings';
 import { APP_VERSION } from '../utils/version';
 import { SyncBadge, SyncBanner } from '../components/sync/SyncStatus';
 import { useUnsynced } from '../hooks/useSync';
@@ -83,6 +84,8 @@ function ProfileForm({ user }: { user: User }) {
 
 export default function SettingsPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const focusEmail = (location.state as { focus?: string } | null)?.focus === 'email';
   const { user, updateUser, signOut } = useUserStore();
   const clearSession = useSessionStore((s) => s.clearSession);
   const [showClearModal, setShowClearModal] = useState(false);
@@ -102,6 +105,11 @@ export default function SettingsPage() {
     return states.length;
   }, []) ?? 0;
   const pendingResolutions = useLiveQuery(() => db.pendingFaultResolutions.count(), []) ?? 0;
+
+  // "Add email" on the home-screen prompt lands here.
+  useEffect(() => {
+    if (focusEmail) document.getElementById('email-section')?.scrollIntoView?.({ block: 'start' });
+  }, [focusEmail]);
 
   if (!user) return null;
 
@@ -225,6 +233,11 @@ export default function SettingsPage() {
         <section aria-labelledby="appearance-heading">
           <h2 id="appearance-heading" className="text-xs font-semibold text-text-secondary font-display mb-3">APPEARANCE</h2>
           <Toggle label="Dark Theme" checked={isDark} onChange={handleThemeToggle} />
+        </section>
+
+        <section id="email-section" aria-labelledby="email-heading">
+          <h2 id="email-heading" className="text-xs font-semibold text-text-secondary font-display mb-3">EMAIL (FOR PIN RESET)</h2>
+          <EmailSettings />
         </section>
 
         <section aria-labelledby="account-heading">

@@ -10,6 +10,10 @@ export interface User {
   role?: 'member' | 'admin';
   /** An admin reset the PIN: the app is locked to "Set a new PIN" until it is changed. */
   mustChangePin?: boolean;
+  /** Personal email for self-service PIN reset. Undefined when the server doesn't report it. */
+  email?: string | null;
+  /** When the email was confirmed with a code; null while unconfirmed. */
+  emailVerifiedAt?: string | null;
 }
 
 export type VehicleType =

@@ -1,19 +1,10 @@
-import { useSyncExternalStore } from 'react';
 import { WifiOff } from 'lucide-react';
 import { useUserStore } from '../stores/userStore';
 import { useSessionStore } from '../stores/sessionStore';
 import { useUnsynced } from '../hooks/useSync';
+import { useOnline } from '../hooks/useOnline';
 import { ChangePinForm } from '../components/account/ChangePinForm';
 import { Button } from '../components/ui/Button';
-
-const subscribeOnline = (cb: () => void) => {
-  window.addEventListener('online', cb);
-  window.addEventListener('offline', cb);
-  return () => {
-    window.removeEventListener('online', cb);
-    window.removeEventListener('offline', cb);
-  };
-};
 
 /**
  * Full-screen lock shown while the server requires a new PIN (an admin reset it and
@@ -22,7 +13,7 @@ const subscribeOnline = (cb: () => void) => {
  */
 export default function SetNewPinPage() {
   const user = useUserStore((s) => s.user);
-  const online = useSyncExternalStore(subscribeOnline, () => navigator.onLine, () => true);
+  const online = useOnline();
   const unsent = useUnsynced(user?.dodId)?.sessions.length ?? 0;
 
   const handleSignOut = () => {

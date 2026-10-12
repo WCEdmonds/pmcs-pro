@@ -8,6 +8,7 @@ import { useSessionStore, getPersistedSession } from '../stores/sessionStore';
 import { db } from '../utils/db';
 import { Button } from '../components/ui/Button';
 import { SyncBanner } from '../components/sync/SyncStatus';
+import { EmailPrompt } from '../components/account/EmailPrompt';
 import type { VehicleType } from '../types';
 import { VEHICLE_REGISTRY } from '../data/vehicles';
 
@@ -231,6 +232,8 @@ export default function HomePage() {
       </div>
 
       <SyncBanner compact />
+
+      <EmailPrompt />
 
       {pendingSession && (
         <motion.div
