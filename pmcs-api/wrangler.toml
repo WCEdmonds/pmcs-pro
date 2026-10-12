@@ -32,7 +32,7 @@ simple = { limit = 30, period = 60 }
 [[d1_databases]]
 binding = "DB"
 database_name = "pmcs-pro"
-database_id = "REPLACE_WITH_D1_DATABASE_ID"
+database_id = "517388eb-5cea-4d84-934a-02b06c8263d0"
 migrations_dir = "migrations"
 
 [[r2_buckets]]
