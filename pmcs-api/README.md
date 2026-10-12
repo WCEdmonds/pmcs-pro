@@ -16,6 +16,7 @@ Backend for PMCS Pro on Cloudflare: a Worker (Hono) with D1 and R2. It replaces 
 
 `visibleUnits()` in `src/index.ts` is the only place that decides access. It mirrors the old RLS:
 
+- **Unit membership is self-asserted (owner's decision, matching the old site).** Anyone can sign up for, or `PATCH /me` into, any UIC and then read and write that unit's data. There is no approval step. If that ever needs to change, `visibleUnits()` is the single place to add a membership or approval check.
 - **Signup is open.** Anyone may sign up with a 10-digit DoD ID, a 6–12 digit PIN and a unit.
 - **Read access** covers the caller's own unit (`profiles.unit`) plus every UIC in their `dashboard_watched_uics`. Watching is self-service, so battalion and higher staff can oversee several companies. This covers vehicles, faults, inspections, generated forms and their links, diagnosis attempts and status history. For profiles, a caller sees their own unit, plus `{id, rank, last_name, first_name}` of the inspectors whose inspections they can see.
 - **Write access** covers the own unit only: sync, fault acknowledge/resolve, photos, diagnosis attempts and DA 2404 generation or upload. `inspector_id` is always the caller.
