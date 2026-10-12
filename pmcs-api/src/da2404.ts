@@ -40,7 +40,7 @@ const norm = (s: string) => s.toUpperCase().replace(/[\s-]/g, '');
 // Which TM covers which model (verified against each TM's cover page). Dates are the latest change.
 const TM_BY_TYPE: Array<{ test: (m: string) => boolean; tm: string; tmDate: string }> = [
   { test: (m) => /^M110[12]/.test(m), tm: 'TM 9-2330-392-14&P', tmDate: '20010427' },
-  { test: (m) => /^MEP(803|813)/.test(m), tm: 'TM 9-6115-642-10', tmDate: '19961030' },
+  { test: (m) => /^MEP(803|813)/.test(m), tm: 'TM 9-6115-642-10', tmDate: '20100915' },
   { test: (m) => /^MEP(802|812)/.test(m), tm: 'TM 9-6115-641-10', tmDate: '20091015' },
   { test: (m) => /^MEP103[01]/.test(m), tm: 'TM 9-6115-749-10', tmDate: '20110201' },
   { test: (m) => /^MEP83[12]/.test(m), tm: 'TM 9-6115-639-13&P', tmDate: '20100430' }, // MEP831, MEP831A, MEP832A

@@ -73,9 +73,9 @@ export const VEHICLE_REGISTRY: VehicleRegistryEntryWithTm[] = [
     name: 'MEP-803A/813A Generator (10kW)',
     nickname: 'Generator',
     tmReference: 'TM 9-6115-642-10',
-    tmDate: '19961030', // Change 2, 30 October 1996
-    tmBaseDate: '19921230', // 30 December 1992
-    tmChange: 2,
+    tmDate: '20100915', // Change 2, 30 October 1996
+    tmBaseDate: '20100915', // 30 December 1992
+    tmChange: 0,
     itemCount: 40,
   },
   {

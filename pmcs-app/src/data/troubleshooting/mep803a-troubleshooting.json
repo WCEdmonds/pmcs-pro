@@ -2,7 +2,7 @@
   {
     "categoryId": "gen-engine",
     "vehicleType": "MEP803A",
-    "tmReference": "TM 9-6115-642-10, Table 3-1, Malfunctions 1-7",
+    "tmReference": "TM 9-6115-642-10, WP 0009, Symptoms 1-7",
     "rootNodeId": "ge-q1",
     "nodes": {
       "ge-q1": {
@@ -54,7 +54,7 @@
             "nextNodeId": "ge-q3"
           }
         ],
-        "tmPage": "3-2 #1"
+        "tmPage": "WP 0009-1"
       },
       "ge-a1": {
         "id": "ge-a1",
@@ -92,15 +92,15 @@
             "nextNodeId": "ge-q4"
           }
         ],
-        "tmPage": "3-2 #1"
+        "tmPage": "WP 0009-1"
       },
       "ge-a2": {
         "id": "ge-a2",
         "type": "action",
         "text": "Push in the DC CONTROL POWER circuit breaker",
-        "actionText": "The DC CONTROL POWER circuit breaker must be pushed in (energized) before starting (para 2-9.2b). Push it in, then check the Emergency Stop switch (Step 3).",
+        "actionText": "The DC CONTROL POWER circuit breaker must be pushed in (energized) before starting (WP 0005, Initial Adjustments). Push it in, then check the Emergency Stop switch (Step 3).",
         "nextNodeId": "ge-q4a",
-        "tmPage": "3-2 #1"
+        "tmPage": "WP 0009-1"
       },
       "ge-q4a": {
         "id": "ge-q4a",
@@ -131,7 +131,7 @@
             "nextNodeId": "ge-q5"
           }
         ],
-        "tmPage": "3-2 #1"
+        "tmPage": "WP 0009-1"
       },
       "ge-a3": {
         "id": "ge-a3",
@@ -159,7 +159,7 @@
         "id": "ge-q5",
         "type": "question",
         "text": "Check the battery connections. Are any loose or corroded? (Step 4)",
-        "tmPage": "3-2 #1",
+        "tmPage": "WP 0009-2",
         "options": [
           {
             "label": "Yes — loose or corroded",
@@ -185,15 +185,15 @@
             "nextNodeId": "ge-q7"
           }
         ],
-        "tmPage": "3-2 #2"
+        "tmPage": "WP 0009-2"
       },
       "ge-a5": {
         "id": "ge-a5",
         "type": "action",
         "text": "Use PREHEAT before starting",
-        "actionText": "Turn the MASTER SWITCH to PREHEAT for a MAXIMUM of 30 seconds, then crank (para 2-10.1). Do not crank more than 15 seconds; let the starter cool at least 15 seconds between attempts.",
+        "actionText": "Turn the MASTER SWITCH to PREHEAT for a MAXIMUM of 30 seconds, then crank (WP 0005, Starting Procedures). Do not crank more than 15 seconds; let the starter cool at least 15 seconds between attempts.",
         "nextNodeId": "ge-q6a",
-        "tmPage": "2-10.1"
+        "tmPage": "WP 0005-5"
       },
       "ge-q6a": {
         "id": "ge-q6a",
@@ -224,15 +224,15 @@
             "nextNodeId": "ge-q8"
           }
         ],
-        "tmPage": "3-2 #2"
+        "tmPage": "WP 0009-2"
       },
       "ge-a6": {
         "id": "ge-a6",
         "type": "action",
         "text": "Service the air cleaner",
-        "actionText": "Shut down. Open the left engine access door. Loosen the wing nut clamp and remove the end cap; remove the wing nut and air cleaner element. If fouled, discard the element and install a new one. Wipe the housing interior with a clean lint-free cloth. Reinstall element, wing nut, and end cap; close the door (para 3-3.3.2). Try starting again.",
+        "actionText": "Shut down. Open the left engine access door. Loosen the wing nut clamp and remove the end cap; remove the wing nut and air cleaner element. If fouled, discard the element and install a new one. Wipe the housing interior with a clean lint-free cloth. Reinstall element, wing nut, and end cap; close the door (WP 0014, Servicing). Try starting again.",
         "nextNodeId": "ge-q7a",
-        "tmPage": "3-3.3.2"
+        "tmPage": "WP 0014-2"
       },
       "ge-q7a": {
         "id": "ge-q7a",
@@ -263,15 +263,15 @@
             "nextNodeId": "ge-t6"
           }
         ],
-        "tmPage": "3-2 #2"
+        "tmPage": "WP 0009-2"
       },
       "ge-a7": {
         "id": "ge-a7",
         "type": "action",
         "text": "Service the fuel filter/water separator",
-        "actionText": "Shut down. Rotate MASTER SWITCH to PRIME & RUN. Open the left engine access door, open the fuel drain cock on the fuel filter/water separator and drain contaminants into a container, then close the drain cock. Close the door and rotate MASTER SWITCH to OFF (para 3-3.6.2). Try starting again.",
+        "actionText": "Shut down. Rotate MASTER SWITCH to PRIME & RUN. Open the left engine access door, open the fuel drain cock on the fuel filter/water separator and drain contaminants into a container, then close the drain cock. Close the door and rotate MASTER SWITCH to OFF (WP 0017, Servicing). Try starting again.",
         "nextNodeId": "ge-q8a",
-        "tmPage": "3-3.6.2"
+        "tmPage": "WP 0017-2"
       },
       "ge-q8a": {
         "id": "ge-q8a",
@@ -292,7 +292,7 @@
         "id": "ge-q10",
         "type": "question",
         "text": "Did you hold the MASTER SWITCH in START until oil pressure reached at least 25 psi (172 kPa), voltage came up, and speed stabilized? (Step 1)",
-        "tmPage": "3-2 #3",
+        "tmPage": "WP 0009-2",
         "options": [
           {
             "label": "No — I released it too soon",
@@ -315,7 +315,7 @@
         "id": "ge-q10a",
         "type": "question",
         "text": "Does the engine stay running now?",
-        "tmPage": "3-2 #3",
+        "tmPage": "WP 0009-2",
         "options": [
           {
             "label": "Yes",
@@ -330,8 +330,8 @@
       "ge-q12": {
         "id": "ge-q12",
         "type": "question",
-        "text": "Are any FAULT INDICATOR lights lit? (malfunction 4, Step 1)",
-        "tmPage": "3-2 #4",
+        "text": "Are any FAULT INDICATOR lights lit? (Symptom 4, Step 1)",
+        "tmPage": "WP 0009-3",
         "options": [
           {
             "label": "NO FUEL light",
@@ -351,7 +351,7 @@
         "id": "ge-q13",
         "type": "question",
         "text": "Is the DC CONTROL POWER circuit breaker de-energized (out)? (Step 2)",
-        "tmPage": "3-2 #4",
+        "tmPage": "WP 0009-3",
         "options": [
           {
             "label": "Yes — it is out",
@@ -377,15 +377,15 @@
             "nextNodeId": "ge-q15"
           }
         ],
-        "tmPage": "3-2 #5"
+        "tmPage": "WP 0009-3"
       },
       "ge-a10": {
         "id": "ge-a10",
         "type": "action",
         "text": "Service the air cleaner",
-        "actionText": "Service the air cleaner assembly (para 3-3.3.2): replace a fouled element, wipe the housing clean, reinstall. Restart and check.",
+        "actionText": "Service the air cleaner assembly (WP 0014, Servicing): replace a fouled element, wipe the housing clean, reinstall. Restart and check.",
         "nextNodeId": "ge-q14a",
-        "tmPage": "3-3.3.2"
+        "tmPage": "WP 0014-2"
       },
       "ge-q14a": {
         "id": "ge-q14a",
@@ -416,15 +416,15 @@
             "nextNodeId": "ge-q16"
           }
         ],
-        "tmPage": "3-2 #5"
+        "tmPage": "WP 0009-3"
       },
       "ge-a11": {
         "id": "ge-a11",
         "type": "action",
         "text": "Service the fuel filter/water separator",
-        "actionText": "Drain contaminants from the fuel filter/water separator with the MASTER SWITCH at PRIME & RUN (para 3-3.6.2). Restart and check.",
+        "actionText": "Drain contaminants from the fuel filter/water separator with the MASTER SWITCH at PRIME & RUN (WP 0017, Servicing). Restart and check.",
         "nextNodeId": "ge-q15a",
-        "tmPage": "3-3.6.2"
+        "tmPage": "WP 0017-2"
       },
       "ge-q15a": {
         "id": "ge-q15a",
@@ -455,7 +455,7 @@
             "nextNodeId": "ge-t14"
           }
         ],
-        "tmPage": "3-2 #5"
+        "tmPage": "WP 0009-3"
       },
       "ge-q18": {
         "id": "ge-q18",
@@ -471,15 +471,15 @@
             "nextNodeId": "ge-q19"
           }
         ],
-        "tmPage": "3-2 #6"
+        "tmPage": "WP 0009-4"
       },
       "ge-a12": {
         "id": "ge-a12",
         "type": "action",
         "text": "Service the air cleaner",
-        "actionText": "Service the air cleaner assembly (para 3-3.3.2). Run and check power.",
+        "actionText": "Service the air cleaner assembly (WP 0014, Servicing). Run and check power.",
         "nextNodeId": "ge-q18a",
-        "tmPage": "3-3.3.2"
+        "tmPage": "WP 0014-2"
       },
       "ge-q18a": {
         "id": "ge-q18a",
@@ -510,15 +510,15 @@
             "nextNodeId": "ge-q20"
           }
         ],
-        "tmPage": "3-2 #6"
+        "tmPage": "WP 0009-4"
       },
       "ge-a13": {
         "id": "ge-a13",
         "type": "action",
         "text": "Service the fuel filter/water separator",
-        "actionText": "Drain contaminants from the fuel filter/water separator (para 3-3.6.2). Run and check power.",
+        "actionText": "Drain contaminants from the fuel filter/water separator (WP 0017, Servicing). Run and check power.",
         "nextNodeId": "ge-q19a",
-        "tmPage": "3-3.6.2"
+        "tmPage": "WP 0017-2"
       },
       "ge-q19a": {
         "id": "ge-q19a",
@@ -538,8 +538,8 @@
       "ge-q20": {
         "id": "ge-q20",
         "type": "question",
-        "text": "Is the exhaust opening obstructed? (malfunction 6, Step 3)",
-        "tmPage": "3-2 #6",
+        "text": "Is the exhaust opening obstructed? (Symptom 6, Step 3)",
+        "tmPage": "WP 0009-4",
         "options": [
           {
             "label": "Yes — obstruction found",
@@ -565,7 +565,7 @@
             "nextNodeId": "ge-t16"
           }
         ],
-        "tmPage": "3-2 #6"
+        "tmPage": "WP 0009-4"
       },
       "ge-q22": {
         "id": "ge-q22",
@@ -581,15 +581,15 @@
             "nextNodeId": "ge-q23"
           }
         ],
-        "tmPage": "3-2 #7"
+        "tmPage": "WP 0009-4"
       },
       "ge-a14": {
         "id": "ge-a14",
         "type": "action",
         "text": "Add engine oil",
-        "actionText": "Add oil per LO 9-6115-642-12 (para 3-3.7.2). Run the engine and listen.",
+        "actionText": "Add oil per LO 9-6115-642-12 (WP 0018, Servicing). Run the engine and listen.",
         "nextNodeId": "ge-q22a",
-        "tmPage": "3-3.7.2"
+        "tmPage": "WP 0018-1"
       },
       "ge-q22a": {
         "id": "ge-q22a",
@@ -609,7 +609,7 @@
       "ge-q23": {
         "id": "ge-q23",
         "type": "question",
-        "text": "Check the engine compartment for loose parts or foreign objects (malfunction 7, Step 2). Any found?",
+        "text": "Check the engine compartment for loose parts or foreign objects (Symptom 7, Step 2). Any found?",
         "options": [
           {
             "label": "Yes — found loose parts or foreign objects",
@@ -620,7 +620,7 @@
             "nextNodeId": "ge-q24"
           }
         ],
-        "tmPage": "3-2 #7"
+        "tmPage": "WP 0009-5"
       },
       "ge-a15": {
         "id": "ge-a15",
@@ -658,12 +658,12 @@
             "nextNodeId": "ge-t19"
           }
         ],
-        "tmPage": "3-2 #7"
+        "tmPage": "WP 0009-5"
       },
       "ge-t1": {
         "id": "ge-t1",
         "type": "terminal",
-        "text": "Engine cranks after setting the DEAD CRANK switch, DC CONTROL POWER breaker, or Emergency Stop switch to the normal starting position (para 2-9.2).",
+        "text": "Engine cranks after setting the DEAD CRANK switch, DC CONTROL POWER breaker, or Emergency Stop switch to the normal starting position (WP 0005, Initial Adjustments).",
         "terminal": {
           "resolution": "operator-fix",
           "readiness": "PMC",
@@ -683,8 +683,8 @@
       "ge-t3": {
         "id": "ge-t3",
         "type": "terminal",
-        "text": "Loose or corroded battery connections: do not clean or tighten them yourself — notify the next higher maintenance level (Table 3-1, malfunction 1, Step 4). Battery cables damaged, loose, or missing parts is NMC (PMCS item 18).",
-        "tmPage": "3-2 #1",
+        "text": "Loose or corroded battery connections: do not clean or tighten them yourself — notify the next higher maintenance level (WP 0009, Symptom 1, Step 4). Battery cables damaged, loose, or missing parts is NMC (WP 0011, Table 1, item 18).",
+        "tmPage": "WP 0009-2",
         "terminal": {
           "resolution": "needs-maintenance",
           "readiness": "NMC",
@@ -714,8 +714,8 @@
       "ge-t6": {
         "id": "ge-t6",
         "type": "terminal",
-        "text": "Engine cranks but will not start after preheat, air cleaner, and fuel filter/water separator service. Notify the next higher maintenance level (malfunction 2, Step 3).",
-        "tmPage": "3-2 #2",
+        "text": "Engine cranks but will not start after preheat, air cleaner, and fuel filter/water separator service. Notify the next higher maintenance level (WP 0009, Symptom 2, Step 3).",
+        "tmPage": "WP 0009-2",
         "terminal": {
           "resolution": "needs-maintenance",
           "readiness": "NMC",
@@ -735,8 +735,8 @@
       "ge-t8": {
         "id": "ge-t8",
         "type": "terminal",
-        "text": "Engine stops when the MASTER SWITCH is released, with a fault light other than NO FUEL or with no cause found. Notify the next higher maintenance level (malfunction 3).",
-        "tmPage": "3-2 #3",
+        "text": "Engine stops when the MASTER SWITCH is released, with a fault light other than NO FUEL or with no cause found. Notify the next higher maintenance level (WP 0009, Symptom 3).",
+        "tmPage": "WP 0009-3",
         "terminal": {
           "resolution": "needs-maintenance",
           "readiness": "NMC",
@@ -757,7 +757,7 @@
         "id": "ge-t11",
         "type": "terminal",
         "text": "Engine stops suddenly with a fault light (other than NO FUEL) or no operator-level cause. Notify the next higher maintenance level.",
-        "tmPage": "3-2 #4",
+        "tmPage": "WP 0009-3",
         "terminal": {
           "resolution": "needs-maintenance",
           "readiness": "NMC",
@@ -767,8 +767,8 @@
       "ge-t12": {
         "id": "ge-t12",
         "type": "terminal",
-        "text": "Engine stopped suddenly and the DC CONTROL POWER circuit breaker is out. Do not reset it — notify the next higher maintenance level (malfunction 4, Step 2).",
-        "tmPage": "3-2 #4",
+        "text": "Engine stopped suddenly and the DC CONTROL POWER circuit breaker is out. Do not reset it — notify the next higher maintenance level (WP 0009, Symptom 4, Step 2).",
+        "tmPage": "WP 0009-3",
         "terminal": {
           "resolution": "needs-maintenance",
           "readiness": "NMC",
@@ -784,7 +784,7 @@
           "readiness": "NMC",
           "summary": "Improper fuel type — needs drain and refuel"
         },
-        "tmPage": "3-2 #5"
+        "tmPage": "WP 0009-4"
       },
       "ge-t14": {
         "id": "ge-t14",
@@ -840,7 +840,7 @@
         "id": "ge-q11",
         "type": "question",
         "text": "Are any FAULT INDICATOR lights lit? (Step 2)",
-        "tmPage": "3-2 #3",
+        "tmPage": "WP 0009-3",
         "options": [
           {
             "label": "NO FUEL light only",
@@ -860,15 +860,15 @@
         "id": "ge-a16",
         "type": "action",
         "text": "Refuel",
-        "actionText": "WARNING: fuel is explosive — no smoking or open flame. Shut down, remove the fuel cap, clean the strainer as necessary, and add the specified diesel fuel (Table 3-3); install the cap (para 3-3.5.1). Restart.",
+        "actionText": "WARNING: fuel is explosive — no smoking or open flame. Shut down, remove the fuel cap, clean the strainer as necessary, and add the specified diesel fuel (WP 0016, Table 1); install the cap (WP 0016, Servicing). Restart.",
         "nextNodeId": "ge-q11a",
-        "tmPage": "3-3.5.1"
+        "tmPage": "WP 0016-1"
       },
       "ge-q11a": {
         "id": "ge-q11a",
         "type": "question",
         "text": "Does the engine start and keep running with the NO FUEL light out?",
-        "tmPage": "3-3.5.1",
+        "tmPage": "WP 0016-1",
         "options": [
           {
             "label": "Yes",
@@ -884,7 +884,7 @@
         "id": "ge-t20",
         "type": "terminal",
         "text": "Out of fuel (NO FUEL light). Refueled and the engine runs.",
-        "tmPage": "3-3.5.1",
+        "tmPage": "WP 0016-1",
         "terminal": {
           "resolution": "operator-fix",
           "readiness": "PMC",
@@ -895,15 +895,15 @@
         "id": "ge-a17",
         "type": "action",
         "text": "Refuel",
-        "actionText": "WARNING: fuel is explosive — no smoking or open flame. Add the specified diesel fuel (para 3-3.5.1, Table 3-3). Restart (para 2-10.1).",
+        "actionText": "WARNING: fuel is explosive — no smoking or open flame. Add the specified diesel fuel (WP 0016, Servicing, Table 1). Restart (WP 0005, Starting Procedures).",
         "nextNodeId": "ge-q12a",
-        "tmPage": "3-3.5.1"
+        "tmPage": "WP 0016-1"
       },
       "ge-q12a": {
         "id": "ge-q12a",
         "type": "question",
         "text": "Does the generator start and keep running?",
-        "tmPage": "3-3.5.1",
+        "tmPage": "WP 0016-1",
         "options": [
           {
             "label": "Yes",
@@ -921,13 +921,13 @@
         "text": "Clear the exhaust opening",
         "actionText": "Shut down, let the exhaust cool, and remove the obstruction from the exhaust opening.",
         "nextNodeId": "ge-q20a",
-        "tmPage": "3-2 #6"
+        "tmPage": "WP 0009-4"
       },
       "ge-q20a": {
         "id": "ge-q20a",
         "type": "question",
         "text": "Does the generator develop full power now?",
-        "tmPage": "3-2 #6",
+        "tmPage": "WP 0009-4",
         "options": [
           {
             "label": "Yes",
@@ -943,7 +943,7 @@
         "id": "ge-t21",
         "type": "terminal",
         "text": "Exhaust opening was obstructed; cleared and full power restored.",
-        "tmPage": "3-2 #6",
+        "tmPage": "WP 0009-4",
         "terminal": {
           "resolution": "operator-fix",
           "readiness": "PMC",
@@ -955,7 +955,7 @@
   {
     "categoryId": "gen-exhaust",
     "vehicleType": "MEP803A",
-    "tmReference": "TM 9-6115-642-10, Table 3-1, Malfunctions 8-9",
+    "tmReference": "TM 9-6115-642-10, WP 0009, Symptoms 8-9",
     "rootNodeId": "gx-q1",
     "nodes": {
       "gx-q1": {
@@ -987,7 +987,7 @@
             "nextNodeId": "gx-t2"
           }
         ],
-        "tmPage": "3-2 #8"
+        "tmPage": "WP 0009-5"
       },
       "gx-q3": {
         "id": "gx-q3",
@@ -1003,13 +1003,13 @@
             "nextNodeId": "gx-q4"
           }
         ],
-        "tmPage": "3-2 #9"
+        "tmPage": "WP 0009-5"
       },
       "gx-q4": {
         "id": "gx-q4",
         "type": "question",
-        "text": "Check the air cleaner restriction indicator (malfunction 9, Step 2). Is the element clogged?",
-        "tmPage": "3-2 #9",
+        "text": "Check the air cleaner restriction indicator (Symptom 9, Step 2). Is the element clogged?",
+        "tmPage": "WP 0009-5",
         "options": [
           {
             "label": "Yes",
@@ -1025,9 +1025,9 @@
         "id": "gx-a1",
         "type": "action",
         "text": "Service the air cleaner",
-        "actionText": "Service the air cleaner assembly (para 3-3.3.2). Run the generator and observe the exhaust.",
+        "actionText": "Service the air cleaner assembly (WP 0014, Servicing). Run the generator and observe the exhaust.",
         "nextNodeId": "gx-q5",
-        "tmPage": "3-3.3.2"
+        "tmPage": "WP 0014-2"
       },
       "gx-q5": {
         "id": "gx-q5",
@@ -1088,7 +1088,7 @@
         "id": "gx-q6",
         "type": "question",
         "text": "Check the PERCENT RATED CURRENT ammeter on each phase (Step 3). Is the generator overloaded (over 100%)?",
-        "tmPage": "3-2 #9",
+        "tmPage": "WP 0009-6",
         "options": [
           {
             "label": "Yes",
@@ -1106,13 +1106,13 @@
         "text": "Reduce the load",
         "actionText": "Reduce the electrical load until the ammeter reads 100% or less on every phase. If unable to adjust, notify the next higher maintenance level.",
         "nextNodeId": "gx-q7",
-        "tmPage": "3-2 #9"
+        "tmPage": "WP 0009-6"
       },
       "gx-q7": {
         "id": "gx-q7",
         "type": "question",
         "text": "Has the black smoke cleared?",
-        "tmPage": "3-2 #9",
+        "tmPage": "WP 0009-6",
         "options": [
           {
             "label": "Yes",
@@ -1128,7 +1128,7 @@
         "id": "gx-t5",
         "type": "terminal",
         "text": "Generator was overloaded; load reduced and black smoke cleared.",
-        "tmPage": "3-2 #9",
+        "tmPage": "WP 0009-6",
         "terminal": {
           "resolution": "operator-fix",
           "readiness": "PMC",
@@ -1140,7 +1140,7 @@
   {
     "categoryId": "gen-oil-pressure",
     "vehicleType": "MEP803A",
-    "tmReference": "TM 9-6115-642-10, Table 3-1, Malfunction 10",
+    "tmReference": "TM 9-6115-642-10, WP 0009, Symptom 10",
     "rootNodeId": "go-q1",
     "nodes": {
       "go-q1": {
@@ -1157,15 +1157,15 @@
             "nextNodeId": "go-q2"
           }
         ],
-        "tmPage": "3-2 #10"
+        "tmPage": "WP 0009-6"
       },
       "go-a1": {
         "id": "go-a1",
         "type": "action",
         "text": "Add engine oil",
-        "actionText": "Shut down. Open the left engine access door, remove the oil filler cap, add oil per LO 9-6115-642-12, install the cap (para 3-3.7.2). Restart and check oil pressure (25-60 psi).",
+        "actionText": "Shut down. Open the left engine access door, remove the oil filler cap, add oil per LO 9-6115-642-12, install the cap (WP 0018, Servicing). Restart and check oil pressure (25-60 psi).",
         "nextNodeId": "go-q1a",
-        "tmPage": "3-3.7.2"
+        "tmPage": "WP 0018-1"
       },
       "go-q1a": {
         "id": "go-q1a",
@@ -1186,7 +1186,7 @@
         "id": "go-q2",
         "type": "question",
         "text": "Is the coolant temperature high — above 200°F (93°C)? (Step 2)",
-        "tmPage": "3-2 #10",
+        "tmPage": "WP 0009-6",
         "options": [
           {
             "label": "Yes",
@@ -1212,15 +1212,15 @@
             "nextNodeId": "go-q4"
           }
         ],
-        "tmPage": "3-2 #10"
+        "tmPage": "WP 0009-6"
       },
       "go-a2": {
         "id": "go-a2",
         "type": "action",
         "text": "Add coolant",
-        "actionText": "WARNING: hot coolant/steam can burn. With the engine cool, fill the coolant recovery (overflow) bottle to the COLD line (HOT line if hot) with proper coolant (para 3-3.4.2, Table 3-2). Restart and check oil pressure.",
+        "actionText": "WARNING: hot coolant/steam can burn. With the engine cool, fill the coolant recovery (overflow) bottle to the COLD line (HOT line if hot) with proper coolant (WP 0015, Servicing, Table 1). Restart and check oil pressure.",
         "nextNodeId": "go-q3a",
-        "tmPage": "3-3.4.2"
+        "tmPage": "WP 0015-1"
       },
       "go-q3a": {
         "id": "go-q3a",
@@ -1251,7 +1251,7 @@
             "nextNodeId": "go-q5"
           }
         ],
-        "tmPage": "3-2 #10"
+        "tmPage": "WP 0009-6"
       },
       "go-a3": {
         "id": "go-a3",
@@ -1289,7 +1289,7 @@
             "nextNodeId": "go-t5"
           }
         ],
-        "tmPage": "3-2 #10"
+        "tmPage": "WP 0009-6"
       },
       "go-t1": {
         "id": "go-t1",
@@ -1346,7 +1346,7 @@
   {
     "categoryId": "gen-overheat",
     "vehicleType": "MEP803A",
-    "tmReference": "TM 9-6115-642-10, Table 3-1, Malfunction 11",
+    "tmReference": "TM 9-6115-642-10, WP 0009, Symptom 11",
     "rootNodeId": "gc-q1",
     "nodes": {
       "gc-q1": {
@@ -1363,7 +1363,7 @@
             "nextNodeId": "gc-q2"
           }
         ],
-        "tmPage": "3-2 #11"
+        "tmPage": "WP 0009-7"
       },
       "gc-a1": {
         "id": "gc-a1",
@@ -1401,15 +1401,15 @@
             "nextNodeId": "gc-q3"
           }
         ],
-        "tmPage": "3-2 #11"
+        "tmPage": "WP 0009-7"
       },
       "gc-a2": {
         "id": "gc-a2",
         "type": "action",
         "text": "Add coolant",
-        "actionText": "Shut down and let it cool. Fill the coolant recovery (overflow) bottle to the COLD line with proper coolant (para 3-3.4.2). Restart and monitor COOLANT TEMP (170-200°F normal).",
+        "actionText": "Shut down and let it cool. Fill the coolant recovery (overflow) bottle to the COLD line with proper coolant (WP 0015, Servicing). Restart and monitor COOLANT TEMP (170-200°F normal).",
         "nextNodeId": "gc-q2a",
-        "tmPage": "3-3.4.2"
+        "tmPage": "WP 0015-1"
       },
       "gc-q2a": {
         "id": "gc-q2a",
@@ -1440,15 +1440,15 @@
             "nextNodeId": "gc-q4"
           }
         ],
-        "tmPage": "3-2 #11"
+        "tmPage": "WP 0009-7"
       },
       "gc-a3": {
         "id": "gc-a3",
         "type": "action",
         "text": "Add engine oil",
-        "actionText": "Add oil per LO 9-6115-642-12 (para 3-3.7.2). Run and monitor temperature.",
+        "actionText": "Add oil per LO 9-6115-642-12 (WP 0018, Servicing). Run and monitor temperature.",
         "nextNodeId": "gc-q3a",
-        "tmPage": "3-3.7.2"
+        "tmPage": "WP 0018-1"
       },
       "gc-q3a": {
         "id": "gc-q3a",
@@ -1479,7 +1479,7 @@
             "nextNodeId": "gc-q5"
           }
         ],
-        "tmPage": "3-2 #11"
+        "tmPage": "WP 0009-7"
       },
       "gc-a4": {
         "id": "gc-a4",
@@ -1517,7 +1517,7 @@
             "nextNodeId": "gc-t7"
           }
         ],
-        "tmPage": "3-2 #11"
+        "tmPage": "WP 0009-7"
       },
       "gc-t1": {
         "id": "gc-t1",
@@ -1594,7 +1594,7 @@
   {
     "categoryId": "gen-electrical",
     "vehicleType": "MEP803A",
-    "tmReference": "TM 9-6115-642-10, Table 3-1, Malfunctions 12-19",
+    "tmReference": "TM 9-6115-642-10, WP 0009, Symptoms 12-19",
     "rootNodeId": "gl-q1",
     "nodes": {
       "gl-q1": {
@@ -1631,7 +1631,7 @@
       "gl-q2": {
         "id": "gl-q2",
         "type": "question",
-        "text": "Check the BATTERY CHARGER FUSE (FIGURE 2-1) (malfunction 12, Step 1). Is it blown?",
+        "text": "Check the BATTERY CHARGER FUSE (WP 0004, Table 1, Item 21) (Symptom 12, Step 1). Is it blown?",
         "options": [
           {
             "label": "Yes — fuse is blown",
@@ -1642,7 +1642,7 @@
             "nextNodeId": "gl-q3"
           }
         ],
-        "tmPage": "3-2 #12"
+        "tmPage": "WP 0009-7"
       },
       "gl-q3": {
         "id": "gl-q3",
@@ -1658,7 +1658,7 @@
             "nextNodeId": "gl-q4"
           }
         ],
-        "tmPage": "3-2 #12"
+        "tmPage": "WP 0009-8"
       },
       "gl-q4": {
         "id": "gl-q4",
@@ -1674,13 +1674,13 @@
             "nextNodeId": "gl-t4"
           }
         ],
-        "tmPage": "3-2 #12"
+        "tmPage": "WP 0009-8"
       },
       "gl-q6": {
         "id": "gl-q6",
         "type": "question",
-        "text": "Check the battery electrolyte level (malfunction 13, Step 1). Is it low (below the bottom of each cap cylinder)?",
-        "tmPage": "3-2 #13",
+        "text": "Check the battery electrolyte level (Symptom 13, Step 1). Is it low (below the bottom of each cap cylinder)?",
+        "tmPage": "WP 0009-8",
         "options": [
           {
             "label": "Yes — low",
@@ -1696,7 +1696,7 @@
         "id": "gl-q7",
         "type": "question",
         "text": "Check the battery connections (Step 2). Are any loose or corroded?",
-        "tmPage": "3-2 #13",
+        "tmPage": "WP 0009-8",
         "options": [
           {
             "label": "Yes",
@@ -1711,8 +1711,8 @@
       "gl-q8": {
         "id": "gl-q8",
         "type": "question",
-        "text": "Is the AM-VM transfer switch set to match the load connection, and is the VOLTAGE adjust potentiometer set to rated voltage? (malfunction 14, Step 1)",
-        "tmPage": "3-2 #14",
+        "text": "Is the AM-VM transfer switch set to match the load connection, and is the VOLTAGE adjust potentiometer set to rated voltage? (Symptom 14, Step 1)",
+        "tmPage": "WP 0009-8",
         "options": [
           {
             "label": "Adjusted it — voltage now correct",
@@ -1728,7 +1728,7 @@
         "id": "gl-q9",
         "type": "question",
         "text": "Check for loose or broken wires at the back of the AM-VM transfer switch, VOLTAGE adjust potentiometer, and AC voltmeter. Any found?",
-        "tmPage": "3-2 #14",
+        "tmPage": "WP 0009-9",
         "options": [
           {
             "label": "Yes",
@@ -1743,8 +1743,8 @@
       "gl-q10": {
         "id": "gl-q10",
         "type": "question",
-        "text": "Press the AC CIRCUIT INTERRUPTER light to test it (malfunction 18, Step 1). Does it light?",
-        "tmPage": "3-2 #18",
+        "text": "Press the AC CIRCUIT INTERRUPTER light to test it (Symptom 18, Step 1). Does it light?",
+        "tmPage": "WP 0009-10",
         "options": [
           {
             "label": "No — bulb/light fails",
@@ -1759,8 +1759,8 @@
       "gl-q11": {
         "id": "gl-q11",
         "type": "question",
-        "text": "Check the load cables for proper connection (para 2-8.2) (Step 2). Are they connected correctly?",
-        "tmPage": "3-2 #18",
+        "text": "Check the load cables for proper connection (WP 0005, Installation of Load Cables) (Step 2). Are they connected correctly?",
+        "tmPage": "WP 0009-10",
         "options": [
           {
             "label": "No",
@@ -1776,15 +1776,15 @@
         "id": "gl-a2",
         "type": "action",
         "text": "Correct the load cable connections",
-        "actionText": "Shut down. Connect the load cables per para 2-8.2. Restart and close the AC CIRCUIT INTERRUPTER switch.",
+        "actionText": "Shut down. Connect the load cables per WP 0005, Installation of Load Cables. Restart and close the AC CIRCUIT INTERRUPTER switch.",
         "nextNodeId": "gl-q11a",
-        "tmPage": "2-8.2"
+        "tmPage": "WP 0005-3"
       },
       "gl-q11a": {
         "id": "gl-q11a",
         "type": "question",
         "text": "Does the AC CIRCUIT INTERRUPTER light come on now?",
-        "tmPage": "3-2 #18",
+        "tmPage": "WP 0009-10",
         "options": [
           {
             "label": "Yes",
@@ -1800,7 +1800,7 @@
         "id": "gl-q12",
         "type": "question",
         "text": "Does the load exceed the generator rating (PERCENT RATED CURRENT over 100%)? (Step 3)",
-        "tmPage": "3-2 #18",
+        "tmPage": "WP 0009-10",
         "options": [
           {
             "label": "Yes",
@@ -1818,13 +1818,13 @@
         "text": "Decrease the load",
         "actionText": "Reduce the load below the generator rating, then close the AC CIRCUIT INTERRUPTER switch.",
         "nextNodeId": "gl-q12a",
-        "tmPage": "3-2 #18"
+        "tmPage": "WP 0009-10"
       },
       "gl-q12a": {
         "id": "gl-q12a",
         "type": "question",
         "text": "Does the AC CIRCUIT INTERRUPTER light come on now?",
-        "tmPage": "3-2 #18",
+        "tmPage": "WP 0009-10",
         "options": [
           {
             "label": "Yes",
@@ -1839,8 +1839,8 @@
       "gl-q14": {
         "id": "gl-q14",
         "type": "question",
-        "text": "Open the control panel and inspect the circuit breaker on the side of the Ground Fault Circuit Interrupter. Is it tripped, or is the red band visible on the GFCI reset button? (malfunction 19)",
-        "tmPage": "3-2 #19",
+        "text": "Open the control panel and inspect the circuit breaker on the side of the Ground Fault Circuit Interrupter. Is it tripped, or is the red band visible on the GFCI reset button? (Symptom 19)",
+        "tmPage": "WP 0009-10",
         "options": [
           {
             "label": "Yes",
@@ -1858,7 +1858,7 @@
         "text": "Reset the GFCI",
         "actionText": "Reset the GFCI side breaker if tripped. If the red band is visible, push the reset button. Check for voltage at the convenience receptacle.",
         "nextNodeId": "gl-q14a",
-        "tmPage": "3-2 #19"
+        "tmPage": "WP 0009-10"
       },
       "gl-q14a": {
         "id": "gl-q14a",
@@ -1889,7 +1889,7 @@
             "nextNodeId": "gl-t16"
           }
         ],
-        "tmPage": "3-2 #19"
+        "tmPage": "WP 0009-10"
       },
       "gl-t1": {
         "id": "gl-t1",
@@ -1935,7 +1935,7 @@
         "id": "gl-t5",
         "type": "terminal",
         "text": "Battery electrolyte was low; distilled water added and charging is normal.",
-        "tmPage": "3-3.2.2",
+        "tmPage": "WP 0013-2",
         "terminal": {
           "resolution": "operator-fix",
           "readiness": "PMC",
@@ -1955,8 +1955,8 @@
       "gl-t7": {
         "id": "gl-t7",
         "type": "terminal",
-        "text": "Loose or corroded battery connections — notify the next higher maintenance level (malfunction 13, Step 2; para 3-3.2.2g). Do not clean or tighten them yourself. Damaged/loose battery cables are NMC (PMCS item 18).",
-        "tmPage": "3-2 #13",
+        "text": "Loose or corroded battery connections — notify the next higher maintenance level (WP 0009, Symptom 13, Step 2; WP 0013, Servicing, step 7). Do not clean or tighten them yourself. Damaged/loose battery cables are NMC (WP 0011, Table 1, item 18).",
+        "tmPage": "WP 0009-8",
         "terminal": {
           "resolution": "needs-maintenance",
           "readiness": "NMC",
@@ -1987,7 +1987,7 @@
         "id": "gl-t10",
         "type": "terminal",
         "text": "AC CIRCUIT INTERRUPTER light fails the press-to-test. Refer to the next higher maintenance level.",
-        "tmPage": "3-2 #18",
+        "tmPage": "WP 0009-10",
         "terminal": {
           "resolution": "needs-maintenance",
           "readiness": "NMC",
@@ -1998,7 +1998,7 @@
         "id": "gl-t11",
         "type": "terminal",
         "text": "Load cables were connected incorrectly; corrected and the interrupter closes.",
-        "tmPage": "2-8.2",
+        "tmPage": "WP 0005-3",
         "terminal": {
           "resolution": "operator-fix",
           "readiness": "PMC",
@@ -2009,7 +2009,7 @@
         "id": "gl-t12",
         "type": "terminal",
         "text": "AC CIRCUIT INTERRUPTER light still does not light with correct connections and load. Refer to the next higher maintenance level.",
-        "tmPage": "3-2 #18",
+        "tmPage": "WP 0009-10",
         "terminal": {
           "resolution": "needs-maintenance",
           "readiness": "NMC",
@@ -2035,7 +2035,7 @@
           "readiness": "PMC",
           "summary": "GFCI tripped — reset, receptacle has voltage"
         },
-        "tmPage": "3-2 #19"
+        "tmPage": "WP 0009-10"
       },
       "gl-t15": {
         "id": "gl-t15",
@@ -2061,15 +2061,15 @@
         "id": "gl-a5",
         "type": "action",
         "text": "Add distilled water",
-        "actionText": "WARNING: batteries give off flammable gas; acid burns. Shut down, open the engine access door, remove the battery caps, add distilled water to each cell as required (to the bottom of the cap cylinder), replace the caps (para 3-3.2.2).",
+        "actionText": "WARNING: batteries give off flammable gas; acid burns. Shut down, open the engine access door, remove the battery caps, add distilled water to each cell as required (to the bottom of the cap cylinder), replace the caps (WP 0013, Servicing).",
         "nextNodeId": "gl-q6a",
-        "tmPage": "3-3.2.2"
+        "tmPage": "WP 0013-2"
       },
       "gl-q6a": {
         "id": "gl-q6a",
         "type": "question",
         "text": "After running, is the charging rate normal now?",
-        "tmPage": "3-2 #13",
+        "tmPage": "WP 0009-8",
         "options": [
           {
             "label": "Yes",
@@ -2084,8 +2084,8 @@
       "gl-q16": {
         "id": "gl-q16",
         "type": "question",
-        "text": "Set the FREQUENCY adjust control (malfunction 15, Step 1). Is the frequency correct and steady now?",
-        "tmPage": "3-2 #15",
+        "text": "Set the FREQUENCY adjust control (Symptom 15, Step 1). Is the frequency correct and steady now?",
+        "tmPage": "WP 0009-9",
         "options": [
           {
             "label": "Yes",
@@ -2101,7 +2101,7 @@
         "id": "gl-q17",
         "type": "question",
         "text": "Check for loose or broken wires at the back of the FREQUENCY adjust control and frequency meter. Any found?",
-        "tmPage": "3-2 #15",
+        "tmPage": "WP 0009-9",
         "options": [
           {
             "label": "Yes",
@@ -2117,7 +2117,7 @@
         "id": "gl-t17",
         "type": "terminal",
         "text": "Frequency set with the FREQUENCY adjust control.",
-        "tmPage": "3-2 #15",
+        "tmPage": "WP 0009-9",
         "terminal": {
           "resolution": "operator-fix",
           "readiness": "PMC",
@@ -2128,7 +2128,7 @@
         "id": "gl-t18",
         "type": "terminal",
         "text": "Frequency off scale or fluctuating with no operator-correctable cause. Notify the next higher maintenance level.",
-        "tmPage": "3-2 #17",
+        "tmPage": "WP 0009-9",
         "terminal": {
           "resolution": "needs-maintenance",
           "readiness": "NMC",

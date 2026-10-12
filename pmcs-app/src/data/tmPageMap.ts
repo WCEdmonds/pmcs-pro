@@ -6,9 +6,9 @@
 //   '<para> #<item>'      e.g. '2-15 #46' → PDF page where that PMCS table row starts
 //                          (LMTV Table 2-1 is in para 2-15; trailer Table 2-1 in para 2-4;
 //                           HMMWV Table 2-1 in para 2-6)
-//   '<para> <malfunction>' e.g. '3-3 a1' (LMTV Table 3-2) or '3-3 #4' (trailer Table 3-1) or
-//                          '3-2 #12' (MEP-803A Table 3-1) → PDF page where that malfunction starts
-//   'WP <nnnn>[-<page>]'  e.g. 'WP 0009-2' (work-package TMs: MEP-802A, MEP-1030, MEP-831A) → PDF page of that
+//   '<para> <malfunction>' e.g. '3-3 a1' (LMTV Table 3-2) or '3-3 #4' (trailer Table 3-1)
+//                          → PDF page where that malfunction starts
+//   'WP <nnnn>[-<page>]'  e.g. 'WP 0009-2' (work-package TMs: MEP-803A, MEP-802A, MEP-1030, MEP-831A) → PDF page of that
 //                          WP page; the WP page designator ('0009-2') is the TM's own locator in WP-format manuals.
 //   M1097 (TM 9-2320-280-10) uses the paragraph forms: PMCS rows '2-5 #<item>', Table 3-1 malfunctions '3-6 #<n>'.
 // Values were regenerated from the PDFs in the repo root (pdftotext page splits; troubleshooting
@@ -137,15 +137,29 @@ const TRAILER_PAGES: Record<string, number> = {
   '3-3 #11': 56,
 };
 
-// TM 9-6115-642-10 (MEP-803A/813A, 100 PDF pages). Table 3-1 malfunctions '3-2 #<n>'.
+// TM 9-6115-642-10 (MEP-803A/813A), 15 September 2010 edition (no changes), 138 PDF pages as
+// published by liberatedmanuals.com (sha256 beedf100...bad2; last 2 PDF pages are a non-TM promo page + blank).
+// 'WP 0009-2' = WP 0009 page 2. WP-format, like MEP802A.
 const MEP803A_PAGES: Record<string, number> = {
-  '2-5': 38, '2-6': 38, '2-8.1': 46, '2-8.2': 46, '2-9.2': 50, '2-10.1': 51, '2-10.2': 52,
-  '3-1': 68, '3-2': 68, '3-2 #1': 70, '3-2 #2': 70, '3-2 #3': 70, '3-2 #4': 71, '3-2 #5': 71,
-  '3-2 #6': 71, '3-2 #7': 72, '3-2 #8': 72, '3-2 #9': 72, '3-2 #10': 73, '3-2 #11': 73,
-  '3-2 #12': 74, '3-2 #13': 74, '3-2 #14': 75, '3-2 #15': 75, '3-2 #16': 75, '3-2 #17': 75,
-  '3-2 #18': 76, '3-2 #19': 76, '3-3': 77, '3-3.2': 77, '3-3.2.2': 77, '3-3.3': 78, '3-3.3.2': 79,
-  '3-3.4': 79, '3-3.4.2': 79, '3-3.5': 80, '3-3.5.1': 80, '3-3.6': 81, '3-3.6.2': 81, '3-3.7': 82,
-  '3-3.7.2': 82,
+  'WP 0001': 19, 'WP 0001-1': 19, 'WP 0001-2': 20, 'WP 0001-3': 21, 'WP 0001-4': 22, 'WP 0002': 23,
+  'WP 0002-1': 23, 'WP 0002-2': 24, 'WP 0002-3': 25, 'WP 0002-4': 26, 'WP 0002-5': 27, 'WP 0002-6': 28,
+  'WP 0002-7': 29, 'WP 0002-8': 30, 'WP 0003': 31, 'WP 0003-1': 31, 'WP 0003-2': 32, 'WP 0003-3': 33,
+  'WP 0003-4': 34, 'WP 0003-5': 35, 'WP 0003-6': 36, 'WP 0003-7': 37, 'WP 0003-8': 38, 'WP 0004': 41,
+  'WP 0004-1': 41, 'WP 0004-2': 42, 'WP 0004-3': 43, 'WP 0004-4': 44, 'WP 0004-5': 45, 'WP 0004-6': 46,
+  'WP 0005': 47, 'WP 0005-1': 47, 'WP 0005-2': 48, 'WP 0005-3': 49, 'WP 0005-4': 50, 'WP 0005-5': 51,
+  'WP 0005-6': 52, 'WP 0005-7': 53, 'WP 0005-8': 54, 'WP 0005-9': 55, 'WP 0005-10': 56, 'WP 0005-11': 57,
+  'WP 0005-12': 58, 'WP 0005-13': 59, 'WP 0005-14': 60, 'WP 0006': 61, 'WP 0006-1': 61, 'WP 0006-2': 62,
+  'WP 0006-3': 63, 'WP 0006-4': 64, 'WP 0007': 65, 'WP 0007-1': 65, 'WP 0007-2': 66, 'WP 0008': 69,
+  'WP 0008-1': 69, 'WP 0008-2': 70, 'WP 0009': 71, 'WP 0009-1': 71, 'WP 0009-2': 72, 'WP 0009-3': 73,
+  'WP 0009-4': 74, 'WP 0009-5': 75, 'WP 0009-6': 76, 'WP 0009-7': 77, 'WP 0009-8': 78, 'WP 0009-9': 79,
+  'WP 0009-10': 80, 'WP 0009-11': 81, 'WP 0010': 85, 'WP 0010-1': 85, 'WP 0010-2': 86, 'WP 0010-3': 87,
+  'WP 0011': 89, 'WP 0011-1': 89, 'WP 0011-2': 90, 'WP 0011-3': 91, 'WP 0011-4': 92, 'WP 0011-5': 93,
+  'WP 0011-6': 94, 'WP 0011-7': 95, 'WP 0011-8': 96, 'WP 0011-9': 97, 'WP 0012': 99, 'WP 0012-1': 99,
+  'WP 0013': 101, 'WP 0013-1': 101, 'WP 0013-2': 102, 'WP 0014': 103, 'WP 0014-1': 103, 'WP 0014-2': 104,
+  'WP 0015': 105, 'WP 0015-1': 105, 'WP 0015-2': 106, 'WP 0016': 107, 'WP 0016-1': 107, 'WP 0016-2': 108,
+  'WP 0017': 109, 'WP 0017-1': 109, 'WP 0017-2': 110, 'WP 0018': 111, 'WP 0018-1': 111, 'WP 0019': 115,
+  'WP 0019-1': 115, 'WP 0020': 117, 'WP 0020-1': 117, 'WP 0020-2': 118, 'WP 0021': 119, 'WP 0021-1': 119,
+  'WP 0022': 121, 'WP 0022-1': 121,
 };
 
 // TM 9-2320-280-10 w/C3 (M998 series incl. M1097/A1/A2, 420 PDF pages). PMCS Table 2-2 is in para 2-5:
