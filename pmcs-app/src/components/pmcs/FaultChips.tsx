@@ -1,8 +1,9 @@
 import { FAULT_SUGGESTIONS } from '../../data/faultSuggestions';
+import type { Readiness } from '../../types/diagnosis';
 
 interface FaultChipsProps {
   stepId: string;
-  onSelect: (text: string, categoryId: string) => void;
+  onSelect: (text: string, categoryId: string, readiness?: Readiness) => void;
 }
 
 export function FaultChips({ stepId, onSelect }: FaultChipsProps) {
@@ -15,7 +16,7 @@ export function FaultChips({ stepId, onSelect }: FaultChipsProps) {
         <button
           key={suggestion.text}
           type="button"
-          onClick={() => onSelect(suggestion.text, suggestion.categoryId)}
+          onClick={() => onSelect(suggestion.text, suggestion.categoryId, suggestion.readiness)}
           className="px-3 py-1.5 min-h-[44px] text-sm text-text-secondary border border-border rounded-full active:bg-bg-tertiary active:text-text-primary transition-colors"
         >
           {suggestion.text}

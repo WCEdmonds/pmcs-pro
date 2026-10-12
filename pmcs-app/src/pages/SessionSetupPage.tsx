@@ -23,14 +23,14 @@ import type { InspectionSession, InspectionType, PmcsVehicleData, VehicleType } 
 // Map server vehicle_type strings to app VehicleType
 function toVehicleType(model: string | null): VehicleType | null {
   if (!model) return null;
-  if (['M1101', 'M1102'].some(m => model.includes(m))) return 'M1101_TRAILER';
-  if (['MEP803', 'MEP813', 'MEP-803', 'MEP-813', 'MEP802', 'MEP-802'].some(m => model.includes(m))) return 'MEP803A';
-  if (['M1151', 'M1151A1', 'M1113', 'M1097', 'M1165A1'].some(m => model.includes(m))) return 'M1151';
-  if (['M1152', 'M1152A1'].some(m => model.includes(m))) return 'M1152';
-  if (['M1078', 'M1083', 'M1085'].some(m => model.includes(m))) return 'LMTV_M1078';
-  return null;
+  const m = model.toUpperCase().replace(/[\s-]/g, '');
+  if (/^M110[12]/.test(m)) return 'M1101_TRAILER';
+  if (/^MEP(803|813)/.test(m)) return 'MEP803A';          // MEP-802A → null
+  if (/^M1151/.test(m)) return 'M1151';
+  if (/^(M1152|M1113|M1165)/.test(m)) return 'M1152';      // no weapon station
+  if (/^M1078(?!A)/.test(m)) return 'LMTV_M1078';          // M1078A1/A1P2, M1083, M1085 → null
+  return null;                                              // M1097 → null
 }
-
 
 type PickerVehicle = RosterVehicle & { vehicleType: VehicleType };
 

@@ -118,14 +118,15 @@ export function FaultDetailPanel({
     setPhase('details');
   }, [applyCategoryReadiness]);
 
-  const handleChipSelect = useCallback((text: string, chipCategoryId: string) => {
+  const handleChipSelect = useCallback((text: string, chipCategoryId: string, chipReadiness?: Readiness) => {
     setDescription(text);
     const cat = getCategoryById(chipCategoryId);
-    if (cat) {
-      setCategoryId(cat.id);
-      applyCategoryReadiness(cat);
-    }
-  }, [applyCategoryReadiness]);
+    if (cat) setCategoryId(cat.id);
+    if (readinessTouched) return;
+    // A chip that states its readiness (matches / falls outside the TM criterion) decides the default.
+    if (chipReadiness) setReadiness(chipReadiness);
+    else if (cat) applyCategoryReadiness(cat);
+  }, [applyCategoryReadiness, readinessTouched]);
 
   const handleDiagnosisComplete = useCallback((terminal: TerminalData, trail: DiagnosisStep[]) => {
     setDescription(buildFaultDescription(trail, terminal.summary));
