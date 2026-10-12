@@ -127,7 +127,15 @@ export function onAuthChange(listener: AuthListener): () => void {
 // Multi-tab: another tab signing out (or in) changes the token key.
 if (typeof window !== 'undefined') {
   window.addEventListener('storage', (e) => {
-    if (e.key === TOKEN_KEY || e.key === null) notify(!!readToken());
+    if (e.key !== TOKEN_KEY && e.key !== null) return;
+    const before = e.oldValue ? decodeClaims(e.oldValue)?.sub : undefined;
+    const after = e.newValue ? decodeClaims(e.newValue)?.sub : undefined;
+    // A different soldier signed in from another tab: start this tab fresh as them.
+    if (before && after && before !== after) {
+      window.location.reload();
+      return;
+    }
+    notify(!!readToken());
   });
 }
 

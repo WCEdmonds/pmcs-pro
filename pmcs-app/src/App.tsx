@@ -7,7 +7,7 @@ import { AppLayout } from './components/layout/AppLayout';
 import { ErrorBoundary } from './components/ui/ErrorBoundary';
 import { LoadingScreen } from './components/ui/NotFound';
 import { UpdateBanner } from './components/layout/UpdateBanner';
-import { startSyncListener, syncAll } from './utils/syncEngine';
+import { syncAll } from './utils/syncEngine';
 
 const LoginPage = lazy(() => import('./pages/LoginPage'));
 const ProfileSetupPage = lazy(() => import('./pages/ProfileSetupPage'));
@@ -45,7 +45,6 @@ function AppRoutes() {
     // Restore the user from the stored token: /me online, Dexie cache offline. Only a 401 logs out.
     useUserStore.getState().restore().finally(() => setReady(true));
 
-    const stopSync = startSyncListener();
     const unsubscribeAuth = onAuthChange((signedIn) => {
       if (!signedIn && useUserStore.getState().user) {
         useSessionStore.getState().clearSession();
@@ -55,7 +54,6 @@ function AppRoutes() {
 
     return () => {
       unsubscribeAuth();
-      stopSync();
     };
   }, []);
 

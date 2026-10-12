@@ -195,6 +195,12 @@ async function flushFaultResolutions(dodId: string, force: boolean): Promise<voi
     } catch (err) {
       if (err instanceof ApiError && err.status === 401) throw err;
       if (isNetworkError(err)) throw err;
+      if (err instanceof ApiError && [400, 403, 404].includes(err.status)) {
+        // Fault gone or no longer ours to change: retrying can never succeed.
+        console.warn('Dropping queued fault resolution the server refused:', err.message);
+        await db.pendingFaultResolutions.delete(e.id);
+        continue;
+      }
       const attempts = e.attempts + 1;
       await db.pendingFaultResolutions.update(e.id, {
         attempts,

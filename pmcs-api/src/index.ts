@@ -954,6 +954,7 @@ app.post('/inspections/:id/da2404', async (c) => {
     supervisorName,
     supervisorDodId,
     localTime,
+    remarks: inspection.remarks as string | null,
     faults: faults.map((f) => ({
       ...f,
       corrected_on_site: f.corrected_on_site ? 1 : 0,

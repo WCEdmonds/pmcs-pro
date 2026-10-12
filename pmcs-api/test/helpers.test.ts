@@ -36,3 +36,17 @@ describe('validation helpers', () => {
     expect(sniffImage(new TextEncoder().encode('<svg'))).toBeNull();
   });
 });
+
+describe('DA 2404 rows', () => {
+  it('adds remarks and marks overflow instead of dropping rows', async () => {
+    const { buildRows } = await import('../src/da2404');
+    const fault = { item: '1', item_description: 'Tires', description: 'Flat', readiness: 'NMC', corrective_action: null,
+      corrected_on_site: 0, needs_maintenance: 1, part_needed: 0, part_description: null, nsn: null };
+    const withRemarks = buildRows([fault], 'Checked twice');
+    expect(withRemarks.map((r) => r.deficiency)).toEqual(['Tires: Flat', 'REMARKS: Checked twice']);
+    const many = buildRows(Array.from({ length: 50 }, () => fault), null);
+    expect(many).toHaveLength(42);
+    expect(many[41].deficiency).toBe('*** 9 MORE ENTRIES NOT SHOWN - FORM FULL ***');
+    expect(buildRows([], null)[0].deficiency).toMatch(/NO DEFICIENCIES/);
+  });
+});

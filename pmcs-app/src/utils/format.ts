@@ -14,7 +14,7 @@ export const MAX_ODOMETER_DIGITS = 7;
 
 /**
  * Parses an odometer entry. Accepts digits with optional thousands separators
- * (commas, spaces, periods used as grouping) — "34,218" → 34218. Returns an
+ * (commas or spaces as grouping) — "34,218" → 34218. Returns an
  * error message for anything else.
  */
 export function parseOdometer(input: string): { value: number } | { error: string } {

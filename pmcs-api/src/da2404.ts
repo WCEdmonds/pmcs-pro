@@ -31,6 +31,8 @@ export interface Da2404Input {
   /** Inspector's local time as 'HHMM'; defaults to the current UTC time + 'Z'. */
   localTime?: string | null;
   faults: Da2404Fault[];
+  /** Inspection remarks; the form has no remarks block, so they go in the fault table. */
+  remarks?: string | null;
 }
 
 // Keyed by the app's VehicleType and by roster model numbers.
@@ -61,6 +63,54 @@ function formatInspectionType(type: string | null): string {
   }
 }
 
+type Row = { tmItem: string; status: string; deficiency: string; corrective: string };
+const MAX_ROWS = 42; // 14 on page 1 + 28 on page 2
+const REMARK_CHUNK = 70;
+
+function chunkWords(text: string, size: number): string[] {
+  const out: string[] = [];
+  let line = '';
+  for (const w of text.split(/\s+/).filter(Boolean)) {
+    if (line && `${line} ${w}`.length > size) { out.push(line); line = w; } else line = line ? `${line} ${w}` : w;
+  }
+  if (line) out.push(line);
+  return out;
+}
+
+/**
+ * Fault-table rows (mirrors buildRows in the field app): faults or a "no deficiencies" line,
+ * then remarks. Never silently drops rows: if they don't fit, the last row says how many are missing.
+ */
+export function buildRows(faults: Da2404Fault[], remarks?: string | null): Row[] {
+  const rows: Row[] = faults.length === 0
+    ? [{ tmItem: '', status: '', deficiency: 'PMCS COMPLETED - NO DEFICIENCIES FOUND', corrective: '' }]
+    : faults.map((f) => ({
+        tmItem: f.item ?? '',
+        status: f.readiness === 'NMC' ? 'X' : '/',
+        deficiency: `${f.item_description ?? ''}: ${f.description ?? ''}`,
+        corrective: f.corrected_on_site
+          ? (f.corrective_action || 'Corrected on site by operator')
+          : f.needs_maintenance
+            ? `Requires maintenance support${f.part_needed ? ` - Parts: ${f.part_description || 'TBD'}${f.nsn ? ` (NSN ${f.nsn})` : ''}` : ''}`
+            : '',
+      }));
+  const remarkText = (remarks ?? '').replace(/\s+/g, ' ').trim();
+  if (remarkText) {
+    for (const line of chunkWords(`REMARKS: ${remarkText}`, REMARK_CHUNK)) rows.push({ tmItem: '', status: '', deficiency: line, corrective: '' });
+  }
+  if (rows.length > MAX_ROWS) {
+    const kept = rows.slice(0, MAX_ROWS - 1);
+    kept.push({
+      tmItem: '',
+      status: '',
+      deficiency: `*** ${rows.length - kept.length} MORE ENTRIES NOT SHOWN - FORM FULL ***`,
+      corrective: 'See PMCS Pro inspection record / continuation sheet',
+    });
+    return kept;
+  }
+  return rows;
+}
+
 export async function fillDa2404(input: Da2404Input): Promise<Uint8Array> {
   const pdfDoc = await PDFDocument.load(template, { ignoreEncryption: true });
   const form = pdfDoc.getForm();
@@ -83,18 +133,7 @@ export async function fillDa2404(input: Da2404Input): Promise<Uint8Array> {
   setField('form1[0].Page1[0].TMDATE_A[0]', tmDate);
   setField('form1[0].Page1[0].TIME_A[0]', input.localTime || `${new Date().toISOString().slice(11, 16).replace(':', '')}Z`);
 
-  const rows = input.faults.length === 0
-    ? [{ tmItem: '', status: '/', deficiency: 'PMCS COMPLETED — NO DEFICIENCIES FOUND', corrective: '' }]
-    : input.faults.map((f) => ({
-        tmItem: f.item ?? '',
-        status: f.readiness === 'NMC' ? 'X' : '/',
-        deficiency: `${f.item_description ?? ''}: ${f.description ?? ''}`,
-        corrective: f.corrected_on_site
-          ? (f.corrective_action || 'Corrected on site by operator')
-          : f.needs_maintenance
-            ? `Requires maintenance support${f.part_needed ? ` — Parts: ${f.part_description || 'TBD'}${f.nsn ? ` (NSN ${f.nsn})` : ''}` : ''}`
-            : '',
-      }));
+  const rows = buildRows(input.faults, input.remarks);
 
   for (let i = 0; i < Math.min(rows.length, 14); i++) {
     const r = rows[i];
