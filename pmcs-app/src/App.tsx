@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-route
 import { type ReactNode, useEffect, useState, lazy, Suspense } from 'react';
 import { useUserStore } from './stores/userStore';
 import { useSessionStore } from './stores/sessionStore';
-import { onAuthChange } from './utils/api';
+import { onAuthChange, onPinChangeRequired } from './utils/api';
 import { AppLayout } from './components/layout/AppLayout';
 import { ErrorBoundary } from './components/ui/ErrorBoundary';
 import { LoadingScreen } from './components/ui/NotFound';
@@ -19,6 +19,7 @@ const Form5988Page = lazy(() => import('./pages/Form5988Page'));
 const HistoryPage = lazy(() => import('./pages/HistoryPage'));
 const SettingsPage = lazy(() => import('./pages/SettingsPage'));
 const PriorFaultReviewPage = lazy(() => import('./pages/PriorFaultReviewPage'));
+const SetNewPinPage = lazy(() => import('./pages/SetNewPinPage'));
 
 function AuthGuard({ children }: { children: ReactNode }) {
   const user = useUserStore((s) => s.user);
@@ -40,6 +41,7 @@ function GuestOnly({ children }: { children: ReactNode }) {
 function AppRoutes() {
   const [ready, setReady] = useState(false);
   const dodId = useUserStore((s) => s.user?.dodId);
+  const mustChangePin = useUserStore((s) => !!s.user?.mustChangePin);
 
   useEffect(() => {
     // Restore the user from the stored token: /me online, Dexie cache offline. Only a 401 logs out.
@@ -52,17 +54,34 @@ function AppRoutes() {
       }
     });
 
+    // An admin reset the PIN (or the server says so mid-session): lock the app until it's changed.
+    const unsubscribePin = onPinChangeRequired(() => {
+      useUserStore.getState().requirePinChange();
+    });
+
     return () => {
       unsubscribeAuth();
+      unsubscribePin();
     };
   }, []);
 
-  // App start and every sign-in: send everything this soldier hasn't sent yet.
+  // App start, every sign-in and the end of a PIN-change lock: send everything this
+  // soldier hasn't sent yet (the run ends with a client-status heartbeat).
   useEffect(() => {
-    if (ready && dodId) syncAll({ force: true });
-  }, [ready, dodId]);
+    if (ready && dodId && !mustChangePin) syncAll({ force: true });
+  }, [ready, dodId, mustChangePin]);
 
   if (!ready) return <LoadingScreen />;
+
+  // Nothing else is usable until the temporary PIN is replaced. Local data is untouched;
+  // the URL is kept so the soldier lands where they were afterwards.
+  if (dodId && mustChangePin) {
+    return (
+      <Suspense fallback={<LoadingScreen />}>
+        <SetNewPinPage />
+      </Suspense>
+    );
+  }
 
   return (
     <Suspense fallback={<LoadingScreen />}>

@@ -1,0 +1,143 @@
+name: Deploy
+
+# Production deploy. Runs after the CI workflow finishes successfully for a push
+# to main, or manually from the Actions tab ("Run workflow").
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Only one production deploy at a time. A deploy that is already running is
+# never cancelled; a newer one waits for it.
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+env:
+  API_URL: https://pmcs-api.wcedmonds28.workers.dev
+  APP_URL: https://pmcs-pro.web.app
+  DASHBOARD_URL: https://pmcs-dashboard.web.app
+  FIREBASE_PROJECT: pmcs-pro
+  FIREBASE_TOOLS: firebase-tools@15
+  WRANGLER_SEND_METRICS: "false"
+
+jobs:
+  gate:
+    name: Decide what to deploy
+    # Automatic runs: only when CI passed for a push to main.
+    # Manual runs: only from main.
+    if: >-
+      (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'workflow_run' &&
+       github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.event == 'push')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      sha: ${{ steps.decide.outputs.sha }}
+      deploy: ${{ steps.decide.outputs.deploy }}
+    steps:
+      # If main has moved on since this commit, skip: the newer commit's own CI
+      # run triggers its own deploy, and deploying this older one afterwards
+      # would roll production back.
+      - id: decide
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
+        run: |
+          set -euo pipefail
+          latest=$(gh api "repos/${GITHUB_REPOSITORY}/commits/main" --jq .sha)
+          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+          if [ "${GITHUB_EVENT_NAME}" = "workflow_dispatch" ] || [ "$SHA" = "$latest" ]; then
+            echo "deploy=true" >> "$GITHUB_OUTPUT"
+            echo "Deploying $SHA"
+          else
+            echo "deploy=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Skipping $SHA because main is now at $latest, which deploys on its own."
+          fi
+
+  deploy:
+    name: Deploy to production
+    needs: gate
+    if: needs.gate.outputs.deploy == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment:
+      name: production
+      url: https://pmcs-pro.web.app
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.gate.outputs.sha }}
+          persist-credentials: false
+
+      - name: Check that the deploy secrets are set
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          missing=0
+          for name in CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID FIREBASE_SERVICE_ACCOUNT; do
+            if [ -z "${!name}" ]; then
+              echo "::error::Repository secret $name is not set. See docs/DEPLOYING.md."
+              missing=1
+            fi
+          done
+          exit $missing
+
+      - uses: ./.github/actions/setup-workspace
+
+      # 1. Database first, so the new Worker code never runs against an old schema.
+      # Wrangler auto-confirms the "About to apply N migration(s)" prompt when it
+      # is not attached to a terminal or CI=true (always the case on Actions).
+      - name: Apply D1 migrations (production)
+        working-directory: pmcs-api
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: npx wrangler d1 migrations apply pmcs-pro --remote
+
+      # 2. API
+      - name: Deploy API Worker
+        working-directory: pmcs-api
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          SHA: ${{ needs.gate.outputs.sha }}
+        run: npx wrangler deploy --message "main ${SHA::7} (GitHub Actions run ${GITHUB_RUN_ID})"
+
+      # 3. Apps
+      - name: Build field app and dashboard
+        env:
+          VITE_API_URL: ${{ env.API_URL }}
+        run: |
+          npm run build -w pmcs-app
+          npm run build -w pmcs-dashboard
+
+      - name: Write Firebase credentials
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          umask 077
+          key="$RUNNER_TEMP/firebase-sa.json"
+          printf '%s' "$FIREBASE_SERVICE_ACCOUNT" > "$key"
+          node -e 'JSON.parse(require("fs").readFileSync(process.argv[1], "utf8"))' "$key" \
+            || { echo "::error::FIREBASE_SERVICE_ACCOUNT is not valid JSON. Paste the whole key file."; exit 1; }
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$key" >> "$GITHUB_ENV"
+
+      - name: Deploy Firebase Hosting (pmcs-pro, pmcs-dashboard)
+        run: npx --yes "$FIREBASE_TOOLS" deploy --only hosting --project "$FIREBASE_PROJECT" --non-interactive
+
+      # 4. Smoke check
+      - name: Smoke check
+        run: bash .github/scripts/smoke.sh "$API_URL" "$APP_URL" "$DASHBOARD_URL"
+
+      - name: Remove Firebase credentials
+        if: always()
+        run: rm -f "$RUNNER_TEMP/firebase-sa.json"

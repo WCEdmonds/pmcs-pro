@@ -2,7 +2,8 @@
 // onError turns into `{error}` with the given status.
 
 export class HttpError extends Error {
-  constructor(public status: 400 | 401 | 403 | 404 | 409 | 410 | 413 | 429, message: string) {
+  /** `code` is an optional machine-readable reason, sent as `{error, code}`. */
+  constructor(public status: 400 | 401 | 403 | 404 | 409 | 410 | 413 | 429, message: string, public code?: string) {
     super(message);
   }
 }
@@ -41,6 +42,39 @@ export function str(o: Obj, key: string, opts: StrOpts = {}): string | null {
   if (s.length > (opts.max ?? 500)) throw bad(`${key} is too long (max ${opts.max ?? 500} characters)`);
   return s;
 }
+
+const EMAIL_RE = /^[^\s@<>",;]+@[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?(?:\.[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?)+$/;
+
+/** A list of email addresses: trimmed, lower-cased, de-duplicated, at most `max`. */
+export function emailList(v: unknown, key: string, max = 10): string[] {
+  if (!Array.isArray(v)) throw bad(`${key} must be an array of email addresses`);
+  const out: string[] = [];
+  for (const e of v) {
+    if (typeof e !== 'string') throw bad(`${key} must be an array of email addresses`);
+    const s = e.trim().toLowerCase();
+    if (s.length > 254 || !EMAIL_RE.test(s)) throw bad(`${key}: invalid email address: ${s.slice(0, 64)}`);
+    if (!out.includes(s)) out.push(s);
+  }
+  if (out.length > max) throw bad(`${key}: at most ${max} addresses`);
+  return out;
+}
+
+/** Optional non-negative integer (≤ max). */
+export function int(o: Obj, key: string, opts: { required?: boolean; max?: number } = {}): number | null {
+  const v = o[key];
+  if (v === undefined || v === null) {
+    if (opts.required) throw bad(`${key} is required`);
+    return null;
+  }
+  if (typeof v !== 'number' || !Number.isInteger(v) || v < 0 || v > (opts.max ?? 1_000_000)) {
+    throw bad(`${key} must be an integer from 0 to ${opts.max ?? 1_000_000}`);
+  }
+  return v;
+}
+
+/** Escapes text for an HTML body. */
+export const escapeHtml = (s: unknown) => String(s ?? '').replace(/[&<>"']/g, (ch) => (
+  { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' } as Record<string, string>)[ch]);
 
 /** Optional finite, non-negative number. */
 export function num(o: Obj, key: string): number | null {

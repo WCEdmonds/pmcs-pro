@@ -4,6 +4,8 @@ import { getSessionUserId, maybeRefreshSession, onAuthChange } from './lib/api'
 import { UnitsProvider } from './components/UnitsProvider'
 import { DashboardLayout } from './components/DashboardLayout'
 import { ErrorBoundary } from './components/ErrorBoundary'
+import { PinChangeGate } from './components/PinChangeGate'
+import { AdminGuard } from './components/AdminGuard'
 
 const LoginPage = lazy(() => import('./pages/LoginPage').then(m => ({ default: m.LoginPage })))
 const FleetOverview = lazy(() => import('./pages/FleetOverview').then(m => ({ default: m.FleetOverview })))
@@ -11,6 +13,9 @@ const VehicleDetail = lazy(() => import('./pages/VehicleDetail').then(m => ({ de
 const FaultQueue = lazy(() => import('./pages/FaultQueue').then(m => ({ default: m.FaultQueue })))
 const PmcsCompliance = lazy(() => import('./pages/PmcsCompliance').then(m => ({ default: m.PmcsCompliance })))
 const Settings = lazy(() => import('./pages/Settings').then(m => ({ default: m.Settings })))
+const AdminUsers = lazy(() => import('./pages/admin/AdminUsers').then(m => ({ default: m.AdminUsers })))
+const AdminUnitSettings = lazy(() => import('./pages/admin/AdminUnitSettings').then(m => ({ default: m.AdminUnitSettings })))
+const AdminAudit = lazy(() => import('./pages/admin/AdminAudit').then(m => ({ default: m.AdminAudit })))
 
 function AuthGuard({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<string | null>(() => getSessionUserId())
@@ -33,7 +38,11 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
   }
 
   // Keyed by user so a different sign-in starts from fresh state.
-  return <UnitsProvider key={user}>{children}</UnitsProvider>
+  return (
+    <UnitsProvider key={user}>
+      <PinChangeGate>{children}</PinChangeGate>
+    </UnitsProvider>
+  )
 }
 
 export default function App() {
@@ -58,6 +67,13 @@ export default function App() {
                     <Route path="/faults" element={<FaultQueue />} />
                     <Route path="/compliance" element={<PmcsCompliance />} />
                     <Route path="/settings" element={<Settings />} />
+                    <Route path="/admin" element={<AdminGuard />}>
+                      <Route index element={<Navigate to="users" replace />} />
+                      <Route path="users" element={<AdminUsers />} />
+                      <Route path="units" element={<AdminUnitSettings />} />
+                      <Route path="audit" element={<AdminAudit />} />
+                      <Route path="*" element={<Navigate to="users" replace />} />
+                    </Route>
                     <Route path="*" element={<Navigate to="/" replace />} />
                   </Routes>
                 </DashboardLayout>

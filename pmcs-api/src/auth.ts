@@ -71,11 +71,15 @@ export interface TokenClaims {
   sub: string;
   dod_id: string;
   exp: number;
+  /** profiles.token_version at signing. Absent in tokens issued before it existed (= 0). */
+  tv?: number;
 }
 
-export async function signToken(secret: string, userId: string, dodId: string): Promise<string> {
+export async function signToken(secret: string, userId: string, dodId: string, tokenVersion = 0): Promise<string> {
   const header = toB64Url(enc.encode(JSON.stringify({ alg: 'HS256', typ: 'JWT' })));
-  const claims: TokenClaims = { sub: userId, dod_id: dodId, exp: Math.floor(Date.now() / 1000) + TOKEN_TTL_SECONDS };
+  const claims: TokenClaims = {
+    sub: userId, dod_id: dodId, exp: Math.floor(Date.now() / 1000) + TOKEN_TTL_SECONDS, tv: tokenVersion,
+  };
   const payload = toB64Url(enc.encode(JSON.stringify(claims)));
   return `${header}.${payload}.${await hmac(secret, `${header}.${payload}`)}`;
 }
@@ -115,4 +119,21 @@ let dummyHash: Promise<string> | null = null;
 export async function dummyVerifyPin(pin: string): Promise<void> {
   dummyHash ??= hashPin('000000');
   await verifyPin(pin, await dummyHash);
+}
+
+/** Constant-time string comparison (both sides hashed first, so lengths don't leak either). */
+export async function safeEqual(a: string, b: string): Promise<boolean> {
+  const [x, y] = await Promise.all([a, b].map((s) => crypto.subtle.digest('SHA-256', enc.encode(s))));
+  return timingSafeEqual(new Uint8Array(x), new Uint8Array(y)) && a.length === b.length;
+}
+
+/** Uniformly random string of `n` decimal digits (rejection sampling, no modulo bias). */
+export function randomDigits(n: number): string {
+  let out = '';
+  while (out.length < n) {
+    for (const b of crypto.getRandomValues(new Uint8Array(n * 2))) {
+      if (b < 250 && out.length < n) out += String(b % 10);
+    }
+  }
+  return out;
 }

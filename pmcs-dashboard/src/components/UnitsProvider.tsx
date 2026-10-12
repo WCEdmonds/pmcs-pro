@@ -17,8 +17,10 @@ function readSelected(): string {
 export function UnitsProvider({ children }: { children: React.ReactNode }) {
   // The profile changes rarely: no polling, refetched on watch-list/profile events.
   const me = useLoader('me', (signal) => api<Profile>('GET', '/me', { signal }), { enabled: false })
-  const { reload } = me
+  const { reload, mutate } = me
   const profile = me.data
+  const applyProfile = useCallback((p: Partial<Profile>) => mutate((prev) => ({ ...prev, ...p })), [mutate])
+  const isAdmin = profile?.role === 'admin'
 
   useEffect(() => {
     window.addEventListener(WATCHED_UICS_CHANGED, reload)
@@ -74,8 +76,10 @@ export function UnitsProvider({ children }: { children: React.ReactNode }) {
       loading: me.loading,
       error: me.error,
       reload,
+      applyProfile,
+      isAdmin,
     }),
-    [profile, ownUnit, units, unitsKey, unitNames, selectedUnit, setSelectedUnit, me.loading, me.error, reload],
+    [profile, ownUnit, units, unitsKey, unitNames, selectedUnit, setSelectedUnit, me.loading, me.error, reload, applyProfile, isAdmin],
   )
 
   return <UnitsContext.Provider value={value}>{children}</UnitsContext.Provider>

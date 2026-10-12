@@ -1,0 +1,2498 @@
+[
+  {
+    "categoryId": "gen-engine",
+    "vehicleType": "MEP802A",
+    "tmReference": "TM 9-6115-641-10, WP 0009, Engine symptoms (engine fails to crank through engine knocks)",
+    "rootNodeId": "m802e-q1",
+    "nodes": {
+      "m802e-q1": {
+        "id": "m802e-q1",
+        "type": "question",
+        "text": "What is the engine doing?",
+        "options": [
+          {
+            "label": "Fails to crank",
+            "nextNodeId": "m802e-c1"
+          },
+          {
+            "label": "Cranks but fails to start",
+            "nextNodeId": "m802e-s1"
+          },
+          {
+            "label": "Starts but stops when MASTER SWITCH is released from START",
+            "nextNodeId": "m802e-m1"
+          },
+          {
+            "label": "Stops suddenly",
+            "nextNodeId": "m802e-x1"
+          },
+          {
+            "label": "Runs erratically or misfires",
+            "nextNodeId": "m802e-r1"
+          },
+          {
+            "label": "Does not develop full power",
+            "nextNodeId": "m802e-p1"
+          },
+          {
+            "label": "Knocks",
+            "nextNodeId": "m802e-k1"
+          }
+        ],
+        "tmPage": "WP 0008-1"
+      },
+      "m802e-c1": {
+        "id": "m802e-c1",
+        "type": "question",
+        "text": "Is the DEAD CRANK switch in the NORMAL position?",
+        "options": [
+          {
+            "label": "No — not in NORMAL",
+            "nextNodeId": "m802e-c1a"
+          },
+          {
+            "label": "Yes — already in NORMAL",
+            "nextNodeId": "m802e-c2"
+          }
+        ],
+        "tmPage": "WP 0009-2"
+      },
+      "m802e-c1a": {
+        "id": "m802e-c1a",
+        "type": "action",
+        "text": "Place DEAD CRANK switch in NORMAL",
+        "actionText": "Place the DEAD CRANK switch in the NORMAL position, then try to crank the engine again.",
+        "nextNodeId": "m802e-c1b",
+        "tmPage": "WP 0009-2"
+      },
+      "m802e-c1b": {
+        "id": "m802e-c1b",
+        "type": "question",
+        "text": "Does the engine crank now?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m802e-c1by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m802e-c2"
+          }
+        ]
+      },
+      "m802e-c1by": {
+        "id": "m802e-c1by",
+        "type": "terminal",
+        "text": "Engine fails to crank — DEAD CRANK switch placed in NORMAL. Operator corrective action per the TM resolved the malfunction.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Engine fails to crank — DEAD CRANK switch placed in NORMAL"
+        }
+      },
+      "m802e-c2": {
+        "id": "m802e-c2",
+        "type": "question",
+        "text": "Is the DC CONTROL POWER circuit breaker energized (in)?",
+        "options": [
+          {
+            "label": "Yes — energized (in)",
+            "nextNodeId": "m802e-c3"
+          },
+          {
+            "label": "No — de-energized (out); TM: go to next check",
+            "nextNodeId": "m802e-c3"
+          }
+        ],
+        "tmPage": "WP 0009-2"
+      },
+      "m802e-c3": {
+        "id": "m802e-c3",
+        "type": "question",
+        "text": "Is the Emergency Stop Switch out (not pushed in)?",
+        "options": [
+          {
+            "label": "No — it is pushed in",
+            "nextNodeId": "m802e-c3a"
+          },
+          {
+            "label": "Yes — it is out",
+            "nextNodeId": "m802e-c4"
+          }
+        ],
+        "tmPage": "WP 0009-2"
+      },
+      "m802e-c3a": {
+        "id": "m802e-c3a",
+        "type": "action",
+        "text": "Reset the Emergency Stop Switch",
+        "actionText": "Reset the Emergency Stop Switch to Normal, then try to crank the engine again.",
+        "nextNodeId": "m802e-c3b",
+        "tmPage": "WP 0009-2"
+      },
+      "m802e-c3b": {
+        "id": "m802e-c3b",
+        "type": "question",
+        "text": "Does the engine crank now?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m802e-c3by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m802e-c4"
+          }
+        ]
+      },
+      "m802e-c3by": {
+        "id": "m802e-c3by",
+        "type": "terminal",
+        "text": "Engine fails to crank — Emergency Stop Switch reset to Normal. Operator corrective action per the TM resolved the malfunction.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Engine fails to crank — Emergency Stop Switch reset to Normal"
+        }
+      },
+      "m802e-c4": {
+        "id": "m802e-c4",
+        "type": "question",
+        "text": "Defect in engine starting/electrical system: check the battery connections. Are they loose or corroded?",
+        "options": [
+          {
+            "label": "Yes — loose or corroded",
+            "nextNodeId": "m802e-c4t"
+          },
+          {
+            "label": "No — connections are good",
+            "nextNodeId": "m802e-c5t"
+          }
+        ],
+        "tmPage": "WP 0009-2"
+      },
+      "m802e-c4t": {
+        "id": "m802e-c4t",
+        "type": "terminal",
+        "text": "Battery connections are loose or corroded. Notify next higher maintenance level.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Engine fails to crank — battery connections loose/corroded"
+        },
+        "tmPage": "WP 0009-2"
+      },
+      "m802e-c5t": {
+        "id": "m802e-c5t",
+        "type": "terminal",
+        "text": "Engine still fails to crank. Malfunction is not corrected by the listed corrective actions. Per WP 0009 (General): \"If a malfunction is not listed or is not corrected by listed corrective actions, notify your supervisor.\" Notify next higher maintenance level.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Engine fails to crank — not corrected by operator checks (check DC CONTROL POWER breaker status)"
+        },
+        "tmPage": "WP 0009-1"
+      },
+      "m802e-s1": {
+        "id": "m802e-s1",
+        "type": "question",
+        "text": "Is the ambient temperature below 40 °F (4 °C)?",
+        "options": [
+          {
+            "label": "Yes — below 40 °F",
+            "nextNodeId": "m802e-s1a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m802e-s2"
+          }
+        ],
+        "tmPage": "WP 0009-2"
+      },
+      "m802e-s1a": {
+        "id": "m802e-s1a",
+        "type": "action",
+        "text": "Use PREHEAT before cranking",
+        "actionText": "Turn the MASTER SWITCH to PREHEAT for a maximum of 30 seconds prior to cranking the engine (WP 0005, Starting Procedure). Do not crank more than fifteen seconds; allow the starter to cool at least fifteen seconds between attempts.",
+        "nextNodeId": "m802e-s1b",
+        "tmPage": "WP 0005-6"
+      },
+      "m802e-s1b": {
+        "id": "m802e-s1b",
+        "type": "question",
+        "text": "Does the engine start now?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m802e-s1by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m802e-s2"
+          }
+        ]
+      },
+      "m802e-s1by": {
+        "id": "m802e-s1by",
+        "type": "terminal",
+        "text": "Cold start — engine started after PREHEAT. Operator corrective action per the TM resolved the malfunction.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Cold start — engine started after PREHEAT"
+        }
+      },
+      "m802e-s2": {
+        "id": "m802e-s2",
+        "type": "question",
+        "text": "Is the air cleaner element dirty (restriction indicator shows clogged)?",
+        "options": [
+          {
+            "label": "Yes — dirty/clogged",
+            "nextNodeId": "m802e-s2a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m802e-s3"
+          }
+        ],
+        "tmPage": "WP 0009-2"
+      },
+      "m802e-s2a": {
+        "id": "m802e-s2a",
+        "type": "action",
+        "text": "Service the air cleaner assembly",
+        "actionText": "Shut down the generator set. Service the air cleaner assembly (WP 0012, Service of Air Cleaner Assembly): open the left side engine access door, loosen the loop clamp, remove the cup assembly, wing nut and air cleaner element; discard the element if fouled; wipe the canister interior; install the element, wing nut and cup assembly, and tighten the loop clamp.",
+        "nextNodeId": "m802e-s2b",
+        "tmPage": "WP 0012-4"
+      },
+      "m802e-s2b": {
+        "id": "m802e-s2b",
+        "type": "question",
+        "text": "Does the engine start now?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m802e-s2by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m802e-s3"
+          }
+        ]
+      },
+      "m802e-s2by": {
+        "id": "m802e-s2by",
+        "type": "terminal",
+        "text": "Engine would not start — air cleaner serviced, engine starts. Operator corrective action per the TM resolved the malfunction.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Engine would not start — air cleaner serviced, engine starts"
+        }
+      },
+      "m802e-s3": {
+        "id": "m802e-s3",
+        "type": "question",
+        "text": "Is the fuel filter/water separator dirty (water or contaminants in the bowl)?",
+        "options": [
+          {
+            "label": "Yes — dirty",
+            "nextNodeId": "m802e-s3a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m802e-s4t"
+          }
+        ],
+        "tmPage": "WP 0009-2"
+      },
+      "m802e-s3a": {
+        "id": "m802e-s3a",
+        "type": "action",
+        "text": "Service the fuel filter/water separator",
+        "actionText": "Service the fuel filter/water separator (WP 0012, Service of Fuel Filter/Water Separator): with the set shut down, rotate MASTER SWITCH to PRIME & RUN, open the left side engine access door, open the drain cock and drain contaminants into a suitable container, close the drain cock and the door, and rotate MASTER SWITCH to OFF.",
+        "nextNodeId": "m802e-s3b",
+        "tmPage": "WP 0012-8"
+      },
+      "m802e-s3b": {
+        "id": "m802e-s3b",
+        "type": "question",
+        "text": "Does the engine start now?",
+        "options": [
+          {
+            "label": "Yes — engine starts",
+            "nextNodeId": "m802e-s3y"
+          },
+          {
+            "label": "No — still fails to start",
+            "nextNodeId": "m802e-s3n"
+          }
+        ]
+      },
+      "m802e-s3y": {
+        "id": "m802e-s3y",
+        "type": "terminal",
+        "text": "Fuel filter/water separator serviced; engine starts.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Engine would not start — fuel filter/water separator drained, engine starts"
+        }
+      },
+      "m802e-s3n": {
+        "id": "m802e-s3n",
+        "type": "terminal",
+        "text": "Engine still fails to start after servicing the fuel filter/water separator. Notify next higher maintenance level.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Engine cranks but fails to start — needs next higher maintenance"
+        },
+        "tmPage": "WP 0009-2"
+      },
+      "m802e-s4t": {
+        "id": "m802e-s4t",
+        "type": "terminal",
+        "text": "Engine cranks but still fails to start. Malfunction is not corrected by the listed corrective actions. Per WP 0009 (General): \"If a malfunction is not listed or is not corrected by listed corrective actions, notify your supervisor.\" Notify next higher maintenance level.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Engine cranks but fails to start — not corrected by operator checks"
+        },
+        "tmPage": "WP 0009-1"
+      },
+      "m802e-m1": {
+        "id": "m802e-m1",
+        "type": "question",
+        "text": "Was the MASTER SWITCH held in START until oil pressure reached 25 psi (172 kPa)?",
+        "options": [
+          {
+            "label": "No — released early",
+            "nextNodeId": "m802e-m1a"
+          },
+          {
+            "label": "Yes",
+            "nextNodeId": "m802e-m2"
+          }
+        ],
+        "tmPage": "WP 0009-2"
+      },
+      "m802e-m1a": {
+        "id": "m802e-m1a",
+        "type": "action",
+        "text": "Use the proper starting procedure",
+        "actionText": "Hold the MASTER SWITCH in START until oil pressure reaches at least 25 psi (172 kPa) (WP 0005, Starting Procedure), then release it to PRIME & RUN.",
+        "nextNodeId": "m802e-m1b",
+        "tmPage": "WP 0005-6"
+      },
+      "m802e-m1b": {
+        "id": "m802e-m1b",
+        "type": "question",
+        "text": "Does the engine keep running now?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m802e-m1by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m802e-m2"
+          }
+        ]
+      },
+      "m802e-m1by": {
+        "id": "m802e-m1by",
+        "type": "terminal",
+        "text": "Engine stopped on release of MASTER SWITCH — proper starting procedure used. Operator corrective action per the TM resolved the malfunction.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Engine stopped on release of MASTER SWITCH — proper starting procedure used"
+        }
+      },
+      "m802e-m2": {
+        "id": "m802e-m2",
+        "type": "question",
+        "text": "Are any FAULT INDICATOR lights lit?",
+        "options": [
+          {
+            "label": "NO FUEL light is lit",
+            "nextNodeId": "m802e-m2a"
+          },
+          {
+            "label": "Another fault light is lit",
+            "nextNodeId": "m802e-m2t"
+          },
+          {
+            "label": "No fault lights are lit",
+            "nextNodeId": "m802e-m3t"
+          }
+        ],
+        "tmPage": "WP 0009-3"
+      },
+      "m802e-m2a": {
+        "id": "m802e-m2a",
+        "type": "action",
+        "text": "Check and service the fuel tank",
+        "actionText": "Inspect the fuel tank (WP 0012, Inspection of Fuel Tank): check the FUEL LEVEL indicator and that the fuel cap strainer is free of dirt. Service the fuel tank with the correct diesel fuel (WP 0012, Service of Fuel Tank, Table 2). Maintain metal-to-metal contact between the filler nozzle and the tank opening.",
+        "nextNodeId": "m802e-m2b",
+        "tmPage": "WP 0012-6"
+      },
+      "m802e-m2b": {
+        "id": "m802e-m2b",
+        "type": "question",
+        "text": "Does the engine start and keep running now?",
+        "options": [
+          {
+            "label": "Yes",
+            "nextNodeId": "m802e-m2y"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m802e-m2n"
+          }
+        ]
+      },
+      "m802e-m2y": {
+        "id": "m802e-m2y",
+        "type": "terminal",
+        "text": "Generator set was out of fuel. Fuel tank serviced; engine runs.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "NO FUEL — fuel tank serviced, engine runs"
+        }
+      },
+      "m802e-m2n": {
+        "id": "m802e-m2n",
+        "type": "terminal",
+        "text": "Engine still stops after the fuel tank was serviced. Malfunction is not corrected by the listed corrective actions. Per WP 0009 (General): \"If a malfunction is not listed or is not corrected by listed corrective actions, notify your supervisor.\" Notify next higher maintenance level.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Engine stops — not corrected after servicing fuel tank"
+        },
+        "tmPage": "WP 0009-1"
+      },
+      "m802e-m2t": {
+        "id": "m802e-m2t",
+        "type": "terminal",
+        "text": "A fault indicator light other than NO FUEL is lit. Notify next higher maintenance level.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Engine stops when MASTER SWITCH released — fault light lit (not NO FUEL)"
+        },
+        "tmPage": "WP 0009-3"
+      },
+      "m802e-m3t": {
+        "id": "m802e-m3t",
+        "type": "terminal",
+        "text": "Engine still stops when the MASTER SWITCH is released. Malfunction is not corrected by the listed corrective actions. Per WP 0009 (General): \"If a malfunction is not listed or is not corrected by listed corrective actions, notify your supervisor.\" Notify next higher maintenance level.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Engine stops when MASTER SWITCH released — not corrected by operator checks"
+        },
+        "tmPage": "WP 0009-1"
+      },
+      "m802e-x1": {
+        "id": "m802e-x1",
+        "type": "question",
+        "text": "Are any FAULT INDICATOR lights lit?",
+        "options": [
+          {
+            "label": "NO FUEL light is lit",
+            "nextNodeId": "m802e-x1a"
+          },
+          {
+            "label": "Another fault light is lit (TM: go to next check)",
+            "nextNodeId": "m802e-x2"
+          },
+          {
+            "label": "No fault lights are lit",
+            "nextNodeId": "m802e-x2"
+          }
+        ],
+        "tmPage": "WP 0009-3"
+      },
+      "m802e-x1a": {
+        "id": "m802e-x1a",
+        "type": "action",
+        "text": "Check and service the fuel tank",
+        "actionText": "Inspect the fuel tank (WP 0012, Inspection of Fuel Tank) and service it with the correct diesel fuel (WP 0012, Service of Fuel Tank, Table 2). Maintain metal-to-metal contact between the filler nozzle and the tank opening.",
+        "nextNodeId": "m802e-x1b",
+        "tmPage": "WP 0012-6"
+      },
+      "m802e-x1b": {
+        "id": "m802e-x1b",
+        "type": "question",
+        "text": "Does the engine start and keep running now?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m802e-x1by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m802e-x2"
+          }
+        ]
+      },
+      "m802e-x1by": {
+        "id": "m802e-x1by",
+        "type": "terminal",
+        "text": "Engine stopped suddenly — out of fuel, tank serviced. Operator corrective action per the TM resolved the malfunction.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Engine stopped suddenly — out of fuel, tank serviced"
+        }
+      },
+      "m802e-x2": {
+        "id": "m802e-x2",
+        "type": "question",
+        "text": "Is the DC CONTROL POWER circuit breaker energized (in)?",
+        "options": [
+          {
+            "label": "No — de-energized (out)",
+            "nextNodeId": "m802e-x2t"
+          },
+          {
+            "label": "Yes — energized (in)",
+            "nextNodeId": "m802e-x3t"
+          }
+        ],
+        "tmPage": "WP 0009-3"
+      },
+      "m802e-x2t": {
+        "id": "m802e-x2t",
+        "type": "terminal",
+        "text": "DC CONTROL POWER circuit breaker is de-energized (out). Notify next higher maintenance level.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Engine stopped suddenly — DC CONTROL POWER breaker out"
+        },
+        "tmPage": "WP 0009-3"
+      },
+      "m802e-x3t": {
+        "id": "m802e-x3t",
+        "type": "terminal",
+        "text": "Engine stopped suddenly and the cause was not found. Malfunction is not corrected by the listed corrective actions. Per WP 0009 (General): \"If a malfunction is not listed or is not corrected by listed corrective actions, notify your supervisor.\" Notify next higher maintenance level.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Engine stopped suddenly — not corrected by operator checks"
+        },
+        "tmPage": "WP 0009-1"
+      },
+      "m802e-r1": {
+        "id": "m802e-r1",
+        "type": "action",
+        "text": "Work through the checks in TM order",
+        "actionText": "Perform the checks in the order listed in WP 0009.",
+        "nextNodeId": "m802e-ra",
+        "tmPage": "WP 0009-3"
+      },
+      "m802e-ra": {
+        "id": "m802e-ra",
+        "type": "question",
+        "text": "Is the air cleaner element dirty (restriction indicator shows clogged)?",
+        "options": [
+          {
+            "label": "Yes — dirty/clogged",
+            "nextNodeId": "m802e-ra1"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m802e-rf"
+          }
+        ],
+        "tmPage": "WP 0009-3"
+      },
+      "m802e-ra1": {
+        "id": "m802e-ra1",
+        "type": "action",
+        "text": "Service the air cleaner assembly",
+        "actionText": "Shut down the generator set and service the air cleaner assembly (WP 0012, Service of Air Cleaner Assembly). Discard the element if fouled.",
+        "nextNodeId": "m802e-ra2",
+        "tmPage": "WP 0012-4"
+      },
+      "m802e-ra2": {
+        "id": "m802e-ra2",
+        "type": "question",
+        "text": "Restart the set. Is the malfunction corrected?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m802e-ra2y"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m802e-rf"
+          }
+        ]
+      },
+      "m802e-ra2y": {
+        "id": "m802e-ra2y",
+        "type": "terminal",
+        "text": "Engine runs erratically/misfires — air cleaner serviced. Operator corrective action per the TM resolved the malfunction.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Engine runs erratically/misfires — air cleaner serviced"
+        }
+      },
+      "m802e-rf": {
+        "id": "m802e-rf",
+        "type": "question",
+        "text": "Is contaminated fuel suspected (water/sediment in the fuel filter/water separator)?",
+        "options": [
+          {
+            "label": "Yes",
+            "nextNodeId": "m802e-rf1"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m802e-ri"
+          }
+        ],
+        "tmPage": "WP 0009-3"
+      },
+      "m802e-rf1": {
+        "id": "m802e-rf1",
+        "type": "action",
+        "text": "Service the fuel filter/water separator",
+        "actionText": "Service the fuel filter/water separator (WP 0012, Service of Fuel Filter/Water Separator): drain contaminants into a suitable container through the drain cock.",
+        "nextNodeId": "m802e-rf2",
+        "tmPage": "WP 0012-8"
+      },
+      "m802e-rf2": {
+        "id": "m802e-rf2",
+        "type": "question",
+        "text": "Restart the set. Is the malfunction corrected?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m802e-rf2y"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m802e-ri"
+          }
+        ]
+      },
+      "m802e-rf2y": {
+        "id": "m802e-rf2y",
+        "type": "terminal",
+        "text": "Engine runs erratically/misfires — fuel filter/water separator serviced. Operator corrective action per the TM resolved the malfunction.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Engine runs erratically/misfires — fuel filter/water separator serviced"
+        }
+      },
+      "m802e-ri": {
+        "id": "m802e-ri",
+        "type": "question",
+        "text": "Is improper type of fuel suspected? (Compare with WP 0012, Table 2 — Diesel Fuel.)",
+        "options": [
+          {
+            "label": "Yes — improper fuel suspected",
+            "nextNodeId": "m802e-rit"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m802e-rin"
+          }
+        ],
+        "tmPage": "WP 0009-3"
+      },
+      "m802e-rit": {
+        "id": "m802e-rit",
+        "type": "terminal",
+        "text": "Improper type of fuel is suspected (WP 0012, Table 2). Notify next higher maintenance level.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Engine runs erratically/misfires — improper fuel suspected"
+        },
+        "tmPage": "WP 0009-3"
+      },
+      "m802e-rin": {
+        "id": "m802e-rin",
+        "type": "terminal",
+        "text": "Engine runs erratically/misfires: Malfunction is not corrected by the listed corrective actions. Per WP 0009 (General): \"If a malfunction is not listed or is not corrected by listed corrective actions, notify your supervisor.\" Notify next higher maintenance level.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Engine runs erratically/misfires — not corrected by operator checks"
+        },
+        "tmPage": "WP 0009-1"
+      },
+      "m802e-p1": {
+        "id": "m802e-p1",
+        "type": "action",
+        "text": "Work through the checks in TM order",
+        "actionText": "Perform the checks in the order listed in WP 0009.",
+        "nextNodeId": "m802e-pa",
+        "tmPage": "WP 0009-3"
+      },
+      "m802e-pa": {
+        "id": "m802e-pa",
+        "type": "question",
+        "text": "Is the air cleaner element dirty (restriction indicator shows clogged)?",
+        "options": [
+          {
+            "label": "Yes — dirty/clogged",
+            "nextNodeId": "m802e-pa1"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m802e-pf"
+          }
+        ],
+        "tmPage": "WP 0009-3"
+      },
+      "m802e-pa1": {
+        "id": "m802e-pa1",
+        "type": "action",
+        "text": "Service the air cleaner assembly",
+        "actionText": "Shut down the generator set and service the air cleaner assembly (WP 0012, Service of Air Cleaner Assembly). Discard the element if fouled.",
+        "nextNodeId": "m802e-pa2",
+        "tmPage": "WP 0012-4"
+      },
+      "m802e-pa2": {
+        "id": "m802e-pa2",
+        "type": "question",
+        "text": "Restart the set. Is the malfunction corrected?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m802e-pa2y"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m802e-pf"
+          }
+        ]
+      },
+      "m802e-pa2y": {
+        "id": "m802e-pa2y",
+        "type": "terminal",
+        "text": "Engine lacks power — air cleaner serviced. Operator corrective action per the TM resolved the malfunction.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Engine lacks power — air cleaner serviced"
+        }
+      },
+      "m802e-pf": {
+        "id": "m802e-pf",
+        "type": "question",
+        "text": "Is contaminated fuel suspected (water/sediment in the fuel filter/water separator)?",
+        "options": [
+          {
+            "label": "Yes",
+            "nextNodeId": "m802e-pf1"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m802e-pe"
+          }
+        ],
+        "tmPage": "WP 0009-3"
+      },
+      "m802e-pf1": {
+        "id": "m802e-pf1",
+        "type": "action",
+        "text": "Service the fuel filter/water separator",
+        "actionText": "Service the fuel filter/water separator (WP 0012, Service of Fuel Filter/Water Separator): drain contaminants into a suitable container through the drain cock.",
+        "nextNodeId": "m802e-pf2",
+        "tmPage": "WP 0012-8"
+      },
+      "m802e-pf2": {
+        "id": "m802e-pf2",
+        "type": "question",
+        "text": "Restart the set. Is the malfunction corrected?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m802e-pf2y"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m802e-pe"
+          }
+        ]
+      },
+      "m802e-pf2y": {
+        "id": "m802e-pf2y",
+        "type": "terminal",
+        "text": "Engine lacks power — fuel filter/water separator serviced. Operator corrective action per the TM resolved the malfunction.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Engine lacks power — fuel filter/water separator serviced"
+        }
+      },
+      "m802e-pe": {
+        "id": "m802e-pe",
+        "type": "question",
+        "text": "Is the exhaust opening obstructed?",
+        "options": [
+          {
+            "label": "Yes — obstruction found",
+            "nextNodeId": "m802e-pe1"
+          },
+          {
+            "label": "No obstruction found",
+            "nextNodeId": "m802e-pet"
+          }
+        ],
+        "tmPage": "WP 0009-4"
+      },
+      "m802e-pe1": {
+        "id": "m802e-pe1",
+        "type": "action",
+        "text": "Clear the exhaust opening",
+        "actionText": "Shut down the set, allow the exhaust to cool, and make sure the exhaust opening is free from obstructions.",
+        "nextNodeId": "m802e-pe2",
+        "tmPage": "WP 0009-4"
+      },
+      "m802e-pe2": {
+        "id": "m802e-pe2",
+        "type": "question",
+        "text": "Restart the set. Does the engine develop full power now?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m802e-pe2y"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m802e-pi"
+          }
+        ]
+      },
+      "m802e-pe2y": {
+        "id": "m802e-pe2y",
+        "type": "terminal",
+        "text": "Engine lacks power — exhaust obstruction cleared. Operator corrective action per the TM resolved the malfunction.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Engine lacks power — exhaust obstruction cleared"
+        }
+      },
+      "m802e-pet": {
+        "id": "m802e-pet",
+        "type": "terminal",
+        "text": "No exhaust obstruction found. Notify next higher maintenance level.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Engine does not develop full power — needs next higher maintenance"
+        },
+        "tmPage": "WP 0009-4"
+      },
+      "m802e-pi": {
+        "id": "m802e-pi",
+        "type": "question",
+        "text": "Is improper type of fuel suspected? (Compare with WP 0012, Table 2 — Diesel Fuel.)",
+        "options": [
+          {
+            "label": "Yes — improper fuel suspected",
+            "nextNodeId": "m802e-pit"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m802e-pin"
+          }
+        ],
+        "tmPage": "WP 0009-4"
+      },
+      "m802e-pit": {
+        "id": "m802e-pit",
+        "type": "terminal",
+        "text": "Improper type of fuel is suspected (WP 0012, Table 2). Notify next higher maintenance level.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Engine lacks power — improper fuel suspected"
+        },
+        "tmPage": "WP 0009-4"
+      },
+      "m802e-pin": {
+        "id": "m802e-pin",
+        "type": "terminal",
+        "text": "Engine lacks power: Malfunction is not corrected by the listed corrective actions. Per WP 0009 (General): \"If a malfunction is not listed or is not corrected by listed corrective actions, notify your supervisor.\" Notify next higher maintenance level.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Engine lacks power — not corrected by operator checks"
+        },
+        "tmPage": "WP 0009-1"
+      },
+      "m802e-k1": {
+        "id": "m802e-k1",
+        "type": "question",
+        "text": "Is the lubrication oil level low?",
+        "options": [
+          {
+            "label": "Yes — low",
+            "nextNodeId": "m802e-k1a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m802e-k2"
+          }
+        ],
+        "tmPage": "WP 0009-4"
+      },
+      "m802e-k1a": {
+        "id": "m802e-k1a",
+        "type": "action",
+        "text": "Add oil",
+        "actionText": "Shut down the set and add oil to the engine crankcase (WP 0012, Service of Lubrication System; refer to LO 9-6115-641-12 for the correct oil).",
+        "nextNodeId": "m802e-k1b",
+        "tmPage": "WP 0012-10"
+      },
+      "m802e-k1b": {
+        "id": "m802e-k1b",
+        "type": "question",
+        "text": "Restart the set. Has the knock stopped?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m802e-k1by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m802e-k2"
+          }
+        ]
+      },
+      "m802e-k1by": {
+        "id": "m802e-k1by",
+        "type": "terminal",
+        "text": "Engine knock — low oil, oil added. Operator corrective action per the TM resolved the malfunction.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Engine knock — low oil, oil added"
+        }
+      },
+      "m802e-k2": {
+        "id": "m802e-k2",
+        "type": "question",
+        "text": "Are there loose parts or foreign objects in the engine compartment?",
+        "options": [
+          {
+            "label": "Yes — found",
+            "nextNodeId": "m802e-k2t"
+          },
+          {
+            "label": "No — none found",
+            "nextNodeId": "m802e-ki"
+          }
+        ],
+        "tmPage": "WP 0009-4"
+      },
+      "m802e-k2t": {
+        "id": "m802e-k2t",
+        "type": "terminal",
+        "text": "Loose parts or foreign objects found in the engine compartment (outcome not stated in the TM). Do not operate; notify next higher maintenance level.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Engine knocks — loose parts/foreign objects in engine compartment"
+        },
+        "tmPage": "WP 0009-4"
+      },
+      "m802e-ki": {
+        "id": "m802e-ki",
+        "type": "question",
+        "text": "Is improper type of fuel suspected? (Compare with WP 0012, Table 2 — Diesel Fuel.)",
+        "options": [
+          {
+            "label": "Yes — improper fuel suspected",
+            "nextNodeId": "m802e-kit"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m802e-kin"
+          }
+        ],
+        "tmPage": "WP 0009-4"
+      },
+      "m802e-kit": {
+        "id": "m802e-kit",
+        "type": "terminal",
+        "text": "Improper type of fuel is suspected (WP 0012, Table 2). Notify next higher maintenance level.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Engine knocks — improper fuel suspected"
+        },
+        "tmPage": "WP 0009-4"
+      },
+      "m802e-kin": {
+        "id": "m802e-kin",
+        "type": "terminal",
+        "text": "Engine knocks: Malfunction is not corrected by the listed corrective actions. Per WP 0009 (General): \"If a malfunction is not listed or is not corrected by listed corrective actions, notify your supervisor.\" Notify next higher maintenance level.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Engine knocks — not corrected by operator checks"
+        },
+        "tmPage": "WP 0009-1"
+      }
+    }
+  },
+  {
+    "categoryId": "gen-exhaust",
+    "vehicleType": "MEP802A",
+    "tmReference": "TM 9-6115-641-10, WP 0009, Blue or white exhaust smoke; Black exhaust smoke",
+    "rootNodeId": "m802x-q1",
+    "nodes": {
+      "m802x-q1": {
+        "id": "m802x-q1",
+        "type": "question",
+        "text": "What color is the exhaust smoke?",
+        "options": [
+          {
+            "label": "Blue or white",
+            "nextNodeId": "m802x-b1"
+          },
+          {
+            "label": "Black",
+            "nextNodeId": "m802x-k1"
+          }
+        ],
+        "tmPage": "WP 0008-1"
+      },
+      "m802x-b1": {
+        "id": "m802x-b1",
+        "type": "question",
+        "text": "Is improper type of fuel suspected? (Compare with WP 0012, Table 2 — Diesel Fuel.)",
+        "options": [
+          {
+            "label": "Yes — improper fuel suspected",
+            "nextNodeId": "m802x-b1t"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m802x-b1n"
+          }
+        ],
+        "tmPage": "WP 0009-4"
+      },
+      "m802x-b1t": {
+        "id": "m802x-b1t",
+        "type": "terminal",
+        "text": "Improper type of fuel is suspected (WP 0012, Table 2). Notify next higher maintenance level.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Blue or white exhaust smoke — improper fuel suspected"
+        },
+        "tmPage": "WP 0009-4"
+      },
+      "m802x-b1n": {
+        "id": "m802x-b1n",
+        "type": "terminal",
+        "text": "Blue or white exhaust smoke: Malfunction is not corrected by the listed corrective actions. Per WP 0009 (General): \"If a malfunction is not listed or is not corrected by listed corrective actions, notify your supervisor.\" Notify next higher maintenance level.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Blue or white exhaust smoke — not corrected by operator checks"
+        },
+        "tmPage": "WP 0009-1"
+      },
+      "m802x-k1": {
+        "id": "m802x-k1",
+        "type": "question",
+        "text": "Is improper type of fuel suspected? (Compare with WP 0012, Table 2 — Diesel Fuel.)",
+        "options": [
+          {
+            "label": "Yes — improper fuel suspected",
+            "nextNodeId": "m802x-k1t"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m802x-k2"
+          }
+        ],
+        "tmPage": "WP 0009-5"
+      },
+      "m802x-k1t": {
+        "id": "m802x-k1t",
+        "type": "terminal",
+        "text": "Improper type of fuel is suspected (WP 0012, Table 2). Notify next higher maintenance level.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Black exhaust smoke — improper fuel suspected"
+        },
+        "tmPage": "WP 0009-5"
+      },
+      "m802x-k2": {
+        "id": "m802x-k2",
+        "type": "question",
+        "text": "Is the air cleaner element dirty (restriction indicator shows clogged)?",
+        "options": [
+          {
+            "label": "Yes",
+            "nextNodeId": "m802x-k2a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m802x-k3"
+          }
+        ],
+        "tmPage": "WP 0009-5"
+      },
+      "m802x-k2a": {
+        "id": "m802x-k2a",
+        "type": "action",
+        "text": "Service the air cleaner assembly",
+        "actionText": "Shut down the set and service the air cleaner assembly (WP 0012, Service of Air Cleaner Assembly). Discard the element if fouled.",
+        "nextNodeId": "m802x-k2b",
+        "tmPage": "WP 0012-4"
+      },
+      "m802x-k2b": {
+        "id": "m802x-k2b",
+        "type": "question",
+        "text": "Restart the set. Has the black smoke cleared?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m802x-k2by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m802x-k3"
+          }
+        ]
+      },
+      "m802x-k2by": {
+        "id": "m802x-k2by",
+        "type": "terminal",
+        "text": "Black exhaust smoke — air cleaner serviced. Operator corrective action per the TM resolved the malfunction.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Black exhaust smoke — air cleaner serviced"
+        }
+      },
+      "m802x-k3": {
+        "id": "m802x-k3",
+        "type": "question",
+        "text": "Check the ammeter (PERCENT RATED CURRENT) on the control panel (WP 0004, Figure 1), rotating the VM-AM transfer switch through each phase. Is the generator set overloaded (more than rated load in any phase)?",
+        "options": [
+          {
+            "label": "Yes — overloaded",
+            "nextNodeId": "m802x-k3a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m802x-k3n"
+          }
+        ],
+        "tmPage": "WP 0009-5"
+      },
+      "m802x-k3a": {
+        "id": "m802x-k3a",
+        "type": "action",
+        "text": "Reduce the load",
+        "actionText": "Reduce the load until no phase shows more than rated load on the PERCENT RATED CURRENT meter.",
+        "nextNodeId": "m802x-k3b",
+        "tmPage": "WP 0005-7"
+      },
+      "m802x-k3b": {
+        "id": "m802x-k3b",
+        "type": "question",
+        "text": "Were you able to reduce the load, and has the black smoke cleared?",
+        "options": [
+          {
+            "label": "Yes",
+            "nextNodeId": "m802x-k3y"
+          },
+          {
+            "label": "No — unable to adjust",
+            "nextNodeId": "m802x-k3t"
+          }
+        ]
+      },
+      "m802x-k3y": {
+        "id": "m802x-k3y",
+        "type": "terminal",
+        "text": "Generator set was overloaded; load reduced and smoke cleared.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Black exhaust smoke — overload, load reduced"
+        }
+      },
+      "m802x-k3t": {
+        "id": "m802x-k3t",
+        "type": "terminal",
+        "text": "Unable to adjust the load / smoke persists. Notify next higher maintenance level.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Black exhaust smoke — overload not corrected"
+        },
+        "tmPage": "WP 0009-5"
+      },
+      "m802x-k3n": {
+        "id": "m802x-k3n",
+        "type": "terminal",
+        "text": "Black exhaust smoke: Malfunction is not corrected by the listed corrective actions. Per WP 0009 (General): \"If a malfunction is not listed or is not corrected by listed corrective actions, notify your supervisor.\" Notify next higher maintenance level.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Black exhaust smoke — not corrected by operator checks"
+        },
+        "tmPage": "WP 0009-1"
+      }
+    }
+  },
+  {
+    "categoryId": "gen-oil-pressure",
+    "vehicleType": "MEP802A",
+    "tmReference": "TM 9-6115-641-10, WP 0009, Low oil pressure",
+    "rootNodeId": "m802o-q1",
+    "nodes": {
+      "m802o-q1": {
+        "id": "m802o-q1",
+        "type": "question",
+        "text": "Low oil pressure (normal is 25-60 psi). Is the lubrication oil level low?",
+        "options": [
+          {
+            "label": "Yes — low",
+            "nextNodeId": "m802o-q1a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m802o-q2"
+          }
+        ],
+        "tmPage": "WP 0009-5"
+      },
+      "m802o-q1a": {
+        "id": "m802o-q1a",
+        "type": "action",
+        "text": "Add oil",
+        "actionText": "Shut down the set and add oil to the engine crankcase (WP 0012, Service of Lubrication System; refer to LO 9-6115-641-12).",
+        "nextNodeId": "m802o-q1b",
+        "tmPage": "WP 0012-10"
+      },
+      "m802o-q1b": {
+        "id": "m802o-q1b",
+        "type": "question",
+        "text": "Restart the set. Is oil pressure normal now?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m802o-q1by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m802o-q2"
+          }
+        ]
+      },
+      "m802o-q1by": {
+        "id": "m802o-q1by",
+        "type": "terminal",
+        "text": "Low oil pressure — low oil level, oil added. Operator corrective action per the TM resolved the malfunction.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Low oil pressure — low oil level, oil added"
+        }
+      },
+      "m802o-q2": {
+        "id": "m802o-q2",
+        "type": "question",
+        "text": "Is the coolant temperature high — above 200 °F (93 °C) on COOLANT TEMP (WP 0004, Figure 1)?",
+        "options": [
+          {
+            "label": "Yes — above 200 °F",
+            "nextNodeId": "m802o-q3"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m802o-q2n"
+          }
+        ],
+        "tmPage": "WP 0009-5"
+      },
+      "m802o-q2n": {
+        "id": "m802o-q2n",
+        "type": "terminal",
+        "text": "Oil pressure is low with normal oil level and normal coolant temperature (outcome not stated in the TM). Notify next higher maintenance level.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Low oil pressure — cause not found by operator"
+        },
+        "tmPage": "WP 0009-5"
+      },
+      "m802o-q3": {
+        "id": "m802o-q3",
+        "type": "question",
+        "text": "Check the coolant level in the coolant recovery (overflow) bottle. Is it low?",
+        "options": [
+          {
+            "label": "Yes — low",
+            "nextNodeId": "m802o-q3a"
+          },
+          {
+            "label": "No — full",
+            "nextNodeId": "m802o-q4"
+          }
+        ],
+        "tmPage": "WP 0009-6"
+      },
+      "m802o-q3a": {
+        "id": "m802o-q3a",
+        "type": "action",
+        "text": "Add coolant",
+        "actionText": "Shut down the set and allow it to cool. Fill the coolant recovery (overflow) bottle to the HOT line if the coolant is hot or the COLD line if it is cold, with the proper coolant/antifreeze (WP 0012, Service of Cooling System, Table 1).",
+        "nextNodeId": "m802o-q3b",
+        "tmPage": "WP 0012-6"
+      },
+      "m802o-q3b": {
+        "id": "m802o-q3b",
+        "type": "question",
+        "text": "Restart the set. Is the malfunction corrected?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m802o-q3by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m802o-q4"
+          }
+        ]
+      },
+      "m802o-q3by": {
+        "id": "m802o-q3by",
+        "type": "terminal",
+        "text": "Low oil pressure — low coolant, coolant added. Operator corrective action per the TM resolved the malfunction.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Low oil pressure — low coolant, coolant added"
+        }
+      },
+      "m802o-q4": {
+        "id": "m802o-q4",
+        "type": "question",
+        "text": "Is there an obstruction in the air intake system?",
+        "options": [
+          {
+            "label": "Yes — debris found",
+            "nextNodeId": "m802o-q4a"
+          },
+          {
+            "label": "No obstruction found",
+            "nextNodeId": "m802o-q5"
+          }
+        ],
+        "tmPage": "WP 0009-6"
+      },
+      "m802o-q4a": {
+        "id": "m802o-q4a",
+        "type": "action",
+        "text": "Remove the debris",
+        "actionText": "Shut down the set and remove the debris from the air intake.",
+        "nextNodeId": "m802o-q4b",
+        "tmPage": "WP 0009-6"
+      },
+      "m802o-q4b": {
+        "id": "m802o-q4b",
+        "type": "question",
+        "text": "Restart the set. Is the malfunction corrected?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m802o-q4by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m802o-q5"
+          }
+        ]
+      },
+      "m802o-q4by": {
+        "id": "m802o-q4by",
+        "type": "terminal",
+        "text": "Low oil pressure — air intake obstruction removed. Operator corrective action per the TM resolved the malfunction.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Low oil pressure — air intake obstruction removed"
+        }
+      },
+      "m802o-q5": {
+        "id": "m802o-q5",
+        "type": "question",
+        "text": "With the set shut down, check the fan belt. Is it loose?",
+        "options": [
+          {
+            "label": "Yes — loose",
+            "nextNodeId": "m802o-q5t"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m802o-q5n"
+          }
+        ],
+        "tmPage": "WP 0009-6"
+      },
+      "m802o-q5t": {
+        "id": "m802o-q5t",
+        "type": "terminal",
+        "text": "Fan belt is loose. Notify next higher maintenance level.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Low oil pressure — loose fan belt"
+        },
+        "tmPage": "WP 0009-6"
+      },
+      "m802o-q5n": {
+        "id": "m802o-q5n",
+        "type": "terminal",
+        "text": "Low oil pressure: Malfunction is not corrected by the listed corrective actions. Per WP 0009 (General): \"If a malfunction is not listed or is not corrected by listed corrective actions, notify your supervisor.\" Notify next higher maintenance level.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Low oil pressure — not corrected by operator checks"
+        },
+        "tmPage": "WP 0009-1"
+      }
+    }
+  },
+  {
+    "categoryId": "gen-overheat",
+    "vehicleType": "MEP802A",
+    "tmReference": "TM 9-6115-641-10, WP 0009, COOLANT TEMPERATURE indicator indicates engine overheating",
+    "rootNodeId": "m802c-q1",
+    "nodes": {
+      "m802c-q1": {
+        "id": "m802c-q1",
+        "type": "question",
+        "text": "Engine overheating (normal COOLANT TEMP is 170-200 °F). Check the ammeter (PERCENT RATED CURRENT), rotating the VM-AM transfer switch through each phase. Is the generator set overloaded?",
+        "options": [
+          {
+            "label": "Yes — overloaded",
+            "nextNodeId": "m802c-q1a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m802c-q2"
+          }
+        ],
+        "tmPage": "WP 0009-6"
+      },
+      "m802c-q1a": {
+        "id": "m802c-q1a",
+        "type": "action",
+        "text": "Reduce the load",
+        "actionText": "Reduce the load until no phase shows more than rated load on the PERCENT RATED CURRENT meter.",
+        "nextNodeId": "m802c-q1b",
+        "tmPage": "WP 0005-7"
+      },
+      "m802c-q1b": {
+        "id": "m802c-q1b",
+        "type": "question",
+        "text": "Were you able to reduce the load, and is coolant temperature returning to normal?",
+        "options": [
+          {
+            "label": "Yes",
+            "nextNodeId": "m802c-q1y"
+          },
+          {
+            "label": "No — unable to adjust",
+            "nextNodeId": "m802c-q1t"
+          }
+        ]
+      },
+      "m802c-q1y": {
+        "id": "m802c-q1y",
+        "type": "terminal",
+        "text": "Generator set was overloaded; load reduced and temperature returning to normal.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Overheating — overload, load reduced"
+        }
+      },
+      "m802c-q1t": {
+        "id": "m802c-q1t",
+        "type": "terminal",
+        "text": "Unable to adjust the load / still overheating. Notify next higher maintenance level.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Overheating — overload not corrected"
+        },
+        "tmPage": "WP 0009-6"
+      },
+      "m802c-q2": {
+        "id": "m802c-q2",
+        "type": "question",
+        "text": "Check the coolant level in the coolant recovery (overflow) bottle. Is it low?",
+        "options": [
+          {
+            "label": "Yes — low",
+            "nextNodeId": "m802c-q2a"
+          },
+          {
+            "label": "No — full",
+            "nextNodeId": "m802c-q3"
+          }
+        ],
+        "tmPage": "WP 0009-6"
+      },
+      "m802c-q2a": {
+        "id": "m802c-q2a",
+        "type": "action",
+        "text": "Add coolant",
+        "actionText": "Shut down the set and allow it to cool. Fill the coolant recovery (overflow) bottle to the HOT line if the coolant is hot or the COLD line if it is cold, with the proper coolant/antifreeze (WP 0012, Service of Cooling System, Table 1).",
+        "nextNodeId": "m802c-q2b",
+        "tmPage": "WP 0012-6"
+      },
+      "m802c-q2b": {
+        "id": "m802c-q2b",
+        "type": "question",
+        "text": "Restart the set. Is coolant temperature normal now?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m802c-q2by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m802c-q3"
+          }
+        ]
+      },
+      "m802c-q2by": {
+        "id": "m802c-q2by",
+        "type": "terminal",
+        "text": "Overheating — low coolant, coolant added. Operator corrective action per the TM resolved the malfunction.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Overheating — low coolant, coolant added"
+        }
+      },
+      "m802c-q3": {
+        "id": "m802c-q3",
+        "type": "question",
+        "text": "Is the lubrication oil level low?",
+        "options": [
+          {
+            "label": "Yes — low",
+            "nextNodeId": "m802c-q3a"
+          },
+          {
+            "label": "No — full",
+            "nextNodeId": "m802c-q4"
+          }
+        ],
+        "tmPage": "WP 0009-6"
+      },
+      "m802c-q3a": {
+        "id": "m802c-q3a",
+        "type": "action",
+        "text": "Add oil",
+        "actionText": "Shut down the set and add oil (WP 0012, Service of Lubrication System; refer to LO 9-6115-641-12).",
+        "nextNodeId": "m802c-q3b",
+        "tmPage": "WP 0012-10"
+      },
+      "m802c-q3b": {
+        "id": "m802c-q3b",
+        "type": "question",
+        "text": "Restart the set. Is coolant temperature normal now?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m802c-q3by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m802c-q4"
+          }
+        ]
+      },
+      "m802c-q3by": {
+        "id": "m802c-q3by",
+        "type": "terminal",
+        "text": "Overheating — low oil, oil added. Operator corrective action per the TM resolved the malfunction.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Overheating — low oil, oil added"
+        }
+      },
+      "m802c-q4": {
+        "id": "m802c-q4",
+        "type": "question",
+        "text": "Is there an obstruction in the air intake system?",
+        "options": [
+          {
+            "label": "Yes — debris found",
+            "nextNodeId": "m802c-q4a"
+          },
+          {
+            "label": "No obstruction found",
+            "nextNodeId": "m802c-q5"
+          }
+        ],
+        "tmPage": "WP 0009-6"
+      },
+      "m802c-q4a": {
+        "id": "m802c-q4a",
+        "type": "action",
+        "text": "Remove the debris",
+        "actionText": "Shut down the set and remove the debris from the air intake.",
+        "nextNodeId": "m802c-q4b",
+        "tmPage": "WP 0009-6"
+      },
+      "m802c-q4b": {
+        "id": "m802c-q4b",
+        "type": "question",
+        "text": "Restart the set. Is coolant temperature normal now?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m802c-q4by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m802c-q5"
+          }
+        ]
+      },
+      "m802c-q4by": {
+        "id": "m802c-q4by",
+        "type": "terminal",
+        "text": "Overheating — air intake obstruction removed. Operator corrective action per the TM resolved the malfunction.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Overheating — air intake obstruction removed"
+        }
+      },
+      "m802c-q5": {
+        "id": "m802c-q5",
+        "type": "question",
+        "text": "With the set shut down, check the fan belt. Is it loose?",
+        "options": [
+          {
+            "label": "Yes — loose",
+            "nextNodeId": "m802c-q5t"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m802c-q5n"
+          }
+        ],
+        "tmPage": "WP 0009-6"
+      },
+      "m802c-q5t": {
+        "id": "m802c-q5t",
+        "type": "terminal",
+        "text": "Fan belt is loose. Notify next higher maintenance level.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Overheating — loose fan belt"
+        },
+        "tmPage": "WP 0009-6"
+      },
+      "m802c-q5n": {
+        "id": "m802c-q5n",
+        "type": "terminal",
+        "text": "Engine overheating: Malfunction is not corrected by the listed corrective actions. Per WP 0009 (General): \"If a malfunction is not listed or is not corrected by listed corrective actions, notify your supervisor.\" Notify next higher maintenance level.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Overheating — not corrected by operator checks"
+        },
+        "tmPage": "WP 0009-1"
+      }
+    }
+  },
+  {
+    "categoryId": "gen-electrical",
+    "vehicleType": "MEP802A",
+    "tmReference": "TM 9-6115-641-10, WP 0009, Battery and AC output symptoms; Winterization Kit code light",
+    "rootNodeId": "m802l-q1",
+    "nodes": {
+      "m802l-q1": {
+        "id": "m802l-q1",
+        "type": "question",
+        "text": "What is the electrical problem?",
+        "options": [
+          {
+            "label": "BATTERY CHARGE ammeter shows low or no charge",
+            "nextNodeId": "m802l-b1"
+          },
+          {
+            "label": "BATTERY CHARGE ammeter shows excessive charging after prolonged operation",
+            "nextNodeId": "m802l-h1"
+          },
+          {
+            "label": "AC voltmeter (VOLTS AC) indicates low voltage",
+            "nextNodeId": "m802l-v1"
+          },
+          {
+            "label": "VOLTS AC correct, but frequency meter (HERTZ) is off scale",
+            "nextNodeId": "m802l-f1"
+          },
+          {
+            "label": "AC voltmeter (VOLTS AC) fluctuates",
+            "nextNodeId": "m802l-vf"
+          },
+          {
+            "label": "Frequency meter (HERTZ) fluctuates",
+            "nextNodeId": "m802l-ff"
+          },
+          {
+            "label": "AC CIRCUIT INTERRUPTER light fails to light when switch is closed",
+            "nextNodeId": "m802l-i1"
+          },
+          {
+            "label": "No voltage at the convenience receptacle",
+            "nextNodeId": "m802l-g1"
+          },
+          {
+            "label": "Winterization kit heater indicator light blinks a code",
+            "nextNodeId": "m802l-w1"
+          }
+        ],
+        "tmPage": "WP 0008-1"
+      },
+      "m802l-b1": {
+        "id": "m802l-b1",
+        "type": "question",
+        "text": "Is the BATTERY CHARGER FUSE (WP 0004, Figure 1) blown?",
+        "options": [
+          {
+            "label": "Yes — blown",
+            "nextNodeId": "m802l-b1t"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m802l-b2"
+          }
+        ],
+        "tmPage": "WP 0009-6"
+      },
+      "m802l-b1t": {
+        "id": "m802l-b1t",
+        "type": "terminal",
+        "text": "BATTERY CHARGER FUSE is blown. Notify next higher maintenance level.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Low/no battery charge — charger fuse blown"
+        },
+        "tmPage": "WP 0009-6"
+      },
+      "m802l-b2": {
+        "id": "m802l-b2",
+        "type": "question",
+        "text": "With the set shut down, check the fan belt. Is it loose?",
+        "options": [
+          {
+            "label": "Yes — loose",
+            "nextNodeId": "m802l-b2t"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m802l-b3"
+          }
+        ],
+        "tmPage": "WP 0009-7"
+      },
+      "m802l-b2t": {
+        "id": "m802l-b2t",
+        "type": "terminal",
+        "text": "Fan belt is loose. Notify next higher maintenance level.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Low/no battery charge — loose fan belt"
+        },
+        "tmPage": "WP 0009-7"
+      },
+      "m802l-b3": {
+        "id": "m802l-b3",
+        "type": "question",
+        "text": "With the set shut down, check for loose or broken wires at the back of the battery charging alternator (WP 0002, Figure 1) and the BATTERY CHARGE ammeter (WP 0004, Figure 1). Are any loose or broken?",
+        "options": [
+          {
+            "label": "Yes",
+            "nextNodeId": "m802l-b3t"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m802l-b4t"
+          }
+        ],
+        "tmPage": "WP 0009-7"
+      },
+      "m802l-b3t": {
+        "id": "m802l-b3t",
+        "type": "terminal",
+        "text": "Loose or broken wires at the battery charging alternator or BATTERY CHARGE ammeter. Notify next higher maintenance level.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Low/no battery charge — loose/broken wires"
+        },
+        "tmPage": "WP 0009-7"
+      },
+      "m802l-b4t": {
+        "id": "m802l-b4t",
+        "type": "terminal",
+        "text": "Low or no battery charge: Malfunction is not corrected by the listed corrective actions. Per WP 0009 (General): \"If a malfunction is not listed or is not corrected by listed corrective actions, notify your supervisor.\" Notify next higher maintenance level.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Low/no battery charge — not corrected by operator checks"
+        },
+        "tmPage": "WP 0009-1"
+      },
+      "m802l-h1": {
+        "id": "m802l-h1",
+        "type": "question",
+        "text": "Shut down the set and inspect the batteries. Is the electrolyte level low?",
+        "options": [
+          {
+            "label": "Yes — low",
+            "nextNodeId": "m802l-h1a"
+          },
+          {
+            "label": "No — level correct",
+            "nextNodeId": "m802l-h2"
+          }
+        ],
+        "tmPage": "WP 0009-7"
+      },
+      "m802l-h1a": {
+        "id": "m802l-h1a",
+        "type": "action",
+        "text": "Service the batteries",
+        "actionText": "Service the batteries (WP 0012, Service of Batteries): remove the battery caps, add distilled water to each cell as required (level at bottom of each cap cylinder), and replace the caps. Contact next higher maintenance level if batteries or terminals need cleaning or replacing.",
+        "nextNodeId": "m802l-h1b",
+        "tmPage": "WP 0012-2"
+      },
+      "m802l-h1b": {
+        "id": "m802l-h1b",
+        "type": "question",
+        "text": "Restart and operate the set. Is charging normal now?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m802l-h1by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m802l-h2"
+          }
+        ]
+      },
+      "m802l-h1by": {
+        "id": "m802l-h1by",
+        "type": "terminal",
+        "text": "Excessive charging — low electrolyte, batteries serviced. Operator corrective action per the TM resolved the malfunction.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Excessive charging — low electrolyte, batteries serviced"
+        }
+      },
+      "m802l-h2": {
+        "id": "m802l-h2",
+        "type": "question",
+        "text": "Check the battery connections. Are they loose or corroded?",
+        "options": [
+          {
+            "label": "Yes",
+            "nextNodeId": "m802l-h2t"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m802l-h3t"
+          }
+        ],
+        "tmPage": "WP 0009-7"
+      },
+      "m802l-h2t": {
+        "id": "m802l-h2t",
+        "type": "terminal",
+        "text": "Battery connections are loose or corroded. Notify next higher maintenance level.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Excessive charging — battery connections loose/corroded"
+        },
+        "tmPage": "WP 0009-7"
+      },
+      "m802l-h3t": {
+        "id": "m802l-h3t",
+        "type": "terminal",
+        "text": "Excessive charging: Malfunction is not corrected by the listed corrective actions. Per WP 0009 (General): \"If a malfunction is not listed or is not corrected by listed corrective actions, notify your supervisor.\" Notify next higher maintenance level.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Excessive charging — not corrected by operator checks"
+        },
+        "tmPage": "WP 0009-1"
+      },
+      "m802l-v1": {
+        "id": "m802l-v1",
+        "type": "action",
+        "text": "Check VM-AM switch position and set voltage",
+        "actionText": "Check that the VM-AM transfer switch position corresponds to the readings on the AC voltmeter (VOLTS AC) — WP 0005, Table 1. Set the VOLTAGE adjust potentiometer (WP 0004, Figure 1, Item 10) to rated voltage.",
+        "nextNodeId": "m802l-v2",
+        "tmPage": "WP 0005-4"
+      },
+      "m802l-v2": {
+        "id": "m802l-v2",
+        "type": "question",
+        "text": "Is the AC voltage correct now?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m802l-v2y"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m802l-v3"
+          }
+        ]
+      },
+      "m802l-v2y": {
+        "id": "m802l-v2y",
+        "type": "terminal",
+        "text": "Low AC voltage — VM-AM switch / VOLTAGE adjust set. Operator corrective action per the TM resolved the malfunction.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Low AC voltage — VM-AM switch / VOLTAGE adjust set"
+        }
+      },
+      "m802l-v3": {
+        "id": "m802l-v3",
+        "type": "question",
+        "text": "Shut down the set. Are there loose or broken wires at the back of the VM-AM transfer switch, VOLTAGE adjust potentiometer, or AC voltmeter (VOLTS AC)?",
+        "options": [
+          {
+            "label": "Yes",
+            "nextNodeId": "m802l-v3t"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m802l-v4t"
+          }
+        ],
+        "tmPage": "WP 0009-7"
+      },
+      "m802l-v3t": {
+        "id": "m802l-v3t",
+        "type": "terminal",
+        "text": "Loose or broken wires found. Notify next higher maintenance level.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Low AC voltage — loose/broken wires"
+        },
+        "tmPage": "WP 0009-7"
+      },
+      "m802l-v4t": {
+        "id": "m802l-v4t",
+        "type": "terminal",
+        "text": "Low AC voltage: Malfunction is not corrected by the listed corrective actions. Per WP 0009 (General): \"If a malfunction is not listed or is not corrected by listed corrective actions, notify your supervisor.\" Notify next higher maintenance level.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Low AC voltage — not corrected by operator checks"
+        },
+        "tmPage": "WP 0009-1"
+      },
+      "m802l-f1": {
+        "id": "m802l-f1",
+        "type": "action",
+        "text": "Set the FREQUENCY adjust control",
+        "actionText": "Check and set the FREQUENCY adjust control (WP 0004, Figure 3) to rated frequency.",
+        "nextNodeId": "m802l-f2",
+        "tmPage": "WP 0009-7"
+      },
+      "m802l-f2": {
+        "id": "m802l-f2",
+        "type": "question",
+        "text": "Is the frequency meter (HERTZ) reading correct now?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m802l-f2y"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m802l-f3"
+          }
+        ]
+      },
+      "m802l-f2y": {
+        "id": "m802l-f2y",
+        "type": "terminal",
+        "text": "Frequency off scale — FREQUENCY adjust control set. Operator corrective action per the TM resolved the malfunction.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Frequency off scale — FREQUENCY adjust control set"
+        }
+      },
+      "m802l-f3": {
+        "id": "m802l-f3",
+        "type": "question",
+        "text": "Shut down the set. Are there loose or broken wires at the back of the FREQUENCY adjust control?",
+        "options": [
+          {
+            "label": "Yes",
+            "nextNodeId": "m802l-f3t"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m802l-f4t"
+          }
+        ],
+        "tmPage": "WP 0009-7"
+      },
+      "m802l-f3t": {
+        "id": "m802l-f3t",
+        "type": "terminal",
+        "text": "Loose or broken wires at the FREQUENCY adjust control. Notify next higher maintenance level.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Frequency off scale — loose/broken wires"
+        },
+        "tmPage": "WP 0009-7"
+      },
+      "m802l-f4t": {
+        "id": "m802l-f4t",
+        "type": "terminal",
+        "text": "Frequency meter off scale: Malfunction is not corrected by the listed corrective actions. Per WP 0009 (General): \"If a malfunction is not listed or is not corrected by listed corrective actions, notify your supervisor.\" Notify next higher maintenance level.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Frequency off scale — not corrected by operator checks"
+        },
+        "tmPage": "WP 0009-1"
+      },
+      "m802l-vf": {
+        "id": "m802l-vf",
+        "type": "question",
+        "text": "Shut down the set. Are there loose or broken wires at the back of the AC voltmeter (VOLTS AC)?",
+        "options": [
+          {
+            "label": "Yes",
+            "nextNodeId": "m802l-vft"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m802l-vfn"
+          }
+        ],
+        "tmPage": "WP 0009-8"
+      },
+      "m802l-vft": {
+        "id": "m802l-vft",
+        "type": "terminal",
+        "text": "Loose or broken wires at the AC voltmeter. Notify next higher maintenance level.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "AC voltage fluctuates — loose/broken wires"
+        },
+        "tmPage": "WP 0009-8"
+      },
+      "m802l-vfn": {
+        "id": "m802l-vfn",
+        "type": "terminal",
+        "text": "AC voltmeter fluctuates: Malfunction is not corrected by the listed corrective actions. Per WP 0009 (General): \"If a malfunction is not listed or is not corrected by listed corrective actions, notify your supervisor.\" Notify next higher maintenance level.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "AC voltage fluctuates — not corrected by operator checks"
+        },
+        "tmPage": "WP 0009-1"
+      },
+      "m802l-ff": {
+        "id": "m802l-ff",
+        "type": "question",
+        "text": "Shut down the set. Are there loose or broken wires at the back of the frequency meter (HERTZ)?",
+        "options": [
+          {
+            "label": "Yes",
+            "nextNodeId": "m802l-fft"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m802l-ffn"
+          }
+        ],
+        "tmPage": "WP 0009-8"
+      },
+      "m802l-fft": {
+        "id": "m802l-fft",
+        "type": "terminal",
+        "text": "Loose or broken wires at the frequency meter. Notify next higher maintenance level.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Frequency fluctuates — loose/broken wires"
+        },
+        "tmPage": "WP 0009-8"
+      },
+      "m802l-ffn": {
+        "id": "m802l-ffn",
+        "type": "terminal",
+        "text": "Frequency meter fluctuates: Malfunction is not corrected by the listed corrective actions. Per WP 0009 (General): \"If a malfunction is not listed or is not corrected by listed corrective actions, notify your supervisor.\" Notify next higher maintenance level.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Frequency fluctuates — not corrected by operator checks"
+        },
+        "tmPage": "WP 0009-1"
+      },
+      "m802l-i1": {
+        "id": "m802l-i1",
+        "type": "question",
+        "text": "Test the AC CIRCUIT INTERRUPTER light by depressing it. Does it light?",
+        "options": [
+          {
+            "label": "No — fails to light",
+            "nextNodeId": "m802l-i1t"
+          },
+          {
+            "label": "Yes — it lights",
+            "nextNodeId": "m802l-i2"
+          }
+        ],
+        "tmPage": "WP 0009-8"
+      },
+      "m802l-i1t": {
+        "id": "m802l-i1t",
+        "type": "terminal",
+        "text": "AC CIRCUIT INTERRUPTER light fails to light when tested. Refer to next higher maintenance level.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "AC CIRCUIT INTERRUPTER light failed lamp test"
+        },
+        "tmPage": "WP 0009-8"
+      },
+      "m802l-i2": {
+        "id": "m802l-i2",
+        "type": "question",
+        "text": "Are the load cables properly connected (WP 0005, Installation of Load Cables)?",
+        "options": [
+          {
+            "label": "No — not correct",
+            "nextNodeId": "m802l-i2a"
+          },
+          {
+            "label": "Yes — correct",
+            "nextNodeId": "m802l-i3"
+          }
+        ],
+        "tmPage": "WP 0009-8"
+      },
+      "m802l-i2a": {
+        "id": "m802l-i2a",
+        "type": "action",
+        "text": "Correct the load cable connections",
+        "actionText": "Shut down the generator set (never connect or disconnect load cables while it is running) and connect the load cables per WP 0005, Installation of Load Cables. Restart and close the AC CIRCUIT INTERRUPTER switch.",
+        "nextNodeId": "m802l-i2b",
+        "tmPage": "WP 0005-2"
+      },
+      "m802l-i2b": {
+        "id": "m802l-i2b",
+        "type": "question",
+        "text": "Does the AC CIRCUIT INTERRUPTER light come on now?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m802l-i2by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m802l-i3"
+          }
+        ]
+      },
+      "m802l-i2by": {
+        "id": "m802l-i2by",
+        "type": "terminal",
+        "text": "AC CIRCUIT INTERRUPTER light — load cables reconnected. Operator corrective action per the TM resolved the malfunction.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "AC CIRCUIT INTERRUPTER light — load cables reconnected"
+        }
+      },
+      "m802l-i3": {
+        "id": "m802l-i3",
+        "type": "question",
+        "text": "Does the load exceed the generator rating?",
+        "options": [
+          {
+            "label": "Yes — load is high",
+            "nextNodeId": "m802l-i3a"
+          },
+          {
+            "label": "No — load is correct",
+            "nextNodeId": "m802l-i3t"
+          }
+        ],
+        "tmPage": "WP 0009-8"
+      },
+      "m802l-i3a": {
+        "id": "m802l-i3a",
+        "type": "action",
+        "text": "Decrease the load",
+        "actionText": "Decrease the load to within the generator set rating.",
+        "nextNodeId": "m802l-i3b",
+        "tmPage": "WP 0009-8"
+      },
+      "m802l-i3b": {
+        "id": "m802l-i3b",
+        "type": "question",
+        "text": "Does the AC CIRCUIT INTERRUPTER light come on now?",
+        "options": [
+          {
+            "label": "Yes",
+            "nextNodeId": "m802l-i3y"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m802l-i3n"
+          }
+        ]
+      },
+      "m802l-i3y": {
+        "id": "m802l-i3y",
+        "type": "terminal",
+        "text": "Load exceeded the generator rating; load decreased and the light operates.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "AC CIRCUIT INTERRUPTER light — load decreased"
+        }
+      },
+      "m802l-i3n": {
+        "id": "m802l-i3n",
+        "type": "terminal",
+        "text": "AC CIRCUIT INTERRUPTER light still fails to light. Malfunction is not corrected by the listed corrective actions. Per WP 0009 (General): \"If a malfunction is not listed or is not corrected by listed corrective actions, notify your supervisor.\" Notify next higher maintenance level.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "AC CIRCUIT INTERRUPTER light — not corrected by operator checks"
+        },
+        "tmPage": "WP 0009-1"
+      },
+      "m802l-i3t": {
+        "id": "m802l-i3t",
+        "type": "terminal",
+        "text": "Load is correct and the light still fails to light. Refer to next higher maintenance level.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "AC CIRCUIT INTERRUPTER light fails — load correct"
+        },
+        "tmPage": "WP 0009-8"
+      },
+      "m802l-g1": {
+        "id": "m802l-g1",
+        "type": "question",
+        "text": "Open the control panel and inspect the circuit breaker on the side of the Ground Fault Circuit Interrupter (GFCI) device. Is it tripped?",
+        "options": [
+          {
+            "label": "Yes — tripped",
+            "nextNodeId": "m802l-g1a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m802l-g2"
+          }
+        ],
+        "tmPage": "WP 0009-8"
+      },
+      "m802l-g1a": {
+        "id": "m802l-g1a",
+        "type": "action",
+        "text": "Reset the GFCI circuit breaker",
+        "actionText": "Reset the device. On generator sets with contract number DAAK01-88-D-0080, also check the fuse on the black wire of the GFCI.",
+        "nextNodeId": "m802l-g1b",
+        "tmPage": "WP 0009-8"
+      },
+      "m802l-g1b": {
+        "id": "m802l-g1b",
+        "type": "question",
+        "text": "Is there voltage at the convenience receptacle now?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m802l-g1by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m802l-g2"
+          }
+        ]
+      },
+      "m802l-g1by": {
+        "id": "m802l-g1by",
+        "type": "terminal",
+        "text": "No voltage at convenience receptacle — GFCI breaker reset. Operator corrective action per the TM resolved the malfunction.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "No voltage at convenience receptacle — GFCI breaker reset"
+        }
+      },
+      "m802l-g2": {
+        "id": "m802l-g2",
+        "type": "question",
+        "text": "Check the Ground Fault Circuit Interrupter indicator. What color is it?",
+        "options": [
+          {
+            "label": "BLACK",
+            "nextNodeId": "m802l-g2a"
+          },
+          {
+            "label": "ORANGE",
+            "nextNodeId": "m802l-g2t"
+          }
+        ],
+        "tmPage": "WP 0009-8"
+      },
+      "m802l-g2a": {
+        "id": "m802l-g2a",
+        "type": "action",
+        "text": "Reset the GFCI",
+        "actionText": "Reset the GFCI by pressing the reset button.",
+        "nextNodeId": "m802l-g2b",
+        "tmPage": "WP 0009-8"
+      },
+      "m802l-g2b": {
+        "id": "m802l-g2b",
+        "type": "question",
+        "text": "Is there voltage at the convenience receptacle now?",
+        "options": [
+          {
+            "label": "Yes",
+            "nextNodeId": "m802l-g2y"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m802l-g2n"
+          }
+        ]
+      },
+      "m802l-g2y": {
+        "id": "m802l-g2y",
+        "type": "terminal",
+        "text": "GFCI reset; convenience receptacle has voltage.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "No voltage at convenience receptacle — GFCI reset"
+        }
+      },
+      "m802l-g2n": {
+        "id": "m802l-g2n",
+        "type": "terminal",
+        "text": "Still no voltage at the convenience receptacle. Malfunction is not corrected by the listed corrective actions. Per WP 0009 (General): \"If a malfunction is not listed or is not corrected by listed corrective actions, notify your supervisor.\" Notify next higher maintenance level.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "No voltage at convenience receptacle — not corrected by operator checks"
+        },
+        "tmPage": "WP 0009-1"
+      },
+      "m802l-g2t": {
+        "id": "m802l-g2t",
+        "type": "terminal",
+        "text": "GFCI indicator is ORANGE. Refer to next higher maintenance level.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "No voltage at convenience receptacle — GFCI indicator ORANGE"
+        },
+        "tmPage": "WP 0009-8"
+      },
+      "m802l-w1": {
+        "id": "m802l-w1",
+        "type": "action",
+        "text": "Turn off the heater and attempt restart",
+        "actionText": "Before troubleshooting, turn off the heater and attempt a restart. Watch the indicator light near the heater ON-OFF switch and compare its pulses with the Heater Function Codes Plate (WP 0009, Figure 1) on the control panel access door.",
+        "nextNodeId": "m802l-w2",
+        "tmPage": "WP 0009-9"
+      },
+      "m802l-w2": {
+        "id": "m802l-w2",
+        "type": "question",
+        "text": "After restart, what does the indicator light show?",
+        "options": [
+          {
+            "label": "Start/glow, normal function (continuous), or purge-and-restart sequence",
+            "nextNodeId": "m802l-w2y"
+          },
+          {
+            "label": "A malfunction code (any MALFUNCTION sequence on the plate)",
+            "nextNodeId": "m802l-w2t"
+          }
+        ],
+        "tmPage": "WP 0009-10"
+      },
+      "m802l-w2y": {
+        "id": "m802l-w2y",
+        "type": "terminal",
+        "text": "Heater indicator shows an operation sequence after restart (no malfunction code).",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Winterization heater — normal after restart"
+        }
+      },
+      "m802l-w2t": {
+        "id": "m802l-w2t",
+        "type": "terminal",
+        "text": "Heater indicator light blinks a malfunction code. Per WP 0009: \"If you see any of these series of pulses, notify the next-higher level of maintenance.\" (PMCS item 53: light blinks showing failure — equipment not ready/available.)",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Winterization heater — malfunction code"
+        },
+        "tmPage": "WP 0009-9"
+      }
+    }
+  }
+]

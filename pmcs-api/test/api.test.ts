@@ -230,14 +230,17 @@ describe('files and forms', () => {
     const key = `generated/da2404/${s.json.inspection_id}.pdf`;
     expect(new TextDecoder().decode(FILES.objects.get(key)!.bytes.subarray(0, 4))).toBe('%PDF');
     await new Promise((res) => setTimeout(res, 10));
-    expect(fetchSpy).toHaveBeenCalledTimes(1);
-    const sent = JSON.parse(fetchSpy.mock.calls[0][1]!.body as string);
+    // Signup also sends a join email now; count only the DA 2404 ones.
+    const formEmails = () => fetchSpy.mock.calls.map((call) => JSON.parse(call[1]!.body as string)).filter((m) => m.subject.startsWith('DA 2404'));
+    expect(formEmails()).toHaveLength(1);
+    const sent = formEmails()[0];
     expect(sent.subject).toBe('DA 2404 - HHC-20 - 2026-10-12');
+    expect(sent.to).toEqual(['ops@example.com']);
     expect(sent.attachments[0].content.length).toBeGreaterThan(100);
 
     // Reuse without regenerate: no new email.
     expect((await req('POST', `/inspections/${s.json.inspection_id}/da2404`, { token })).status).toBe(200);
-    expect(fetchSpy).toHaveBeenCalledTimes(1);
+    expect(formEmails()).toHaveLength(1);
     // Signed link works, unsigned does not.
     const ok = await app.request(new URL(r.json.url).pathname + new URL(r.json.url).search, {}, env);
     expect(ok.status).toBe(200);

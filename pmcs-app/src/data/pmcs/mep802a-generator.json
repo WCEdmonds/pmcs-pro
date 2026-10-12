@@ -1,0 +1,847 @@
+{
+  "vehicleType": "MEP802A",
+  "tmReference": "TM 9-6115-641-10",
+  "zones": [
+    {
+      "id": "zone-1",
+      "name": "Generator Set Exterior",
+      "description": "Housing, identification plates, skid base, and acoustical materials",
+      "steps": [
+        {
+          "id": "mep802a-b-001",
+          "sequence": 1,
+          "zone": "Generator Set Exterior",
+          "zoneId": "zone-1",
+          "item": "1",
+          "itemDescription": "Housing",
+          "procedure": "Check door panels, hinges, and latches for damaged, loose, or corroded items. Inspect air intake and exhaust grills for debris.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Cannot secure door."
+        },
+        {
+          "id": "mep802a-b-002",
+          "sequence": 2,
+          "zone": "Generator Set Exterior",
+          "zoneId": "zone-1",
+          "item": "2",
+          "itemDescription": "Identification Plates",
+          "procedure": "Check to ensure identification plates are secure.",
+          "conditionSet": "BEFORE",
+          "isNoGo": false
+        },
+        {
+          "id": "mep802a-b-003",
+          "sequence": 3,
+          "zone": "Generator Set Exterior",
+          "zoneId": "zone-1",
+          "item": "3",
+          "itemDescription": "Skid Base",
+          "procedure": "Inspect skid base for cracks and/or corrosion.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Skid base is cracked or shows signs of structural damage."
+        },
+        {
+          "id": "mep802a-b-004",
+          "sequence": 4,
+          "zone": "Generator Set Exterior",
+          "zoneId": "zone-1",
+          "item": "4",
+          "itemDescription": "Acoustical Materials",
+          "procedure": "Ensure that acoustical materials are free of damage and not missing.",
+          "conditionSet": "BEFORE",
+          "isNoGo": false
+        }
+      ]
+    },
+    {
+      "id": "zone-2",
+      "name": "Engine Assembly",
+      "description": "Engine, fuel system, fuel filter/water separator, lubrication, radiator, hoses, cooling fan, water pump, and fan belt",
+      "steps": [
+        {
+          "id": "mep802a-b-005",
+          "sequence": 5,
+          "zone": "Engine Assembly",
+          "zoneId": "zone-2",
+          "item": "5",
+          "itemDescription": "Engine Assembly",
+          "procedure": "Inspect for loose, damaged, or missing hardware.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Any loose, damaged, or missing hardware."
+        },
+        {
+          "id": "mep802a-b-006",
+          "sequence": 6,
+          "zone": "Engine Assembly",
+          "zoneId": "zone-2",
+          "item": "6",
+          "itemDescription": "Fuel System",
+          "procedure": "Inspect for leaks, damage, loose, or missing hardware.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Any fuel leaks, damage, loose or missing parts."
+        },
+        {
+          "id": "mep802a-b-007",
+          "sequence": 7,
+          "zone": "Engine Assembly",
+          "zoneId": "zone-2",
+          "item": "7",
+          "itemDescription": "Fuel Filter/Water Separator",
+          "procedure": "Inspect for leaks, cracks, damage, proper mounting, loose or missing parts. Drain water from fuel filter/water separator (WP 0012, Service of Air Cleaner Assembly).",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Any fuel leaks. Water not drained."
+        },
+        {
+          "id": "mep802a-b-008",
+          "sequence": 8,
+          "zone": "Engine Assembly",
+          "zoneId": "zone-2",
+          "item": "8",
+          "itemDescription": "Lubrication System",
+          "procedure": "Inspect for leaks, damage, loose or missing parts. Inspect oil level. Inspect for contamination. Refer to Lube Order LO 9-6115-641-12.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Class III leaks, damage, loose or missing parts. Oil level is low. Oil shows signs of contamination."
+        },
+        {
+          "id": "mep802a-b-009",
+          "sequence": 9,
+          "zone": "Engine Assembly",
+          "zoneId": "zone-2",
+          "item": "9",
+          "itemDescription": "Radiator",
+          "procedure": "Inspect for leaks, damage, loose or missing parts.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Class III leaks or missing radiator cap."
+        },
+        {
+          "id": "mep802a-b-010",
+          "sequence": 10,
+          "zone": "Engine Assembly",
+          "zoneId": "zone-2",
+          "item": "10",
+          "itemDescription": "Hoses",
+          "procedure": "Inspect for leaks, cracks, or missing parts.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Class III leaks or missing clamps or hoses."
+        },
+        {
+          "id": "mep802a-b-011",
+          "sequence": 11,
+          "zone": "Engine Assembly",
+          "zoneId": "zone-2",
+          "item": "11",
+          "itemDescription": "Cooling Fan",
+          "procedure": "Inspect for obstruction, damage, or looseness. Inspect for unusual noise in fan area.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Damaged or loose. Unusual noise from fan area."
+        },
+        {
+          "id": "mep802a-b-012",
+          "sequence": 12,
+          "zone": "Engine Assembly",
+          "zoneId": "zone-2",
+          "item": "11.1",
+          "itemDescription": "Water Pump",
+          "procedure": "Inspect for leaks.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Class III leaks or unusual noise from area."
+        },
+        {
+          "id": "mep802a-b-013",
+          "sequence": 13,
+          "zone": "Engine Assembly",
+          "zoneId": "zone-2",
+          "item": "12",
+          "itemDescription": "Fan Belt",
+          "procedure": "Inspect for cracks, fraying, or looseness.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Broken or missing belt."
+        }
+      ]
+    },
+    {
+      "id": "zone-3",
+      "name": "Cooling & Exhaust",
+      "description": "Overflow bottle, exhaust system, and air cleaner assembly",
+      "steps": [
+        {
+          "id": "mep802a-b-014",
+          "sequence": 14,
+          "zone": "Cooling & Exhaust",
+          "zoneId": "zone-3",
+          "item": "13",
+          "itemDescription": "Overflow Bottle",
+          "procedure": "Inspect for proper mounting, leaks, or missing hardware.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Class III leaks or missing hardware."
+        },
+        {
+          "id": "mep802a-b-015",
+          "sequence": 15,
+          "zone": "Cooling & Exhaust",
+          "zoneId": "zone-3",
+          "item": "14",
+          "itemDescription": "Exhaust System",
+          "procedure": "Inspect for leaks, corrosion, and missing parts.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Leaks, damaged, or missing parts."
+        },
+        {
+          "id": "mep802a-b-016",
+          "sequence": 16,
+          "zone": "Cooling & Exhaust",
+          "zoneId": "zone-3",
+          "item": "15",
+          "itemDescription": "Air Cleaner Assembly",
+          "procedure": "Inspect for loose, damaged, or missing parts. Inspect restriction indicator for clogged air cleaner element.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Loose, damaged, or missing parts. Clogged air cleaner element."
+        }
+      ]
+    },
+    {
+      "id": "zone-4",
+      "name": "Electrical",
+      "description": "Ground rod, batteries, battery cables, output box, controls, and control box harness",
+      "steps": [
+        {
+          "id": "mep802a-b-017",
+          "sequence": 17,
+          "zone": "Electrical",
+          "zoneId": "zone-4",
+          "item": "16",
+          "itemDescription": "Ground Rod Cable and Connections",
+          "procedure": "Inspect for damage, corrosion, loose connections, and missing parts.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Damaged, corroded, loose connections, or missing parts."
+        },
+        {
+          "id": "mep802a-b-018",
+          "sequence": 18,
+          "zone": "Electrical",
+          "zoneId": "zone-4",
+          "item": "17",
+          "itemDescription": "Batteries",
+          "procedure": "Inspect electrolyte level. Inspect for secure mounting.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Electrolyte is below battery plates. Broken or missing mounting hardware."
+        },
+        {
+          "id": "mep802a-b-019",
+          "sequence": 19,
+          "zone": "Electrical",
+          "zoneId": "zone-4",
+          "item": "18",
+          "itemDescription": "Battery Cables",
+          "procedure": "Inspect for corrosion, damage, loose connections, or missing parts.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Damaged, loose, or missing parts."
+        },
+        {
+          "id": "mep802a-b-020",
+          "sequence": 20,
+          "zone": "Electrical",
+          "zoneId": "zone-4",
+          "item": "19",
+          "itemDescription": "Output Box Assembly",
+          "procedure": "Inspect cables for damage or loose connections. Inspect output terminals for damage or missing hardware.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Damaged, loose, or missing parts. Damaged or missing hardware."
+        },
+        {
+          "id": "mep802a-b-021",
+          "sequence": 21,
+          "zone": "Electrical",
+          "zoneId": "zone-4",
+          "item": "20",
+          "itemDescription": "Controls and Indicators",
+          "procedure": "Inspect for damage or missing parts.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Damaged or missing parts."
+        },
+        {
+          "id": "mep802a-b-022",
+          "sequence": 22,
+          "zone": "Electrical",
+          "zoneId": "zone-4",
+          "item": "21",
+          "itemDescription": "Control Box Harness",
+          "procedure": "Inspect for damage and looseness.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Damaged or loose."
+        }
+      ]
+    },
+    {
+      "id": "zone-5",
+      "name": "Generator Set (During)",
+      "description": "During-operation checks: housing, engine, fuel, lubrication, cooling, ground rod, controls and indicators",
+      "steps": [
+        {
+          "id": "mep802a-b-023",
+          "sequence": 23,
+          "zone": "Generator Set (During)",
+          "zoneId": "zone-5",
+          "item": "22",
+          "itemDescription": "Housing",
+          "procedure": "Check door panels, hinges, and latches for damaged, loose, or corroded items.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "Cannot secure door."
+        },
+        {
+          "id": "mep802a-b-024",
+          "sequence": 24,
+          "zone": "Generator Set (During)",
+          "zoneId": "zone-5",
+          "item": "23",
+          "itemDescription": "Engine Assembly",
+          "procedure": "Inspect for loose, damaged, or missing hardware.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "Any loose, damaged, or missing hardware."
+        },
+        {
+          "id": "mep802a-b-025",
+          "sequence": 25,
+          "zone": "Generator Set (During)",
+          "zoneId": "zone-5",
+          "item": "24",
+          "itemDescription": "Fuel System",
+          "procedure": "Inspect for leaks, damaged, loose, or missing hardware.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "Any fuel leaks, damaged, loose, or missing parts."
+        },
+        {
+          "id": "mep802a-b-026",
+          "sequence": 26,
+          "zone": "Generator Set (During)",
+          "zoneId": "zone-5",
+          "item": "25",
+          "itemDescription": "Lubrication System",
+          "procedure": "Inspect for leaks, damage, loose or missing parts. Inspect oil level. Inspect for contamination. Refer to Lube Order LO 9-6115-641-12.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "Class III leaks, damage, loose or missing parts. Oil level is low. Oil shows signs of contamination."
+        },
+        {
+          "id": "mep802a-b-027",
+          "sequence": 27,
+          "zone": "Generator Set (During)",
+          "zoneId": "zone-5",
+          "item": "26",
+          "itemDescription": "Cooling Fan",
+          "procedure": "Inspect for obstruction, damage, or looseness. Inspect for unusual noise in fan area.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "Damaged or loose. Unusual noise from fan area."
+        },
+        {
+          "id": "mep802a-b-028",
+          "sequence": 28,
+          "zone": "Generator Set (During)",
+          "zoneId": "zone-5",
+          "item": "27",
+          "itemDescription": "Overflow Bottle",
+          "procedure": "Inspect for proper mounting, leaks, or missing hardware.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "Class III leaks or missing hardware."
+        },
+        {
+          "id": "mep802a-b-029",
+          "sequence": 29,
+          "zone": "Generator Set (During)",
+          "zoneId": "zone-5",
+          "item": "28",
+          "itemDescription": "Ground Rod Cable and Connections",
+          "procedure": "Inspect for damage, corrosion, loose connections, and missing parts.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "Damaged, corroded, loose connections, or missing parts."
+        },
+        {
+          "id": "mep802a-b-030",
+          "sequence": 30,
+          "zone": "Generator Set (During)",
+          "zoneId": "zone-5",
+          "item": "29",
+          "itemDescription": "Controls and Indicators",
+          "procedure": "Inspect indicators are operating properly.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "Indicators are not operating properly."
+        }
+      ]
+    },
+    {
+      "id": "zone-6",
+      "name": "Generator Set (After)",
+      "description": "After-operation checks: exterior, engine, fuel, lubrication, cooling, fan belt, controls",
+      "steps": [
+        {
+          "id": "mep802a-b-031",
+          "sequence": 31,
+          "zone": "Generator Set (After)",
+          "zoneId": "zone-6",
+          "item": "30",
+          "itemDescription": "Housing",
+          "procedure": "Check door panels, hinges, and latches for damaged, loose, or corroded items.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "Cannot secure door."
+        },
+        {
+          "id": "mep802a-b-032",
+          "sequence": 32,
+          "zone": "Generator Set (After)",
+          "zoneId": "zone-6",
+          "item": "31",
+          "itemDescription": "Identification Plates",
+          "procedure": "Check to ensure identification plates are secure.",
+          "conditionSet": "AFTER",
+          "isNoGo": false
+        },
+        {
+          "id": "mep802a-b-033",
+          "sequence": 33,
+          "zone": "Generator Set (After)",
+          "zoneId": "zone-6",
+          "item": "32",
+          "itemDescription": "Skid Base",
+          "procedure": "Inspect skid base for cracks and/or corrosion.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "Skid base is cracked or shows signs of structural damage."
+        },
+        {
+          "id": "mep802a-b-034",
+          "sequence": 34,
+          "zone": "Generator Set (After)",
+          "zoneId": "zone-6",
+          "item": "33",
+          "itemDescription": "Engine Assembly",
+          "procedure": "Inspect for loose, damaged, or missing hardware.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "Loose, damaged, or missing hardware."
+        },
+        {
+          "id": "mep802a-b-035",
+          "sequence": 35,
+          "zone": "Generator Set (After)",
+          "zoneId": "zone-6",
+          "item": "34",
+          "itemDescription": "Fuel System",
+          "procedure": "Inspect for leaks, damage, loose, or missing hardware.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "Any fuel leaks, damage, loose or missing parts."
+        },
+        {
+          "id": "mep802a-b-036",
+          "sequence": 36,
+          "zone": "Generator Set (After)",
+          "zoneId": "zone-6",
+          "item": "35",
+          "itemDescription": "Fuel Filter/Water Separator",
+          "procedure": "Inspect for leaks, cracks, damage, proper mounting, loose or missing parts. Drain water.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "Any fuel leaks. Water not drained."
+        },
+        {
+          "id": "mep802a-b-037",
+          "sequence": 37,
+          "zone": "Generator Set (After)",
+          "zoneId": "zone-6",
+          "item": "36",
+          "itemDescription": "Lubrication System",
+          "procedure": "Inspect for leaks, damage, loose or missing parts. Inspect oil level. Inspect for contamination. Refer to Lube Order LO 9-6115-641-12.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "Class III leaks, damage, loose or missing parts. Oil level is low. Oil shows signs of contamination."
+        },
+        {
+          "id": "mep802a-b-038",
+          "sequence": 38,
+          "zone": "Generator Set (After)",
+          "zoneId": "zone-6",
+          "item": "37",
+          "itemDescription": "Radiator",
+          "procedure": "Inspect for leaks, damage, loose or missing parts.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "Class III leaks or missing radiator cap."
+        },
+        {
+          "id": "mep802a-b-039",
+          "sequence": 39,
+          "zone": "Generator Set (After)",
+          "zoneId": "zone-6",
+          "item": "38",
+          "itemDescription": "Hoses",
+          "procedure": "Inspect for leaks, cracks, or missing parts.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "Class III leaks or missing clamps or hoses."
+        },
+        {
+          "id": "mep802a-b-040",
+          "sequence": 40,
+          "zone": "Generator Set (After)",
+          "zoneId": "zone-6",
+          "item": "39",
+          "itemDescription": "Fan Belt",
+          "procedure": "Inspect for cracks, fraying, or looseness.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "Broken or missing belt."
+        },
+        {
+          "id": "mep802a-b-041",
+          "sequence": 41,
+          "zone": "Generator Set (After)",
+          "zoneId": "zone-6",
+          "item": "40",
+          "itemDescription": "Controls and Indicators",
+          "procedure": "Inspect for damaged or missing parts.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "Damaged or missing parts."
+        }
+      ]
+    },
+    {
+      "id": "zone-7",
+      "name": "Winterization Kit (Before)",
+      "description": "Winterization kit, if installed. Complete the generator set PMCS first (WP 0010). Heater, control unit, fuel and coolant components, harness, switch lamp",
+      "steps": [
+        {
+          "id": "mep802a-b-042",
+          "sequence": 42,
+          "zone": "Winterization Kit (Before)",
+          "zoneId": "zone-7",
+          "item": "41",
+          "itemDescription": "Heater Assembly",
+          "procedure": "Check for damage. Ensure that heater assembly is mounted securely.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Damage that renders equipment unsafe. Heater not mounted securely."
+        },
+        {
+          "id": "mep802a-b-043",
+          "sequence": 43,
+          "zone": "Winterization Kit (Before)",
+          "zoneId": "zone-7",
+          "item": "42",
+          "itemDescription": "Control Unit",
+          "procedure": "Check for loose or broken wires or damage.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Wires loose or broken or control unit damaged."
+        },
+        {
+          "id": "mep802a-b-044",
+          "sequence": 44,
+          "zone": "Winterization Kit (Before)",
+          "zoneId": "zone-7",
+          "item": "43",
+          "itemDescription": "Fuel Pump",
+          "procedure": "Inspect fuel pump for leaks",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Any fuel leak."
+        },
+        {
+          "id": "mep802a-b-045",
+          "sequence": 45,
+          "zone": "Winterization Kit (Before)",
+          "zoneId": "zone-7",
+          "item": "44",
+          "itemDescription": "Fuel Tank",
+          "procedure": "Check for sufficient fuel.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Insufficient fuel."
+        },
+        {
+          "id": "mep802a-b-046",
+          "sequence": 46,
+          "zone": "Winterization Kit (Before)",
+          "zoneId": "zone-7",
+          "item": "45",
+          "itemDescription": "Fuel Lines",
+          "procedure": "Inspect winterization kit fuel lines for kinks, leaks, loose or damaged clamps.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Fuel lines damaged; clamps missing."
+        },
+        {
+          "id": "mep802a-b-047",
+          "sequence": 47,
+          "zone": "Winterization Kit (Before)",
+          "zoneId": "zone-7",
+          "item": "46",
+          "itemDescription": "Heater",
+          "procedure": "Inspect heater for signs of leaks.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Class III coolant or any class fuel leak is detected."
+        },
+        {
+          "id": "mep802a-b-048",
+          "sequence": 48,
+          "zone": "Winterization Kit (Before)",
+          "zoneId": "zone-7",
+          "item": "47",
+          "itemDescription": "Exhaust Hose",
+          "procedure": "Inspect for obstruction, missing or damaged mounting clamp.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Hose obstructed; hose or clamp missing or damaged."
+        },
+        {
+          "id": "mep802a-b-049",
+          "sequence": 49,
+          "zone": "Winterization Kit (Before)",
+          "zoneId": "zone-7",
+          "item": "48",
+          "itemDescription": "Air Inlet Hose",
+          "procedure": "Inspect for obstruction, missing or damaged mounting clamp.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Inlet hose obstructed."
+        },
+        {
+          "id": "mep802a-b-050",
+          "sequence": 50,
+          "zone": "Winterization Kit (Before)",
+          "zoneId": "zone-7",
+          "item": "49",
+          "itemDescription": "Winterization Kit Coolant Lines",
+          "procedure": "Inspect for loose, damaged, or missing clamps. Inspect for leaks.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Class III leaks or missing clamps or hoses."
+        },
+        {
+          "id": "mep802a-b-051",
+          "sequence": 51,
+          "zone": "Winterization Kit (Before)",
+          "zoneId": "zone-7",
+          "item": "50",
+          "itemDescription": "Coolant Pump",
+          "procedure": "Inspect for leaks.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Class III leaks or missing clamps or hoses."
+        },
+        {
+          "id": "mep802a-b-052",
+          "sequence": 52,
+          "zone": "Winterization Kit (Before)",
+          "zoneId": "zone-7",
+          "item": "51",
+          "itemDescription": "Coolant Lines",
+          "procedure": "Check on, around, and under equipment for coolant leaks.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Class III coolant leak is detected."
+        },
+        {
+          "id": "mep802a-b-053",
+          "sequence": 53,
+          "zone": "Winterization Kit (Before)",
+          "zoneId": "zone-7",
+          "item": "52",
+          "itemDescription": "Wire Harness",
+          "procedure": "Inspect wiring for burned or frayed insulation or loose terminals.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Wiring is loose or damaged."
+        },
+        {
+          "id": "mep802a-b-054",
+          "sequence": 54,
+          "zone": "Winterization Kit (Before)",
+          "zoneId": "zone-7",
+          "item": "53",
+          "itemDescription": "Heater Control and Switch Lamp",
+          "procedure": "Check that indicator light is on when heater is operating. Check Heater Function Code Plate.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Light blinks showing failure in accordance with Heater Function Code Plate."
+        }
+      ]
+    },
+    {
+      "id": "zone-8",
+      "name": "Winterization Kit (During)",
+      "description": "Winterization kit, if installed: heater assembly, fuel and coolant connections",
+      "steps": [
+        {
+          "id": "mep802a-b-055",
+          "sequence": 55,
+          "zone": "Winterization Kit (During)",
+          "zoneId": "zone-8",
+          "item": "54",
+          "itemDescription": "Heater Assembly",
+          "procedure": "Check for leaks.",
+          "conditionSet": "DURING",
+          "isNoGo": false
+        },
+        {
+          "id": "mep802a-b-056",
+          "sequence": 56,
+          "zone": "Winterization Kit (During)",
+          "zoneId": "zone-8",
+          "item": "55",
+          "itemDescription": "All Fuel Connections",
+          "procedure": "Check for leaks.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "Any class fuel leak detected."
+        },
+        {
+          "id": "mep802a-b-057",
+          "sequence": 57,
+          "zone": "Winterization Kit (During)",
+          "zoneId": "zone-8",
+          "item": "56",
+          "itemDescription": "All Coolant Connections",
+          "procedure": "Inspect for leaks.",
+          "conditionSet": "DURING",
+          "isNoGo": false
+        }
+      ]
+    },
+    {
+      "id": "zone-9",
+      "name": "Winterization Kit (After)",
+      "description": "Winterization kit, if installed: heater, control unit, fuel pump, hoses, connections, harness",
+      "steps": [
+        {
+          "id": "mep802a-b-058",
+          "sequence": 58,
+          "zone": "Winterization Kit (After)",
+          "zoneId": "zone-9",
+          "item": "57",
+          "itemDescription": "Heater Assembly",
+          "procedure": "Check for damage.",
+          "conditionSet": "AFTER",
+          "isNoGo": false
+        },
+        {
+          "id": "mep802a-b-059",
+          "sequence": 59,
+          "zone": "Winterization Kit (After)",
+          "zoneId": "zone-9",
+          "item": "58",
+          "itemDescription": "Control Unit",
+          "procedure": "Loose or broken wires or damage.",
+          "conditionSet": "AFTER",
+          "isNoGo": false
+        },
+        {
+          "id": "mep802a-b-060",
+          "sequence": 60,
+          "zone": "Winterization Kit (After)",
+          "zoneId": "zone-9",
+          "item": "59",
+          "itemDescription": "All Fuel Connections",
+          "procedure": "Check for leaks.",
+          "conditionSet": "AFTER",
+          "isNoGo": false
+        },
+        {
+          "id": "mep802a-b-061",
+          "sequence": 61,
+          "zone": "Winterization Kit (After)",
+          "zoneId": "zone-9",
+          "item": "60",
+          "itemDescription": "Fuel Pump",
+          "procedure": "Inspect fuel pump for leaks.",
+          "conditionSet": "AFTER",
+          "isNoGo": false
+        },
+        {
+          "id": "mep802a-b-062",
+          "sequence": 62,
+          "zone": "Winterization Kit (After)",
+          "zoneId": "zone-9",
+          "item": "61",
+          "itemDescription": "Heater",
+          "procedure": "Inspect heater for signs of leaks.",
+          "conditionSet": "AFTER",
+          "isNoGo": false
+        },
+        {
+          "id": "mep802a-b-063",
+          "sequence": 63,
+          "zone": "Winterization Kit (After)",
+          "zoneId": "zone-9",
+          "item": "62",
+          "itemDescription": "Exhaust Hose",
+          "procedure": "Inspect for obstruction, missing or damaged mounting clamp.",
+          "conditionSet": "AFTER",
+          "isNoGo": false
+        },
+        {
+          "id": "mep802a-b-064",
+          "sequence": 64,
+          "zone": "Winterization Kit (After)",
+          "zoneId": "zone-9",
+          "item": "63",
+          "itemDescription": "Air Inlet Hose",
+          "procedure": "Inspect for obstruction, missing or damaged mounting clamp.",
+          "conditionSet": "AFTER",
+          "isNoGo": false
+        },
+        {
+          "id": "mep802a-b-065",
+          "sequence": 65,
+          "zone": "Winterization Kit (After)",
+          "zoneId": "zone-9",
+          "item": "64",
+          "itemDescription": "All Coolant Connections",
+          "procedure": "Check for leaks.",
+          "conditionSet": "AFTER",
+          "isNoGo": false
+        },
+        {
+          "id": "mep802a-b-066",
+          "sequence": 66,
+          "zone": "Winterization Kit (After)",
+          "zoneId": "zone-9",
+          "item": "65",
+          "itemDescription": "Wire Harness",
+          "procedure": "Inspect wiring for burned or frayed insulation or loose terminals.",
+          "conditionSet": "AFTER",
+          "isNoGo": false
+        }
+      ]
+    }
+  ]
+}

@@ -64,6 +64,8 @@ export function profileToUser(profile: ApiProfile, existing?: Partial<User> | nu
     lastName: profile.last_name ?? '',
     mi: profile.mi ?? '',
     unit: normalizeUic(profile.unit ?? ''),
+    role: profile.role === 'admin' ? 'admin' : 'member',
+    mustChangePin: profile.must_change_pin === 1 || profile.must_change_pin === true,
   };
 }
 

@@ -1,0 +1,46 @@
+name: Set up workspace
+description: >-
+  Installs Node 22 with an npm cache, runs `npm ci` for all workspaces, and
+  makes sure Tailwind's native Linux binding is present.
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Node 22
+      uses: actions/setup-node@v7
+      with:
+        node-version: 22
+        cache: npm
+        cache-dependency-path: package-lock.json
+
+    - name: Install dependencies
+      shell: bash
+      run: npm ci --no-audit --no-fund
+
+    # package-lock.json was generated on macOS and records only the darwin-arm64
+    # build of @tailwindcss/oxide (a known npm bug with optional native deps).
+    # On Linux, `npm ci` then installs no native binding and `vite build` fails
+    # with "Cannot find native binding". Install the matching Linux build
+    # without touching package.json or the lockfile. This step does nothing
+    # once the lockfile includes the binding.
+    - name: Ensure Tailwind native binding (linux-x64)
+      shell: bash
+      run: |
+        set -euo pipefail
+        missing=()
+        for ws in pmcs-app pmcs-dashboard; do
+          if ! (cd "$ws" && node -e "require('@tailwindcss/oxide')") >/dev/null 2>&1; then
+            missing+=("$ws")
+          fi
+        done
+        if [ ${#missing[@]} -eq 0 ]; then
+          echo "Tailwind native binding already present."
+          exit 0
+        fi
+        version=$(cd "${missing[0]}" && node -p "require('@tailwindcss/oxide/package.json').version")
+        echo "Installing @tailwindcss/oxide-linux-x64-gnu@${version} (missing in: ${missing[*]})"
+        npm install --no-save --no-audit --no-fund "@tailwindcss/oxide-linux-x64-gnu@${version}"
+        for ws in "${missing[@]}"; do
+          (cd "$ws" && node -e "require('@tailwindcss/oxide')") \
+            || { echo "::error::Tailwind native binding still missing in $ws"; exit 1; }
+        done

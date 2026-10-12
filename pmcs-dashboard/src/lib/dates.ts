@@ -61,3 +61,41 @@ export function formatDay(value: string | null | undefined, opts: Intl.DateTimeF
 export function localHHMM(now = new Date()): string {
   return `${pad(now.getHours())}${pad(now.getMinutes())}`
 }
+
+/** Parses a server timestamp (ISO, or SQLite "YYYY-MM-DD HH:MM:SS" which is UTC). */
+export function parseServerTime(value: string | null | undefined): Date | null {
+  if (!value) return null
+  const iso = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}(:\d{2}(\.\d+)?)?$/.test(value) ? `${value.replace(' ', 'T')}Z` : value
+  const d = new Date(iso)
+  return Number.isNaN(d.getTime()) ? null : d
+}
+
+/** Local date + time for a server timestamp, or '---'. */
+export function formatDateTime(value: string | null | undefined): string {
+  const d = parseServerTime(value)
+  return d ? d.toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' }) : value || '---'
+}
+
+/** Compact age ("just now", "12 min", "5 h", "3 d") from a timestamp to `now`. */
+export function formatAge(value: string | null | undefined, now: Date): string {
+  const d = parseServerTime(value)
+  if (!d) return '---'
+  const mins = Math.floor((now.getTime() - d.getTime()) / 60_000)
+  if (mins < 1) return 'just now'
+  if (mins < 60) return `${mins} min`
+  const hours = Math.floor(mins / 60)
+  if (hours < 48) return `${hours} h`
+  return `${Math.floor(hours / 24)} d`
+}
+
+/** Local midnight at the start of a YYYY-MM-DD day, as an ISO instant. */
+export function localDayStartIso(dayKey: string): string {
+  const [y, m, d] = dayKey.split('-').map(Number)
+  return new Date(y, m - 1, d).toISOString()
+}
+
+/** Local midnight at the end of a YYYY-MM-DD day (start of the next day), as an ISO instant. */
+export function localDayEndIso(dayKey: string): string {
+  const [y, m, d] = dayKey.split('-').map(Number)
+  return new Date(y, m - 1, d + 1).toISOString()
+}

@@ -132,6 +132,7 @@ export function LoginPage() {
                 {loading && <Loader2 className="w-4 h-4 animate-spin" />}
                 Sign In
               </button>
+              <p className="text-xs text-text-secondary text-center">Forgot your PIN? Ask an admin to reset it.</p>
             </form>
           ) : (
             <form onSubmit={handleRegister} noValidate className="space-y-3">

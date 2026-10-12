@@ -1,0 +1,78 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+# A new push to a pull request cancels its older CI run. Runs on main are never
+# cancelled, because the Deploy workflow waits for them.
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  WRANGLER_SEND_METRICS: "false"
+
+jobs:
+  api:
+    name: API (typecheck, test, dry-run deploy)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: pmcs-api
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: ./.github/actions/setup-workspace
+
+      - name: Typecheck
+        run: npx tsc --noEmit -p .
+
+      - name: Test
+        run: npx vitest run
+
+      # Bundles the Worker and validates wrangler.toml without uploading.
+      # Needs no Cloudflare credentials.
+      - name: Dry-run deploy
+        run: npx wrangler deploy --dry-run
+
+  web:
+    name: ${{ matrix.workspace }} (typecheck, lint, test, build)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        workspace: [pmcs-app, pmcs-dashboard]
+    defaults:
+      run:
+        working-directory: ${{ matrix.workspace }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: ./.github/actions/setup-workspace
+
+      - name: Typecheck
+        run: npx tsc -b
+
+      - name: Lint
+        run: npx eslint src
+
+      - name: Test
+        run: npx vitest run
+
+      # The build refuses to run without VITE_API_URL. A placeholder is enough
+      # to prove that the app builds.
+      - name: Build
+        run: npm run build
+        env:
+          VITE_API_URL: https://example.invalid

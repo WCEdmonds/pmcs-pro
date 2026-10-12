@@ -16,6 +16,8 @@ import { SegmentedControl } from '../components/ui/SegmentedControl';
 import { Button } from '../components/ui/Button';
 import { Modal } from '../components/ui/Modal';
 import { UicField } from '../components/ui/UicField';
+import { ChangePinForm } from '../components/account/ChangePinForm';
+import { APP_VERSION } from '../utils/version';
 import { SyncBadge, SyncBanner } from '../components/sync/SyncStatus';
 import { useUnsynced } from '../hooks/useSync';
 import { ALL_RANKS } from '../data/ranks';
@@ -85,6 +87,11 @@ export default function SettingsPage() {
   const clearSession = useSessionStore((s) => s.clearSession);
   const [showClearModal, setShowClearModal] = useState(false);
   const [showSignOutModal, setShowSignOutModal] = useState(false);
+  const [showPinModal, setShowPinModal] = useState(false);
+  const [pinStatus, setPinStatus] = useState('');
+  const [showEverywhereModal, setShowEverywhereModal] = useState(false);
+  const [everywhereBusy, setEverywhereBusy] = useState(false);
+  const [everywhereError, setEverywhereError] = useState('');
   const [isDark, setIsDark] = useState(getSavedTheme() === 'dark');
   const [clearing, setClearing] = useState(false);
 
@@ -109,6 +116,24 @@ export default function SettingsPage() {
     clearSession();
     signOut();
     navigate('/login', { replace: true });
+  };
+
+  const handleSignOutEverywhere = async () => {
+    if (everywhereBusy) return;
+    setEverywhereBusy(true);
+    setEverywhereError('');
+    try {
+      await useUserStore.getState().signOutEverywhere();
+      clearSession();
+      navigate('/login', { replace: true });
+    } catch (err) {
+      setEverywhereError(
+        isNetworkError(err)
+          ? "Can't reach the server. Connect to the internet and try again. You are still signed in."
+          : `Could not sign out other devices: ${(err as Error).message}`,
+      );
+      setEverywhereBusy(false);
+    }
   };
 
   const handleClearData = async () => {
@@ -205,13 +230,18 @@ export default function SettingsPage() {
         <section aria-labelledby="account-heading">
           <h2 id="account-heading" className="text-xs font-semibold text-text-secondary font-display mb-3">ACCOUNT</h2>
           <p className="text-xs text-text-secondary mb-2">DOD ID: {user.dodId}</p>
+          {pinStatus && <p className="text-sm text-accent-green mb-2" role="status">{pinStatus}</p>}
           <div className="flex flex-col gap-2">
+            <Button variant="secondary" fullWidth onClick={() => { setPinStatus(''); setShowPinModal(true); }}>Change PIN</Button>
             <Button variant="secondary" fullWidth onClick={() => setShowSignOutModal(true)}>Sign Out</Button>
+            <Button variant="secondary" fullWidth onClick={() => { setEverywhereError(''); setShowEverywhereModal(true); }}>
+              Sign Out on All Devices
+            </Button>
             <Button variant="danger" fullWidth onClick={() => setShowClearModal(true)}>Clear All Saved Data</Button>
           </div>
         </section>
 
-        <p className="text-xs text-text-secondary text-center mt-4">PMCS Pro v0.2.0</p>
+        <p className="text-xs text-text-secondary text-center mt-4">PMCS Pro v{APP_VERSION}</p>
       </div>
 
       <Modal open={showSignOutModal} onClose={() => setShowSignOutModal(false)} title="Sign out?">
@@ -225,6 +255,38 @@ export default function SettingsPage() {
         <div className="flex gap-3">
           <Button variant="secondary" fullWidth onClick={() => setShowSignOutModal(false)}>Cancel</Button>
           <Button fullWidth onClick={handleSignOut}>Sign Out</Button>
+        </div>
+      </Modal>
+
+      <Modal open={showPinModal} onClose={() => setShowPinModal(false)} title="Change PIN">
+        <p className="text-text-secondary text-sm mb-3">Changing your PIN signs you out on every other device.</p>
+        <ChangePinForm
+          idPrefix="settings-pin"
+          onDone={() => {
+            setShowPinModal(false);
+            setPinStatus('PIN changed. Other devices were signed out.');
+          }}
+        />
+        <Button variant="ghost" fullWidth className="mt-2" onClick={() => setShowPinModal(false)}>Cancel</Button>
+      </Modal>
+
+      <Modal open={showEverywhereModal} onClose={() => !everywhereBusy && setShowEverywhereModal(false)} title="Sign out on all devices?">
+        <p className="text-text-secondary text-sm mb-3">
+          This signs you out on every phone and computer where you use PMCS Pro, <strong>including this phone</strong>. You'll need your PIN to sign in again.
+        </p>
+        {unsentCount > 0 ? (
+          <p className="text-accent-amber text-sm mb-3" role="alert">
+            {unsentCount} of your inspection{unsentCount === 1 ? ' has' : 's have'} not been sent to the server yet. They stay on this phone and will send after you sign in again.
+          </p>
+        ) : (
+          <p className="text-text-secondary text-sm mb-3">Your inspections stay on this device.</p>
+        )}
+        {everywhereError && <p className="text-accent-red text-sm mb-3" role="alert">{everywhereError}</p>}
+        <div className="flex gap-3">
+          <Button variant="secondary" fullWidth onClick={() => setShowEverywhereModal(false)} disabled={everywhereBusy}>Cancel</Button>
+          <Button variant="danger" fullWidth onClick={handleSignOutEverywhere} disabled={everywhereBusy}>
+            {everywhereBusy ? 'Signing out…' : 'Sign Out Everywhere'}
+          </Button>
         </div>
       </Modal>
 

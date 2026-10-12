@@ -7,7 +7,8 @@
 // re-sending a session that did reach the server is safe.
 
 import { db, type SyncStateEntry, type PendingFaultResolution } from './db';
-import { api, ApiError, getSessionDodId, isNetworkError } from './api';
+import { api, ApiError, getSessionDodId, isNetworkError, isPinChangeRequired } from './api';
+import { sendHeartbeat } from './heartbeat';
 import { postInspection, dataUrlToBlob } from './sync';
 import { localTimeHHMM } from './format';
 import { useUserStore } from '../stores/userStore';
@@ -23,13 +24,15 @@ export function backoffDelay(attempts: number): number {
 }
 
 export interface SyncRunResult {
-  skipped?: 'offline' | 'signed-out';
+  skipped?: 'offline' | 'signed-out' | 'pin-change';
   synced: number;
   failed: number;
   /** Sessions still not confirmed after this run (any user). */
   remaining: number;
   authFailed?: boolean;
   networkFailed?: boolean;
+  /** The server wants a new PIN before it accepts anything (admin reset). Nothing was lost. */
+  pinChangeRequired?: boolean;
 }
 
 // ---------------------------------------------------------------------------
@@ -210,6 +213,8 @@ async function flushFaultResolutions(dodId: string, force: boolean): Promise<voi
       await db.pendingFaultResolutions.delete(e.id);
     } catch (err) {
       if (err instanceof ApiError && err.status === 401) throw err;
+      // Must come before the 403 drop below: a PIN-change lock is not a refusal of this change.
+      if (isPinChangeRequired(err)) throw err;
       if (isNetworkError(err)) throw err;
       if (err instanceof ApiError && [400, 403, 404].includes(err.status)) {
         // Fault gone or no longer ours to change: retrying can never succeed.
@@ -251,12 +256,17 @@ async function runSync(force: boolean): Promise<SyncRunResult> {
   }
   const dodId = getSessionDodId();
   if (!dodId) return { ...result, skipped: 'signed-out', remaining: await countRemaining() };
+  const current = useUserStore.getState().user;
+  if (current?.dodId === dodId && current.mustChangePin) {
+    return { ...result, skipped: 'pin-change', remaining: await countRemaining() };
+  }
   const unit = await resolveUnit(dodId);
 
   try {
     await flushFaultResolutions(dodId, force);
   } catch (err) {
     if (err instanceof ApiError && err.status === 401) return { ...result, authFailed: true, remaining: await countRemaining() };
+    if (isPinChangeRequired(err)) return { ...result, pinChangeRequired: true, remaining: await countRemaining() };
     // network trouble: carry on, inspections will hit the same error and stop
   }
 
@@ -278,6 +288,12 @@ async function runSync(force: boolean): Promise<SyncRunResult> {
         // Not an attempt: we just need the user to sign in again.
         await patchState(session.id, { lastError: 'Sign in to send' });
         result.authFailed = true;
+        break;
+      }
+      if (isPinChangeRequired(err)) {
+        // Not an attempt either: the soldier has to set a new PIN first.
+        await patchState(session.id, { lastError: 'Set a new PIN to send' });
+        result.pinChangeRequired = true;
         break;
       }
       if (isNetworkError(err)) {
@@ -344,6 +360,10 @@ export function syncAll(opts: { force?: boolean } = {}): Promise<SyncRunResult> 
     })
     .then((result) => {
       scheduleNetworkRetry(result);
+      // Tell leaders what hasn't reached the server (throttled; never throws or blocks the run).
+      if (!result.skipped && !result.authFailed && !result.pinChangeRequired) {
+        sendHeartbeat().catch(() => undefined);
+      }
       return result;
     })
     .finally(() => {
@@ -393,6 +413,7 @@ export async function getUnsyncedSessions(dodId?: string): Promise<InspectionSes
 export function describeRun(r: SyncRunResult): string {
   if (r.skipped === 'offline') return "You're offline. They'll send automatically when you're back online.";
   if (r.skipped === 'signed-out' || r.authFailed) return 'Sign in again to send them.';
+  if (r.skipped === 'pin-change' || r.pinChangeRequired) return 'Set a new PIN to send them.';
   if (r.networkFailed) return "Can't reach the server right now. Will keep trying.";
   if (r.failed > 0) return `${r.failed} could not be sent. See the reasons below; will keep retrying.`;
   if (r.synced > 0) return `Sent ${r.synced} inspection${r.synced === 1 ? '' : 's'}.`;

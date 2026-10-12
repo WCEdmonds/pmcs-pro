@@ -6,8 +6,13 @@ compatibility_flags = ["nodejs_compat"]
 # Bundle the DA 2404 template as binary.
 rules = [{ type = "Data", globs = ["**/*.pdf"], fallthrough = false }]
 
+# Workers Logs (console.log/error, including onError's structured errors).
+[observability]
+enabled = true
+
 [vars]
-# Firebase Hosting origins of the field app and dashboard.
+# Firebase Hosting origins of the field app and dashboard. Production is exact-match only
+# (no ALLOWED_ORIGIN_PATTERNS here).
 ALLOWED_ORIGINS = "https://pmcs-pro.web.app,https://pmcs-pro.firebaseapp.com,https://pmcs-dashboard.web.app,https://pmcs-dashboard.firebaseapp.com"
 
 # Recipients of newly generated DA 2404 PDFs (comma-separated). Emails are sent only
@@ -15,6 +20,8 @@ ALLOWED_ORIGINS = "https://pmcs-pro.web.app,https://pmcs-pro.firebaseapp.com,htt
 # verified in Resend (the default onboarding@resend.dev only reaches the Resend account owner).
 # NOTIFICATION_EMAIL = "motorpool@example.mil"
 # NOTIFICATION_FROM = "PMCS Pro <pmcs@your-verified-domain>"
+# Per-unit recipients (admin dashboard → unit settings, table unit_settings) take precedence
+# over NOTIFICATION_EMAIL for DA 2404 and new-member emails.
 
 # Rate limit for /auth/* (signup, login, exists), keyed on client IP + DoD ID.
 # namespace_id is any account-unique integer string.
@@ -39,10 +46,54 @@ migrations_dir = "migrations"
 binding = "FILES"
 bucket_name = "pmcs-pro-files"
 
-# Daily readiness snapshot (vehicle_status_history).
+# "5 4 * * *": daily readiness snapshot (vehicle_status_history).
+# "17 3 * * 0": weekly D1 backup to R2 backups/YYYY-MM-DD.json.gz (Sundays), keeps 12 weeks.
+# scheduled() dispatches on the expression (DAILY_CRON / BACKUP_CRON in src/index.ts): keep them in sync.
 [triggers]
-crons = ["5 4 * * *"]
+crons = ["5 4 * * *", "17 3 * * 0"]
 
 # Secrets (set with `npx wrangler secret put JWT_SECRET`):
-#   JWT_SECRET      random 32+ byte string used to sign sessions and file links
-#   RESEND_API_KEY  optional; enables emailing new DA 2404s to NOTIFICATION_EMAIL
+#   JWT_SECRET            random 32+ byte string used to sign sessions and file links
+#   RESEND_API_KEY        optional; enables DA 2404 and new-member emails
+#   ADMIN_BOOTSTRAP_CODE  optional, temporary; lets the caller of POST /admin/claim become admin.
+#                         Delete it (`npx wrangler secret delete ADMIN_BOOTSTRAP_CODE`) once claimed.
+
+# ---------------------------------------------------------------------------
+# Staging: `npx wrangler deploy --env staging`, migrations with
+# `npx wrangler d1 migrations apply pmcs-pro-staging --remote --env staging`.
+# Secrets are per environment: `npx wrangler secret put JWT_SECRET --env staging`.
+# Nothing below is inherited from the top level except main, compatibility and rules.
+# ---------------------------------------------------------------------------
+[env.staging]
+name = "pmcs-api-staging"
+
+[env.staging.observability]
+enabled = true
+
+[env.staging.vars]
+ALLOWED_ORIGINS = "https://pmcs-pro.web.app,https://pmcs-pro.firebaseapp.com,https://pmcs-dashboard.web.app,https://pmcs-dashboard.firebaseapp.com"
+# Firebase Hosting preview channels (pmcs-pro--<channel>.web.app). Used by CORS only.
+ALLOWED_ORIGIN_PATTERNS = '^https://pmcs-(pro|dashboard)--[a-z0-9-]+\.web\.app$'
+
+[[env.staging.ratelimits]]
+name = "LOGIN_LIMITER"
+namespace_id = "1003"
+simple = { limit = 10, period = 60 }
+
+[[env.staging.ratelimits]]
+name = "AUTH_IP_LIMITER"
+namespace_id = "1004"
+simple = { limit = 30, period = 60 }
+
+[[env.staging.d1_databases]]
+binding = "DB"
+database_name = "pmcs-pro-staging"
+database_id = "6bd32b79-9f60-4725-8700-df9fb344b628"
+migrations_dir = "migrations"
+
+[[env.staging.r2_buckets]]
+binding = "FILES"
+bucket_name = "pmcs-pro-files-staging"
+
+[env.staging.triggers]
+crons = ["5 4 * * *", "17 3 * * 0"]

@@ -1,6 +1,6 @@
 // In-memory stand-ins for the Worker bindings, so the real Hono app and the real
 // migration can be exercised by vitest. D1 is emulated with node:sqlite.
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { DatabaseSync } from 'node:sqlite';
 
 class FakeStatement {
@@ -27,11 +27,17 @@ class FakeStatement {
   _exec() { return { success: true, ...this.exec() }; }
 }
 
+const MIGRATIONS = new URL('../migrations/', import.meta.url);
+/** Every migration in order, as wrangler applies them. */
+export const migrations = () => readdirSync(MIGRATIONS).filter((f) => f.endsWith('.sql')).sort()
+  .map((name) => ({ name, sql: readFileSync(new URL(name, MIGRATIONS), 'utf8') }));
+
 export class FakeD1 {
-  constructor() {
+  /** `upTo`: apply only migrations whose file name sorts at or before it (e.g. '0001_init.sql'). */
+  constructor({ upTo } = {}) {
     this.db = new DatabaseSync(':memory:');
     this.db.exec('PRAGMA foreign_keys = ON;');
-    this.db.exec(readFileSync(new URL('../migrations/0001_init.sql', import.meta.url), 'utf8'));
+    for (const m of migrations()) if (!upTo || m.name <= upTo) this.db.exec(m.sql);
   }
   prepare(sql) { return new FakeStatement(this.db, sql); }
   /** Like D1: all statements in one transaction, rolled back on any error. */
@@ -64,6 +70,15 @@ export class FakeR2 {
     return {};
   }
   async head(key) { return this.objects.has(key) ? { key } : null; }
+  async delete(keys) { for (const k of [keys].flat()) this.objects.delete(k); }
+  /** Paged like R2 (limit 2 per page here, to exercise the cursor). */
+  async list({ prefix = '', cursor, limit = 2 } = {}) {
+    const keys = [...this.objects.keys()].filter((k) => k.startsWith(prefix)).sort();
+    const start = cursor ? Number(cursor) : 0;
+    const page = keys.slice(start, start + limit);
+    const truncated = start + limit < keys.length;
+    return { objects: page.map((key) => ({ key })), truncated, cursor: truncated ? String(start + limit) : undefined };
+  }
   async get(key) {
     const o = this.objects.get(key);
     if (!o) return null;

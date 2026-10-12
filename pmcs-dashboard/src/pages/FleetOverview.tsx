@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts'
 import { Truck, AlertCircle, CheckCircle2, Filter, Building2 } from 'lucide-react'
-import { api, errorMessage, isAbortedError } from '../lib/api'
+import { api, ApiError, errorMessage, isAbortedError } from '../lib/api'
 import { useLoader } from '../hooks/useLoader'
 import { unitLabel, unitQuery, useUnits } from '../hooks/useUnits'
 import { buildReadinessSeries, countStatuses, statusBucket } from '../lib/readiness'
@@ -10,7 +10,8 @@ import { pmcsCompliance } from '../lib/compliance'
 import { addLocalDays, formatDay, localDateKey } from '../lib/dates'
 import { ErrorState, StaleBanner, StatusBadge } from '../components/Feedback'
 import { UnitSelector } from '../components/UnitSelector'
-import type { Fault, LastInspection, Vehicle, VehicleStatusSnapshot } from '../types/database'
+import { ClientStatusPanel } from '../components/ClientStatusPanel'
+import type { ClientStatus, Fault, LastInspection, Vehicle, VehicleStatusSnapshot } from '../types/database'
 
 type FilterMode = 'all' | 'nmc' | 'pmc' | 'overdue'
 
@@ -29,6 +30,8 @@ interface FleetData {
   lastInspections: LastInspection[]
   history: VehicleStatusSnapshot[] | null
   historyError: string | null
+  clientStatus: ClientStatus[]
+  clientStatusError: string | null
 }
 
 async function loadFleet(unit: string[] | undefined, signal: AbortSignal): Promise<FleetData> {
@@ -39,13 +42,23 @@ async function loadFleet(unit: string[] | undefined, signal: AbortSignal): Promi
       if (isAbortedError(err)) throw err
       return { history: null, historyError: errorMessage(err) }
     })
-  const [vehicles, openFaults, lastInspections, hist] = await Promise.all([
+  // Optional panel: its failure must not take down the fleet view. A 404 means
+  // the API doesn't have the endpoint yet (older deploy): show nothing.
+  const clientReq = api<ClientStatus[]>('GET', '/client-status', { query: { unit }, signal })
+    .then((rows) => ({ clientStatus: rows, clientStatusError: null }))
+    .catch((err: unknown) => {
+      if (isAbortedError(err)) throw err
+      if (err instanceof ApiError && err.status === 404) return { clientStatus: [], clientStatusError: null }
+      return { clientStatus: [], clientStatusError: errorMessage(err) }
+    })
+  const [vehicles, openFaults, lastInspections, hist, client] = await Promise.all([
     api<Vehicle[]>('GET', '/vehicles', { query: { unit }, signal }),
     api<Fault[]>('GET', '/faults', { query: { open: 1, unit }, signal }),
     api<LastInspection[]>('GET', '/vehicles/last-inspections', { query: { unit }, signal }),
     historyReq,
+    clientReq,
   ])
-  return { vehicles, openFaults, lastInspections, ...hist }
+  return { vehicles, openFaults, lastInspections, ...hist, ...client }
 }
 
 export function FleetOverview() {
@@ -152,6 +165,11 @@ export function FleetOverview() {
           <p className="text-text-secondary text-sm mt-1">NMC</p>
         </div>
       </div>
+
+      {data && <ClientStatusPanel rows={data.clientStatus} unitNames={unitNames} />}
+      {data?.clientStatusError && (
+        <p role="alert" className="text-sm text-accent-red">Couldn't check for unsent inspections: {data.clientStatusError}</p>
+      )}
 
       {multiUnit && !selectedUnit && unitBreakdown.length > 0 && (
         <div className="bg-bg-secondary border border-border rounded-xl" data-testid="unit-breakdown">

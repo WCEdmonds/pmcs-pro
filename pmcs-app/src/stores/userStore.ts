@@ -1,6 +1,16 @@
 import { create } from 'zustand';
 import { db } from '../utils/db';
-import { api, ApiError, getSessionDodId, refreshTokenIfStale, signOut, type ApiProfile } from '../utils/api';
+import {
+  api,
+  ApiError,
+  changePin as apiChangePin,
+  getSessionDodId,
+  isPinChangeRequired,
+  refreshTokenIfStale,
+  signOut,
+  signOutEverywhere as apiSignOutEverywhere,
+  type ApiProfile,
+} from '../utils/api';
 import { fetchRemoteProfile, normalizeUic, profileToUser } from '../utils/auth';
 import type { User } from '../types';
 
@@ -26,6 +36,15 @@ interface UserState {
   setUser: (user: User) => void;
   /** Restores the signed-in user on app start: /me when online, Dexie cache when offline. */
   restore: () => Promise<void>;
+  /** Locks the app to "Set a new PIN" (login/`/me` said so, or an API call returned PIN_CHANGE_REQUIRED). */
+  requirePinChange: () => Promise<void>;
+  /**
+   * Changes the PIN on the server and stores the new session token (all other sessions
+   * are signed out by the server). Clears the PIN-change lock. Local data is untouched.
+   */
+  changePin: (currentPin: string, newPin: string) => Promise<void>;
+  /** Signs out every session of this soldier, this device included. Local data is kept. */
+  signOutEverywhere: () => Promise<void>;
   /** Clears the token and the in-memory user. Local inspection data is kept. */
   signOut: () => void;
   logout: () => void;
@@ -92,13 +111,51 @@ export const useUserStore = create<UserState>((set, get) => ({
         set({ user: null });
       } else {
         // Offline / server trouble: keep working from the cached profile.
+        // A cached PIN-change lock stays in force offline.
         const cached = await db.users.get(dodId).catch(() => undefined);
         const user: User = cached ?? { dodId, rank: '', firstName: '', lastName: '', mi: '', unit: '' };
+        if (isPinChangeRequired(err)) user.mustChangePin = true;
         set({ user, offlineProfile: true });
       }
     } finally {
       set({ isLoading: false });
     }
+  },
+
+  requirePinChange: async () => {
+    const { user } = get();
+    if (!user || user.mustChangePin) return;
+    const updated = { ...user, mustChangePin: true };
+    set({ user: updated });
+    await cacheUser(updated);
+  },
+
+  changePin: async (currentPin, newPin) => {
+    const before = get().user;
+    let profile: ApiProfile;
+    try {
+      profile = await apiChangePin(currentPin, newPin);
+    } catch (err) {
+      if (err instanceof ApiError && err.status === 401) {
+        // Usually a wrong current PIN. If the session itself was revoked, /me says so
+        // and api() signs this device out with a message.
+        await api('GET', '/me').catch(() => undefined);
+      }
+      throw err;
+    }
+    if (profile && typeof profile === 'object' && profile.dod_id) {
+      // The server just accepted the new PIN, so the lock is over whatever the payload says.
+      await get().setFromProfile({ ...profile, must_change_pin: 0 });
+    } else if (before) {
+      const updated = { ...before, mustChangePin: false };
+      await cacheUser(updated);
+      set({ user: updated, offlineProfile: false });
+    }
+  },
+
+  signOutEverywhere: async () => {
+    await apiSignOutEverywhere();
+    set({ user: null, offlineProfile: false });
   },
 
   signOut: () => {

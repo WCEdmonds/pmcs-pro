@@ -18,6 +18,9 @@ export interface UnitsContextValue {
   loading: boolean
   error: string | null
   reload: () => void
+  /** Merges a profile returned by another endpoint (e.g. change-pin) into the loaded one. */
+  applyProfile: (p: Partial<Profile>) => void
+  isAdmin: boolean
 }
 
 export const UnitsContext = createContext<UnitsContextValue | null>(null)

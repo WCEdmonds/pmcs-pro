@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from 'react-router-dom'
-import { LayoutDashboard, AlertTriangle, ClipboardCheck, LogOut, Shield, Settings } from 'lucide-react'
+import { LayoutDashboard, AlertTriangle, ClipboardCheck, LogOut, Shield, ShieldCheck, Settings } from 'lucide-react'
 import { signOut } from '../lib/api'
 import { useUnits } from '../hooks/useUnits'
 
@@ -9,10 +9,12 @@ const navItems = [
   { to: '/compliance', icon: ClipboardCheck, label: 'PMCS Compliance' },
   { to: '/settings', icon: Settings, label: 'Settings' },
 ]
+const adminItem = { to: '/admin', icon: ShieldCheck, label: 'Admin' }
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate()
-  const { profile, ownUnit } = useUnits()
+  const { profile, ownUnit, isAdmin } = useUnits()
+  const items = isAdmin ? [...navItems, adminItem] : navItems
 
   function handleLogout() {
     signOut()
@@ -42,7 +44,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
 
         {/* Navigation */}
         <nav className="flex-1 p-4 space-y-1">
-          {navItems.map(({ to, icon: Icon, label }) => (
+          {items.map(({ to, icon: Icon, label }) => (
             <NavLink
               key={to}
               to={to}

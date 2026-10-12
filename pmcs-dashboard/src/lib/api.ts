@@ -23,15 +23,47 @@ export interface ApiProfile {
   created_at: string
   /** Units this user may view (own unit + approved watched units). Optional until the API ships it. */
   visible_units?: string[]
+  role?: 'member' | 'admin'
+  /** 1 while the user signs in with an admin-issued temporary PIN and must set their own. */
+  must_change_pin?: number | boolean
 }
 
 export class ApiError extends Error {
   /** HTTP status, or 0 for network failures and timeouts. */
   readonly status: number
-  constructor(message: string, status: number) {
+  /** Machine-readable error code from the body (`{error, code}`), when the server sends one. */
+  readonly code: string | undefined
+  constructor(message: string, status: number, code?: string) {
     super(message)
     this.name = 'ApiError'
     this.status = status
+    this.code = code
+  }
+}
+
+export const PIN_CHANGE_REQUIRED = 'PIN_CHANGE_REQUIRED'
+
+// --- Forced PIN change -------------------------------------------------------
+// Set when any request answers 403 {code:'PIN_CHANGE_REQUIRED'}; the app then
+// shows the set-new-PIN screen until changePin() succeeds or the user signs out.
+let pinChangeRequired = false
+const pinListeners = new Set<() => void>()
+
+function setPinChangeRequired(value: boolean) {
+  if (pinChangeRequired === value) return
+  pinChangeRequired = value
+  pinListeners.forEach((l) => l())
+}
+
+export function isPinChangeRequired(): boolean {
+  return pinChangeRequired
+}
+
+/** Subscribe to the forced-PIN-change flag (useSyncExternalStore-compatible). */
+export function onPinChangeRequired(listener: () => void): () => void {
+  pinListeners.add(listener)
+  return () => {
+    pinListeners.delete(listener)
   }
 }
 
@@ -73,6 +105,7 @@ function readToken(): string | null {
 
 function notify(signedIn: boolean) {
   if (!signedIn) {
+    setPinChangeRequired(false)
     sessionController.abort()
     sessionController = new AbortController()
   }
@@ -138,7 +171,8 @@ export interface ApiOptions {
   timeoutMs?: number
 }
 
-const AUTH_PATHS = new Set(['/auth/login', '/auth/signup'])
+// A 401 on these is a wrong DOD ID / PIN, not an expired session.
+const AUTH_PATHS = new Set(['/auth/login', '/auth/signup', '/auth/change-pin'])
 
 export async function api<T = unknown>(method: string, path: string, opts: ApiOptions = {}): Promise<T> {
   const url = new URL(API_URL + path, window.location.origin)
@@ -203,8 +237,11 @@ export async function api<T = unknown>(method: string, path: string, opts: ApiOp
         else notify(false)
         throw new AbortedError()
       }
-      const msg = (data as { error?: string } | undefined)?.error
-      throw new ApiError(msg || `Request failed (${res.status})`, res.status)
+      const { error: msg, code } = (data ?? {}) as { error?: string; code?: string }
+      if (res.status === 403 && code === PIN_CHANGE_REQUIRED && token && readToken() === token) {
+        setPinChangeRequired(true)
+      }
+      throw new ApiError(msg || `Request failed (${res.status})`, res.status, typeof code === 'string' ? code : undefined)
     }
 
     if (cancelled()) throw new AbortedError()
@@ -260,6 +297,25 @@ export async function signUp(
 
 export function signOut() {
   writeToken(null)
+}
+
+/**
+ * Sets a new PIN (also clears a forced PIN change). The server issues a fresh
+ * token, which replaces the stored one.
+ */
+export async function changePin(currentPin: string, newPin: string): Promise<ApiProfile> {
+  const { token, profile } = await api<{ token: string; profile: ApiProfile }>('POST', '/auth/change-pin', {
+    body: { current_pin: currentPin, new_pin: newPin },
+  })
+  if (token) writeToken(token)
+  setPinChangeRequired(false)
+  return profile
+}
+
+/** Ends every session for the signed-in user (all devices), then signs out here. */
+export async function signOutEverywhere(): Promise<void> {
+  await api('POST', '/auth/sign-out-everywhere')
+  signOut()
 }
 
 let refreshing: Promise<void> | null = null

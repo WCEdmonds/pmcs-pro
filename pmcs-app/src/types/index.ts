@@ -7,6 +7,9 @@ export interface User {
   unit: string;
   defaultInspectionType?: InspectionType;
   theme?: 'dark' | 'light';
+  role?: 'member' | 'admin';
+  /** An admin reset the PIN: the app is locked to "Set a new PIN" until it is changed. */
+  mustChangePin?: boolean;
 }
 
 export type VehicleType = 'M1151' | 'M1152' | 'LMTV_M1078' | 'M1101_TRAILER' | 'MEP803A';

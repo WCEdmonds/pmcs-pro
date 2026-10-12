@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { remoteSignIn, checkDodIdExists } from '../utils/auth';
-import { ApiError, isNetworkError } from '../utils/api';
+import { ApiError, getSignOutNotice, isNetworkError } from '../utils/api';
 import { useUserStore } from '../stores/userStore';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
@@ -22,6 +22,8 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const busyRef = useRef(false);
+  // "You were signed out" after a session was revoked elsewhere or expired.
+  const [notice] = useState(() => getSignOutNotice());
   const navigate = useNavigate();
   const location = useLocation();
   const from = (location.state as { from?: { pathname?: string } } | null)?.from?.pathname;
@@ -89,6 +91,16 @@ export default function LoginPage() {
           </p>
         </div>
 
+        {notice && (
+          <p
+            className="w-full max-w-sm text-sm text-text-primary bg-accent-amber/10 border border-accent-amber/40 rounded-[var(--radius-md)] p-3"
+            role="status"
+            data-testid="signout-notice"
+          >
+            {notice} Inspections saved on this phone are kept and will send after you sign in.
+          </p>
+        )}
+
         {step === 'dodid' ? (
           <form onSubmit={handleDodIdSubmit} noValidate className="w-full max-w-sm flex flex-col gap-4">
             <Input
@@ -116,7 +128,11 @@ export default function LoginPage() {
               placeholder="Enter your PIN"
               autoFocus
               autoComplete="off"
+              aria-describedby="forgot-pin-note"
             />
+            <p id="forgot-pin-note" className="text-xs text-text-secondary">
+              Forgot your PIN? Ask your unit's PMCS Pro admin to reset it. You'll get a temporary PIN.
+            </p>
             {error && <p className="text-sm text-accent-red" role="alert">{error}</p>}
             <button
               type="button"

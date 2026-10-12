@@ -20,7 +20,12 @@ export interface Profile {
   created_at: string
   /** Own unit first, then watched units (GET /me). */
   visible_units?: string[]
+  role?: UserRole
+  /** 0/1: signed in with an admin-issued temporary PIN; must set a new one. */
+  must_change_pin?: number | boolean
 }
+
+export type UserRole = 'member' | 'admin'
 
 /** Editable profile fields (PATCH /me). */
 export type ProfileUpdate = Partial<Pick<Profile, 'rank' | 'last_name' | 'first_name' | 'mi' | 'unit'>>
@@ -136,4 +141,63 @@ export interface DiagnosisAttempt {
   skip_reason: string | null
   readiness_result: Readiness
   completed_at: string
+}
+
+/** GET /client-status: a soldier's phone reporting inspections that haven't reached the server. */
+export interface ClientStatus {
+  user_id: string
+  rank: string | null
+  last_name: string | null
+  first_name: string | null
+  unit: string | null
+  unsent_count: number
+  failed_count: number
+  last_error: string | null
+  oldest_unsent_at: string | null
+  reported_at: string
+  app_version: string | null
+  stale: boolean | number
+}
+
+/** GET /admin/users */
+export interface AdminUser {
+  id: string
+  dod_last4: string | null
+  rank: string | null
+  first_name: string | null
+  last_name: string | null
+  mi: string | null
+  unit: string | null
+  role: UserRole
+  created_at: string
+  locked_until: string | null
+  must_change_pin: number | boolean
+}
+
+/** GET /admin/audit item */
+export interface AuditEntry {
+  id: string | number
+  at: string
+  actor_id: string | null
+  actor_dod_last4: string | null
+  actor_name: string | null
+  unit: string | null
+  action: string
+  target_type: string | null
+  target_id: string | null
+  /** Object (or a JSON string of one) describing the change. */
+  details: unknown
+}
+
+export interface AuditPage {
+  items: AuditEntry[]
+  next_before: string | number | null
+}
+
+/** GET /admin/unit-settings */
+export interface UnitSettings {
+  uic: string
+  unit_name: string | null
+  notification_emails: string[] | null
+  updated_at: string | null
 }

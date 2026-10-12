@@ -1,11 +1,13 @@
 import { useRef, useState } from 'react'
-import { Plus, X, Loader2, Eye, User, Save } from 'lucide-react'
-import { api, errorMessage, isAbortedError } from '../lib/api'
+import { Plus, X, Loader2, Eye, User, Save, Lock, LogOut, ShieldCheck } from 'lucide-react'
+import { api, errorMessage, isAbortedError, signOutEverywhere } from '../lib/api'
 import { useLoader } from '../hooks/useLoader'
 import { PROFILE_CHANGED, unitLabel, useUnits, WATCHED_UICS_CHANGED } from '../hooks/useUnits'
 import { normalizeUic, uicError } from '../lib/uic'
 import { UicInput } from '../components/UicInput'
 import { ActionError, ErrorState } from '../components/Feedback'
+import { ChangePinForm } from '../components/ChangePinForm'
+import { ConfirmDialog } from '../components/Dialog'
 import type { Profile, ProfileUpdate, WatchedUic } from '../types/database'
 
 const inputCls =
@@ -120,8 +122,103 @@ function ProfileEditor({ profile }: { profile: Profile }) {
   )
 }
 
+function SecuritySettings() {
+  const { applyProfile } = useUnits()
+  const [confirming, setConfirming] = useState(false)
+  return (
+    <div className="bg-bg-secondary border border-border rounded-xl p-6 space-y-6" data-testid="security-settings">
+      <div className="flex items-center gap-3">
+        <Lock className="w-5 h-5 text-accent-amber" />
+        <h2 className="font-display text-lg font-semibold text-text-primary">PIN and sessions</h2>
+      </div>
+      <div>
+        <h3 className="text-sm font-semibold text-text-primary mb-3">Change PIN</h3>
+        <ChangePinForm idPrefix="change-pin" onChanged={(p) => applyProfile(p)} />
+      </div>
+      <div className="border-t border-border pt-6">
+        <h3 className="text-sm font-semibold text-text-primary mb-1">Sign out on all devices</h3>
+        <p className="text-sm text-text-secondary mb-3">
+          Use this if you lost a phone or signed in on a shared computer. Every session ends, including this one.
+        </p>
+        <button
+          type="button"
+          onClick={() => setConfirming(true)}
+          className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-accent-red bg-accent-red/10 hover:bg-accent-red/20 transition-colors"
+        >
+          <LogOut className="w-4 h-4" />
+          Sign out on all devices
+        </button>
+      </div>
+      {confirming && (
+        <ConfirmDialog
+          title="Sign out on all devices?"
+          confirmLabel="Sign out everywhere"
+          danger
+          testId="confirm-signout-all"
+          onClose={() => setConfirming(false)}
+          onConfirm={signOutEverywhere}
+        >
+          <p>
+            You will be signed out of this dashboard and of PMCS Pro on every phone.
+          </p>
+        </ConfirmDialog>
+      )}
+    </div>
+  )
+}
+
+function BecomeAdmin() {
+  const [code, setCode] = useState('')
+  const [busy, setBusy] = useState(false)
+  const busyRef = useRef(false)
+  const [error, setError] = useState<string | null>(null)
+
+  async function claim(e: React.FormEvent) {
+    e.preventDefault()
+    if (busyRef.current) return
+    if (!code.trim()) {
+      setError('Enter the admin setup code')
+      return
+    }
+    busyRef.current = true
+    setBusy(true)
+    setError(null)
+    try {
+      await api('POST', '/admin/claim', { body: { code: code.trim() } })
+      setCode('')
+      window.dispatchEvent(new Event(PROFILE_CHANGED))
+    } catch (err) {
+      if (!isAbortedError(err)) setError(errorMessage(err))
+    } finally {
+      busyRef.current = false
+      setBusy(false)
+    }
+  }
+
+  return (
+    <form onSubmit={claim} className="bg-bg-secondary border border-border rounded-xl p-6 space-y-3" data-testid="become-admin">
+      <div className="flex items-center gap-3">
+        <ShieldCheck className="w-5 h-5 text-text-secondary" />
+        <h2 className="font-display text-lg font-semibold text-text-primary">Become admin</h2>
+      </div>
+      <p className="text-sm text-text-secondary">Only needed once, to set up the first admin.</p>
+      <div className="flex items-start gap-3">
+        <label htmlFor="admin-code" className="sr-only">Admin setup code</label>
+        <input id="admin-code" type="password" autoComplete="off" value={code} onChange={(e) => { setCode(e.target.value); setError(null) }}
+          placeholder="Admin setup code" className={inputCls} />
+        <button type="submit" disabled={busy}
+          className="flex items-center gap-2 px-5 py-2.5 bg-accent-blue text-white rounded-lg text-sm font-medium hover:bg-accent-blue/90 disabled:opacity-50 transition-colors whitespace-nowrap">
+          {busy && <Loader2 className="w-4 h-4 animate-spin" />}
+          Claim admin
+        </button>
+      </div>
+      {error && <p role="alert" className="text-accent-red text-sm">{error}</p>}
+    </form>
+  )
+}
+
 export function Settings() {
-  const { profile, ownUnit, unitNames, loading: profileLoading, error: profileError, reload: reloadProfile } = useUnits()
+  const { profile, ownUnit, unitNames, loading: profileLoading, error: profileError, reload: reloadProfile, isAdmin } = useUnits()
   const watched = useLoader('watched-uics', (signal) => api<WatchedUic[]>('GET', '/watched-uics', { signal }), { enabled: false })
   const [newUic, setNewUic] = useState('')
   const [adding, setAdding] = useState(false)
@@ -182,7 +279,7 @@ export function Settings() {
     <div className="space-y-8 max-w-2xl">
       <div>
         <h1 className="font-display text-2xl font-bold text-text-primary">Settings</h1>
-        <p className="text-text-secondary mt-1">Your profile and the units you watch</p>
+        <p className="text-text-secondary mt-1">Your profile, PIN and the units you watch</p>
       </div>
 
       {profile ? (
@@ -252,6 +349,9 @@ export function Settings() {
           </div>
         )}
       </div>
+
+      {profile && <SecuritySettings />}
+      {profile && !isAdmin && <BecomeAdmin />}
     </div>
   )
 }

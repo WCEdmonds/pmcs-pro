@@ -5,11 +5,13 @@
   "type": "module",
   "scripts": {
     "dev": "wrangler dev",
-    "deploy": "wrangler deploy",
+    "deploy": "wrangler deploy --env=\"\"",
+    "deploy:staging": "wrangler deploy --env staging",
     "typecheck": "tsc --noEmit -p .",
     "test": "vitest run",
     "db:migrate:local": "wrangler d1 migrations apply pmcs-pro --local",
     "db:migrate": "wrangler d1 migrations apply pmcs-pro --remote",
+    "db:migrate:staging": "wrangler d1 migrations apply pmcs-pro-staging --remote --env staging",
     "export-supabase": "node scripts/export-from-supabase.mjs",
     "import-d1": "node scripts/import-to-d1.mjs"
   },

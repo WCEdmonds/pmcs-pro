@@ -20,15 +20,25 @@ export interface ApiProfile {
   mi: string | null;
   unit: string | null;
   created_at: string;
+  /** 'admin' can use the dashboard admin tools. Absent on older API versions. */
+  role?: 'member' | 'admin';
+  /** 1 while the soldier must replace a temporary PIN an admin set. */
+  must_change_pin?: number | boolean;
 }
+
+/** Error code the API returns (403) on every non-auth route until a temporary PIN is replaced. */
+export const PIN_CHANGE_REQUIRED = 'PIN_CHANGE_REQUIRED';
 
 /** HTTP error returned by the API (status is the HTTP status code). */
 export class ApiError extends Error {
   readonly status: number;
-  constructor(message: string, status: number) {
+  /** Machine-readable `code` from the error body, when the API sends one. */
+  readonly code?: string;
+  constructor(message: string, status: number, code?: string) {
     super(message);
     this.name = 'ApiError';
     this.status = status;
+    this.code = code;
   }
 }
 
@@ -46,6 +56,61 @@ export function isNetworkError(err: unknown): err is NetworkError {
 
 export function isAuthError(err: unknown): boolean {
   return err instanceof ApiError && err.status === 401;
+}
+
+export function isPinChangeRequired(err: unknown): boolean {
+  return err instanceof ApiError && err.status === 403 && err.code === PIN_CHANGE_REQUIRED;
+}
+
+// ---------------------------------------------------------------------------
+// "Set a new PIN" gate: any API call answering PIN_CHANGE_REQUIRED tells the app.
+// ---------------------------------------------------------------------------
+
+type PinChangeListener = () => void;
+const pinChangeListeners = new Set<PinChangeListener>();
+
+export function onPinChangeRequired(listener: PinChangeListener): () => void {
+  pinChangeListeners.add(listener);
+  return () => pinChangeListeners.delete(listener);
+}
+
+function notifyPinChangeRequired() {
+  pinChangeListeners.forEach((l) => {
+    try {
+      l();
+    } catch (err) {
+      console.error('PIN-change listener failed:', err);
+    }
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Why the soldier was signed out (shown once on the login screen)
+// ---------------------------------------------------------------------------
+
+const SIGN_OUT_NOTICE_KEY = 'pmcs-signout-notice';
+export const REVOKED_NOTICE = 'You were signed out. Sign in again.';
+
+function setSignOutNotice(text: string | null) {
+  try {
+    if (text) sessionStorage.setItem(SIGN_OUT_NOTICE_KEY, text);
+    else sessionStorage.removeItem(SIGN_OUT_NOTICE_KEY);
+  } catch {
+    // ignore
+  }
+}
+
+/** The pending "you were signed out" message, if any (kept until cleared). */
+export function getSignOutNotice(): string | null {
+  try {
+    return sessionStorage.getItem(SIGN_OUT_NOTICE_KEY);
+  } catch {
+    return null;
+  }
+}
+
+export function clearSignOutNotice() {
+  setSignOutNotice(null);
 }
 
 type AuthListener = (signedIn: boolean) => void;
@@ -146,6 +211,11 @@ export interface ApiOptions {
   body?: unknown;
   raw?: Blob;
   timeoutMs?: number;
+  /**
+   * A 401 here means bad credentials in the body (e.g. a wrong current PIN), not a dead
+   * session, so the stored token is kept.
+   */
+  credentialCheck?: boolean;
 }
 
 export function apiUrl(path: string): string {
@@ -197,13 +267,21 @@ export async function api<T = unknown>(method: string, path: string, opts: ApiOp
   }
 
   if (!res.ok) {
-    if (res.status === 401) {
-      // Any 401 means we are not (or no longer) signed in.
-      if (token) writeToken(null);
-      else notify(false);
+    const errBody = isJson && data && typeof data === 'object' ? (data as { error?: unknown; code?: unknown }) : {};
+    const msg = (typeof errBody.error === 'string' && errBody.error) || `Request failed (${res.status})`;
+    const code = typeof errBody.code === 'string' ? errBody.code : undefined;
+    if (res.status === 401 && !opts.credentialCheck) {
+      // Any other 401 means we are not (or no longer) signed in: expired, or revoked
+      // from another device. Local data stays; it syncs after the next sign-in.
+      if (token && readToken() === token) {
+        setSignOutNotice(REVOKED_NOTICE);
+        writeToken(null);
+      } else if (!token) {
+        notify(false);
+      }
     }
-    const msg = (isJson && (data as { error?: string })?.error) || `Request failed (${res.status})`;
-    throw new ApiError(msg, res.status);
+    if (res.status === 403 && code === PIN_CHANGE_REQUIRED) notifyPinChangeRequired();
+    throw new ApiError(msg, res.status, code);
   }
   if (!isJson) {
     // A 2xx that isn't JSON is a proxy/captive portal/SPA fallback, not our API.
@@ -215,9 +293,35 @@ export async function api<T = unknown>(method: string, path: string, opts: ApiOp
 export async function signIn(dodId: string, pin: string): Promise<ApiProfile> {
   const { token, profile } = await api<{ token: string; profile: ApiProfile }>('POST', '/auth/login', {
     body: { dod_id: dodId, pin },
+    credentialCheck: true,
   });
+  clearSignOutNotice();
   writeToken(token);
   return profile;
+}
+
+/**
+ * POST /auth/change-pin. The server signs out every other session and returns a fresh
+ * token for this one, which replaces the stored token. A 401 here usually means the
+ * current PIN was wrong, so the session is kept (see `credentialCheck`).
+ */
+export async function changePin(currentPin: string, newPin: string): Promise<ApiProfile> {
+  const res = await api<{ token: string; profile: ApiProfile }>('POST', '/auth/change-pin', {
+    body: { current_pin: currentPin, new_pin: newPin },
+    credentialCheck: true,
+  });
+  if (!res || typeof res.token !== 'string' || !res.token) {
+    throw new ApiError('Unexpected response from the server', 200);
+  }
+  writeToken(res.token);
+  return res.profile;
+}
+
+/** POST /auth/sign-out-everywhere, then signs this device out too (the server revoked it). */
+export async function signOutEverywhere(): Promise<void> {
+  await api<{ ok: boolean }>('POST', '/auth/sign-out-everywhere');
+  clearSignOutNotice();
+  writeToken(null);
 }
 
 export async function signUp(
@@ -233,6 +337,7 @@ export async function signUp(
 }
 
 export function signOut() {
+  clearSignOutNotice();
   writeToken(null);
 }
 

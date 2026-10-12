@@ -1,0 +1,212 @@
+name: Preview
+
+# Every pull request from a branch of this repository gets:
+#   1. its migrations applied to the staging D1 database (pmcs-pro-staging)
+#   2. the API deployed to the staging Worker (pmcs-api-staging)
+#   3. both apps built against the staging API
+#   4. both apps deployed to Firebase preview channels "pr-<number>" (7 days)
+#   5. one PR comment with the links, updated on every push
+# Pull requests from forks (and Dependabot) are skipped: they get no secrets.
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: preview-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+env:
+  STAGING_API_URL: https://pmcs-api-staging.wcedmonds28.workers.dev
+  FIREBASE_PROJECT: pmcs-pro
+  FIREBASE_TOOLS: firebase-tools@15
+  CHANNEL: pr-${{ github.event.pull_request.number }}
+  WRANGLER_SEND_METRICS: "false"
+
+jobs:
+  preview:
+    name: Deploy preview
+    if: >-
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.actor != 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Check that the deploy secrets are set
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          missing=0
+          for name in CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID FIREBASE_SERVICE_ACCOUNT; do
+            if [ -z "${!name}" ]; then
+              echo "::error::Repository secret $name is not set. See docs/DEPLOYING.md."
+              missing=1
+            fi
+          done
+          exit $missing
+
+      # Guard against touching production. If [env.staging] were missing, wrangler
+      # would only warn and fall back to the top-level config, whose bindings are
+      # the production D1 database and R2 bucket.
+      - name: Check the staging config in wrangler.toml
+        run: |
+          python3 - <<'EOF'
+          import sys, tomllib
+          cfg = tomllib.load(open("pmcs-api/wrangler.toml", "rb"))
+          prod_d1 = {d.get("database_id") for d in cfg.get("d1_databases", [])}
+          prod_d1_names = {d.get("database_name") for d in cfg.get("d1_databases", [])}
+          prod_r2 = {b.get("bucket_name") for b in cfg.get("r2_buckets", [])}
+          st = cfg.get("env", {}).get("staging")
+          errors = []
+          if not st:
+              errors.append("pmcs-api/wrangler.toml has no [env.staging] section")
+          else:
+              name = st.get("name", f"{cfg.get('name')}-staging")
+              if name != "pmcs-api-staging":
+                  errors.append(f"[env.staging] deploys Worker '{name}', expected 'pmcs-api-staging'")
+              d1 = st.get("d1_databases", [])
+              if "pmcs-pro-staging" not in {d.get("database_name") for d in d1}:
+                  errors.append("[env.staging] has no d1_databases entry named 'pmcs-pro-staging'")
+              for d in d1:
+                  if d.get("database_id") in prod_d1 or d.get("database_name") in prod_d1_names:
+                      errors.append(f"[env.staging] binds the production D1 database ({d.get('database_name')})")
+              for b in st.get("r2_buckets", []):
+                  if b.get("bucket_name") in prod_r2:
+                      errors.append(f"[env.staging] binds the production R2 bucket ({b.get('bucket_name')})")
+          for e in errors:
+              print(f"::error::{e}")
+          sys.exit(1 if errors else 0)
+          EOF
+
+      - uses: ./.github/actions/setup-workspace
+
+      # 1. `pmcs-pro-staging` is the database_name in [[env.staging.d1_databases]].
+      # With --env staging, wrangler looks the name (or the binding, DB) up in
+      # that environment's own d1_databases, which are not inherited from the top
+      # level. The confirmation prompt is auto-accepted in CI.
+      - name: Apply D1 migrations (staging)
+        working-directory: pmcs-api
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: npx wrangler d1 migrations apply pmcs-pro-staging --remote --env staging
+
+      # 2. The staging Worker is shared by all open pull requests: the most
+      # recent push to any PR decides which API code staging runs.
+      - name: Deploy API Worker (staging)
+        working-directory: pmcs-api
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          npx wrangler deploy --env staging --message "PR #${PR_NUMBER} ${PR_SHA::7}"
+
+      # 3.
+      - name: Build field app and dashboard (staging API)
+        env:
+          VITE_API_URL: ${{ env.STAGING_API_URL }}
+        run: |
+          npm run build -w pmcs-app
+          npm run build -w pmcs-dashboard
+
+      - name: Write Firebase credentials
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          umask 077
+          key="$RUNNER_TEMP/firebase-sa.json"
+          printf '%s' "$FIREBASE_SERVICE_ACCOUNT" > "$key"
+          node -e 'JSON.parse(require("fs").readFileSync(process.argv[1], "utf8"))' "$key" \
+            || { echo "::error::FIREBASE_SERVICE_ACCOUNT is not valid JSON. Paste the whole key file."; exit 1; }
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$key" >> "$GITHUB_ENV"
+
+      # 4. `--only` takes the site names from firebase.json, comma-separated and
+      # without a "hosting:" prefix (the command adds it). Sites defined with
+      # "site" (not "target") need no `firebase target:apply`. The apps do not
+      # use Firebase Auth, so authorized-domain syncing is turned off.
+      # With --json, stdout holds only the result: {"status", "result": {<site>: {url, ...}}}.
+      - name: Deploy Firebase preview channels
+        id: channels
+        run: |
+          set -euo pipefail
+          out="$RUNNER_TEMP/channel-deploy.json"
+          status=0
+          npx --yes "$FIREBASE_TOOLS" hosting:channel:deploy "$CHANNEL" \
+            --only pmcs-pro,pmcs-dashboard \
+            --expires 7d \
+            --project "$FIREBASE_PROJECT" \
+            --non-interactive \
+            --no-authorized-domains \
+            --json > "$out" || status=$?
+          cat "$out"; echo
+          [ "$status" -eq 0 ] || exit "$status"
+          app_url=$(jq -r '.result["pmcs-pro"].url // empty' "$out")
+          dash_url=$(jq -r '.result["pmcs-dashboard"].url // empty' "$out")
+          if [ -z "$app_url" ] || [ -z "$dash_url" ]; then
+            echo "::error::Could not read the $CHANNEL channel URLs from the deploy result"
+            exit 1
+          fi
+          {
+            echo "app_url=$app_url"
+            echo "dashboard_url=$dash_url"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Smoke check
+        env:
+          APP_URL: ${{ steps.channels.outputs.app_url }}
+          DASHBOARD_URL: ${{ steps.channels.outputs.dashboard_url }}
+        run: bash .github/scripts/smoke.sh "$STAGING_API_URL" "$APP_URL" "$DASHBOARD_URL"
+
+      # 5. One comment per PR, found by a hidden marker and edited in place.
+      - name: Comment preview links on the PR
+        uses: actions/github-script@v9
+        env:
+          APP_URL: ${{ steps.channels.outputs.app_url }}
+          DASHBOARD_URL: ${{ steps.channels.outputs.dashboard_url }}
+        with:
+          script: |
+            const marker = '<!-- pmcs-preview -->';
+            const sha = context.payload.pull_request.head.sha.slice(0, 7);
+            const body = [
+              marker,
+              '### Preview deployed',
+              '',
+              '| | URL |',
+              '| --- | --- |',
+              `| Field app | ${process.env.APP_URL} |`,
+              `| Dashboard | ${process.env.DASHBOARD_URL} |`,
+              `| Staging API | ${process.env.STAGING_API_URL} |`,
+              '',
+              `Commit ${sha}. The preview links expire 7 days after the last push. ` +
+                'The staging API and database are shared by all open pull requests.',
+            ].join('\n');
+            const { owner, repo } = context.repo;
+            const issue_number = context.payload.pull_request.number;
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner, repo, issue_number, per_page: 100,
+            });
+            const existing = comments.find(
+              (c) => c.user?.type === 'Bot' && c.body?.includes(marker),
+            );
+            if (existing) {
+              await github.rest.issues.updateComment({ owner, repo, comment_id: existing.id, body });
+            } else {
+              await github.rest.issues.createComment({ owner, repo, issue_number, body });
+            }
+
+      - name: Remove Firebase credentials
+        if: always()
+        run: rm -f "$RUNNER_TEMP/firebase-sa.json"
