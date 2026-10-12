@@ -1,0 +1,3021 @@
+[
+  {
+    "categoryId": "gen-engine",
+    "vehicleType": "MEP1030",
+    "tmReference": "TM 9-6115-749-10, WP 0010, Engine symptoms 1-9, 20, 23, 27 and fuel level warnings",
+    "rootNodeId": "m1030e-q1",
+    "nodes": {
+      "m1030e-q1": {
+        "id": "m1030e-q1",
+        "type": "question",
+        "text": "What is happening?",
+        "options": [
+          {
+            "label": "DCS has no power — no lighted display",
+            "nextNodeId": "m1030e-n1"
+          },
+          {
+            "label": "Engine fails to crank",
+            "nextNodeId": "m1030e-c0"
+          },
+          {
+            "label": "Engine cranks but fails to start [Fault 359: Fail to Start]",
+            "nextNodeId": "m1030e-f1"
+          },
+          {
+            "label": "Engine fails to start [Warning/Fault 3663: Winterization Kit Failure to Heat]",
+            "nextNodeId": "m1030e-w1"
+          },
+          {
+            "label": "Engine starts but stops",
+            "nextNodeId": "m1030e-s1"
+          },
+          {
+            "label": "Engine stops suddenly (DCS shows a fault code)",
+            "nextNodeId": "m1030e-x0"
+          },
+          {
+            "label": "Engine starts but develops lower than rated speed",
+            "nextNodeId": "m1030e-l1"
+          },
+          {
+            "label": "Engine will not shut down [Warning 1416: Fail To Shutdown]",
+            "nextNodeId": "m1030e-d1"
+          },
+          {
+            "label": "Fuel level warning [1441 Low Fuel Level, 2937 Fuel Level Sensor Low, 2936 Fuel Level Sensor High]",
+            "nextNodeId": "m1030e-u0"
+          },
+          {
+            "label": "[Warning 1417: Power Down Failure] shown longer than 10 min",
+            "nextNodeId": "m1030e-p1"
+          }
+        ],
+        "tmPage": "WP 0009-2"
+      },
+      "m1030e-n1": {
+        "id": "m1030e-n1",
+        "type": "action",
+        "text": "Push the PANEL LIGHTS switch",
+        "actionText": "Push the PANEL LIGHTS switch.",
+        "nextNodeId": "m1030e-n1b",
+        "tmPage": "WP 0010-2"
+      },
+      "m1030e-n1b": {
+        "id": "m1030e-n1b",
+        "type": "question",
+        "text": "Does the DCS display light now?",
+        "options": [
+          {
+            "label": "Yes — display lit",
+            "nextNodeId": "m1030e-n6"
+          },
+          {
+            "label": "No — still dark",
+            "nextNodeId": "m1030e-n2"
+          }
+        ],
+        "tmPage": "WP 0010-2"
+      },
+      "m1030e-n2": {
+        "id": "m1030e-n2",
+        "type": "question",
+        "text": "Inspect the battery cables and connections. Are any loose, damaged, corroded, or disconnected?",
+        "options": [
+          {
+            "label": "Yes",
+            "nextNodeId": "m1030e-n2t"
+          },
+          {
+            "label": "No — serviceable",
+            "nextNodeId": "m1030e-n3"
+          }
+        ],
+        "tmPage": "WP 0010-2"
+      },
+      "m1030e-n2t": {
+        "id": "m1030e-n2t",
+        "type": "terminal",
+        "text": "Battery cables and/or connections are loose, damaged, corroded, or disconnected. Notify field maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "No DCS power — battery cables/connections defective"
+        },
+        "tmPage": "WP 0010-2"
+      },
+      "m1030e-n3": {
+        "id": "m1030e-n3",
+        "type": "question",
+        "text": "Is the main DC circuit breaker in the OFF/TRIP position (WP 0005)?",
+        "options": [
+          {
+            "label": "Yes — OFF/TRIP",
+            "nextNodeId": "m1030e-n3a"
+          },
+          {
+            "label": "No — ON",
+            "nextNodeId": "m1030e-n5t"
+          }
+        ],
+        "tmPage": "WP 0010-2"
+      },
+      "m1030e-n3a": {
+        "id": "m1030e-n3a",
+        "type": "action",
+        "text": "Reset the main DC circuit breaker",
+        "actionText": "Move the switch handle to ON to RESET the circuit breaker (one attempt only).",
+        "nextNodeId": "m1030e-n4",
+        "tmPage": "WP 0010-2"
+      },
+      "m1030e-n4": {
+        "id": "m1030e-n4",
+        "type": "question",
+        "text": "Did the circuit breaker return to OFF/TRIP after the single attempt?",
+        "options": [
+          {
+            "label": "Yes — it tripped again",
+            "nextNodeId": "m1030e-n4t"
+          },
+          {
+            "label": "No — it stays ON",
+            "nextNodeId": "m1030e-n4b"
+          }
+        ],
+        "tmPage": "WP 0010-2"
+      },
+      "m1030e-n4t": {
+        "id": "m1030e-n4t",
+        "type": "terminal",
+        "text": "Main DC circuit breaker returns to OFF/TRIP after a single attempt to move to ON. Notify field maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "No DCS power — main DC circuit breaker will not stay ON"
+        },
+        "tmPage": "WP 0010-2"
+      },
+      "m1030e-n4b": {
+        "id": "m1030e-n4b",
+        "type": "action",
+        "text": "Push PANEL LIGHTS",
+        "actionText": "Push the PANEL LIGHTS switch to determine if power has been restored.",
+        "nextNodeId": "m1030e-n5",
+        "tmPage": "WP 0010-2"
+      },
+      "m1030e-n5": {
+        "id": "m1030e-n5",
+        "type": "question",
+        "text": "Does the DCS indicate power is available (lighted display)?",
+        "options": [
+          {
+            "label": "Yes",
+            "nextNodeId": "m1030e-n6"
+          },
+          {
+            "label": "No — still no power",
+            "nextNodeId": "m1030e-n5t"
+          }
+        ],
+        "tmPage": "WP 0010-2"
+      },
+      "m1030e-n5t": {
+        "id": "m1030e-n5t",
+        "type": "terminal",
+        "text": "DCS still indicates no power available (no lighted display). Notify field maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "No DCS power — not restored"
+        },
+        "tmPage": "WP 0010-2"
+      },
+      "m1030e-n6": {
+        "id": "m1030e-n6",
+        "type": "action",
+        "text": "Turn engine control switch to START",
+        "actionText": "Turn the engine control switch to START position.",
+        "nextNodeId": "m1030e-n7",
+        "tmPage": "WP 0010-2"
+      },
+      "m1030e-n7": {
+        "id": "m1030e-n7",
+        "type": "question",
+        "text": "Does the engine crank and start?",
+        "options": [
+          {
+            "label": "Yes — engine runs",
+            "nextNodeId": "m1030e-n7y"
+          },
+          {
+            "label": "No — engine fails to crank",
+            "nextNodeId": "m1030e-c0"
+          }
+        ],
+        "tmPage": "WP 0010-2"
+      },
+      "m1030e-n7y": {
+        "id": "m1030e-n7y",
+        "type": "terminal",
+        "text": "DCS power restored (panel lights / main DC circuit breaker reset); engine starts.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "No DCS power — restored by operator, engine starts"
+        }
+      },
+      "m1030e-c0": {
+        "id": "m1030e-c0",
+        "type": "question",
+        "text": "Which code does the DCS show?",
+        "options": [
+          {
+            "label": "[Fault 1443: Dead Battery]",
+            "nextNodeId": "m1030e-b1"
+          },
+          {
+            "label": "[Fault 1438: Fail To Crank]",
+            "nextNodeId": "m1030e-k1t"
+          },
+          {
+            "label": "[Fault 1434: Remote E-Stop]",
+            "nextNodeId": "m1030e-r1"
+          },
+          {
+            "label": "[Fault 1433: Local E-Stop]",
+            "nextNodeId": "m1030e-e1"
+          },
+          {
+            "label": "[Warning 1131: Battleshort Active]",
+            "nextNodeId": "m1030e-g1"
+          },
+          {
+            "label": "No code / other code",
+            "nextNodeId": "m1030e-c0t"
+          }
+        ],
+        "tmPage": "WP 0009-2"
+      },
+      "m1030e-c0t": {
+        "id": "m1030e-c0t",
+        "type": "terminal",
+        "text": "Engine fails to crank with no listed code. Not corrected by the listed corrective actions. Per WP 0009: \"If a malfunction is not listed or is not corrected by the listed corrective action, notify field maintenance.\"",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Engine fails to crank — not listed/not corrected"
+        },
+        "tmPage": "WP 0009-1"
+      },
+      "m1030e-b1": {
+        "id": "m1030e-b1",
+        "type": "action",
+        "text": "Check battery charge on the DCS",
+        "actionText": "Examine the [Battery] [Vdc] parameter on the DCS display.",
+        "nextNodeId": "m1030e-b2",
+        "tmPage": "WP 0010-3"
+      },
+      "m1030e-b2": {
+        "id": "m1030e-b2",
+        "type": "question",
+        "text": "Where is the battery indicator?",
+        "options": [
+          {
+            "label": "Red area — discharged",
+            "nextNodeId": "m1030e-b2t"
+          },
+          {
+            "label": "Green area — charged",
+            "nextNodeId": "m1030e-b3"
+          }
+        ],
+        "tmPage": "WP 0010-3"
+      },
+      "m1030e-b2t": {
+        "id": "m1030e-b2t",
+        "type": "terminal",
+        "text": "Battery is discharged (indicator in the red area of the DCS display). Notify field maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Engine fails to crank — dead battery"
+        },
+        "tmPage": "WP 0010-3"
+      },
+      "m1030e-b3": {
+        "id": "m1030e-b3",
+        "type": "action",
+        "text": "Reset and attempt start",
+        "actionText": "Push the FAULT RESET switch to clear the fault on the DCS, then turn the engine control switch to START. If needed, attempt to start the generator set using the NATO slave receptacle (WP 0008, Emergency).",
+        "nextNodeId": "m1030e-b4",
+        "tmPage": "WP 0010-3"
+      },
+      "m1030e-b4": {
+        "id": "m1030e-b4",
+        "type": "question",
+        "text": "Did the engine start, and is the battery indicator out of the red area?",
+        "options": [
+          {
+            "label": "Yes",
+            "nextNodeId": "m1030e-b4y"
+          },
+          {
+            "label": "No — remains in the red area",
+            "nextNodeId": "m1030e-b4t"
+          }
+        ],
+        "tmPage": "WP 0010-3"
+      },
+      "m1030e-b4y": {
+        "id": "m1030e-b4y",
+        "type": "terminal",
+        "text": "Fault 1443 cleared; engine started and battery indicator is not in the red area.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Dead Battery fault — cleared, engine starts"
+        }
+      },
+      "m1030e-b4t": {
+        "id": "m1030e-b4t",
+        "type": "terminal",
+        "text": "Battery indicator remains in the red area on the DCS display. Notify field maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Dead battery — remains discharged"
+        },
+        "tmPage": "WP 0010-3"
+      },
+      "m1030e-k1t": {
+        "id": "m1030e-k1t",
+        "type": "terminal",
+        "text": "Faulty control, speed sensing, or starting system(s) [Fault 1438: Fail To Crank]. Notify field maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Engine fails to crank — Fault 1438 Fail To Crank"
+        },
+        "tmPage": "WP 0010-3"
+      },
+      "m1030e-r1": {
+        "id": "m1030e-r1",
+        "type": "question",
+        "text": "Was the remote EMERGENCY STOP enabled intentionally?",
+        "options": [
+          {
+            "label": "Yes — intentionally",
+            "nextNodeId": "m1030e-r2"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m1030e-r3"
+          }
+        ],
+        "tmPage": "WP 0010-3"
+      },
+      "m1030e-r2": {
+        "id": "m1030e-r2",
+        "type": "question",
+        "text": "Determine the cause. Can you restore from the cause (WP 0011)?",
+        "options": [
+          {
+            "label": "Yes — restored",
+            "nextNodeId": "m1030e-r3"
+          },
+          {
+            "label": "No — unable to restore",
+            "nextNodeId": "m1030e-r2t"
+          }
+        ],
+        "tmPage": "WP 0010-3"
+      },
+      "m1030e-r2t": {
+        "id": "m1030e-r2t",
+        "type": "terminal",
+        "text": "Unable to restore from the cause of the EMERGENCY STOP. Notify field maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Remote E-Stop — cannot restore from cause"
+        },
+        "tmPage": "WP 0010-3"
+      },
+      "m1030e-r3": {
+        "id": "m1030e-r3",
+        "type": "action",
+        "text": "Release the remote EMERGENCY STOP",
+        "actionText": "Disable the remote EMERGENCY STOP (place the PC cursor over the EMERGENCY STOP command symbol and click or press ENTER). Push FAULT RESET at the DCS panel to clear the Remote E-Stop fault, then turn the engine control switch to START.",
+        "nextNodeId": "m1030e-r4",
+        "tmPage": "WP 0010-3"
+      },
+      "m1030e-r4": {
+        "id": "m1030e-r4",
+        "type": "question",
+        "text": "Does the engine crank now?",
+        "options": [
+          {
+            "label": "Yes",
+            "nextNodeId": "m1030e-r4y"
+          },
+          {
+            "label": "No — TM: proceed to next symptom",
+            "nextNodeId": "m1030e-e1"
+          }
+        ],
+        "tmPage": "WP 0010-4"
+      },
+      "m1030e-r4y": {
+        "id": "m1030e-r4y",
+        "type": "terminal",
+        "text": "Remote E-Stop cleared; engine cranks.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Engine fails to crank — Remote E-Stop cleared"
+        }
+      },
+      "m1030e-e1": {
+        "id": "m1030e-e1",
+        "type": "question",
+        "text": "Was the local EMERGENCY STOP enabled intentionally?",
+        "options": [
+          {
+            "label": "Yes — intentionally",
+            "nextNodeId": "m1030e-e2"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m1030e-e3"
+          }
+        ],
+        "tmPage": "WP 0010-4"
+      },
+      "m1030e-e2": {
+        "id": "m1030e-e2",
+        "type": "question",
+        "text": "Determine the cause. Can you restore from the cause (WP 0011)?",
+        "options": [
+          {
+            "label": "Yes — restored",
+            "nextNodeId": "m1030e-e3"
+          },
+          {
+            "label": "No — unable to restore",
+            "nextNodeId": "m1030e-e2t"
+          }
+        ],
+        "tmPage": "WP 0010-4"
+      },
+      "m1030e-e2t": {
+        "id": "m1030e-e2t",
+        "type": "terminal",
+        "text": "Unable to restore from the cause of the EMERGENCY STOP. Notify field maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Local E-Stop — cannot restore from cause"
+        },
+        "tmPage": "WP 0010-4"
+      },
+      "m1030e-e3": {
+        "id": "m1030e-e3",
+        "type": "action",
+        "text": "Release the local EMERGENCY STOP",
+        "actionText": "Pull the EMERGENCY STOP switch knob out to the extended position. Push FAULT RESET at the DCS panel to clear the Local E-Stop fault, then turn the engine control switch to START.",
+        "nextNodeId": "m1030e-e4",
+        "tmPage": "WP 0010-4"
+      },
+      "m1030e-e4": {
+        "id": "m1030e-e4",
+        "type": "question",
+        "text": "Does the engine crank now?",
+        "options": [
+          {
+            "label": "Yes",
+            "nextNodeId": "m1030e-e4y"
+          },
+          {
+            "label": "No — TM: proceed to next symptom",
+            "nextNodeId": "m1030e-g1"
+          }
+        ],
+        "tmPage": "WP 0010-4"
+      },
+      "m1030e-e4y": {
+        "id": "m1030e-e4y",
+        "type": "terminal",
+        "text": "Local E-Stop cleared; engine cranks.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Engine fails to crank — Local E-Stop cleared"
+        }
+      },
+      "m1030e-g1": {
+        "id": "m1030e-g1",
+        "type": "question",
+        "text": "Is the BATTLESHORT switch in the ON position?",
+        "options": [
+          {
+            "label": "Yes — ON",
+            "nextNodeId": "m1030e-g2"
+          },
+          {
+            "label": "No — OFF",
+            "nextNodeId": "m1030e-c0t"
+          }
+        ],
+        "tmPage": "WP 0010-4"
+      },
+      "m1030e-g2": {
+        "id": "m1030e-g2",
+        "type": "action",
+        "text": "Turn BATTLESHORT OFF and restart",
+        "actionText": "Move the BATTLESHORT switch handle to OFF. Push FAULT RESET at the DCS panel to clear [Warning 1131: Battleshort Active]. Turn the engine control switch to START.",
+        "nextNodeId": "m1030e-g3",
+        "tmPage": "WP 0010-4"
+      },
+      "m1030e-g3": {
+        "id": "m1030e-g3",
+        "type": "question",
+        "text": "Does the engine crank now?",
+        "options": [
+          {
+            "label": "Yes",
+            "nextNodeId": "m1030e-g3y"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m1030e-g3t"
+          }
+        ],
+        "tmPage": "WP 0010-4"
+      },
+      "m1030e-g3y": {
+        "id": "m1030e-g3y",
+        "type": "terminal",
+        "text": "BATTLESHORT switch set to OFF; engine cranks.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Engine fails to crank — BATTLESHORT turned OFF"
+        }
+      },
+      "m1030e-g3t": {
+        "id": "m1030e-g3t",
+        "type": "terminal",
+        "text": "Engine fails to crank after BATTLESHORT switch set to OFF. Notify field maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Engine fails to crank — not corrected"
+        },
+        "tmPage": "WP 0010-4"
+      },
+      "m1030e-f1": {
+        "id": "m1030e-f1",
+        "type": "action",
+        "text": "Service the fuel system",
+        "actionText": "Perform WP 0016, Service Fuel System. Push FAULT RESET at the DCS panel to clear [Fault 359: Fail to Start]. Turn the engine control switch to START.",
+        "nextNodeId": "m1030e-f2",
+        "tmPage": "WP 0010-4"
+      },
+      "m1030e-f2": {
+        "id": "m1030e-f2",
+        "type": "question",
+        "text": "Does [Fault 359: Fail to Start] reappear?",
+        "options": [
+          {
+            "label": "No — engine starts",
+            "nextNodeId": "m1030e-f2y"
+          },
+          {
+            "label": "Yes — reappears",
+            "nextNodeId": "m1030e-f3"
+          }
+        ],
+        "tmPage": "WP 0010-5"
+      },
+      "m1030e-f2y": {
+        "id": "m1030e-f2y",
+        "type": "terminal",
+        "text": "Fuel system serviced; engine starts.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Fail to Start — fuel system serviced"
+        }
+      },
+      "m1030e-f3": {
+        "id": "m1030e-f3",
+        "type": "action",
+        "text": "Service the air cleaner",
+        "actionText": "Perform WP 0014, Service Air Cleaner. Push FAULT RESET to clear [Fault 359: Fail to Start]. Turn the engine control switch to START.",
+        "nextNodeId": "m1030e-f4",
+        "tmPage": "WP 0010-5"
+      },
+      "m1030e-f4": {
+        "id": "m1030e-f4",
+        "type": "question",
+        "text": "Does [Fault 359: Fail to Start] reappear?",
+        "options": [
+          {
+            "label": "No — engine starts",
+            "nextNodeId": "m1030e-f4y"
+          },
+          {
+            "label": "Yes — reappears",
+            "nextNodeId": "m1030e-f4t"
+          }
+        ],
+        "tmPage": "WP 0010-5"
+      },
+      "m1030e-f4y": {
+        "id": "m1030e-f4y",
+        "type": "terminal",
+        "text": "Air cleaner serviced; engine starts.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Fail to Start — air cleaner serviced"
+        }
+      },
+      "m1030e-f4t": {
+        "id": "m1030e-f4t",
+        "type": "terminal",
+        "text": "[Fault 359: Fail to Start] reappears on the DCS display. Notify field maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Fail to Start — not corrected"
+        },
+        "tmPage": "WP 0010-5"
+      },
+      "m1030e-w1": {
+        "id": "m1030e-w1",
+        "type": "action",
+        "text": "Check cold weather starting aid status",
+        "actionText": "Examine cold weather starting aid status on the DCS display ([Glw Plg] = air intake heaters). Turn the engine control switch to PRIME & RUN (or PRIME & RUN AUX FUEL if fuel is supplied from an auxiliary source). Observe coolant temperature on the DCS display.",
+        "nextNodeId": "m1030e-w2",
+        "tmPage": "WP 0010-5"
+      },
+      "m1030e-w2": {
+        "id": "m1030e-w2",
+        "type": "question",
+        "text": "Are coolant and ambient air temperatures below +20 °F (-6 °C)?",
+        "options": [
+          {
+            "label": "Yes — below +20 °F ([Not Ready To Crank] shown)",
+            "nextNodeId": "m1030e-w3"
+          },
+          {
+            "label": "No — above +20 °F and cold start aids are activated",
+            "nextNodeId": "m1030e-w2t"
+          }
+        ],
+        "tmPage": "WP 0010-5"
+      },
+      "m1030e-w2t": {
+        "id": "m1030e-w2t",
+        "type": "terminal",
+        "text": "Coolant and ambient temperatures are above +20 °F (-6 °C) and cold start aids are activated: move the main DC circuit breaker to OFF/TRIP and notify field maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Winterization kit/air intake heaters activated above +20 °F"
+        },
+        "tmPage": "WP 0010-5"
+      },
+      "m1030e-w3": {
+        "id": "m1030e-w3",
+        "type": "action",
+        "text": "Wait for Ready To Crank",
+        "actionText": "Wait until the [Ready To Crank] message appears after the allotted time shown on the DCS display, then turn the engine control switch to START.",
+        "nextNodeId": "m1030e-w4",
+        "tmPage": "WP 0010-5"
+      },
+      "m1030e-w4": {
+        "id": "m1030e-w4",
+        "type": "question",
+        "text": "Does the engine start?",
+        "options": [
+          {
+            "label": "Yes",
+            "nextNodeId": "m1030e-w4y"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m1030e-w4t"
+          }
+        ],
+        "tmPage": "WP 0010-5"
+      },
+      "m1030e-w4y": {
+        "id": "m1030e-w4y",
+        "type": "terminal",
+        "text": "Engine started after the cold-start heat cycle completed.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Cold start — engine started after Ready To Crank"
+        }
+      },
+      "m1030e-w4t": {
+        "id": "m1030e-w4t",
+        "type": "terminal",
+        "text": "Engine fails to start after [Ready To Crank]. Notify field maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Winterization Kit Failure to Heat — engine fails to start"
+        },
+        "tmPage": "WP 0010-5"
+      },
+      "m1030e-s1": {
+        "id": "m1030e-s1",
+        "type": "question",
+        "text": "Examine the fuel level indication on the DCS. Is [Fault 1918: Fuel Level Low] shown, the indicator in the yellow or red area, or (with no DCS indication) no fuel visible in the tank?",
+        "options": [
+          {
+            "label": "Yes — low fuel",
+            "nextNodeId": "m1030e-s1a"
+          },
+          {
+            "label": "No — fuel level OK",
+            "nextNodeId": "m1030e-s3"
+          }
+        ],
+        "tmPage": "WP 0010-6"
+      },
+      "m1030e-s1a": {
+        "id": "m1030e-s1a",
+        "type": "action",
+        "text": "Refill the fuel tank",
+        "actionText": "Refill the fuel tank (WP 0016, Service Fuel System). Examine the DCS fault status line for additional faults and restore from them if possible (WP 0011); push FAULT RESET to clear each fault code. Turn the engine control switch to START.",
+        "nextNodeId": "m1030e-s2",
+        "tmPage": "WP 0010-6"
+      },
+      "m1030e-s2": {
+        "id": "m1030e-s2",
+        "type": "question",
+        "text": "Can the additional fault(s) be cleared, and does the engine keep running after START is released?",
+        "options": [
+          {
+            "label": "Yes — runs",
+            "nextNodeId": "m1030e-s2y"
+          },
+          {
+            "label": "Unable to clear a fault",
+            "nextNodeId": "m1030e-s2t"
+          },
+          {
+            "label": "Engine still stops",
+            "nextNodeId": "m1030e-s3"
+          }
+        ],
+        "tmPage": "WP 0010-6"
+      },
+      "m1030e-s2y": {
+        "id": "m1030e-s2y",
+        "type": "terminal",
+        "text": "Low fuel corrected (tank refilled); engine runs.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Engine starts but stops — fuel tank refilled"
+        }
+      },
+      "m1030e-s2t": {
+        "id": "m1030e-s2t",
+        "type": "terminal",
+        "text": "Unable to clear fault. Notify field maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Engine starts but stops — fault cannot be cleared"
+        },
+        "tmPage": "WP 0010-6"
+      },
+      "m1030e-s3": {
+        "id": "m1030e-s3",
+        "type": "action",
+        "text": "Service the fuel filter/water separator",
+        "actionText": "Service the fuel filter/water separator (WP 0016, Service Fuel System). Turn the engine control switch to START.",
+        "nextNodeId": "m1030e-s4",
+        "tmPage": "WP 0010-6"
+      },
+      "m1030e-s4": {
+        "id": "m1030e-s4",
+        "type": "question",
+        "text": "Does the engine keep running after START is released?",
+        "options": [
+          {
+            "label": "Yes — runs",
+            "nextNodeId": "m1030e-s4y"
+          },
+          {
+            "label": "No — still stops",
+            "nextNodeId": "m1030e-s5"
+          }
+        ],
+        "tmPage": "WP 0010-6"
+      },
+      "m1030e-s4y": {
+        "id": "m1030e-s4y",
+        "type": "terminal",
+        "text": "Engine starts but stops — fuel filter/water separator serviced. Corrected by the operator action authorized in the TM.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Engine starts but stops — fuel filter/water separator serviced"
+        }
+      },
+      "m1030e-s5": {
+        "id": "m1030e-s5",
+        "type": "action",
+        "text": "Service the air cleaner element",
+        "actionText": "Service the air cleaner element (WP 0014, Service Air Cleaner). Turn the engine control switch to START.",
+        "nextNodeId": "m1030e-s6",
+        "tmPage": "WP 0010-6"
+      },
+      "m1030e-s6": {
+        "id": "m1030e-s6",
+        "type": "question",
+        "text": "Does the engine keep running after START is released?",
+        "options": [
+          {
+            "label": "Yes — runs",
+            "nextNodeId": "m1030e-s6y"
+          },
+          {
+            "label": "No — still stops",
+            "nextNodeId": "m1030e-s7"
+          }
+        ],
+        "tmPage": "WP 0010-7"
+      },
+      "m1030e-s6y": {
+        "id": "m1030e-s6y",
+        "type": "terminal",
+        "text": "Engine starts but stops — air cleaner serviced. Corrected by the operator action authorized in the TM.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Engine starts but stops — air cleaner serviced"
+        }
+      },
+      "m1030e-s7": {
+        "id": "m1030e-s7",
+        "type": "action",
+        "text": "Fault condition not corrected",
+        "actionText": "Examine the fault code on the DCS display. Restore from the FAULT if possible (WP 0011), pushing FAULT RESET to clear each code. Turn the engine control switch to START.",
+        "nextNodeId": "m1030e-s8",
+        "tmPage": "WP 0010-7"
+      },
+      "m1030e-s8": {
+        "id": "m1030e-s8",
+        "type": "question",
+        "text": "Result?",
+        "options": [
+          {
+            "label": "Engine runs",
+            "nextNodeId": "m1030e-s8y"
+          },
+          {
+            "label": "Unable to clear the fault",
+            "nextNodeId": "m1030e-s8t"
+          },
+          {
+            "label": "Engine starts but stops after START is released",
+            "nextNodeId": "m1030e-s8t"
+          }
+        ],
+        "tmPage": "WP 0010-7"
+      },
+      "m1030e-s8y": {
+        "id": "m1030e-s8y",
+        "type": "terminal",
+        "text": "Fault condition restored by the operator (WP 0011); engine runs.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Engine starts but stops — fault restored"
+        }
+      },
+      "m1030e-s8t": {
+        "id": "m1030e-s8t",
+        "type": "terminal",
+        "text": "Fault cannot be cleared, or engine starts but stops after the START switch is released. Notify field maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Engine starts but stops — not corrected"
+        },
+        "tmPage": "WP 0010-7"
+      },
+      "m1030e-x0": {
+        "id": "m1030e-x0",
+        "type": "question",
+        "text": "Which fault does the DCS operator screen display?",
+        "options": [
+          {
+            "label": "[Fault 1445: Short Circuit]",
+            "nextNodeId": "m1030e-h1"
+          },
+          {
+            "label": "[Fault 1472: OverCurrent]",
+            "nextNodeId": "m1030e-o1"
+          },
+          {
+            "label": "[Fault 415: Low Oil Pressure]",
+            "nextNodeId": "m1030e-lo1"
+          },
+          {
+            "label": "[Fault 151: High Coolant Temperature]",
+            "nextNodeId": "m1030e-hc1"
+          },
+          {
+            "label": "[Fault 3668/3669: Output Voltage Configuration Bit Changed]",
+            "nextNodeId": "m1030e-v1"
+          },
+          {
+            "label": "[Fault 1448: Underfrequency]",
+            "nextNodeId": "m1030e-u1"
+          },
+          {
+            "label": "[Fault 234: Overspeed Shutdown]",
+            "nextNodeId": "m1030e-z1"
+          },
+          {
+            "label": "[Fault 1459: Reverse Power]",
+            "nextNodeId": "m1030e-rp1"
+          },
+          {
+            "label": "[Fault 1446: High AC Voltage]",
+            "nextNodeId": "m1030e-hv1"
+          },
+          {
+            "label": "[Fault 1447: Low AC Voltage]",
+            "nextNodeId": "m1030e-lv1"
+          },
+          {
+            "label": "Other / no code",
+            "nextNodeId": "m1030e-x0t"
+          }
+        ],
+        "tmPage": "WP 0009-2"
+      },
+      "m1030e-x0t": {
+        "id": "m1030e-x0t",
+        "type": "terminal",
+        "text": "Engine stopped suddenly with a code not listed for the operator. Not corrected by the listed corrective actions. Per WP 0009: \"If a malfunction is not listed or is not corrected by the listed corrective action, notify field maintenance.\" (WP 0011 lists codes for field maintenance.)",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Engine stops suddenly — code not operator-correctable"
+        },
+        "tmPage": "WP 0009-1"
+      },
+      "m1030e-h1": {
+        "id": "m1030e-h1",
+        "type": "question",
+        "text": "Examine external cables and components, and (with the set stopped) the load connections in the output box, for signs of damage due to excessive heat and/or the odor of burned insulation. Any sign of heat damage?",
+        "options": [
+          {
+            "label": "Yes",
+            "nextNodeId": "m1030e-h1t"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m1030e-h2"
+          }
+        ],
+        "tmPage": "WP 0010-7"
+      },
+      "m1030e-h1t": {
+        "id": "m1030e-h1t",
+        "type": "terminal",
+        "text": "Sign of damage due to excessive heat. Notify field maintenance. Do not attempt to start the generator set; restart only on order of higher command or when field maintenance has examined and corrected the damage.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Fault 1445: Short Circuit — heat damage found"
+        },
+        "tmPage": "WP 0010-7"
+      },
+      "m1030e-h2": {
+        "id": "m1030e-h2",
+        "type": "action",
+        "text": "Reset and restart",
+        "actionText": "Push FAULT RESET switch at the DCS panel to clear the fault. Turn the engine control switch to START position.",
+        "nextNodeId": "m1030e-h3",
+        "tmPage": "WP 0010-7"
+      },
+      "m1030e-h3": {
+        "id": "m1030e-h3",
+        "type": "question",
+        "text": "Does [Fault 1445: Short Circuit] reappear?",
+        "options": [
+          {
+            "label": "No — operating normally",
+            "nextNodeId": "m1030e-h3y"
+          },
+          {
+            "label": "Yes",
+            "nextNodeId": "m1030e-h3t"
+          }
+        ],
+        "tmPage": "WP 0010-7"
+      },
+      "m1030e-h3y": {
+        "id": "m1030e-h3y",
+        "type": "terminal",
+        "text": "Fault 1445: Short Circuit cleared; no heat damage; generator set operating normally.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Fault 1445: Short Circuit — cleared"
+        }
+      },
+      "m1030e-h3t": {
+        "id": "m1030e-h3t",
+        "type": "terminal",
+        "text": "Fault 1445: Short Circuit not corrected. Notify field maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Fault 1445: Short Circuit — not corrected"
+        },
+        "tmPage": "WP 0010-7"
+      },
+      "m1030e-o1": {
+        "id": "m1030e-o1",
+        "type": "question",
+        "text": "Examine external cables and components, and (with the set stopped) the load connections in the output box, for signs of damage due to excessive heat and/or the odor of burned insulation. Any sign of heat damage?",
+        "options": [
+          {
+            "label": "Yes",
+            "nextNodeId": "m1030e-o1t"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m1030e-o2"
+          }
+        ],
+        "tmPage": "WP 0010-8"
+      },
+      "m1030e-o1t": {
+        "id": "m1030e-o1t",
+        "type": "terminal",
+        "text": "Sign of damage due to excessive heat. Notify field maintenance. Do not attempt to start the generator set; restart only on order of higher command or when field maintenance has examined and corrected the damage.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Fault 1472: OverCurrent — heat damage found"
+        },
+        "tmPage": "WP 0010-8"
+      },
+      "m1030e-o2": {
+        "id": "m1030e-o2",
+        "type": "action",
+        "text": "Reset and restart",
+        "actionText": "Push FAULT RESET switch at the DCS panel to clear the fault. Turn the engine control switch to START position.",
+        "nextNodeId": "m1030e-o3",
+        "tmPage": "WP 0010-8"
+      },
+      "m1030e-o3": {
+        "id": "m1030e-o3",
+        "type": "question",
+        "text": "Is the generator set operating outside [Genset Current] parameters?",
+        "options": [
+          {
+            "label": "No — operating normally",
+            "nextNodeId": "m1030e-o3y"
+          },
+          {
+            "label": "Yes",
+            "nextNodeId": "m1030e-o3t"
+          }
+        ],
+        "tmPage": "WP 0010-8"
+      },
+      "m1030e-o3y": {
+        "id": "m1030e-o3y",
+        "type": "terminal",
+        "text": "Fault 1472: OverCurrent cleared; no heat damage; generator set operating normally.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Fault 1472: OverCurrent — cleared"
+        }
+      },
+      "m1030e-o3t": {
+        "id": "m1030e-o3t",
+        "type": "terminal",
+        "text": "Fault 1472: OverCurrent not corrected. Notify field maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Fault 1472: OverCurrent — not corrected"
+        },
+        "tmPage": "WP 0010-8"
+      },
+      "m1030e-lo1": {
+        "id": "m1030e-lo1",
+        "type": "action",
+        "text": "Check and add engine oil",
+        "actionText": "Inspect engine oil level and add oil if necessary (WP 0017, Service Engine Oil). Push FAULT RESET switch at the DCS panel to clear the fault. Examine the [FAULT] status line for additional faults and restore from them if possible (WP 0011). Turn the engine control switch to START.",
+        "nextNodeId": "m1030e-lo2",
+        "tmPage": "WP 0010-8"
+      },
+      "m1030e-lo2": {
+        "id": "m1030e-lo2",
+        "type": "question",
+        "text": "Result?",
+        "options": [
+          {
+            "label": "Engine runs",
+            "nextNodeId": "m1030e-lo2y"
+          },
+          {
+            "label": "Unable to clear a fault",
+            "nextNodeId": "m1030e-lo2t"
+          },
+          {
+            "label": "Engine starts but stops after the switch is released",
+            "nextNodeId": "m1030e-lo2t"
+          }
+        ],
+        "tmPage": "WP 0010-8"
+      },
+      "m1030e-lo2y": {
+        "id": "m1030e-lo2y",
+        "type": "terminal",
+        "text": "Low oil corrected (oil added); engine runs.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Fault 415 Low Oil Pressure — oil added, engine runs"
+        }
+      },
+      "m1030e-lo2t": {
+        "id": "m1030e-lo2t",
+        "type": "terminal",
+        "text": "Low oil pressure fault not corrected. Notify field maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Fault 415 Low Oil Pressure — not corrected"
+        },
+        "tmPage": "WP 0010-8"
+      },
+      "m1030e-hc1": {
+        "id": "m1030e-hc1",
+        "type": "action",
+        "text": "Check and add coolant",
+        "actionText": "Examine coolant level visually and add coolant as required (WP 0015, Service Cooling System). Push FAULT RESET switch at the DCS panel to clear the fault. Examine coolant temperature on the DCS; when in the green area, turn the engine control switch to START.",
+        "nextNodeId": "m1030e-hc2",
+        "tmPage": "WP 0010-8"
+      },
+      "m1030e-hc2": {
+        "id": "m1030e-hc2",
+        "type": "question",
+        "text": "Does [Fault 151: High Coolant Temperature] reappear?",
+        "options": [
+          {
+            "label": "No",
+            "nextNodeId": "m1030e-hc2y"
+          },
+          {
+            "label": "Yes",
+            "nextNodeId": "m1030e-hc3"
+          }
+        ],
+        "tmPage": "WP 0010-9"
+      },
+      "m1030e-hc2y": {
+        "id": "m1030e-hc2y",
+        "type": "terminal",
+        "text": "Coolant added; high coolant temperature fault cleared.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Fault 151 — coolant added"
+        }
+      },
+      "m1030e-hc3": {
+        "id": "m1030e-hc3",
+        "type": "action",
+        "text": "Clear ventilation and air flow paths",
+        "actionText": "Inspect ventilation and air flow paths and clear any obstruction. Push FAULT RESET switch at the DCS panel to clear the fault. Examine coolant temperature; when in the green area, turn the engine control switch to START.",
+        "nextNodeId": "m1030e-hc4",
+        "tmPage": "WP 0010-9"
+      },
+      "m1030e-hc4": {
+        "id": "m1030e-hc4",
+        "type": "question",
+        "text": "Does [Fault 151: High Coolant Temperature] reappear?",
+        "options": [
+          {
+            "label": "No",
+            "nextNodeId": "m1030e-hc4y"
+          },
+          {
+            "label": "Yes",
+            "nextNodeId": "m1030e-hc4t"
+          }
+        ],
+        "tmPage": "WP 0010-9"
+      },
+      "m1030e-hc4y": {
+        "id": "m1030e-hc4y",
+        "type": "terminal",
+        "text": "Ventilation/air flow obstruction cleared; fault cleared.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Fault 151 — air flow obstruction cleared"
+        }
+      },
+      "m1030e-hc4t": {
+        "id": "m1030e-hc4t",
+        "type": "terminal",
+        "text": "High coolant temperature [Fault 151] reappears. Notify field maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Fault 151 High Coolant Temperature — not corrected"
+        },
+        "tmPage": "WP 0010-9"
+      },
+      "m1030e-v1": {
+        "id": "m1030e-v1",
+        "type": "question",
+        "text": "Can the AC voltage reconnection switch handle be moved to the voltage position required for the configuration?",
+        "options": [
+          {
+            "label": "Yes",
+            "nextNodeId": "m1030e-v2"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m1030e-v1t"
+          }
+        ],
+        "tmPage": "WP 0010-9"
+      },
+      "m1030e-v1t": {
+        "id": "m1030e-v1t",
+        "type": "terminal",
+        "text": "Switch handle cannot be selected for the required configuration. Notify field maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Voltage configuration fault — switch cannot be set"
+        },
+        "tmPage": "WP 0010-9"
+      },
+      "m1030e-v2": {
+        "id": "m1030e-v2",
+        "type": "action",
+        "text": "Set switch, reset, restart",
+        "actionText": "Move the switch handle to the required voltage position. Push FAULT RESET switch at the DCS panel to clear the fault. Turn the engine control switch to START.",
+        "nextNodeId": "m1030e-v3",
+        "tmPage": "WP 0010-9"
+      },
+      "m1030e-v3": {
+        "id": "m1030e-v3",
+        "type": "question",
+        "text": "Does Fault 3668 or 3669 reappear?",
+        "options": [
+          {
+            "label": "No",
+            "nextNodeId": "m1030e-v3y"
+          },
+          {
+            "label": "Yes",
+            "nextNodeId": "m1030e-v3t"
+          }
+        ],
+        "tmPage": "WP 0010-9"
+      },
+      "m1030e-v3y": {
+        "id": "m1030e-v3y",
+        "type": "terminal",
+        "text": "AC voltage reconnection switch set to the required position; fault cleared.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Voltage configuration fault — switch set"
+        }
+      },
+      "m1030e-v3t": {
+        "id": "m1030e-v3t",
+        "type": "terminal",
+        "text": "Fault 3668/3669 reappears. Notify field maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Voltage configuration fault — not corrected"
+        },
+        "tmPage": "WP 0010-9"
+      },
+      "m1030e-u1": {
+        "id": "m1030e-u1",
+        "type": "action",
+        "text": "Reset and restart",
+        "actionText": "Push FAULT RESET switch at the DCS panel to clear the fault. Turn the engine control switch to START. Observe [FREQUENCY] on the DCS display.",
+        "nextNodeId": "m1030e-u2",
+        "tmPage": "WP 0010-9"
+      },
+      "m1030e-u2": {
+        "id": "m1030e-u2",
+        "type": "question",
+        "text": "Does [Fault 1448: Underfrequency] reappear?",
+        "options": [
+          {
+            "label": "No",
+            "nextNodeId": "m1030e-u2y"
+          },
+          {
+            "label": "Yes",
+            "nextNodeId": "m1030e-u3"
+          }
+        ],
+        "tmPage": "WP 0010-9"
+      },
+      "m1030e-u2y": {
+        "id": "m1030e-u2y",
+        "type": "terminal",
+        "text": "Underfrequency fault cleared after reset.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Fault 1448 Underfrequency — cleared"
+        }
+      },
+      "m1030e-u3": {
+        "id": "m1030e-u3",
+        "type": "action",
+        "text": "Service fuel filter/water separator",
+        "actionText": "Service the fuel filter/water separator (WP 0016, Service Fuel System). Push FAULT RESET switch at the DCS panel to clear the fault. Turn the engine control switch to START and observe [FREQUENCY].",
+        "nextNodeId": "m1030e-u4",
+        "tmPage": "WP 0010-9"
+      },
+      "m1030e-u4": {
+        "id": "m1030e-u4",
+        "type": "question",
+        "text": "Does [Fault 1448: Underfrequency] reappear?",
+        "options": [
+          {
+            "label": "No",
+            "nextNodeId": "m1030e-u4y"
+          },
+          {
+            "label": "Yes",
+            "nextNodeId": "m1030e-u4t"
+          }
+        ],
+        "tmPage": "WP 0010-10"
+      },
+      "m1030e-u4y": {
+        "id": "m1030e-u4y",
+        "type": "terminal",
+        "text": "Fuel filter/water separator serviced; underfrequency cleared.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Fault 1448 — fuel filter/water separator serviced"
+        }
+      },
+      "m1030e-u4t": {
+        "id": "m1030e-u4t",
+        "type": "terminal",
+        "text": "[Fault 1448: Underfrequency] reappears. Notify field maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Fault 1448 Underfrequency — not corrected"
+        },
+        "tmPage": "WP 0010-10"
+      },
+      "m1030e-z1": {
+        "id": "m1030e-z1",
+        "type": "action",
+        "text": "Reset and restart",
+        "actionText": "Push FAULT RESET switch at the DCS panel to clear the fault. Turn the engine control switch to START position.",
+        "nextNodeId": "m1030e-z2",
+        "tmPage": "WP 0010-10"
+      },
+      "m1030e-z2": {
+        "id": "m1030e-z2",
+        "type": "question",
+        "text": "Does [Fault 234: Overspeed Shutdown] reappear?",
+        "options": [
+          {
+            "label": "No",
+            "nextNodeId": "m1030e-z2y"
+          },
+          {
+            "label": "Yes",
+            "nextNodeId": "m1030e-z2t"
+          }
+        ],
+        "tmPage": "WP 0010-10"
+      },
+      "m1030e-z2y": {
+        "id": "m1030e-z2y",
+        "type": "terminal",
+        "text": "Overspeed fault cleared after reset.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Fault 234 Overspeed — cleared"
+        }
+      },
+      "m1030e-z2t": {
+        "id": "m1030e-z2t",
+        "type": "terminal",
+        "text": "[Fault 234: Overspeed Shutdown] reappears. Notify field maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Fault 234 Overspeed — not corrected"
+        },
+        "tmPage": "WP 0010-10"
+      },
+      "m1030e-rp1": {
+        "id": "m1030e-rp1",
+        "type": "action",
+        "text": "Reset and check contactor",
+        "actionText": "Push FAULT RESET switch at the DCS panel to clear the fault. Examine the [Contactor] indication; if it does not show [Open], push the AC CIRCUIT INTERRUPT switch and re-examine.",
+        "nextNodeId": "m1030e-rp2",
+        "tmPage": "WP 0010-10"
+      },
+      "m1030e-rp2": {
+        "id": "m1030e-rp2",
+        "type": "question",
+        "text": "Does [Contactor] indicate [Open]?",
+        "options": [
+          {
+            "label": "Yes",
+            "nextNodeId": "m1030e-rp3"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m1030e-rp2t"
+          }
+        ],
+        "tmPage": "WP 0010-10"
+      },
+      "m1030e-rp2t": {
+        "id": "m1030e-rp2t",
+        "type": "terminal",
+        "text": "[Contactor] does not indicate [Open]. Notify field maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Fault 1459 Reverse Power — contactor will not open"
+        },
+        "tmPage": "WP 0010-10"
+      },
+      "m1030e-rp3": {
+        "id": "m1030e-rp3",
+        "type": "action",
+        "text": "Restart and check for faults",
+        "actionText": "Turn the engine control switch to START. Examine the DCS fault status line for additional faults and restore from them if possible (WP 0011).",
+        "nextNodeId": "m1030e-rp4",
+        "tmPage": "WP 0010-10"
+      },
+      "m1030e-rp4": {
+        "id": "m1030e-rp4",
+        "type": "question",
+        "text": "Are all faults cleared?",
+        "options": [
+          {
+            "label": "Yes",
+            "nextNodeId": "m1030e-rp4y"
+          },
+          {
+            "label": "No — unable to clear",
+            "nextNodeId": "m1030e-rp4t"
+          }
+        ],
+        "tmPage": "WP 0010-10"
+      },
+      "m1030e-rp4y": {
+        "id": "m1030e-rp4y",
+        "type": "terminal",
+        "text": "Reverse power fault cleared; contactor open; engine restarted.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Fault 1459 Reverse Power — cleared"
+        }
+      },
+      "m1030e-rp4t": {
+        "id": "m1030e-rp4t",
+        "type": "terminal",
+        "text": "Unable to clear fault(s). Notify field maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Fault 1459 — additional faults not cleared"
+        },
+        "tmPage": "WP 0010-10"
+      },
+      "m1030e-hv1": {
+        "id": "m1030e-hv1",
+        "type": "action",
+        "text": "Reset and restart",
+        "actionText": "Push FAULT RESET switch at the DCS panel to clear the fault. Turn the engine control switch to START. Observe [Genset Voltage] (Table 1: 120 V 1-phase 118-122 V; 120/240 V 1-phase 118-122/236-244 V; 120/208 V 3-phase 118-122/205-211 V).",
+        "nextNodeId": "m1030e-hv2",
+        "tmPage": "WP 0010-10"
+      },
+      "m1030e-hv2": {
+        "id": "m1030e-hv2",
+        "type": "question",
+        "text": "Is generator set voltage more than the maximum in Table 1?",
+        "options": [
+          {
+            "label": "No",
+            "nextNodeId": "m1030e-hv2y"
+          },
+          {
+            "label": "Yes",
+            "nextNodeId": "m1030e-hv2t"
+          }
+        ],
+        "tmPage": "WP 0010-11"
+      },
+      "m1030e-hv2y": {
+        "id": "m1030e-hv2y",
+        "type": "terminal",
+        "text": "High AC voltage fault cleared; voltage within Table 1.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Fault 1446 High AC Voltage — cleared"
+        }
+      },
+      "m1030e-hv2t": {
+        "id": "m1030e-hv2t",
+        "type": "terminal",
+        "text": "Generator set voltage is more than the maximum in Table 1. Notify field maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Fault 1446 High AC Voltage — not corrected"
+        },
+        "tmPage": "WP 0010-11"
+      },
+      "m1030e-lv1": {
+        "id": "m1030e-lv1",
+        "type": "action",
+        "text": "Reset and restart",
+        "actionText": "Push FAULT RESET switch at the DCS panel to clear the fault. Turn the engine control switch to START. Observe [Genset Voltage] against Table 1.",
+        "nextNodeId": "m1030e-lv2",
+        "tmPage": "WP 0010-10"
+      },
+      "m1030e-lv2": {
+        "id": "m1030e-lv2",
+        "type": "question",
+        "text": "Is generator set voltage less than or more than the Table 1 parameters?",
+        "options": [
+          {
+            "label": "No — within",
+            "nextNodeId": "m1030e-lv2y"
+          },
+          {
+            "label": "Yes",
+            "nextNodeId": "m1030e-lv2t"
+          }
+        ],
+        "tmPage": "WP 0010-11"
+      },
+      "m1030e-lv2y": {
+        "id": "m1030e-lv2y",
+        "type": "terminal",
+        "text": "Low AC voltage fault cleared; voltage within Table 1.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Fault 1447 Low AC Voltage — cleared"
+        }
+      },
+      "m1030e-lv2t": {
+        "id": "m1030e-lv2t",
+        "type": "terminal",
+        "text": "Generator set voltage outside Table 1. Notify field maintenance and request instructions on continued operation; do not continue operation without them.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Fault 1447 Low AC Voltage — not corrected"
+        },
+        "tmPage": "WP 0010-11"
+      },
+      "m1030e-l1": {
+        "id": "m1030e-l1",
+        "type": "action",
+        "text": "Adjust frequency",
+        "actionText": "Examine the frequency indicator on the DCS. If less than rated, adjust to obtain rated frequency (WP 0005, Operation Under Usual Conditions).",
+        "nextNodeId": "m1030e-l2",
+        "tmPage": "WP 0010-18"
+      },
+      "m1030e-l2": {
+        "id": "m1030e-l2",
+        "type": "question",
+        "text": "Is rated frequency obtained?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m1030e-l2y"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m1030e-l3"
+          }
+        ],
+        "tmPage": "WP 0010-18"
+      },
+      "m1030e-l2y": {
+        "id": "m1030e-l2y",
+        "type": "terminal",
+        "text": "Low engine speed — frequency adjusted to rated. Corrected by the operator action authorized in the TM.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Low engine speed — frequency adjusted to rated"
+        }
+      },
+      "m1030e-l3": {
+        "id": "m1030e-l3",
+        "type": "action",
+        "text": "Service fuel filter/water separator",
+        "actionText": "Service the fuel filter/water separator (WP 0016, Service Fuel System). Turn the engine control switch to START.",
+        "nextNodeId": "m1030e-l4",
+        "tmPage": "WP 0010-18"
+      },
+      "m1030e-l4": {
+        "id": "m1030e-l4",
+        "type": "question",
+        "text": "Is the engine at rated speed now?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m1030e-l4y"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m1030e-l5"
+          }
+        ],
+        "tmPage": "WP 0010-19"
+      },
+      "m1030e-l4y": {
+        "id": "m1030e-l4y",
+        "type": "terminal",
+        "text": "Low engine speed — fuel filter/water separator serviced. Corrected by the operator action authorized in the TM.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Low engine speed — fuel filter/water separator serviced"
+        }
+      },
+      "m1030e-l5": {
+        "id": "m1030e-l5",
+        "type": "action",
+        "text": "Service air cleaner element",
+        "actionText": "Service the air cleaner element (WP 0014, Service Air Cleaner).",
+        "nextNodeId": "m1030e-l6",
+        "tmPage": "WP 0010-19"
+      },
+      "m1030e-l6": {
+        "id": "m1030e-l6",
+        "type": "question",
+        "text": "Does the symptom continue?",
+        "options": [
+          {
+            "label": "No",
+            "nextNodeId": "m1030e-l6y"
+          },
+          {
+            "label": "Yes",
+            "nextNodeId": "m1030e-l6t"
+          }
+        ],
+        "tmPage": "WP 0010-19"
+      },
+      "m1030e-l6y": {
+        "id": "m1030e-l6y",
+        "type": "terminal",
+        "text": "Air cleaner serviced; engine at rated speed.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Low engine speed — air cleaner serviced"
+        }
+      },
+      "m1030e-l6t": {
+        "id": "m1030e-l6t",
+        "type": "terminal",
+        "text": "Engine still below rated speed. Notify field maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Low engine speed — not corrected"
+        },
+        "tmPage": "WP 0010-19"
+      },
+      "m1030e-d1": {
+        "id": "m1030e-d1",
+        "type": "action",
+        "text": "Stop the engine",
+        "actionText": "Verify the engine control switch is OFF. If it is, push the EMERGENCY STOP switch on the engine control panel. If the engine continues to operate, open the right-side door and move the DEAD CRANK SWITCH toggle to OFF.",
+        "nextNodeId": "m1030e-d2",
+        "tmPage": "WP 0010-15"
+      },
+      "m1030e-d2": {
+        "id": "m1030e-d2",
+        "type": "question",
+        "text": "Did the engine stop?",
+        "options": [
+          {
+            "label": "Yes — stopped",
+            "nextNodeId": "m1030e-d2t"
+          },
+          {
+            "label": "No — still running",
+            "nextNodeId": "m1030e-d3t"
+          }
+        ],
+        "tmPage": "WP 0010-15"
+      },
+      "m1030e-d2t": {
+        "id": "m1030e-d2t",
+        "type": "terminal",
+        "text": "Engine stopped only by EMERGENCY STOP / DEAD CRANK SWITCH after failing to shut down. Notify field maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Fail To Shutdown — engine stopped, needs field maintenance"
+        },
+        "tmPage": "WP 0010-15"
+      },
+      "m1030e-d3t": {
+        "id": "m1030e-d3t",
+        "type": "terminal",
+        "text": "Engine continues to operate. Notify field maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Fail To Shutdown — engine will not stop"
+        },
+        "tmPage": "WP 0010-15"
+      },
+      "m1030e-u0": {
+        "id": "m1030e-u0",
+        "type": "question",
+        "text": "Which warning?",
+        "options": [
+          {
+            "label": "[Warning 1441: Low Fuel Level] or [Warning 2937: Fuel Level Sensor Low]",
+            "nextNodeId": "m1030e-fl1"
+          },
+          {
+            "label": "[Warning 2936: Fuel Level Sensor High]",
+            "nextNodeId": "m1030e-fh1"
+          }
+        ],
+        "tmPage": "WP 0009-3"
+      },
+      "m1030e-fl1": {
+        "id": "m1030e-fl1",
+        "type": "question",
+        "text": "If the DCS fuel indicator is in the green area or shows no level, examine fuel level visually (WP 0016). Is fuel visible in the tank?",
+        "options": [
+          {
+            "label": "No — fuel not visible",
+            "nextNodeId": "m1030e-fl2"
+          },
+          {
+            "label": "Yes — fuel is visible",
+            "nextNodeId": "m1030e-fl1t"
+          }
+        ],
+        "tmPage": "WP 0010-13"
+      },
+      "m1030e-fl1t": {
+        "id": "m1030e-fl1t",
+        "type": "terminal",
+        "text": "Fuel level is visible while the low-fuel/sensor warning is shown (faulty fuel level sensor). Notify field maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Low fuel warning — fuel visible, sensor suspected"
+        },
+        "tmPage": "WP 0010-13"
+      },
+      "m1030e-fl2": {
+        "id": "m1030e-fl2",
+        "type": "action",
+        "text": "Refill the fuel tank",
+        "actionText": "Refill the fuel tank (WP 0016, Service Fuel System). Push FAULT RESET to clear [Warning 1441: Low Fuel Level].",
+        "nextNodeId": "m1030e-fl3",
+        "tmPage": "WP 0010-13"
+      },
+      "m1030e-fl3": {
+        "id": "m1030e-fl3",
+        "type": "question",
+        "text": "Does the warning reappear?",
+        "options": [
+          {
+            "label": "No",
+            "nextNodeId": "m1030e-fl3y"
+          },
+          {
+            "label": "Yes",
+            "nextNodeId": "m1030e-fl3t"
+          }
+        ],
+        "tmPage": "WP 0010-13"
+      },
+      "m1030e-fl3y": {
+        "id": "m1030e-fl3y",
+        "type": "terminal",
+        "text": "Fuel tank refilled; low fuel warning cleared.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Low fuel warning — tank refilled"
+        }
+      },
+      "m1030e-fl3t": {
+        "id": "m1030e-fl3t",
+        "type": "terminal",
+        "text": "[Warning 1441: Low Fuel Level] reappears. Notify field maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Low fuel warning — not corrected"
+        },
+        "tmPage": "WP 0010-13"
+      },
+      "m1030e-fh1": {
+        "id": "m1030e-fh1",
+        "type": "question",
+        "text": "Note the fuel level reported on the DCS and examine the fuel level in the tank visually (WP 0016). Does the tank level correspond to the DCS?",
+        "options": [
+          {
+            "label": "No — does not correspond",
+            "nextNodeId": "m1030e-fh1t"
+          },
+          {
+            "label": "Yes — corresponds",
+            "nextNodeId": "m1030e-fh2t"
+          }
+        ],
+        "tmPage": "WP 0010-14"
+      },
+      "m1030e-fh1t": {
+        "id": "m1030e-fh1t",
+        "type": "terminal",
+        "text": "Fuel level in the tank does not correspond to the level reported on the DCS. Notify field maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Fuel Level Sensor High — sensor mismatch"
+        },
+        "tmPage": "WP 0010-14"
+      },
+      "m1030e-fh2t": {
+        "id": "m1030e-fh2t",
+        "type": "terminal",
+        "text": "Fuel level corresponds but [Warning 2936] is displayed (outcome not stated in the TM). Not corrected by the listed corrective actions. Per WP 0009: \"If a malfunction is not listed or is not corrected by the listed corrective action, notify field maintenance.\"",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Fuel Level Sensor High — not corrected"
+        },
+        "tmPage": "WP 0009-1"
+      },
+      "m1030e-p1": {
+        "id": "m1030e-p1",
+        "type": "action",
+        "text": "Reboot the processor",
+        "actionText": "Move the main DC circuit breaker handle to OFF/TRIP, then return it to RESET-ON. Turn the engine control switch to PRIME & RUN AUX FUEL or PRIME & RUN to reboot the processor. Push FAULT RESET to clear [Warning 1417: Power Down Failure].",
+        "nextNodeId": "m1030e-p2",
+        "tmPage": "WP 0010-16"
+      },
+      "m1030e-p2": {
+        "id": "m1030e-p2",
+        "type": "question",
+        "text": "Does [Warning 1417: Power Down Failure] reappear?",
+        "options": [
+          {
+            "label": "No",
+            "nextNodeId": "m1030e-p2y"
+          },
+          {
+            "label": "Yes",
+            "nextNodeId": "m1030e-p2t"
+          }
+        ],
+        "tmPage": "WP 0010-16"
+      },
+      "m1030e-p2y": {
+        "id": "m1030e-p2y",
+        "type": "terminal",
+        "text": "Processor rebooted; Power Down Failure warning cleared.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Warning 1417 — cleared by reboot"
+        }
+      },
+      "m1030e-p2t": {
+        "id": "m1030e-p2t",
+        "type": "terminal",
+        "text": "[Warning 1417: Power Down Failure] reappears. Notify field maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Warning 1417 Power Down Failure — not corrected"
+        },
+        "tmPage": "WP 0010-16"
+      }
+    }
+  },
+  {
+    "categoryId": "gen-exhaust",
+    "vehicleType": "MEP1030",
+    "tmReference": "TM 9-6115-749-10, WP 0010, Engine exhaust smoking",
+    "rootNodeId": "m1030x-q1",
+    "nodes": {
+      "m1030x-q1": {
+        "id": "m1030x-q1",
+        "type": "question",
+        "text": "What color is the exhaust smoke?",
+        "options": [
+          {
+            "label": "White",
+            "nextNodeId": "m1030x-w1"
+          },
+          {
+            "label": "Black",
+            "nextNodeId": "m1030x-k1"
+          },
+          {
+            "label": "Blue (oil in combustion chambers)",
+            "nextNodeId": "m1030x-b1t"
+          }
+        ],
+        "tmPage": "WP 0010-17"
+      },
+      "m1030x-b1t": {
+        "id": "m1030x-b1t",
+        "type": "terminal",
+        "text": "Engine emits blue exhaust smoke due to oil in combustion chambers. Notify field maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Blue exhaust smoke"
+        },
+        "tmPage": "WP 0010-18"
+      },
+      "m1030x-w1": {
+        "id": "m1030x-w1",
+        "type": "question",
+        "text": "Inspect for evidence of water in the fuel tank, and inspect the fuel filter/water separator for contamination (WP 0016). Does contamination appear?",
+        "options": [
+          {
+            "label": "Yes",
+            "nextNodeId": "m1030x-w2"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m1030x-w3t"
+          }
+        ],
+        "tmPage": "WP 0010-18"
+      },
+      "m1030x-w2": {
+        "id": "m1030x-w2",
+        "type": "action",
+        "text": "Drain the fuel filter/water separator",
+        "actionText": "Drain the fuel filter/water separator (WP 0016, Service Fuel System). Turn the engine control switch to START.",
+        "nextNodeId": "m1030x-w3",
+        "tmPage": "WP 0010-18"
+      },
+      "m1030x-w3": {
+        "id": "m1030x-w3",
+        "type": "question",
+        "text": "Does the white smoke continue?",
+        "options": [
+          {
+            "label": "No",
+            "nextNodeId": "m1030x-w3y"
+          },
+          {
+            "label": "Yes",
+            "nextNodeId": "m1030x-w3t"
+          }
+        ],
+        "tmPage": "WP 0010-18"
+      },
+      "m1030x-w3y": {
+        "id": "m1030x-w3y",
+        "type": "terminal",
+        "text": "Fuel filter/water separator drained; white smoke stopped.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "White exhaust smoke — water drained"
+        }
+      },
+      "m1030x-w3t": {
+        "id": "m1030x-w3t",
+        "type": "terminal",
+        "text": "White exhaust smoke continues. Notify field maintenance and request instructions on continued operation; do not continue operation without them.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "White exhaust smoke — not corrected"
+        },
+        "tmPage": "WP 0010-18"
+      },
+      "m1030x-k1": {
+        "id": "m1030x-k1",
+        "type": "question",
+        "text": "Examine [GENSET CURRENT] parameters. Are they within limits (no high load condition)?",
+        "options": [
+          {
+            "label": "Yes — within limits",
+            "nextNodeId": "m1030x-k2"
+          },
+          {
+            "label": "No — high load condition",
+            "nextNodeId": "m1030x-k1t"
+          }
+        ],
+        "tmPage": "WP 0010-18"
+      },
+      "m1030x-k1t": {
+        "id": "m1030x-k1t",
+        "type": "terminal",
+        "text": "High load condition with black smoke (corrective action not stated in the TM). Notify field maintenance and request instructions on continued operation; do not continue operation without them.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Black exhaust smoke — high load"
+        },
+        "tmPage": "WP 0010-18"
+      },
+      "m1030x-k2": {
+        "id": "m1030x-k2",
+        "type": "action",
+        "text": "Service the air cleaner element",
+        "actionText": "Service the air cleaner element (WP 0014, Service Air Cleaner). Turn the engine control switch to START.",
+        "nextNodeId": "m1030x-k3",
+        "tmPage": "WP 0010-18"
+      },
+      "m1030x-k3": {
+        "id": "m1030x-k3",
+        "type": "question",
+        "text": "Does the black smoke continue?",
+        "options": [
+          {
+            "label": "No",
+            "nextNodeId": "m1030x-k3y"
+          },
+          {
+            "label": "Yes",
+            "nextNodeId": "m1030x-k3t"
+          }
+        ],
+        "tmPage": "WP 0010-18"
+      },
+      "m1030x-k3y": {
+        "id": "m1030x-k3y",
+        "type": "terminal",
+        "text": "Air cleaner serviced; black smoke stopped.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Black exhaust smoke — air cleaner serviced"
+        }
+      },
+      "m1030x-k3t": {
+        "id": "m1030x-k3t",
+        "type": "terminal",
+        "text": "Black exhaust smoke continues. Notify field maintenance and request instructions on continued operation; do not continue operation without them.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Black exhaust smoke — not corrected"
+        },
+        "tmPage": "WP 0010-18"
+      }
+    }
+  },
+  {
+    "categoryId": "gen-oil-pressure",
+    "vehicleType": "MEP1030",
+    "tmReference": "TM 9-6115-749-10, WP 0010, Fault 415 Low Oil Pressure; Warning 143 Pre-Low Oil Pressure",
+    "rootNodeId": "m1030o-q1",
+    "nodes": {
+      "m1030o-q1": {
+        "id": "m1030o-q1",
+        "type": "question",
+        "text": "Which code does the DCS show?",
+        "options": [
+          {
+            "label": "[Fault 415: Low Oil Pressure] — engine stopped",
+            "nextNodeId": "m1030o-f1"
+          },
+          {
+            "label": "[Warning 143: Pre-Low Oil Pressure]",
+            "nextNodeId": "m1030o-w1"
+          }
+        ],
+        "tmPage": "WP 0009-2"
+      },
+      "m1030o-f1": {
+        "id": "m1030o-f1",
+        "type": "action",
+        "text": "Check and add engine oil",
+        "actionText": "Inspect engine oil level and add oil if necessary (WP 0017, Service Engine Oil). Push FAULT RESET switch at the DCS panel to clear the fault. Examine the [FAULT] status line for additional faults and restore from them if possible (WP 0011). Turn the engine control switch to START.",
+        "nextNodeId": "m1030o-f2",
+        "tmPage": "WP 0010-8"
+      },
+      "m1030o-f2": {
+        "id": "m1030o-f2",
+        "type": "question",
+        "text": "Result?",
+        "options": [
+          {
+            "label": "Engine runs",
+            "nextNodeId": "m1030o-f2y"
+          },
+          {
+            "label": "Unable to clear a fault",
+            "nextNodeId": "m1030o-f2t"
+          },
+          {
+            "label": "Engine starts but stops after the switch is released",
+            "nextNodeId": "m1030o-f2t"
+          }
+        ],
+        "tmPage": "WP 0010-8"
+      },
+      "m1030o-f2y": {
+        "id": "m1030o-f2y",
+        "type": "terminal",
+        "text": "Low oil corrected (oil added); engine runs.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Fault 415 Low Oil Pressure — oil added"
+        }
+      },
+      "m1030o-f2t": {
+        "id": "m1030o-f2t",
+        "type": "terminal",
+        "text": "Low oil pressure fault not corrected. Notify field maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Fault 415 Low Oil Pressure — not corrected"
+        },
+        "tmPage": "WP 0010-8"
+      },
+      "m1030o-w1": {
+        "id": "m1030o-w1",
+        "type": "question",
+        "text": "Is the engine oil level below normal, or is an improper grade of oil for conditions suspected?",
+        "options": [
+          {
+            "label": "Oil level below normal",
+            "nextNodeId": "m1030o-w2"
+          },
+          {
+            "label": "Improper grade of oil suspected",
+            "nextNodeId": "m1030o-w4"
+          },
+          {
+            "label": "Neither",
+            "nextNodeId": "m1030o-w1t"
+          }
+        ],
+        "tmPage": "WP 0010-12"
+      },
+      "m1030o-w1t": {
+        "id": "m1030o-w1t",
+        "type": "terminal",
+        "text": "[Warning 143] with correct oil level and grade (outcome not stated in the TM). Not corrected by the listed corrective actions. Per WP 0009: \"If a malfunction is not listed or is not corrected by the listed corrective action, notify field maintenance.\"",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Warning 143 — cause not found"
+        },
+        "tmPage": "WP 0009-1"
+      },
+      "m1030o-w2": {
+        "id": "m1030o-w2",
+        "type": "action",
+        "text": "Service engine oil",
+        "actionText": "Perform WP 0017, Service Engine Oil. Push FAULT RESET to clear the warning. If the engine was stopped to service oil, turn the engine control switch to START.",
+        "nextNodeId": "m1030o-w2b",
+        "tmPage": "WP 0010-12"
+      },
+      "m1030o-w2b": {
+        "id": "m1030o-w2b",
+        "type": "question",
+        "text": "Does [Warning 143: Pre-Low Oil Pressure] reappear?",
+        "options": [
+          {
+            "label": "No",
+            "nextNodeId": "m1030o-w2y"
+          },
+          {
+            "label": "Yes",
+            "nextNodeId": "m1030o-w2t"
+          }
+        ],
+        "tmPage": "WP 0010-12"
+      },
+      "m1030o-w2y": {
+        "id": "m1030o-w2y",
+        "type": "terminal",
+        "text": "Engine oil serviced (low oil); warning cleared.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Warning 143 — oil serviced (low oil)"
+        }
+      },
+      "m1030o-w2t": {
+        "id": "m1030o-w2t",
+        "type": "terminal",
+        "text": "[Warning 143: Pre-Low Oil Pressure] reappears. Notify field maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Warning 143 — not corrected (low oil)"
+        },
+        "tmPage": "WP 0010-12"
+      },
+      "m1030o-w4": {
+        "id": "m1030o-w4",
+        "type": "action",
+        "text": "Service engine oil",
+        "actionText": "Perform WP 0017, Service Engine Oil. Push FAULT RESET to clear the warning. If the engine was stopped to service oil, turn the engine control switch to START.",
+        "nextNodeId": "m1030o-w4b",
+        "tmPage": "WP 0010-12"
+      },
+      "m1030o-w4b": {
+        "id": "m1030o-w4b",
+        "type": "question",
+        "text": "Does [Warning 143: Pre-Low Oil Pressure] reappear?",
+        "options": [
+          {
+            "label": "No",
+            "nextNodeId": "m1030o-w4y"
+          },
+          {
+            "label": "Yes",
+            "nextNodeId": "m1030o-w4t"
+          }
+        ],
+        "tmPage": "WP 0010-12"
+      },
+      "m1030o-w4y": {
+        "id": "m1030o-w4y",
+        "type": "terminal",
+        "text": "Engine oil serviced (improper grade); warning cleared.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Warning 143 — oil serviced (improper grade)"
+        }
+      },
+      "m1030o-w4t": {
+        "id": "m1030o-w4t",
+        "type": "terminal",
+        "text": "[Warning 143: Pre-Low Oil Pressure] reappears. Notify field maintenance. Notify field maintenance and request instructions on continued operation; do not continue operation without them.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Warning 143 — not corrected (improper grade)"
+        },
+        "tmPage": "WP 0010-12"
+      }
+    }
+  },
+  {
+    "categoryId": "gen-overheat",
+    "vehicleType": "MEP1030",
+    "tmReference": "TM 9-6115-749-10, WP 0010, Fault 151 High Coolant Temperature; Warning 146 Pre-High Coolant Temperature",
+    "rootNodeId": "m1030c-q1",
+    "nodes": {
+      "m1030c-q1": {
+        "id": "m1030c-q1",
+        "type": "question",
+        "text": "Which code does the DCS show?",
+        "options": [
+          {
+            "label": "[Fault 151: High Coolant Temperature] — engine stopped",
+            "nextNodeId": "m1030c-f1"
+          },
+          {
+            "label": "[Warning 146: Pre-High Coolant Temperature]",
+            "nextNodeId": "m1030c-w1"
+          }
+        ],
+        "tmPage": "WP 0009-3"
+      },
+      "m1030c-f1": {
+        "id": "m1030c-f1",
+        "type": "action",
+        "text": "Check and add coolant",
+        "actionText": "Examine coolant level visually and add coolant as required (WP 0015, Service Cooling System). Push FAULT RESET switch at the DCS panel to clear the fault. Examine coolant temperature on the DCS; when in the green area, turn the engine control switch to START.",
+        "nextNodeId": "m1030c-f2",
+        "tmPage": "WP 0010-8"
+      },
+      "m1030c-f2": {
+        "id": "m1030c-f2",
+        "type": "question",
+        "text": "Does [Fault 151: High Coolant Temperature] reappear?",
+        "options": [
+          {
+            "label": "No",
+            "nextNodeId": "m1030c-f2y"
+          },
+          {
+            "label": "Yes",
+            "nextNodeId": "m1030c-f3"
+          }
+        ],
+        "tmPage": "WP 0010-9"
+      },
+      "m1030c-f2y": {
+        "id": "m1030c-f2y",
+        "type": "terminal",
+        "text": "Coolant added; high coolant temperature fault cleared.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Fault 151 — coolant added"
+        }
+      },
+      "m1030c-f3": {
+        "id": "m1030c-f3",
+        "type": "action",
+        "text": "Clear ventilation and air flow paths",
+        "actionText": "Inspect ventilation and air flow paths and clear any obstruction. Push FAULT RESET switch at the DCS panel to clear the fault. Examine coolant temperature; when in the green area, turn the engine control switch to START.",
+        "nextNodeId": "m1030c-f4",
+        "tmPage": "WP 0010-9"
+      },
+      "m1030c-f4": {
+        "id": "m1030c-f4",
+        "type": "question",
+        "text": "Does [Fault 151: High Coolant Temperature] reappear?",
+        "options": [
+          {
+            "label": "No",
+            "nextNodeId": "m1030c-f4y"
+          },
+          {
+            "label": "Yes",
+            "nextNodeId": "m1030c-f4t"
+          }
+        ],
+        "tmPage": "WP 0010-9"
+      },
+      "m1030c-f4y": {
+        "id": "m1030c-f4y",
+        "type": "terminal",
+        "text": "Air flow obstruction cleared; fault cleared.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Fault 151 — air flow obstruction cleared"
+        }
+      },
+      "m1030c-f4t": {
+        "id": "m1030c-f4t",
+        "type": "terminal",
+        "text": "High coolant temperature [Fault 151] reappears. Notify field maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Fault 151 — not corrected"
+        },
+        "tmPage": "WP 0010-9"
+      },
+      "m1030c-w1": {
+        "id": "m1030c-w1",
+        "type": "question",
+        "text": "Note the coolant temperature on the DCS, open the left-side access door and check the coolant overflow bottle. Is coolant visible (level midpoint between HIGH and LOW marks)?",
+        "options": [
+          {
+            "label": "Yes — visible",
+            "nextNodeId": "m1030c-w2"
+          },
+          {
+            "label": "No — not visible",
+            "nextNodeId": "m1030c-w1t"
+          }
+        ],
+        "tmPage": "WP 0010-12"
+      },
+      "m1030c-w1t": {
+        "id": "m1030c-w1t",
+        "type": "terminal",
+        "text": "Coolant level is not visible. Notify field maintenance and request instructions on continued operation; do not continue operation without them.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Warning 146 — coolant level not visible"
+        },
+        "tmPage": "WP 0010-12"
+      },
+      "m1030c-w2": {
+        "id": "m1030c-w2",
+        "type": "action",
+        "text": "Notify field maintenance and check air flow",
+        "actionText": "Coolant level is visible: notify field maintenance (WP 0010 step 4). If the warning continues, inspect ventilation and air flow paths, clear any obstruction, and push FAULT RESET to clear the warning.",
+        "nextNodeId": "m1030c-w3",
+        "tmPage": "WP 0010-13"
+      },
+      "m1030c-w3": {
+        "id": "m1030c-w3",
+        "type": "question",
+        "text": "Does [Warning 146: Pre-High Coolant Temperature] continue?",
+        "options": [
+          {
+            "label": "No",
+            "nextNodeId": "m1030c-w3y"
+          },
+          {
+            "label": "Yes",
+            "nextNodeId": "m1030c-w3t"
+          }
+        ],
+        "tmPage": "WP 0010-13"
+      },
+      "m1030c-w3y": {
+        "id": "m1030c-w3y",
+        "type": "terminal",
+        "text": "Air flow paths cleared; Pre-High Coolant Temperature warning cleared (field maintenance notified per TM).",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Warning 146 — air flow cleared"
+        }
+      },
+      "m1030c-w3t": {
+        "id": "m1030c-w3t",
+        "type": "terminal",
+        "text": "[Warning 146] continues. Notify field maintenance and request instructions on continued operation; do not continue operation without them.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Warning 146 — not corrected"
+        },
+        "tmPage": "WP 0010-13"
+      }
+    }
+  },
+  {
+    "categoryId": "gen-electrical",
+    "vehicleType": "MEP1030",
+    "tmReference": "TM 9-6115-749-10, WP 0010, AC output, battery, load, paralleling and GFCI symptoms",
+    "rootNodeId": "m1030l-q1",
+    "nodes": {
+      "m1030l-q1": {
+        "id": "m1030l-q1",
+        "type": "question",
+        "text": "What is the problem?",
+        "options": [
+          {
+            "label": "AC voltage fluctuation",
+            "nextNodeId": "m1030l-vf1"
+          },
+          {
+            "label": "AC frequency fluctuation",
+            "nextNodeId": "m1030l-ff1"
+          },
+          {
+            "label": "Battery warning [441 Low Battery Voltage, 1442 Weak Battery, 3662 Battery Discharge, 3663 Winterization Kit Failure to Heat]",
+            "nextNodeId": "m1030l-b1"
+          },
+          {
+            "label": "[Warning 1444: KW Overload]",
+            "nextNodeId": "m1030l-kw1"
+          },
+          {
+            "label": "[Warning 1471: Overcurrent]",
+            "nextNodeId": "m1030l-oc1"
+          },
+          {
+            "label": "[Warning 1449: Overfrequency]",
+            "nextNodeId": "m1030l-of1"
+          },
+          {
+            "label": "[Warning 3678: Genset Frequency Changed]",
+            "nextNodeId": "m1030l-fc1"
+          },
+          {
+            "label": "[Warning 1457: Fail To Synchronize] or [Warning 3658: Switch Box Fail To Close]",
+            "nextNodeId": "m1030l-sy1"
+          },
+          {
+            "label": "Engine at speed but less than rated voltage",
+            "nextNodeId": "m1030l-rv1"
+          },
+          {
+            "label": "No power at GFCI CONVENIENCE RECEPTACLE",
+            "nextNodeId": "m1030l-g1"
+          }
+        ],
+        "tmPage": "WP 0009-3"
+      },
+      "m1030l-vf1": {
+        "id": "m1030l-vf1",
+        "type": "question",
+        "text": "Observe generator voltage. Does it settle within 30 seconds (transient) and stay within Table 1 limits?",
+        "options": [
+          {
+            "label": "Yes — transient, within limits",
+            "nextNodeId": "m1030l-vfy"
+          },
+          {
+            "label": "Fluctuates more than 30 s",
+            "nextNodeId": "m1030l-vft"
+          },
+          {
+            "label": "Outside Table 1 limits",
+            "nextNodeId": "m1030l-vfo"
+          }
+        ],
+        "tmPage": "WP 0010-11"
+      },
+      "m1030l-vfy": {
+        "id": "m1030l-vfy",
+        "type": "terminal",
+        "text": "Voltage fluctuation was transient and voltage is within Table 1.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "AC voltage fluctuation — transient"
+        }
+      },
+      "m1030l-vft": {
+        "id": "m1030l-vft",
+        "type": "terminal",
+        "text": "Voltage continues to fluctuate for more than 30 seconds. Notify field maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "AC voltage fluctuation — continuous"
+        },
+        "tmPage": "WP 0010-11"
+      },
+      "m1030l-vfo": {
+        "id": "m1030l-vfo",
+        "type": "terminal",
+        "text": "Voltage is less than or more than the Table 1 values. Notify field maintenance and request instructions on continued operation; do not continue operation without them.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "AC voltage outside limits"
+        },
+        "tmPage": "WP 0010-11"
+      },
+      "m1030l-ff1": {
+        "id": "m1030l-ff1",
+        "type": "question",
+        "text": "Observe generator frequency. Does it fluctuate outside Table 2 limits (60 Hz: 59.5-60.5; 50 Hz: 49.5-50.5; 400 Hz: 399-401) for more than 15 seconds?",
+        "options": [
+          {
+            "label": "No — transient",
+            "nextNodeId": "m1030l-ffy"
+          },
+          {
+            "label": "Yes",
+            "nextNodeId": "m1030l-fft"
+          }
+        ],
+        "tmPage": "WP 0010-11"
+      },
+      "m1030l-ffy": {
+        "id": "m1030l-ffy",
+        "type": "terminal",
+        "text": "Frequency fluctuation was transient.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "AC frequency fluctuation — transient"
+        }
+      },
+      "m1030l-fft": {
+        "id": "m1030l-fft",
+        "type": "terminal",
+        "text": "Frequency fluctuates outside Table 2 limits for more than 15 seconds. Notify field maintenance and request instructions on continued operation; do not continue operation without them.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "AC frequency fluctuation — continuous"
+        },
+        "tmPage": "WP 0010-11"
+      },
+      "m1030l-b1": {
+        "id": "m1030l-b1",
+        "type": "question",
+        "text": "Inspect battery cables and connections. Are any loose, damaged, corroded, or disconnected?",
+        "options": [
+          {
+            "label": "Yes",
+            "nextNodeId": "m1030l-b1t"
+          },
+          {
+            "label": "No — serviceable",
+            "nextNodeId": "m1030l-b2t"
+          }
+        ],
+        "tmPage": "WP 0010-14"
+      },
+      "m1030l-b1t": {
+        "id": "m1030l-b1t",
+        "type": "terminal",
+        "text": "Battery cables and/or connections are loose, damaged, corroded, or disconnected. Notify field maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Battery warning — cables/connections defective"
+        },
+        "tmPage": "WP 0010-14"
+      },
+      "m1030l-b2t": {
+        "id": "m1030l-b2t",
+        "type": "terminal",
+        "text": "Cables serviceable: faulty battery-charging alternator. Notify field maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Battery warning — charging alternator suspected"
+        },
+        "tmPage": "WP 0010-14"
+      },
+      "m1030l-kw1": {
+        "id": "m1030l-kw1",
+        "type": "question",
+        "text": "Observe the DCS for a transient condition. Is the condition less than maximum [kW] output?",
+        "options": [
+          {
+            "label": "Yes — transient / below maximum",
+            "nextNodeId": "m1030l-kw2"
+          },
+          {
+            "label": "No — remains near or above maximum",
+            "nextNodeId": "m1030l-kw1t"
+          }
+        ],
+        "tmPage": "WP 0010-15"
+      },
+      "m1030l-kw2": {
+        "id": "m1030l-kw2",
+        "type": "action",
+        "text": "Clear the warning",
+        "actionText": "Push FAULT RESET to clear [Warning 1444: KW Overload].",
+        "nextNodeId": "m1030l-kw3",
+        "tmPage": "WP 0010-15"
+      },
+      "m1030l-kw3": {
+        "id": "m1030l-kw3",
+        "type": "question",
+        "text": "Does the warning stay cleared?",
+        "options": [
+          {
+            "label": "Yes",
+            "nextNodeId": "m1030l-kw3y"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m1030l-kw1t"
+          }
+        ],
+        "tmPage": "WP 0010-15"
+      },
+      "m1030l-kw3y": {
+        "id": "m1030l-kw3y",
+        "type": "terminal",
+        "text": "Transient condition; [Warning 1444: KW Overload] cleared.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Warning 1444: KW Overload — transient, cleared"
+        }
+      },
+      "m1030l-kw1t": {
+        "id": "m1030l-kw1t",
+        "type": "terminal",
+        "text": "Overload/over-current condition persists: continuously monitor coolant temperature. Notify field maintenance and request instructions on continued operation; do not continue operation without them.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Warning 1444: KW Overload — persists"
+        },
+        "tmPage": "WP 0010-15"
+      },
+      "m1030l-oc1": {
+        "id": "m1030l-oc1",
+        "type": "question",
+        "text": "Observe the DCS for a transient condition. Is the condition less than maximum [Genset Current]?",
+        "options": [
+          {
+            "label": "Yes — transient / below maximum",
+            "nextNodeId": "m1030l-oc2"
+          },
+          {
+            "label": "No — remains near or above maximum",
+            "nextNodeId": "m1030l-oc1t"
+          }
+        ],
+        "tmPage": "WP 0010-15"
+      },
+      "m1030l-oc2": {
+        "id": "m1030l-oc2",
+        "type": "action",
+        "text": "Clear the warning",
+        "actionText": "Push FAULT RESET to clear [Warning 1471: Overcurrent].",
+        "nextNodeId": "m1030l-oc3",
+        "tmPage": "WP 0010-15"
+      },
+      "m1030l-oc3": {
+        "id": "m1030l-oc3",
+        "type": "question",
+        "text": "Does the warning stay cleared?",
+        "options": [
+          {
+            "label": "Yes",
+            "nextNodeId": "m1030l-oc3y"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m1030l-oc1t"
+          }
+        ],
+        "tmPage": "WP 0010-15"
+      },
+      "m1030l-oc3y": {
+        "id": "m1030l-oc3y",
+        "type": "terminal",
+        "text": "Transient condition; [Warning 1471: Overcurrent] cleared.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Warning 1471: Overcurrent — transient, cleared"
+        }
+      },
+      "m1030l-oc1t": {
+        "id": "m1030l-oc1t",
+        "type": "terminal",
+        "text": "Overload/over-current condition persists: continuously monitor coolant temperature. Notify field maintenance and request instructions on continued operation; do not continue operation without them.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Warning 1471: Overcurrent — persists"
+        },
+        "tmPage": "WP 0010-15"
+      },
+      "m1030l-of1": {
+        "id": "m1030l-of1",
+        "type": "action",
+        "text": "Adjust frequency",
+        "actionText": "Observe the DCS for a transient over-frequency condition. If it continues, adjust frequency to the required value on the DCS panel (WP 0005, Operation Under Usual Conditions).",
+        "nextNodeId": "m1030l-of2",
+        "tmPage": "WP 0010-16"
+      },
+      "m1030l-of2": {
+        "id": "m1030l-of2",
+        "type": "question",
+        "text": "Is frequency at the required value and the condition gone?",
+        "options": [
+          {
+            "label": "Yes",
+            "nextNodeId": "m1030l-of2y"
+          },
+          {
+            "label": "No / unable to adjust",
+            "nextNodeId": "m1030l-of2t"
+          }
+        ],
+        "tmPage": "WP 0010-16"
+      },
+      "m1030l-of2y": {
+        "id": "m1030l-of2y",
+        "type": "terminal",
+        "text": "Over-frequency was transient or frequency adjusted to the required value.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Warning 1449 Overfrequency — corrected"
+        }
+      },
+      "m1030l-of2t": {
+        "id": "m1030l-of2t",
+        "type": "terminal",
+        "text": "Over-frequency continues or unable to adjust frequency. Notify field maintenance and request instructions on continued operation; do not continue operation without them.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Warning 1449 Overfrequency — not corrected"
+        },
+        "tmPage": "WP 0010-16"
+      },
+      "m1030l-fc1": {
+        "id": "m1030l-fc1",
+        "type": "action",
+        "text": "Adjust frequency",
+        "actionText": "Observe the DCS for a change in selected frequency and adjust frequency to the required value on the DCS panel (WP 0005, Operation Under Usual Conditions).",
+        "nextNodeId": "m1030l-fc2",
+        "tmPage": "WP 0010-16"
+      },
+      "m1030l-fc2": {
+        "id": "m1030l-fc2",
+        "type": "question",
+        "text": "Was frequency adjusted to the required value?",
+        "options": [
+          {
+            "label": "Yes",
+            "nextNodeId": "m1030l-fc2y"
+          },
+          {
+            "label": "No — unable",
+            "nextNodeId": "m1030l-fc2t"
+          }
+        ],
+        "tmPage": "WP 0010-16"
+      },
+      "m1030l-fc2y": {
+        "id": "m1030l-fc2y",
+        "type": "terminal",
+        "text": "Frequency adjusted to the required value.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Warning 3678 Genset Frequency Changed — adjusted"
+        }
+      },
+      "m1030l-fc2t": {
+        "id": "m1030l-fc2t",
+        "type": "terminal",
+        "text": "Unable to adjust frequency to the required value. Contact field maintenance and request instructions on continued operation.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Warning 3678 — unable to adjust"
+        },
+        "tmPage": "WP 0010-16"
+      },
+      "m1030l-sy1": {
+        "id": "m1030l-sy1",
+        "type": "action",
+        "text": "Check settings and repeat paralleling",
+        "actionText": "Examine voltage and frequency options on the DCS and the AC voltage reconnection switches on each generator set; select voltage and frequency to match the required parameters (WP 0005). Repeat the paralleling task (WP 0006, Parallel Operation).",
+        "nextNodeId": "m1030l-sy2",
+        "tmPage": "WP 0010-17"
+      },
+      "m1030l-sy2": {
+        "id": "m1030l-sy2",
+        "type": "question",
+        "text": "Does the warning reappear?",
+        "options": [
+          {
+            "label": "No",
+            "nextNodeId": "m1030l-sy2y"
+          },
+          {
+            "label": "Yes",
+            "nextNodeId": "m1030l-sy2t"
+          }
+        ],
+        "tmPage": "WP 0010-17"
+      },
+      "m1030l-sy2y": {
+        "id": "m1030l-sy2y",
+        "type": "terminal",
+        "text": "Paralleling parameters corrected; generator sets synchronized.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Paralleling warning — corrected"
+        }
+      },
+      "m1030l-sy2t": {
+        "id": "m1030l-sy2t",
+        "type": "terminal",
+        "text": "Paralleling warning (1457 or 3658) reappears. Notify field maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Paralleling warning — not corrected"
+        },
+        "tmPage": "WP 0010-17"
+      },
+      "m1030l-rv1": {
+        "id": "m1030l-rv1",
+        "type": "action",
+        "text": "Adjust voltage",
+        "actionText": "Examine [GENSET VOLTAGE] on the DCS. If less than rated, adjust to obtain rated voltage (WP 0005, Operation Under Usual Conditions).",
+        "nextNodeId": "m1030l-rv2",
+        "tmPage": "WP 0010-19"
+      },
+      "m1030l-rv2": {
+        "id": "m1030l-rv2",
+        "type": "question",
+        "text": "Is rated voltage obtained?",
+        "options": [
+          {
+            "label": "Yes",
+            "nextNodeId": "m1030l-rv2y"
+          },
+          {
+            "label": "No — unable",
+            "nextNodeId": "m1030l-rv2t"
+          }
+        ],
+        "tmPage": "WP 0010-19"
+      },
+      "m1030l-rv2y": {
+        "id": "m1030l-rv2y",
+        "type": "terminal",
+        "text": "Voltage adjusted to rated.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Low output voltage — adjusted"
+        }
+      },
+      "m1030l-rv2t": {
+        "id": "m1030l-rv2t",
+        "type": "terminal",
+        "text": "Unable to obtain rated voltage. Notify field maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Low output voltage — not corrected"
+        },
+        "tmPage": "WP 0010-19"
+      },
+      "m1030l-g1": {
+        "id": "m1030l-g1",
+        "type": "action",
+        "text": "Reset the GFCI",
+        "actionText": "Power is available from the GFCI CONVENIENCE RECEPTACLE only when the set is operating and [CONTACTOR] is [CLOSED]. With the set operating and the contactor closed, push the RESET switches on the face of the receptacle.",
+        "nextNodeId": "m1030l-g2",
+        "tmPage": "WP 0010-19"
+      },
+      "m1030l-g2": {
+        "id": "m1030l-g2",
+        "type": "question",
+        "text": "Is power available at the receptacle now?",
+        "options": [
+          {
+            "label": "Yes",
+            "nextNodeId": "m1030l-g2y"
+          },
+          {
+            "label": "No — symptom continues",
+            "nextNodeId": "m1030l-g2t"
+          }
+        ],
+        "tmPage": "WP 0010-19"
+      },
+      "m1030l-g2y": {
+        "id": "m1030l-g2y",
+        "type": "terminal",
+        "text": "GFCI reset; convenience receptacle has power.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "GFCI receptacle — reset"
+        }
+      },
+      "m1030l-g2t": {
+        "id": "m1030l-g2t",
+        "type": "terminal",
+        "text": "Power still not available at the GFCI CONVENIENCE RECEPTACLE. Notify field maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "GFCI receptacle — not corrected"
+        },
+        "tmPage": "WP 0010-19"
+      }
+    }
+  }
+]

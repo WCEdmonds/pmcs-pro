@@ -844,4 +844,667 @@ export const FAULT_SUGGESTIONS: Record<string, FaultSuggestion[]> = {
     { text: 'Master cylinder cap damaged/missing — replaced', categoryId: 'trailer-brakes', readiness: 'PMC' },
     { text: 'Brake fluid low — added', categoryId: 'trailer-brakes', readiness: 'PMC' },
   ],
+  // ── M1097 (TM 9-2320-280-10 Table 2-2) ──
+  'm1097-b-001': [
+    { text: "Any brake fluid leak; class III leak of oil, fuel, or coolant.", categoryId: 'fluid-leak', readiness: 'NMC' },
+    { text: "Any damage that will prevent operation.", categoryId: 'body-damage', readiness: 'NMC' },
+  ],
+  'm1097-b-002': [
+    { text: "Tire missing, deflated, or unserviceable.", categoryId: 'tire-damage', readiness: 'NMC' },
+  ],
+  'm1097-b-003': [
+    { text: "Any brake fluid leak; class III leak of oil, fuel, or coolant.", categoryId: 'fluid-leak', readiness: 'NMC' },
+    { text: "Any damage that would prevent operation.", categoryId: 'body-damage', readiness: 'NMC' },
+  ],
+  'm1097-b-004': [
+    { text: "Any brake fluid leak; class III leak of oil, fuel, or coolant.", categoryId: 'fluid-leak', readiness: 'NMC' },
+    { text: "Any damage that would prevent operation.", categoryId: 'body-damage', readiness: 'NMC' },
+  ],
+  'm1097-b-005': [
+    { text: "Tire missing, deflated, or unserviceable.", categoryId: 'tire-damage', readiness: 'NMC' },
+  ],
+  'm1097-b-006': [
+    { text: "Any damage that will prevent operation.", categoryId: 'body-damage', readiness: 'NMC' },
+    { text: "Any brake fluid leak; class III leak of oil, fuel, or coolant.", categoryId: 'fluid-leak', readiness: 'NMC' },
+  ],
+  'm1097-b-009': [
+    { text: "Seat adjustment lock broken or missing.", categoryId: 'body-damage', readiness: 'NMC' },
+  ],
+  'm1097-b-010': [
+    { text: "Fire extinguisher missing or damaged.", categoryId: 'missing-bii', readiness: 'NMC' },
+    { text: "Pressure gauge needle in recharge area.", categoryId: 'missing-bii', readiness: 'NMC' },
+    { text: "Seal broken or missing.", categoryId: 'missing-bii', readiness: 'NMC' },
+  ],
+  'm1097-b-011': [
+    { text: "Wait-to-start light does not come on when engine is cold or wait light stays on continually. Brake warning light does not come on.", categoryId: 'wont-start', readiness: 'NMC' },
+    { text: "Engine will not start.", categoryId: 'wont-start', readiness: 'NMC' },
+    { text: "Oil pressure is less than 6 psi (103 kPa) at idle.", categoryId: 'engine-oil-pressure', readiness: 'NMC' },
+    { text: "Voltmeter needle stays in yellow or red range.", categoryId: 'electrical', readiness: 'NMC' },
+    { text: "Air restriction indicator reaches red zone.", categoryId: 'engine-smoke', readiness: 'NMC' },
+    { text: "Brake warning light stays on after hand brake is released or comes on while driving.", categoryId: 'brake-issue', readiness: 'NMC' },
+    { text: "Coolant temperature gauge inoperative or reads greater than 230°F (110°C).", categoryId: 'engine-overheat', readiness: 'NMC' },
+  ],
+  'm1097-b-012': [
+    { text: "Brakes will not stop the vehicle.", categoryId: 'brake-issue', readiness: 'NMC' },
+    { text: "Parking brake inoperable or unable to hold vehicle.", categoryId: 'brake-issue', readiness: 'NMC' },
+    { text: "Parking brake lever safety mechanism (if equipped) is not functioning properly.", categoryId: 'brake-issue', readiness: 'NMC' },
+  ],
+  'm1097-b-013': [
+    { text: "Engine oil pressure gauge reads less than approximately 40 psi (276 kPa) under normal driving conditions or less than 6 psi (41 kPa) at idle. Coolant temperature gauge reads greater than 230°F (110°C). Air restriction gauge indicates restriction in the air cleaner. Voltmeter indicates a loss of voltage.", categoryId: 'engine-oil-pressure', readiness: 'NMC' },
+  ],
+  'm1097-b-014': [
+    { text: "Brakes pull or grab.", categoryId: 'brake-issue', readiness: 'NMC' },
+  ],
+  'm1097-b-015': [
+    { text: "Handling is unstable turning is difficult or free play, binding, or shimming detected.", categoryId: 'steering', readiness: 'NMC' },
+  ],
+  'm1097-b-016': [
+    { text: "Pedal sticking or binding.", categoryId: 'controls', readiness: 'NMC' },
+  ],
+  'm1097-b-017': [
+    { text: "Unusual noise or vibration detected.", categoryId: 'unusual-noise', readiness: 'NMC' },
+  ],
+  'm1097-b-018': [
+    { text: "Transmission slips or will not shift.", categoryId: 'transmission', readiness: 'NMC' },
+  ],
+  'm1097-b-019': [
+    { text: "Lever inoperable or binds between range detents.", categoryId: 'transmission', readiness: 'NMC' },
+    { text: "Lever inoperable or does not engage in all ranges with engine not running.", categoryId: 'transmission', readiness: 'NMC' },
+  ],
+  'm1097-b-021': [
+    { text: "Fuel is not clear after draining 1 pint (0.47 L).", categoryId: 'fuel-system', readiness: 'NMC' },
+    { text: "Class III leakage evident.", categoryId: 'fluid-leak', readiness: 'NMC' },
+  ],
+  'm1097-b-022': [
+    { text: "Tire deflated or otherwise unserviceable.", categoryId: 'tire-damage', readiness: 'NMC' },
+  ],
+  'm1097-b-024': [
+    { text: "Any brake fluid leak; Class III leak of oil, fuel, or coolant.", categoryId: 'fluid-leak', readiness: 'NMC' },
+    { text: "Crossmembers or underbody support are missing any hardware, broken, cracked, or if a bent or rusted-through condition is present that would affect vehicle operation.", categoryId: 'body-damage', readiness: 'NMC' },
+    { text: "Any damage that will prevent operation.", categoryId: 'body-damage', readiness: 'NMC' },
+  ],
+  'm1097-b-025': [
+    { text: "Any brake fluid leak; class III leak of oil, fuel, or coolant.", categoryId: 'fluid-leak', readiness: 'NMC' },
+    { text: "Crossmembers or underbody support are missing any hardware, broken, cracked, or if a bent or rusted-through condition is present that would affect vehicle operation.", categoryId: 'body-damage', readiness: 'NMC' },
+    { text: "Bumper, crossmember or an inner brace is cracked or broken.", categoryId: 'body-damage', readiness: 'NMC' },
+  ],
+  'm1097-b-026': [
+    { text: "Tire deflated, or otherwise unserviceable.", categoryId: 'tire-damage', readiness: 'NMC' },
+  ],
+  'm1097-b-028': [
+    { text: "Any brake fluid leak; class III leak of oil, fuel, or coolant.", categoryId: 'fluid-leak', readiness: 'NMC' },
+    { text: "Crossmembers or underbody support are missing any hardware, broken, cracked, or if a bent or rusted-through condition is present that would affect vehicle operation.", categoryId: 'body-damage', readiness: 'NMC' },
+    { text: "Any damage that will prevent operation.", categoryId: 'body-damage', readiness: 'NMC' },
+  ],
+  'm1097-b-029': [
+    { text: "Oil appears milky.", categoryId: 'engine-oil-pressure', readiness: 'NMC' },
+  ],
+  'm1097-b-030': [
+    { text: "Class III leakage evident.", categoryId: 'steering', readiness: 'NMC' },
+  ],
+  'm1097-b-031': [
+    { text: "Class III leakage evident.", categoryId: 'cooling-system', readiness: 'NMC' },
+  ],
+  'm1097-b-032': [
+    { text: "Any leak or cover missing.", categoryId: 'brake-issue', readiness: 'NMC' },
+  ],
+  'm1097-b-036': [
+    { text: "Windshield is cracked, broken, or discolored (cloudy) sufficiently to impair operator’s vision.", categoryId: 'glass-damage', readiness: 'NMC' },
+  ],
+  'm1097-b-039': [
+    { text: "Any tread is worn to height of tread wear indicator (1/16 in. (1.59 mm) or less). Any cut, gouge, or crack that extends to the cord body or any bulges. Tires exhibit excessive inner and outer wear or balance.", categoryId: 'tire-damage', readiness: 'NMC' },
+    { text: "Any wheel stud nut or lug nut is broken or missing.", categoryId: 'tire-damage', readiness: 'NMC' },
+  ],
+  'm1097-b-040': [
+    { text: "Any mounts are broken, pipes are rusted through or broken, and any indication of an exhaust leak.", categoryId: 'unusual-noise', readiness: 'NMC' },
+  ],
+  'm1097-b-041': [
+    { text: "Class III leakage or damage is evident; mounting damaged or loose.", categoryId: 'fluid-leak', readiness: 'NMC' },
+    { text: "Spring coil has shifted off center.", categoryId: 'unusual-noise', readiness: 'NMC' },
+  ],
+  'm1097-b-044': [
+    { text: "Heater inoperable and mission requires heater.", categoryId: 'heater', readiness: 'NMC' },
+    { text: "Class III fuel leakage is evident and mission requires heater.", categoryId: 'fuel-system', readiness: 'NMC' },
+    { text: "Frayed or broken wires.", categoryId: 'heater', readiness: 'NMC' },
+    { text: "Heater exhaust damaged or components missing.", categoryId: 'heater', readiness: 'NMC' },
+    { text: "Class III leak evident.", categoryId: 'fuel-system', readiness: 'NMC' },
+  ],
+  'm1097-b-045': [
+    { text: "Evidence of damage to air cleaner weathercap, body, air intake hose, or mounting that will allow unfiltered air to enter the engine.", categoryId: 'engine-smoke', readiness: 'NMC' },
+  ],
+  'm1097-b-046': [
+    { text: "Damaged or cracked bracket, or loose bolts.", categoryId: 'electrical', readiness: 'NMC' },
+  ],
+  'm1097-b-047': [
+    { text: "Fan blade or pulley is bent, broken, cracked, or loose.", categoryId: 'cooling-system', readiness: 'NMC' },
+    { text: "Class III leakage evident.", categoryId: 'fluid-leak', readiness: 'NMC' },
+    { text: "Support mounts broken, damaged, or missing hardware. Side brackets damaged or weldments broken.", categoryId: 'cooling-system', readiness: 'NMC' },
+    { text: "Any drivebelt is missing, broken, frayed or dry rotted. Belt fiber has more than one crack 1/8-in. (3.18 mm) in depth or 50% or frays more than 2 in. (5.1 cm) long.", categoryId: 'cooling-system', readiness: 'NMC' },
+    { text: "Serpentine drivebelt is loose, misaligned (off one or more grooves on any pulley), breaks or splits in outer surface, frays on either edge if cord is broken.", categoryId: 'cooling-system', readiness: 'NMC' },
+    { text: "Fan shroud broken, cracked, or loose.", categoryId: 'cooling-system', readiness: 'NMC' },
+    { text: "Class III leak evident.", categoryId: 'fluid-leak', readiness: 'NMC' },
+  ],
+  'm1097-b-048': [
+    { text: "One or more batteries missing, unserviceable, leaking, terminal or cables are loose, corroded, or holddowns are not secure.", categoryId: 'electrical', readiness: 'NMC' },
+  ],
+  'm1097-b-053': [
+    { text: "Actuating lever or spring is missing or broken.", categoryId: 'brake-issue', readiness: 'NMC' },
+  ],
+  'm1097-b-054': [
+    { text: "Any corroded-through condition or cracks or breaks that would affect vehicle operation.", categoryId: 'body-damage', readiness: 'NMC' },
+  ],
+  'm1097-b-055': [
+    { text: "Any corroded-through condition or damage that would affect vehicle operation.", categoryId: 'body-damage', readiness: 'NMC' },
+  ],
+  'm1097-b-056': [
+    { text: "Any mounting bolt missing.", categoryId: 'body-damage', readiness: 'NMC' },
+  ],
+  // ── MEP802A (TM 9-6115-641-10) — texts are TM NMC criteria ──
+  'mep802a-b-001': [  // BEFORE 1 Housing
+    { text: 'Cannot secure door.', categoryId: 'gen-housing', readiness: 'NMC' },
+  ],
+  'mep802a-b-003': [  // BEFORE 3 Skid Base
+    { text: 'Skid base is cracked or shows signs of structural damage.', categoryId: 'gen-housing', readiness: 'NMC' },
+  ],
+  'mep802a-b-005': [  // BEFORE 5 Engine Assembly
+    { text: 'Any loose, damaged, or missing hardware.', categoryId: 'gen-engine', readiness: 'NMC' },
+  ],
+  'mep802a-b-006': [  // BEFORE 6 Fuel System
+    { text: 'Any fuel leaks, damage, loose or missing parts.', categoryId: 'gen-fuel', readiness: 'NMC' },
+  ],
+  'mep802a-b-007': [  // BEFORE 7 Fuel Filter/Water Separator
+    { text: 'Any fuel leaks.', categoryId: 'gen-fuel', readiness: 'NMC' },
+    { text: 'Water not drained.', categoryId: 'gen-fuel', readiness: 'NMC' },
+  ],
+  'mep802a-b-008': [  // BEFORE 8 Lubrication System
+    { text: 'Class III leaks, damage, loose or missing parts.', categoryId: 'gen-oil-pressure', readiness: 'NMC' },
+    { text: 'Oil level is low.', categoryId: 'gen-oil-pressure', readiness: 'NMC' },
+    { text: 'Oil shows signs of contamination.', categoryId: 'gen-oil-pressure', readiness: 'NMC' },
+  ],
+  'mep802a-b-009': [  // BEFORE 9 Radiator
+    { text: 'Class III leaks or missing radiator cap.', categoryId: 'gen-overheat', readiness: 'NMC' },
+  ],
+  'mep802a-b-010': [  // BEFORE 10 Hoses
+    { text: 'Class III leaks or missing clamps or hoses.', categoryId: 'gen-overheat', readiness: 'NMC' },
+  ],
+  'mep802a-b-011': [  // BEFORE 11 Cooling Fan
+    { text: 'Damaged or loose.', categoryId: 'gen-overheat', readiness: 'NMC' },
+    { text: 'Unusual noise from fan area.', categoryId: 'gen-overheat', readiness: 'NMC' },
+  ],
+  'mep802a-b-012': [  // BEFORE 11.1 Water Pump
+    { text: 'Class III leaks or unusual noise from area.', categoryId: 'gen-overheat', readiness: 'NMC' },
+  ],
+  'mep802a-b-013': [  // BEFORE 12 Fan Belt
+    { text: 'Broken or missing belt.', categoryId: 'gen-overheat', readiness: 'NMC' },
+  ],
+  'mep802a-b-014': [  // BEFORE 13 Overflow Bottle
+    { text: 'Class III leaks or missing hardware.', categoryId: 'gen-overheat', readiness: 'NMC' },
+  ],
+  'mep802a-b-015': [  // BEFORE 14 Exhaust System
+    { text: 'Leaks, damaged, or missing parts.', categoryId: 'gen-exhaust', readiness: 'NMC' },
+  ],
+  'mep802a-b-016': [  // BEFORE 15 Air Cleaner Assembly
+    { text: 'Loose, damaged, or missing parts.', categoryId: 'gen-engine', readiness: 'NMC' },
+    { text: 'Clogged air cleaner element.', categoryId: 'gen-engine', readiness: 'NMC' },
+  ],
+  'mep802a-b-017': [  // BEFORE 16 Ground Rod Cable and Connections
+    { text: 'Damaged, corroded, loose connections, or missing parts.', categoryId: 'gen-electrical', readiness: 'NMC' },
+  ],
+  'mep802a-b-018': [  // BEFORE 17 Batteries
+    { text: 'Electrolyte is below battery plates.', categoryId: 'gen-electrical', readiness: 'NMC' },
+    { text: 'Broken or missing mounting hardware.', categoryId: 'gen-electrical', readiness: 'NMC' },
+  ],
+  'mep802a-b-019': [  // BEFORE 18 Battery Cables
+    { text: 'Damaged, loose, or missing parts.', categoryId: 'gen-electrical', readiness: 'NMC' },
+  ],
+  'mep802a-b-020': [  // BEFORE 19 Output Box Assembly
+    { text: 'Damaged, loose, or missing parts.', categoryId: 'gen-electrical', readiness: 'NMC' },
+    { text: 'Damaged or missing hardware.', categoryId: 'gen-electrical', readiness: 'NMC' },
+  ],
+  'mep802a-b-021': [  // BEFORE 20 Controls and Indicators
+    { text: 'Damaged or missing parts.', categoryId: 'gen-electrical', readiness: 'NMC' },
+  ],
+  'mep802a-b-022': [  // BEFORE 21 Control Box Harness
+    { text: 'Damaged or loose.', categoryId: 'gen-electrical', readiness: 'NMC' },
+  ],
+  'mep802a-b-023': [  // DURING 22 Housing
+    { text: 'Cannot secure door.', categoryId: 'gen-housing', readiness: 'NMC' },
+  ],
+  'mep802a-b-024': [  // DURING 23 Engine Assembly
+    { text: 'Any loose, damaged, or missing hardware.', categoryId: 'gen-engine', readiness: 'NMC' },
+  ],
+  'mep802a-b-025': [  // DURING 24 Fuel System
+    { text: 'Any fuel leaks, damaged, loose, or missing parts.', categoryId: 'gen-fuel', readiness: 'NMC' },
+  ],
+  'mep802a-b-026': [  // DURING 25 Lubrication System
+    { text: 'Class III leaks, damage, loose or missing parts.', categoryId: 'gen-oil-pressure', readiness: 'NMC' },
+    { text: 'Oil level is low.', categoryId: 'gen-oil-pressure', readiness: 'NMC' },
+    { text: 'Oil shows signs of contamination.', categoryId: 'gen-oil-pressure', readiness: 'NMC' },
+  ],
+  'mep802a-b-027': [  // DURING 26 Cooling Fan
+    { text: 'Damaged or loose.', categoryId: 'gen-overheat', readiness: 'NMC' },
+    { text: 'Unusual noise from fan area.', categoryId: 'gen-overheat', readiness: 'NMC' },
+  ],
+  'mep802a-b-028': [  // DURING 27 Overflow Bottle
+    { text: 'Class III leaks or missing hardware.', categoryId: 'gen-overheat', readiness: 'NMC' },
+  ],
+  'mep802a-b-029': [  // DURING 28 Ground Rod Cable and Connections
+    { text: 'Damaged, corroded, loose connections, or missing parts.', categoryId: 'gen-electrical', readiness: 'NMC' },
+  ],
+  'mep802a-b-030': [  // DURING 29 Controls and Indicators
+    { text: 'Indicators are not operating properly.', categoryId: 'gen-electrical', readiness: 'NMC' },
+  ],
+  'mep802a-b-031': [  // AFTER 30 Housing
+    { text: 'Cannot secure door.', categoryId: 'gen-housing', readiness: 'NMC' },
+  ],
+  'mep802a-b-033': [  // AFTER 32 Skid Base
+    { text: 'Skid base is cracked or shows signs of structural damage.', categoryId: 'gen-housing', readiness: 'NMC' },
+  ],
+  'mep802a-b-034': [  // AFTER 33 Engine Assembly
+    { text: 'Loose, damaged, or missing hardware.', categoryId: 'gen-engine', readiness: 'NMC' },
+  ],
+  'mep802a-b-035': [  // AFTER 34 Fuel System
+    { text: 'Any fuel leaks, damage, loose or missing parts.', categoryId: 'gen-fuel', readiness: 'NMC' },
+  ],
+  'mep802a-b-036': [  // AFTER 35 Fuel Filter/Water Separator
+    { text: 'Any fuel leaks.', categoryId: 'gen-fuel', readiness: 'NMC' },
+    { text: 'Water not drained.', categoryId: 'gen-fuel', readiness: 'NMC' },
+  ],
+  'mep802a-b-037': [  // AFTER 36 Lubrication System
+    { text: 'Class III leaks, damage, loose or missing parts.', categoryId: 'gen-oil-pressure', readiness: 'NMC' },
+    { text: 'Oil level is low.', categoryId: 'gen-oil-pressure', readiness: 'NMC' },
+    { text: 'Oil shows signs of contamination.', categoryId: 'gen-oil-pressure', readiness: 'NMC' },
+  ],
+  'mep802a-b-038': [  // AFTER 37 Radiator
+    { text: 'Class III leaks or missing radiator cap.', categoryId: 'gen-overheat', readiness: 'NMC' },
+  ],
+  'mep802a-b-039': [  // AFTER 38 Hoses
+    { text: 'Class III leaks or missing clamps or hoses.', categoryId: 'gen-overheat', readiness: 'NMC' },
+  ],
+  'mep802a-b-040': [  // AFTER 39 Fan Belt
+    { text: 'Broken or missing belt.', categoryId: 'gen-overheat', readiness: 'NMC' },
+  ],
+  'mep802a-b-041': [  // AFTER 40 Controls and Indicators
+    { text: 'Damaged or missing parts.', categoryId: 'gen-electrical', readiness: 'NMC' },
+  ],
+  'mep802a-b-042': [  // BEFORE 41 Heater Assembly
+    { text: 'Damage that renders equipment unsafe. Heater not mounted securely.', categoryId: 'gen-winterization', readiness: 'NMC' },
+  ],
+  'mep802a-b-043': [  // BEFORE 42 Control Unit
+    { text: 'Wires loose or broken or control unit damaged.', categoryId: 'gen-winterization', readiness: 'NMC' },
+  ],
+  'mep802a-b-044': [  // BEFORE 43 Fuel Pump
+    { text: 'Any fuel leak.', categoryId: 'gen-winterization', readiness: 'NMC' },
+  ],
+  'mep802a-b-045': [  // BEFORE 44 Fuel Tank
+    { text: 'Insufficient fuel.', categoryId: 'gen-winterization', readiness: 'NMC' },
+  ],
+  'mep802a-b-046': [  // BEFORE 45 Fuel Lines
+    { text: 'Fuel lines damaged; clamps missing.', categoryId: 'gen-winterization', readiness: 'NMC' },
+  ],
+  'mep802a-b-047': [  // BEFORE 46 Heater
+    { text: 'Class III coolant or any class fuel leak is detected.', categoryId: 'gen-winterization', readiness: 'NMC' },
+  ],
+  'mep802a-b-048': [  // BEFORE 47 Exhaust Hose
+    { text: 'Hose obstructed; hose or clamp missing or damaged.', categoryId: 'gen-winterization', readiness: 'NMC' },
+  ],
+  'mep802a-b-049': [  // BEFORE 48 Air Inlet Hose
+    { text: 'Inlet hose obstructed.', categoryId: 'gen-winterization', readiness: 'NMC' },
+  ],
+  'mep802a-b-050': [  // BEFORE 49 Winterization Kit Coolant Lines
+    { text: 'Class III leaks or missing clamps or hoses.', categoryId: 'gen-winterization', readiness: 'NMC' },
+  ],
+  'mep802a-b-051': [  // BEFORE 50 Coolant Pump
+    { text: 'Class III leaks or missing clamps or hoses.', categoryId: 'gen-winterization', readiness: 'NMC' },
+  ],
+  'mep802a-b-052': [  // BEFORE 51 Coolant Lines
+    { text: 'Class III coolant leak is detected.', categoryId: 'gen-winterization', readiness: 'NMC' },
+  ],
+  'mep802a-b-053': [  // BEFORE 52 Wire Harness
+    { text: 'Wiring is loose or damaged.', categoryId: 'gen-winterization', readiness: 'NMC' },
+  ],
+  'mep802a-b-054': [  // BEFORE 53 Heater Control and Switch Lamp
+    { text: 'Light blinks showing failure in accordance with Heater Function Code Plate.', categoryId: 'gen-winterization', readiness: 'NMC' },
+  ],
+  'mep802a-b-056': [  // DURING 55 All Fuel Connections
+    { text: 'Any class fuel leak detected.', categoryId: 'gen-winterization', readiness: 'NMC' },
+  ],
+  // ── MEP1030 (TM 9-6115-749-10) — texts are TM NMC criteria ──
+  'mep1030-b-001': [  // BEFORE 1 Ground Rod, Clamp, and Cable
+    { text: 'Ground rod, clamp, or cable missing, damaged, or connection loose.', categoryId: 'gen-electrical', readiness: 'NMC' },
+  ],
+  'mep1030-b-002': [  // BEFORE 2 Rear Panel
+    { text: 'Rear panel missing or punctured.', categoryId: 'gen-housing', readiness: 'NMC' },
+  ],
+  'mep1030-b-005': [  // BEFORE 5 DCS
+    { text: 'Damaged, loose, or missing parts.', categoryId: 'gen-electrical', readiness: 'NMC' },
+  ],
+  'mep1030-b-006': [  // BEFORE 6 Convenience Receptacle
+    { text: 'Cover will not close.', categoryId: 'gen-electrical', readiness: 'NMC' },
+    { text: 'Receptacles damaged or corroded.', categoryId: 'gen-electrical', readiness: 'NMC' },
+  ],
+  'mep1030-b-007': [  // BEFORE 7 Flexible Sleeve
+    { text: 'Separated from rear panel.', categoryId: 'gen-housing', readiness: 'NMC' },
+  ],
+  'mep1030-b-008': [  // BEFORE 8 Fuel Fill
+    { text: 'Damaged, corroded, or missing parts.', categoryId: 'gen-fuel', readiness: 'NMC' },
+    { text: 'Damaged or missing cap, punctured or missing strainer.', categoryId: 'gen-fuel', readiness: 'NMC' },
+    { text: 'Damaged or missing gasket.', categoryId: 'gen-fuel', readiness: 'NMC' },
+    { text: 'Grounding stud (fuel fill static ground) missing or corroded.', categoryId: 'gen-fuel', readiness: 'NMC' },
+  ],
+  'mep1030-b-009': [  // BEFORE 9 Rear Door
+    { text: 'Door cannot be secured.', categoryId: 'gen-housing', readiness: 'NMC' },
+  ],
+  'mep1030-b-010': [  // BEFORE 10 Fuel Tank
+    { text: 'Fuel level is less than 4%.', categoryId: 'gen-fuel', readiness: 'NMC' },
+    { text: 'Any classification of fuel leak or damage, or any loose or missing parts.', categoryId: 'gen-fuel', readiness: 'NMC' },
+  ],
+  'mep1030-b-011': [  // BEFORE 11 Fuel System Hoses
+    { text: 'Any classification of fuel leak or damaged, loose, or missing parts.', categoryId: 'gen-fuel', readiness: 'NMC' },
+  ],
+  'mep1030-b-012': [  // BEFORE 12 Fuel Pumps and Fuel Manifold
+    { text: 'Any classification of fuel leak or damage.', categoryId: 'gen-fuel', readiness: 'NMC' },
+  ],
+  'mep1030-b-013': [  // BEFORE 13 Electrical Connections
+    { text: 'Connector looseness cannot be resolved.', categoryId: 'gen-electrical', readiness: 'NMC' },
+  ],
+  'mep1030-b-014': [  // BEFORE 14 Top Panel
+    { text: 'Top panel missing or punctured.', categoryId: 'gen-housing', readiness: 'NMC' },
+    { text: 'Clogged intake and/or exhaust grates cannot be resolved.', categoryId: 'gen-housing', readiness: 'NMC' },
+  ],
+  'mep1030-b-016': [  // BEFORE 16 Radiator, Exterior
+    { text: 'Any Class III coolant leaks.', categoryId: 'gen-overheat', readiness: 'NMC' },
+  ],
+  'mep1030-b-017': [  // BEFORE 17 Radiator, Interior
+    { text: 'Milky or dirty color.', categoryId: 'gen-overheat', readiness: 'NMC' },
+  ],
+  'mep1030-b-018': [  // BEFORE 18 Muffler
+    { text: 'Muffler punctured, damaged, or corroded through to interior.', categoryId: 'gen-exhaust', readiness: 'NMC' },
+    { text: 'Obstructions present.', categoryId: 'gen-exhaust', readiness: 'NMC' },
+    { text: 'Rain cap missing or inoperable.', categoryId: 'gen-exhaust', readiness: 'NMC' },
+  ],
+  'mep1030-b-019': [  // BEFORE 19 Right-Side Panel
+    { text: 'Right-side panel missing or punctured.', categoryId: 'gen-housing', readiness: 'NMC' },
+  ],
+  'mep1030-b-021': [  // BEFORE 21 Skid Base
+    { text: 'Skid base cracked or shows signs of structural damage.', categoryId: 'gen-housing', readiness: 'NMC' },
+    { text: 'If lifting ring shows signs of corrosion, bending, broken, or missing pin.', categoryId: 'gen-housing', readiness: 'NMC' },
+  ],
+  'mep1030-b-022': [  // BEFORE 22 Oil Drain Outlet
+    { text: 'Class III leak.', categoryId: 'gen-oil-pressure', readiness: 'NMC' },
+  ],
+  'mep1030-b-023': [  // BEFORE 23 Output Box Door
+    { text: 'Door cannot be secured.', categoryId: 'gen-housing', readiness: 'NMC' },
+  ],
+  'mep1030-b-024': [  // BEFORE 24 Right-Side Door
+    { text: 'Door cannot be secured.', categoryId: 'gen-housing', readiness: 'NMC' },
+  ],
+  'mep1030-b-025': [  // BEFORE 25 Output Connections
+    { text: 'Door cracked, missing, hinges missing or not working properly.', categoryId: 'gen-electrical', readiness: 'NMC' },
+    { text: 'Ground and load cable connections are loose.', categoryId: 'gen-electrical', readiness: 'NMC' },
+    { text: 'Ground or load cable cannot be secured.', categoryId: 'gen-electrical', readiness: 'NMC' },
+    { text: 'Terminals, terminal nuts, damaged, missing, or corroded.', categoryId: 'gen-electrical', readiness: 'NMC' },
+  ],
+  'mep1030-b-026': [  // BEFORE 26 Output Terminal Board Protective Cover
+    { text: 'Output terminal board protective cover missing, damaged or punctured. Missing or damaged hinge or hinge fasteners.', categoryId: 'gen-housing', readiness: 'NMC' },
+  ],
+  'mep1030-b-029': [  // BEFORE 29 Engine and Compartment Base
+    { text: 'Any classification of fuel, Class III oil, or coolant leaks.', categoryId: 'gen-engine', readiness: 'NMC' },
+  ],
+  'mep1030-b-030': [  // BEFORE 30 Internal Exhaust Pipe
+    { text: 'Any puncture to exhaust pipe.', categoryId: 'gen-exhaust', readiness: 'NMC' },
+    { text: 'Missing clamp or separated exhaust joint.', categoryId: 'gen-exhaust', readiness: 'NMC' },
+  ],
+  'mep1030-b-031': [  // BEFORE 31 Radiator Hoses and Pipes
+    { text: 'Class III coolant leak, missing clamp, or puncture of hoses or pipes.', categoryId: 'gen-overheat', readiness: 'NMC' },
+  ],
+  'mep1030-b-032': [  // BEFORE 32 Winterization Kit (If Installed)
+    { text: 'Any classification of fuel leak or Class III coolant leak.', categoryId: 'gen-winterization', readiness: 'NMC' },
+    { text: 'Any fuel leak or missing clamp.', categoryId: 'gen-winterization', readiness: 'NMC' },
+    { text: 'Class III coolant leak, missing clamp, or punctured of hoses.', categoryId: 'gen-winterization', readiness: 'NMC' },
+  ],
+  'mep1030-b-033': [  // BEFORE 33 Oil Drain Line
+    { text: 'Class III oil leak.', categoryId: 'gen-oil-pressure', readiness: 'NMC' },
+  ],
+  'mep1030-b-034': [  // BEFORE 34 Oil Level
+    { text: 'Oil fill cap missing.', categoryId: 'gen-oil-pressure', readiness: 'NMC' },
+  ],
+  'mep1030-b-035': [  // BEFORE 35 Fuel Lines
+    { text: 'Any fuel leak.', categoryId: 'gen-fuel', readiness: 'NMC' },
+  ],
+  'mep1030-b-036': [  // BEFORE 36 Fuel Filter/Water Separator
+    { text: 'Any fuel leak.', categoryId: 'gen-fuel', readiness: 'NMC' },
+  ],
+  'mep1030-b-037': [  // BEFORE 37 Air Cleaner Assembly
+    { text: 'Damage that restricts air flow, restriction indicator showing red band.', categoryId: 'gen-engine', readiness: 'NMC' },
+  ],
+  'mep1030-b-038': [  // BEFORE 38 AC Generator
+    { text: 'Cracked generator housing, broken, or missing hardware.', categoryId: 'gen-electrical', readiness: 'NMC' },
+    { text: 'Loose, broken, or missing wiring.', categoryId: 'gen-electrical', readiness: 'NMC' },
+  ],
+  'mep1030-b-040': [  // BEFORE 40 Front Panel
+    { text: 'Front panel missing or punctured.', categoryId: 'gen-housing', readiness: 'NMC' },
+    { text: 'Access panel missing.', categoryId: 'gen-housing', readiness: 'NMC' },
+  ],
+  'mep1030-b-042': [  // BEFORE 42 NATO Slave Receptacle
+    { text: 'Safety cap missing.', categoryId: 'gen-electrical', readiness: 'NMC' },
+    { text: 'Damaged, loose, or corroded connections.', categoryId: 'gen-electrical', readiness: 'NMC' },
+  ],
+  'mep1030-b-044': [  // BEFORE 44 Left-Side Panel
+    { text: 'Left-side panel missing or punctured.', categoryId: 'gen-housing', readiness: 'NMC' },
+    { text: 'Clogged intake grate cannot be resolved.', categoryId: 'gen-housing', readiness: 'NMC' },
+  ],
+  'mep1030-b-045': [  // BEFORE 45 Fuel Drain Fitting
+    { text: 'Any fuel leak or missing cap.', categoryId: 'gen-fuel', readiness: 'NMC' },
+  ],
+  'mep1030-b-046': [  // BEFORE 46 Skid Base
+    { text: 'Skid base cracked, dented, or shows signs of structural damage.', categoryId: 'gen-housing', readiness: 'NMC' },
+    { text: 'Lifting ring corroded, bent, broken, or missing pin.', categoryId: 'gen-housing', readiness: 'NMC' },
+  ],
+  'mep1030-b-047': [  // BEFORE 47 Left-Side Door
+    { text: 'Door cannot be secured.', categoryId: 'gen-housing', readiness: 'NMC' },
+  ],
+  'mep1030-b-048': [  // BEFORE 48 Oil Filter
+    { text: 'Class III oil leak.', categoryId: 'gen-oil-pressure', readiness: 'NMC' },
+    { text: 'Oil filter cannot be tightened by hand.', categoryId: 'gen-oil-pressure', readiness: 'NMC' },
+  ],
+  'mep1030-b-049': [  // BEFORE 49 Engine and Compartment Base
+    { text: 'Any classification of fuel leak. Class III oil or coolant leaks.', categoryId: 'gen-engine', readiness: 'NMC' },
+  ],
+  'mep1030-b-050': [  // BEFORE 50 Coolant Overflow Bottle
+    { text: 'Class III coolant leak. Missing cap.', categoryId: 'gen-overheat', readiness: 'NMC' },
+    { text: 'Hose cannot be reconnected.', categoryId: 'gen-overheat', readiness: 'NMC' },
+  ],
+  'mep1030-b-051': [  // BEFORE 51 Battery-Charging Alternator
+    { text: 'Loose wires or cracked housing.', categoryId: 'gen-electrical', readiness: 'NMC' },
+    { text: 'Belt missing, loose, frayed, or cracked.', categoryId: 'gen-electrical', readiness: 'NMC' },
+  ],
+  'mep1030-b-052': [  // BEFORE 52 Batteries
+    { text: 'Cracked or swollen casing, corroded terminals, or detached cables.', categoryId: 'gen-electrical', readiness: 'NMC' },
+  ],
+  'mep1030-b-053': [  // BEFORE 53 Starter
+    { text: 'NATO slave receptacle (Figure 3, Item 1) terminal and wires loose, damaged, corroded, signs of arcing or other damage.', categoryId: 'gen-electrical', readiness: 'NMC' },
+  ],
+  'mep1030-b-054': [  // BEFORE 54 AC Generator
+    { text: 'Cracked generator housing, or broken, loose, or missing hardware or wiring.', categoryId: 'gen-electrical', readiness: 'NMC' },
+  ],
+  'mep1030-b-056': [  // BEFORE 56 Radiator Hoses and Pipes
+    { text: 'Class III coolant leak, missing clamp, or puncture of hoses or pipes.', categoryId: 'gen-overheat', readiness: 'NMC' },
+  ],
+  'mep1030-b-058': [  // DURING 58 DCS
+    { text: 'Indicators not operating properly.', categoryId: 'gen-electrical', readiness: 'NMC' },
+    { text: 'Battery voltage is below 16 VDC.', categoryId: 'gen-electrical', readiness: 'NMC' },
+    { text: 'Circuit interrupter will not remain closed.', categoryId: 'gen-electrical', readiness: 'NMC' },
+  ],
+  'mep1030-b-059': [  // DURING 59 Engine
+    { text: 'Exhaust smoke is black, white, or blue.', categoryId: 'gen-engine', readiness: 'NMC' },
+    { text: 'Unusual, severe engine noises.', categoryId: 'gen-engine', readiness: 'NMC' },
+  ],
+  'mep1030-b-060': [  // DURING 60 Ground Rod and Connections
+    { text: 'Arcing, damage, corrosion, or loose connections.', categoryId: 'gen-electrical', readiness: 'NMC' },
+  ],
+  'mep1030-b-061': [  // DURING 61 Rear Door
+    { text: 'Door cannot be secured.', categoryId: 'gen-housing', readiness: 'NMC' },
+  ],
+  'mep1030-b-063': [  // DURING 63 Fuel Tank
+    { text: 'Any classification of fuel leak, damage, or any loose or missing parts.', categoryId: 'gen-fuel', readiness: 'NMC' },
+  ],
+  'mep1030-b-064': [  // DURING 64 Fuel System Hoses
+    { text: 'Any classification of fuel leak or damaged, loose, or missing parts.', categoryId: 'gen-fuel', readiness: 'NMC' },
+  ],
+  'mep1030-b-065': [  // DURING 65 Fuel Pumps and Fuel Manifold
+    { text: 'Any classification of fuel leak or damage.', categoryId: 'gen-fuel', readiness: 'NMC' },
+  ],
+  'mep1030-b-066': [  // DURING 66 Electrical Connections
+    { text: 'Connector loose.', categoryId: 'gen-electrical', readiness: 'NMC' },
+  ],
+  'mep1030-b-067': [  // DURING 67 Relay Panel and Electrical Connections
+    { text: 'Relay panel cover punctured.', categoryId: 'gen-electrical', readiness: 'NMC' },
+  ],
+  'mep1030-b-068': [  // DURING 68 Engine and Compartment Base
+    { text: 'Any classification of fuel leak. Class III oil or coolant leaks.', categoryId: 'gen-engine', readiness: 'NMC' },
+  ],
+  'mep1030-b-069': [  // DURING 69 Oil Drain Line
+    { text: 'Class III oil leak.', categoryId: 'gen-oil-pressure', readiness: 'NMC' },
+  ],
+  'mep1030-b-070': [  // DURING 70 Fuel Lines and Fuel Filter/Water Separator
+    { text: 'Any fuel leak.', categoryId: 'gen-fuel', readiness: 'NMC' },
+  ],
+  'mep1030-b-071': [  // DURING 71 Oil Level
+    { text: 'Oil fill cap missing.', categoryId: 'gen-oil-pressure', readiness: 'NMC' },
+  ],
+  'mep1030-b-072': [  // DURING 72 AC Generator
+    { text: 'Excessive noise and/or vibration.', categoryId: 'gen-electrical', readiness: 'NMC' },
+    { text: 'Signs of damage, arcing, or loose connections.', categoryId: 'gen-electrical', readiness: 'NMC' },
+  ],
+  'mep1030-b-073': [  // DURING 73 Fuel Drain Fitting
+    { text: 'Any classification of fuel leak or missing cap.', categoryId: 'gen-fuel', readiness: 'NMC' },
+  ],
+  'mep1030-b-074': [  // DURING 74 Cooling Fan
+    { text: 'Damaged or loose fan.', categoryId: 'gen-overheat', readiness: 'NMC' },
+  ],
+  'mep1030-b-075': [  // DURING 75 Engine and Compartment Base
+    { text: 'Any classification of fuel leak. Class III oil or coolant leaks.', categoryId: 'gen-engine', readiness: 'NMC' },
+  ],
+  'mep1030-b-076': [  // DURING 76 Coolant Overflow Bottle
+    { text: 'Class III coolant leak or missing cap.', categoryId: 'gen-overheat', readiness: 'NMC' },
+  ],
+  'mep1030-b-077': [  // DURING 77 AC Generator
+    { text: 'Excessive noise and/or vibration.', categoryId: 'gen-electrical', readiness: 'NMC' },
+    { text: 'Signs of damage, arcing, or loose connections.', categoryId: 'gen-electrical', readiness: 'NMC' },
+  ],
+  'mep1030-b-078': [  // AFTER 78 Fuel Fill
+    { text: 'Damaged, corroded, or missing parts.', categoryId: 'gen-fuel', readiness: 'NMC' },
+    { text: 'Damaged or missing cap. Punctured or missing strainer.', categoryId: 'gen-fuel', readiness: 'NMC' },
+    { text: 'Damaged or missing gasket.', categoryId: 'gen-fuel', readiness: 'NMC' },
+    { text: 'Fuel fill cap will not seal.', categoryId: 'gen-fuel', readiness: 'NMC' },
+    { text: 'Grounding stud (fuel fill static ground) missing or corroded.', categoryId: 'gen-fuel', readiness: 'NMC' },
+  ],
+  'mep1030-b-080': [  // AFTER 80 Output Connections
+    { text: 'Terminal board shows evidence of arcing or high temperature', categoryId: 'gen-electrical', readiness: 'NMC' },
+  ],
+  'mep1030-b-081': [  // AFTER 81 Output Terminal Board Protective Cover
+    { text: 'Output terminal board protective cover missing, cracked through, or melted. Missing or damaged hinge or hinge fasteners.', categoryId: 'gen-housing', readiness: 'NMC' },
+  ],
+  'mep1030-b-082': [  // AFTER 82 Oil Drain Outlet
+    { text: 'Class III leak.', categoryId: 'gen-oil-pressure', readiness: 'NMC' },
+  ],
+  'mep1030-b-083': [  // AFTER 83 Engine and Compartment Base
+    { text: 'Any classification of fuel leak. Class III oil or coolant leaks.', categoryId: 'gen-engine', readiness: 'NMC' },
+  ],
+  'mep1030-b-084': [  // AFTER 84 Oil Level
+    { text: 'Oil fill cap missing.', categoryId: 'gen-oil-pressure', readiness: 'NMC' },
+  ],
+  'mep1030-b-085': [  // AFTER 85 Fuel Drain Fitting
+    { text: 'Any fuel leak. Missing cap.', categoryId: 'gen-fuel', readiness: 'NMC' },
+  ],
+  'mep1030-b-086': [  // AFTER 86 Batteries
+    { text: 'Cracked or swollen casing.', categoryId: 'gen-electrical', readiness: 'NMC' },
+  ],
+  'mep1030-b-088': [  // AFTER 88 Engine and Compartment Base
+    { text: 'Any classification of fuel leak. Class III oil or coolant leaks.', categoryId: 'gen-engine', readiness: 'NMC' },
+  ],
+  'mep1030-b-089': [  // AFTER 89 Coolant Overflow Bottle
+    { text: 'Class III coolant leak. Missing cap.', categoryId: 'gen-overheat', readiness: 'NMC' },
+    { text: 'Hose cannot be reconnected.', categoryId: 'gen-overheat', readiness: 'NMC' },
+  ],
+  'mep1030-b-091': [  // AFTER 91 Radiator, Interior
+    { text: 'Milky or dirty color.', categoryId: 'gen-overheat', readiness: 'NMC' },
+    { text: 'Radiator cap missing or cannot be tightened.', categoryId: 'gen-overheat', readiness: 'NMC' },
+  ],
+  // ── MEP831A (TM 9-6115-639-13&P) — texts are TM NMC criteria ──
+  'mep831a-b-001': [  // BEFORE 1 Overall Generator Set
+    { text: 'Significant cracks in any generator set component.', categoryId: 'gen-housing', readiness: 'NMC' },
+  ],
+  'mep831a-b-002': [  // BEFORE 2 Generator Set Main Access Cover
+    { text: 'Main access cover is not secure. Latches do not lock, allowing main access cover to rattle excessively.', categoryId: 'gen-housing', readiness: 'NMC' },
+    { text: 'Intake or exhaust is blocked or damaged.', categoryId: 'gen-housing', readiness: 'NMC' },
+  ],
+  'mep831a-b-003': [  // BEFORE 3 Control Box and Output Panel
+    { text: 'Any switch is not operable or any meter is damaged.', categoryId: 'gen-electrical', readiness: 'NMC' },
+    { text: 'Fault indicator is defective or lamp does not light.', categoryId: 'gen-electrical', readiness: 'NMC' },
+    { text: 'Wires or connectors are damaged.', categoryId: 'gen-electrical', readiness: 'NMC' },
+  ],
+  'mep831a-b-004': [  // BEFORE 4 Convenience Receptacle (60 Hz Only)
+    { text: 'Receptacle damaged, shorted, or corroded.', categoryId: 'gen-electrical', readiness: 'NMC' },
+  ],
+  'mep831a-b-005': [  // BEFORE 5 NATO Slave Receptacle
+    { text: 'Receptacle damaged, shorted, or corroded.', categoryId: 'gen-electrical', readiness: 'NMC' },
+  ],
+  'mep831a-b-006': [  // BEFORE 6 Output Panel
+    { text: 'Terminals are loose, damaged, disconnected, shorted, or corroded.', categoryId: 'gen-electrical', readiness: 'NMC' },
+    { text: 'Set is not grounded properly.', categoryId: 'gen-electrical', readiness: 'NMC' },
+  ],
+  'mep831a-b-007': [  // BEFORE 7 Exhaust System
+    { text: 'Exhaust system is damaged to the extent it will affect operation or safety of personnel.', categoryId: 'gen-exhaust', readiness: 'NMC' },
+  ],
+  'mep831a-b-008': [  // BEFORE 8 Fuel Fill Ports
+    { text: 'Strainer is damaged.', categoryId: 'gen-fuel', readiness: 'NMC' },
+    { text: 'Fuel cap is damaged to the point where fuel leakage is likely.', categoryId: 'gen-fuel', readiness: 'NMC' },
+  ],
+  'mep831a-b-009': [  // BEFORE 9 Fuel Tank and Hoses
+    { text: 'Fuel leaks of any kind are present. Fuel line is cut or damaged.', categoryId: 'gen-fuel', readiness: 'NMC' },
+  ],
+  'mep831a-b-010': [  // BEFORE 10 Fuel Filter/Water Separator
+    { text: 'Water and fuel are mixed. Separator is damaged or leaking.', categoryId: 'gen-fuel', readiness: 'NMC' },
+  ],
+  'mep831a-b-011': [  // BEFORE 11 Skid Base
+    { text: 'Drain ports are damaged to the extent they will leak.', categoryId: 'gen-housing', readiness: 'NMC' },
+    { text: 'Lifting handles do not operate or are loose.', categoryId: 'gen-housing', readiness: 'NMC' },
+    { text: 'Vibration mounts are damaged or worn.', categoryId: 'gen-housing', readiness: 'NMC' },
+  ],
+  'mep831a-b-013': [  // BEFORE 13 Frequency Converter (A8)
+    { text: 'Water is in Frequency Converter (A8).', categoryId: 'gen-electrical', readiness: 'NMC' },
+  ],
+  'mep831a-b-014': [  // BEFORE 14 Engine Oil
+    { text: 'Class III oil leaks, damage, or loose or missing parts are present.', categoryId: 'gen-oil-pressure', readiness: 'NMC' },
+    { text: 'Oil shows signs of contamination.', categoryId: 'gen-oil-pressure', readiness: 'NMC' },
+  ],
+  'mep831a-b-015': [  // BEFORE 15 Engine Air Filter
+    { text: 'Filter is clogged.', categoryId: 'gen-engine', readiness: 'NMC' },
+  ],
+  'mep831a-b-016': [  // BEFORE 16 Engine Alternator Compartment
+    { text: 'Damaged wires, or broken or missing terminals.', categoryId: 'gen-electrical', readiness: 'NMC' },
+  ],
+  'mep831a-b-017': [  // DURING 17 VOLTAGE and LOAD Meters (Control Panel)
+    { text: 'Adjustments cannot be made.', categoryId: 'gen-electrical', readiness: 'NMC' },
+  ],
+  'mep831a-b-018': [  // DURING 18 FUEL LEVEL Meter (Located on Control Panel)
+    { text: 'Fuel level is empty or level meter is inoperable.', categoryId: 'gen-fuel', readiness: 'NMC' },
+  ],
+  'mep831a-b-019': [  // DURING 19 Engine Oil (After 8 Hours of Constant Use)
+    { text: 'Oil level is at or below minimum oil level mark on dipstick.', categoryId: 'gen-oil-pressure', readiness: 'NMC' },
+  ],
+  'mep831a-b-020': [  // DURING 20 Fuel Filter/Water Separator (After 8 Hours of Constant Use)
+    { text: 'Water and fuel are mixed. Separator is damaged or leaking.', categoryId: 'gen-fuel', readiness: 'NMC' },
+  ],
+  'mep831a-b-021': [  // AFTER 21 Fuel Lines
+    { text: 'Fuel leaks of any kind are present. Lines are cut, torn, loose, or damaged.', categoryId: 'gen-fuel', readiness: 'NMC' },
+  ],
+  'mep831a-b-022': [  // AFTER 22 Overall Generator Set
+    { text: 'Cracks allow water to enter Frequency Converter (A8) or dents adversely affect operation of generator set.', categoryId: 'gen-housing', readiness: 'NMC' },
+  ],
+  'mep831a-b-024': [  // AFTER 24 Engine
+    { text: 'Fuel leaks of any kind are present. Pipes or hose are damaged.', categoryId: 'gen-fuel', readiness: 'NMC' },
+  ],
 };

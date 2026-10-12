@@ -41,6 +41,10 @@ function vehicleKeyFor(vehicleType: string): string {
     case 'LMTV_M1078': return 'm1078';
     case 'M1101_TRAILER': return 'm1101';
     case 'MEP803A': return 'mep803a';
+    case 'M1097': return 'm1097';
+    case 'MEP802A': return 'mep802a';
+    case 'MEP1030': return 'mep1030';
+    case 'MEP831A': return 'mep831a';
     default: return 'm1151';
   }
 }

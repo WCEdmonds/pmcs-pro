@@ -1,0 +1,320 @@
+{
+  "vehicleType": "MEP831A",
+  "tmReference": "TM 9-6115-639-13&P",
+  "zones": [
+    {
+      "id": "zone-1",
+      "name": "Exterior, Control Box and Output Panel",
+      "description": "Before: overall set, main access cover, control box, receptacles, output panel, exhaust, fuel fill ports",
+      "steps": [
+        {
+          "id": "mep831a-b-001",
+          "sequence": 1,
+          "zone": "Exterior, Control Box and Output Panel",
+          "zoneId": "zone-1",
+          "item": "1",
+          "itemDescription": "Overall Generator Set",
+          "procedure": "a. Inspect for cracks, dents, and corrosion in accordance with WP 0011, Main Access Cover. b. Inspect for loose or missing hardware.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Significant cracks in any generator set component."
+        },
+        {
+          "id": "mep831a-b-002",
+          "sequence": 2,
+          "zone": "Exterior, Control Box and Output Panel",
+          "zoneId": "zone-1",
+          "item": "2",
+          "itemDescription": "Generator Set Main Access Cover",
+          "procedure": "a. Inspect main access cover for security of attachment in accordance with WP 0011, Main Access Cover. b. Inspect air intake and exhaust ducts for obstructions and blockages. Clear obstructions and check for damage. c. Check all main access cover gaskets to ensure they fit properly (snugly but not too tightly) and are not torn.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Main access cover is not secure. Latches do not lock, allowing main access cover to rattle excessively. Intake or exhaust is blocked or damaged."
+        },
+        {
+          "id": "mep831a-b-003",
+          "sequence": 3,
+          "zone": "Exterior, Control Box and Output Panel",
+          "zoneId": "zone-1",
+          "item": "3",
+          "itemDescription": "Control Box and Output Panel",
+          "procedure": "a. Inspect for secure attachment. Check that hinged panel is closed and locked. b. Inspect switches, meters, indicators, and terminals. Conduct fault lamp test by depressing FAULT RESET/PUSH TEST switch. See WP 0011, Control Box and Output Panel Assemblies. c. Inspect electrical wires for damage, corrosion, or electrical short. Check for bent, broken, or missing pins.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Any switch is not operable or any meter is damaged. Fault indicator is defective or lamp does not light. Wires or connectors are damaged."
+        },
+        {
+          "id": "mep831a-b-004",
+          "sequence": 4,
+          "zone": "Exterior, Control Box and Output Panel",
+          "zoneId": "zone-1",
+          "item": "4",
+          "itemDescription": "Convenience Receptacle (60 Hz Only)",
+          "procedure": "Inspect convenience receptacle for damage. Check for signs of electrical short or corrosion.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Receptacle damaged, shorted, or corroded."
+        },
+        {
+          "id": "mep831a-b-005",
+          "sequence": 5,
+          "zone": "Exterior, Control Box and Output Panel",
+          "zoneId": "zone-1",
+          "item": "5",
+          "itemDescription": "NATO Slave Receptacle",
+          "procedure": "Inspect NATO slave receptacle for damage. Check for signs of electrical short or corrosion.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Receptacle damaged, shorted, or corroded."
+        },
+        {
+          "id": "mep831a-b-006",
+          "sequence": 6,
+          "zone": "Exterior, Control Box and Output Panel",
+          "zoneId": "zone-1",
+          "item": "6",
+          "itemDescription": "Output Panel",
+          "procedure": "a. Inspect output panel door for security. Check locking latch operates properly. WARNING: Never attempt to start the generator set unless it is properly grounded. Never attempt to connect or disconnect load cables while the generator set is running. b. Check load and ground terminals for security of attachment. Inspect for signs of electrical short or corrosion. c. Check ground rod cable for proper installation. Check for correct connection.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Terminals are loose, damaged, disconnected, shorted, or corroded. Set is not grounded properly."
+        },
+        {
+          "id": "mep831a-b-007",
+          "sequence": 7,
+          "zone": "Exterior, Control Box and Output Panel",
+          "zoneId": "zone-1",
+          "item": "7",
+          "itemDescription": "Exhaust System",
+          "procedure": "a. Inspect exhaust system for cracks, holes, or dents. Ensure secure attachment. b. Inspect muffler for damage.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Exhaust system is damaged to the extent it will affect operation or safety of personnel."
+        },
+        {
+          "id": "mep831a-b-008",
+          "sequence": 8,
+          "zone": "Exterior, Control Box and Output Panel",
+          "zoneId": "zone-1",
+          "item": "8",
+          "itemDescription": "Fuel Fill Ports",
+          "procedure": "a. Inspect fill neck strainer for damage. Remove obstructions or blockage. b. Inspect vented fuel cap and auxiliary fuel connection for damage or leakage. Check that caps are securely attached.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Strainer is damaged. Fuel cap is damaged to the point where fuel leakage is likely."
+        }
+      ]
+    },
+    {
+      "id": "zone-2",
+      "name": "Fuel, Skid Base and Engine Compartment",
+      "description": "Before: fuel tank and hoses, fuel filter/water separator, skid base, battery, frequency converter, engine oil, air filter, alternator compartment",
+      "steps": [
+        {
+          "id": "mep831a-b-009",
+          "sequence": 9,
+          "zone": "Fuel, Skid Base and Engine Compartment",
+          "zoneId": "zone-2",
+          "item": "9",
+          "itemDescription": "Fuel Tank and Hoses",
+          "procedure": "Inspect generator set and engine fuel system components for damage or leaks, in accordance with WP 0011, Fuel System.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Fuel leaks of any kind are present. Fuel line is cut or damaged."
+        },
+        {
+          "id": "mep831a-b-010",
+          "sequence": 10,
+          "zone": "Fuel, Skid Base and Engine Compartment",
+          "zoneId": "zone-2",
+          "item": "10",
+          "itemDescription": "Fuel Filter/Water Separator",
+          "procedure": "Inspect and drain filter/separator in accordance with WP 0011, Fuel Filter/Water Separator.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Water and fuel are mixed. Separator is damaged or leaking."
+        },
+        {
+          "id": "mep831a-b-011",
+          "sequence": 11,
+          "zone": "Fuel, Skid Base and Engine Compartment",
+          "zoneId": "zone-2",
+          "item": "11",
+          "itemDescription": "Skid Base",
+          "procedure": "a. Inspect oil and fuel drain ports for damage. Ensure drain plugs are securely attached. b. Inspect lifting handles and tie-down rings for damage. Check to see they are securely attached. c. Inspect engine vibration mounts for cracks, wear, or deterioration.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Drain ports are damaged to the extent they will leak. Lifting handles do not operate or are loose. Vibration mounts are damaged or worn."
+        },
+        {
+          "id": "mep831a-b-012",
+          "sequence": 12,
+          "zone": "Fuel, Skid Base and Engine Compartment",
+          "zoneId": "zone-2",
+          "item": "12",
+          "itemDescription": "Battery",
+          "procedure": "a. Open main access cover. Inspect battery cables for corrosion, evidence of electrical short, and damage. Check for cuts, tears, or exposed wires. b. Inspect battery terminals and battery posts for corrosion and damage. Check for security of attachment and that battery terminal quick release feature is functional. c. Inspect battery for cracks, corrosion, or evidence of leakage. NOTE: If a battery does not provide power to the electrical starter motor, the generator is still mission-capable. See WP 0006, Manual Starting for manual starting. NOTE: Recharge battery at 90 days and ensure battery is fully charged prior to electrical starting. see WP 0025 for battery recharging procedures.",
+          "conditionSet": "BEFORE",
+          "isNoGo": false
+        },
+        {
+          "id": "mep831a-b-013",
+          "sequence": 13,
+          "zone": "Fuel, Skid Base and Engine Compartment",
+          "zoneId": "zone-2",
+          "item": "13",
+          "itemDescription": "Frequency Converter (A8)",
+          "procedure": "Open main access cover. Inspect Frequency Converter (A8) and area around it for signs of water. If water is present, thoroughly dry out Frequency Converter (A8) before starting generator.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Water is in Frequency Converter (A8)."
+        },
+        {
+          "id": "mep831a-b-014",
+          "sequence": 14,
+          "zone": "Fuel, Skid Base and Engine Compartment",
+          "zoneId": "zone-2",
+          "item": "14",
+          "itemDescription": "Engine Oil",
+          "procedure": "a. Open main access cover. Remove oil fill cap and inspect oil level. If servicing is required, refer to field level maintenance. b. Inspect areas around oil filter and oil drain hose for leaks, damage, and loose or missing parts. c. Inspect for contamination.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Class III oil leaks, damage, or loose or missing parts are present. See leakage class definitions (WP 0009, Leakage Definitions for Operator PMCS). Oil shows signs of contamination."
+        },
+        {
+          "id": "mep831a-b-015",
+          "sequence": 15,
+          "zone": "Fuel, Skid Base and Engine Compartment",
+          "zoneId": "zone-2",
+          "item": "15",
+          "itemDescription": "Engine Air Filter",
+          "procedure": "Inspect air filter for clogs (see WP 0011, Air Filter).",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Filter is clogged."
+        },
+        {
+          "id": "mep831a-b-016",
+          "sequence": 16,
+          "zone": "Fuel, Skid Base and Engine Compartment",
+          "zoneId": "zone-2",
+          "item": "16",
+          "itemDescription": "Engine Alternator Compartment",
+          "procedure": "Inspect electrical wires for damage, corrosion, or electrical short. Check for bent, broken, or missing terminals.",
+          "conditionSet": "BEFORE",
+          "isNoGo": true,
+          "noGoCondition": "Damaged wires, or broken or missing terminals."
+        }
+      ]
+    },
+    {
+      "id": "zone-3",
+      "name": "During Operation",
+      "description": "During: voltage/load meters, fuel level; after 8 hours of constant use: engine oil, fuel filter/water separator",
+      "steps": [
+        {
+          "id": "mep831a-b-017",
+          "sequence": 17,
+          "zone": "During Operation",
+          "zoneId": "zone-3",
+          "item": "17",
+          "itemDescription": "VOLTAGE and LOAD Meters (Control Panel)",
+          "procedure": "Monitor output levels during generator set operation. Adjust output, as required, using VOLTAGE ADJUST potentiometer. See WP 0036 and WP 0042.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "Adjustments cannot be made."
+        },
+        {
+          "id": "mep831a-b-018",
+          "sequence": 18,
+          "zone": "During Operation",
+          "zoneId": "zone-3",
+          "item": "18",
+          "itemDescription": "FUEL LEVEL Meter (Located on Control Panel)",
+          "procedure": "a. Monitor fuel level while generator is running. WARNING: Never service or perform maintenance on generator set while engine is running. Always shut down generator set before servicing. b. Replenish fuel as follows: Shut down generator set. Remove fuel fill cap and fill with diesel fuel. Replace fuel fill cap.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "Fuel level is empty or level meter is inoperable."
+        },
+        {
+          "id": "mep831a-b-019",
+          "sequence": 19,
+          "zone": "During Operation",
+          "zoneId": "zone-3",
+          "item": "19",
+          "itemDescription": "Engine Oil (After 8 Hours of Constant Use)",
+          "procedure": "Interval: During (After 8 hours of constant use). a. Shut down generator set. Open main access cover. b. Remove engine oil fill cap and check oil level. Service, as required, in accordance with WP 0011.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "Oil level is at or below minimum oil level mark on dipstick."
+        },
+        {
+          "id": "mep831a-b-020",
+          "sequence": 20,
+          "zone": "During Operation",
+          "zoneId": "zone-3",
+          "item": "20",
+          "itemDescription": "Fuel Filter/Water Separator (After 8 Hours of Constant Use)",
+          "procedure": "Interval: During (After 8 hours of constant use). a. Shut down generator set. Open main access cover. b. If water is present, drain water from fuel filter/water separator by turning valve.",
+          "conditionSet": "DURING",
+          "isNoGo": true,
+          "noGoCondition": "Water and fuel are mixed. Separator is damaged or leaking."
+        }
+      ]
+    },
+    {
+      "id": "zone-4",
+      "name": "After Operation",
+      "description": "After: fuel lines, overall set, data plates, engine",
+      "steps": [
+        {
+          "id": "mep831a-b-021",
+          "sequence": 21,
+          "zone": "After Operation",
+          "zoneId": "zone-4",
+          "item": "21",
+          "itemDescription": "Fuel Lines",
+          "procedure": "Open main access cover. Inspect all fuel lines for cuts, tears, loose connections, or evidence of leakage.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "Fuel leaks of any kind are present. Lines are cut, torn, loose, or damaged."
+        },
+        {
+          "id": "mep831a-b-022",
+          "sequence": 22,
+          "zone": "After Operation",
+          "zoneId": "zone-4",
+          "item": "22",
+          "itemDescription": "Overall Generator Set",
+          "procedure": "a. Inspect for cracks, dents, and corrosion, in accordance with WP 0011, Main Access Cover. b. Inspect for loose hardware.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "Cracks allow water to enter Frequency Converter (A8) or dents adversely affect operation of generator set."
+        },
+        {
+          "id": "mep831a-b-023",
+          "sequence": 23,
+          "zone": "After Operation",
+          "zoneId": "zone-4",
+          "item": "23",
+          "itemDescription": "Data Plates",
+          "procedure": "Check for legibility.",
+          "conditionSet": "AFTER",
+          "isNoGo": false
+        },
+        {
+          "id": "mep831a-b-024",
+          "sequence": 24,
+          "zone": "After Operation",
+          "zoneId": "zone-4",
+          "item": "24",
+          "itemDescription": "Engine",
+          "procedure": "a. Inspect engine fuel piping for damage, kinks, or evidence of leakage. b. Inspect hoses for evidence of wear, cracking, or deterioration. Check connections for tightness. WARNING: Check to ensure that all parts of the starter wiring including the wires, and the connection point are completely coated with a layer of NSN: 8040-00-117-8510.",
+          "conditionSet": "AFTER",
+          "isNoGo": true,
+          "noGoCondition": "Fuel leaks of any kind are present. Pipes or hose are damaged."
+        }
+      ]
+    }
+  ]
+}

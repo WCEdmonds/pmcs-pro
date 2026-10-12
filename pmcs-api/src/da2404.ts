@@ -41,11 +41,16 @@ const norm = (s: string) => s.toUpperCase().replace(/[\s-]/g, '');
 const TM_BY_TYPE: Array<{ test: (m: string) => boolean; tm: string; tmDate: string }> = [
   { test: (m) => /^M110[12]/.test(m), tm: 'TM 9-2330-392-14&P', tmDate: '20010427' },
   { test: (m) => /^MEP(803|813)/.test(m), tm: 'TM 9-6115-642-10', tmDate: '19961030' },
+  { test: (m) => /^MEP(802|812)/.test(m), tm: 'TM 9-6115-641-10', tmDate: '20091015' },
+  { test: (m) => /^MEP103[01]/.test(m), tm: 'TM 9-6115-749-10', tmDate: '20110201' },
+  { test: (m) => /^MEP83[12]/.test(m), tm: 'TM 9-6115-639-13&P', tmDate: '20100430' }, // MEP831, MEP831A, MEP832A
   { test: (m) => /^M1078(?!A)/.test(m) || m === 'LMTVM1078' || m === 'LMTV_M1078', tm: 'TM 9-2320-365-10', tmDate: '20010531' },
+  // M1097 (heavy variant, TM 9-2320-280-10 w/C3) — listed before the up-armored HMMWV rule.
+  { test: (m) => /^M1097/.test(m), tm: 'TM 9-2320-280-10', tmDate: '20040715' },
   { test: (m) => /^(M1151|M1152|M1113|M1165)/.test(m), tm: 'TM 9-2320-387-10', tmDate: '20090630' },
 ];
 
-function tmFor(vehicleType: string | null) {
+export function tmFor(vehicleType: string | null) {
   if (!vehicleType) return { tm: '', tmDate: '' };
   const m = norm(vehicleType);
   return TM_BY_TYPE.find((t) => t.test(m)) ?? { tm: '', tmDate: '' };

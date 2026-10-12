@@ -12,7 +12,16 @@ export interface User {
   mustChangePin?: boolean;
 }
 
-export type VehicleType = 'M1151' | 'M1152' | 'LMTV_M1078' | 'M1101_TRAILER' | 'MEP803A';
+export type VehicleType =
+  | 'M1151'
+  | 'M1152'
+  | 'M1097'
+  | 'LMTV_M1078'
+  | 'M1101_TRAILER'
+  | 'MEP803A'
+  | 'MEP802A'
+  | 'MEP1030'
+  | 'MEP831A';
 
 export interface VehicleRegistryEntry {
   type: VehicleType;

@@ -39,6 +39,16 @@ export const VEHICLE_REGISTRY: VehicleRegistryEntryWithTm[] = [
     itemCount: 67,
   },
   {
+    type: 'M1097',
+    name: 'M1097 HMMWV Heavy Variant',
+    nickname: 'Humvee (Heavy)',
+    tmReference: 'TM 9-2320-280-10',
+    tmDate: '20040715', // Change 3, 15 July 2004 (armypubs: "REPRINTED W/BASIC INCL C1-3")
+    tmBaseDate: '19960131', // 31 January 1996
+    tmChange: 3,
+    itemCount: 59, // Table 2-2 items applicable to M1097/A1/A2: 12 Before, 6 During, 19 After, 16 Weekly, 6 Monthly
+  },
+  {
     type: 'LMTV_M1078',
     name: 'LMTV M1078',
     nickname: 'LMTV',
@@ -67,5 +77,35 @@ export const VEHICLE_REGISTRY: VehicleRegistryEntryWithTm[] = [
     tmBaseDate: '19921230', // 30 December 1992
     tmChange: 2,
     itemCount: 40,
+  },
+  {
+    type: 'MEP802A',
+    name: 'MEP-802A/812A Generator (5kW)',
+    nickname: 'Generator (5kW)',
+    tmReference: 'TM 9-6115-641-10',
+    tmDate: '20091015', // 15 October 2009 (revised edition, no changes; supersedes 30 Dec 1992 incl. all changes)
+    tmBaseDate: '20091015',
+    tmChange: 0,
+    itemCount: 66,
+  },
+  {
+    type: 'MEP1030',
+    name: 'MEP-1030/1031 AMMPS Generator (5kW)',
+    nickname: 'AMMPS (5kW)',
+    tmReference: 'TM 9-6115-749-10',
+    tmDate: '20110201', // 1 February 2011 (original, no changes)
+    tmBaseDate: '20110201',
+    tmChange: 0,
+    itemCount: 91,
+  },
+  {
+    type: 'MEP831A',
+    name: 'MEP-831A/832A Generator (3kW)',
+    nickname: 'Generator (3kW)',
+    tmReference: 'TM 9-6115-639-13&P',
+    tmDate: '20100430', // 30 April 2010 (revised edition, no changes)
+    tmBaseDate: '20100430',
+    tmChange: 0,
+    itemCount: 24,
   },
 ];

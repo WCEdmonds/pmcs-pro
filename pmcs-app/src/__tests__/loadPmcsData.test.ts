@@ -2,7 +2,9 @@ import { describe, it, expect } from 'vitest';
 import { loadPmcsData } from '../utils/loadPmcsData';
 import type { VehicleType } from '../types';
 
-const VEHICLE_TYPES: VehicleType[] = ['M1151', 'M1152', 'LMTV_M1078', 'M1101_TRAILER', 'MEP803A'];
+const VEHICLE_TYPES: VehicleType[] = [
+  'M1151', 'M1152', 'M1097', 'LMTV_M1078', 'M1101_TRAILER', 'MEP803A', 'MEP802A', 'MEP1030', 'MEP831A',
+];
 
 describe('loadPmcsData', () => {
   it.each(VEHICLE_TYPES)('loads PMCS data for %s', async (type) => {

@@ -81,6 +81,10 @@ export function VehicleDiagram({ vehicleType, zone, itemNumber, className = '' }
             Ref: {
               vehicleType === 'LMTV_M1078' ? 'TM 9-2320-365-10' :
               vehicleType === 'M1101_TRAILER' ? 'TM 9-2330-392-14P' :
+              vehicleType === 'M1097' ? 'TM 9-2320-280-10' :
+              vehicleType === 'MEP802A' ? 'TM 9-6115-641-10' :
+              vehicleType === 'MEP1030' ? 'TM 9-6115-749-10' :
+              vehicleType === 'MEP831A' ? 'TM 9-6115-639-13&P' :
               vehicleType === 'MEP803A' ? 'TM 9-6115-642-10' :
               'TM 9-2320-387-10'
             }

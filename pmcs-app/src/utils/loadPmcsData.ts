@@ -10,6 +10,10 @@ export async function loadPmcsData(vehicleType: VehicleType): Promise<PmcsVehicl
       const data = await import('../data/pmcs/m1152-hmmwv.json');
       return data.default as PmcsVehicleData;
     }
+    case 'M1097': {
+      const data = await import('../data/pmcs/m1097-hmmwv.json');
+      return data.default as PmcsVehicleData;
+    }
     case 'LMTV_M1078': {
       const data = await import('../data/pmcs/m1078-lmtv.json');
       return data.default as PmcsVehicleData;
@@ -20,6 +24,18 @@ export async function loadPmcsData(vehicleType: VehicleType): Promise<PmcsVehicl
     }
     case 'MEP803A': {
       const data = await import('../data/pmcs/mep803a-generator.json');
+      return data.default as PmcsVehicleData;
+    }
+    case 'MEP802A': {
+      const data = await import('../data/pmcs/mep802a-generator.json');
+      return data.default as PmcsVehicleData;
+    }
+    case 'MEP1030': {
+      const data = await import('../data/pmcs/mep1030-generator.json');
+      return data.default as PmcsVehicleData;
+    }
+    case 'MEP831A': {
+      const data = await import('../data/pmcs/mep831a-generator.json');
       return data.default as PmcsVehicleData;
     }
   }

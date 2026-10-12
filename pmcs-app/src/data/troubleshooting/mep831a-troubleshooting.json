@@ -1,0 +1,2439 @@
+[
+  {
+    "categoryId": "gen-engine",
+    "vehicleType": "MEP831A",
+    "tmReference": "TM 9-6115-639-13&P, WP 0008 Table 1, malfunctions 1, 2, 3, 8, 12, 14",
+    "rootNodeId": "m831e-q1",
+    "nodes": {
+      "m831e-q1": {
+        "id": "m831e-q1",
+        "type": "question",
+        "text": "What is the engine doing?",
+        "options": [
+          {
+            "label": "Fails to crank",
+            "nextNodeId": "m831e-c1"
+          },
+          {
+            "label": "Cranks but fails to start",
+            "nextNodeId": "m831e-s1"
+          },
+          {
+            "label": "Starts and stops",
+            "nextNodeId": "m831e-r1"
+          },
+          {
+            "label": "NO FUEL indicator illuminates",
+            "nextNodeId": "m831e-nf1"
+          },
+          {
+            "label": "Fails to start in cold weather",
+            "nextNodeId": "m831e-w1"
+          },
+          {
+            "label": "Fails to stop with EMERGENCY STOP button or START/RUN/STOP switch in STOP",
+            "nextNodeId": "m831e-x1"
+          }
+        ],
+        "tmPage": "WP 0007-3"
+      },
+      "m831e-c1": {
+        "id": "m831e-c1",
+        "type": "question",
+        "text": "Is the EMERGENCY STOP button engaged (pushed in)?",
+        "options": [
+          {
+            "label": "Yes — engaged",
+            "nextNodeId": "m831e-c1a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m831e-c2"
+          }
+        ],
+        "tmPage": "WP 0008-1"
+      },
+      "m831e-c1a": {
+        "id": "m831e-c1a",
+        "type": "action",
+        "text": "Disengage EMERGENCY STOP",
+        "actionText": "Pull out switch to disengage.",
+        "nextNodeId": "m831e-c1b",
+        "tmPage": "WP 0008-1"
+      },
+      "m831e-c1b": {
+        "id": "m831e-c1b",
+        "type": "question",
+        "text": "Does the engine crank now?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m831e-c1by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m831e-c2"
+          }
+        ]
+      },
+      "m831e-c1by": {
+        "id": "m831e-c1by",
+        "type": "terminal",
+        "text": "Fails to crank — EMERGENCY STOP disengaged. Corrected by the operator action authorized in the TM.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Fails to crank — EMERGENCY STOP disengaged"
+        }
+      },
+      "m831e-c2": {
+        "id": "m831e-c2",
+        "type": "question",
+        "text": "Is the START/RUN/STOP switch in the START position when cranking?",
+        "options": [
+          {
+            "label": "No",
+            "nextNodeId": "m831e-c2a"
+          },
+          {
+            "label": "Yes",
+            "nextNodeId": "m831e-c3"
+          }
+        ],
+        "tmPage": "WP 0008-1"
+      },
+      "m831e-c2a": {
+        "id": "m831e-c2a",
+        "type": "action",
+        "text": "Place switch in START",
+        "actionText": "Place switch in START position.",
+        "nextNodeId": "m831e-c2b",
+        "tmPage": "WP 0008-1"
+      },
+      "m831e-c2b": {
+        "id": "m831e-c2b",
+        "type": "question",
+        "text": "Does the engine crank now?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m831e-c2by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m831e-c3"
+          }
+        ]
+      },
+      "m831e-c2by": {
+        "id": "m831e-c2by",
+        "type": "terminal",
+        "text": "Fails to crank — START/RUN/STOP switch placed in START. Corrected by the operator action authorized in the TM.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Fails to crank — START/RUN/STOP switch placed in START"
+        }
+      },
+      "m831e-c3": {
+        "id": "m831e-c3",
+        "type": "question",
+        "text": "Is the DC CIRCUIT BREAKER tripped?",
+        "options": [
+          {
+            "label": "Yes — tripped",
+            "nextNodeId": "m831e-c3a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m831e-c4"
+          }
+        ],
+        "tmPage": "WP 0008-1"
+      },
+      "m831e-c3a": {
+        "id": "m831e-c3a",
+        "type": "action",
+        "text": "Reset the DC CIRCUIT BREAKER",
+        "actionText": "Reset by depressing pushbutton.",
+        "nextNodeId": "m831e-c3b",
+        "tmPage": "WP 0008-1"
+      },
+      "m831e-c3b": {
+        "id": "m831e-c3b",
+        "type": "question",
+        "text": "Does the engine crank now?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m831e-c3by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m831e-c4"
+          }
+        ]
+      },
+      "m831e-c3by": {
+        "id": "m831e-c3by",
+        "type": "terminal",
+        "text": "Fails to crank — DC CIRCUIT BREAKER reset. Corrected by the operator action authorized in the TM.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Fails to crank — DC CIRCUIT BREAKER reset"
+        }
+      },
+      "m831e-c4": {
+        "id": "m831e-c4",
+        "type": "question",
+        "text": "Check the malfunction indicator module. Is a system fault light lit?",
+        "options": [
+          {
+            "label": "HIGH TEMP",
+            "nextNodeId": "m831e-ht1"
+          },
+          {
+            "label": "LOW OIL PRESSURE",
+            "nextNodeId": "m831e-lo1"
+          },
+          {
+            "label": "NO FUEL",
+            "nextNodeId": "m831e-nf1"
+          },
+          {
+            "label": "No fault light",
+            "nextNodeId": "m831e-c5"
+          }
+        ],
+        "tmPage": "WP 0008-1"
+      },
+      "m831e-c5": {
+        "id": "m831e-c5",
+        "type": "question",
+        "text": "Are battery wires loose (not properly/securely connected)?",
+        "options": [
+          {
+            "label": "Yes — loose",
+            "nextNodeId": "m831e-c5a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m831e-c5t"
+          }
+        ],
+        "tmPage": "WP 0008-1"
+      },
+      "m831e-c5a": {
+        "id": "m831e-c5a",
+        "type": "action",
+        "text": "Tighten battery connections",
+        "actionText": "Tighten connections.",
+        "nextNodeId": "m831e-c5b",
+        "tmPage": "WP 0008-1"
+      },
+      "m831e-c5b": {
+        "id": "m831e-c5b",
+        "type": "question",
+        "text": "Does the engine crank now?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m831e-c5by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m831e-c5t"
+          }
+        ]
+      },
+      "m831e-c5by": {
+        "id": "m831e-c5by",
+        "type": "terminal",
+        "text": "Fails to crank — battery connections tightened. Corrected by the operator action authorized in the TM.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Fails to crank — battery connections tightened"
+        }
+      },
+      "m831e-c5t": {
+        "id": "m831e-c5t",
+        "type": "terminal",
+        "text": "Performing steps a-e does not yield results. Refer trouble to field level maintenance. (WP 0010 item 12: if the battery does not power the starter the set is still mission-capable using Manual Starting, WP 0006 — readiness per supervisor.)",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Engine fails to crank — not corrected by operator checks"
+        },
+        "tmPage": "WP 0008-1"
+      },
+      "m831e-ht1": {
+        "id": "m831e-ht1",
+        "type": "question",
+        "text": "Are the air inlet ducts clogged or obstructed?",
+        "options": [
+          {
+            "label": "Yes — clogged/obstructed",
+            "nextNodeId": "m831e-ht1a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m831e-ht2"
+          }
+        ],
+        "tmPage": "WP 0008-3"
+      },
+      "m831e-ht1a": {
+        "id": "m831e-ht1a",
+        "type": "action",
+        "text": "Clear the air inlet ducts",
+        "actionText": "Clear restrictions and blockages. Press FAULT RESET pushbutton to reset fault indicator module.",
+        "nextNodeId": "m831e-ht1b",
+        "tmPage": "WP 0008-3"
+      },
+      "m831e-ht1b": {
+        "id": "m831e-ht1b",
+        "type": "question",
+        "text": "Is the malfunction corrected?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m831e-ht1by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m831e-ht2"
+          }
+        ]
+      },
+      "m831e-ht1by": {
+        "id": "m831e-ht1by",
+        "type": "terminal",
+        "text": "ENGINE HIGH TEMP fault — clear the air inlet ducts. Corrected by the operator action authorized in the TM.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "ENGINE HIGH TEMP fault — clear the air inlet ducts"
+        }
+      },
+      "m831e-ht2": {
+        "id": "m831e-ht2",
+        "type": "question",
+        "text": "Is the air inlet grill on the recoil starter clogged or obstructed?",
+        "options": [
+          {
+            "label": "Yes",
+            "nextNodeId": "m831e-ht2a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m831e-ht3"
+          }
+        ],
+        "tmPage": "WP 0008-3"
+      },
+      "m831e-ht2a": {
+        "id": "m831e-ht2a",
+        "type": "action",
+        "text": "Clear the recoil starter air inlet grill",
+        "actionText": "Clear restrictions and blockages. Press FAULT RESET pushbutton to reset fault indicator module.",
+        "nextNodeId": "m831e-ht2b",
+        "tmPage": "WP 0008-3"
+      },
+      "m831e-ht2b": {
+        "id": "m831e-ht2b",
+        "type": "question",
+        "text": "Is the malfunction corrected?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m831e-ht2by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m831e-ht3"
+          }
+        ]
+      },
+      "m831e-ht2by": {
+        "id": "m831e-ht2by",
+        "type": "terminal",
+        "text": "ENGINE HIGH TEMP fault — clear the recoil starter air inlet grill. Corrected by the operator action authorized in the TM.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "ENGINE HIGH TEMP fault — clear the recoil starter air inlet grill"
+        }
+      },
+      "m831e-ht3": {
+        "id": "m831e-ht3",
+        "type": "question",
+        "text": "Is the air filter clogged?",
+        "options": [
+          {
+            "label": "Yes — clogged",
+            "nextNodeId": "m831e-ht3a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m831e-ht4"
+          }
+        ],
+        "tmPage": "WP 0011-2"
+      },
+      "m831e-ht3a": {
+        "id": "m831e-ht3a",
+        "type": "action",
+        "text": "Service the air filter",
+        "actionText": "Remove filter and inspect (WP 0011, Air Filter). Replace filter as required.",
+        "nextNodeId": "m831e-ht3b",
+        "tmPage": "WP 0011-2"
+      },
+      "m831e-ht3b": {
+        "id": "m831e-ht3b",
+        "type": "question",
+        "text": "Is the malfunction corrected?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m831e-ht3by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m831e-ht4"
+          }
+        ]
+      },
+      "m831e-ht3by": {
+        "id": "m831e-ht3by",
+        "type": "terminal",
+        "text": "ENGINE HIGH TEMP fault — service the air filter. Corrected by the operator action authorized in the TM.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "ENGINE HIGH TEMP fault — service the air filter"
+        }
+      },
+      "m831e-ht4": {
+        "id": "m831e-ht4",
+        "type": "question",
+        "text": "Is the generator set overloaded?",
+        "options": [
+          {
+            "label": "Yes — overloaded",
+            "nextNodeId": "m831e-ht4a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m831e-htz"
+          }
+        ],
+        "tmPage": "WP 0008-3"
+      },
+      "m831e-ht4a": {
+        "id": "m831e-ht4a",
+        "type": "action",
+        "text": "Reduce the load",
+        "actionText": "Reduce load. Press FAULT RESET pushbutton to reset fault indicator module.",
+        "nextNodeId": "m831e-ht4b",
+        "tmPage": "WP 0008-3"
+      },
+      "m831e-ht4b": {
+        "id": "m831e-ht4b",
+        "type": "question",
+        "text": "Is the malfunction corrected?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m831e-ht4by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m831e-htz"
+          }
+        ]
+      },
+      "m831e-ht4by": {
+        "id": "m831e-ht4by",
+        "type": "terminal",
+        "text": "ENGINE HIGH TEMP fault — reduce the load. Corrected by the operator action authorized in the TM.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "ENGINE HIGH TEMP fault — reduce the load"
+        }
+      },
+      "m831e-htz": {
+        "id": "m831e-htz",
+        "type": "terminal",
+        "text": "Performing the listed steps does not yield results. Refer trouble to field level maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "ENGINE HIGH TEMP fault — not corrected by operator checks"
+        },
+        "tmPage": "WP 0008-3"
+      },
+      "m831e-lo1": {
+        "id": "m831e-lo1",
+        "type": "question",
+        "text": "Check engine oil level. Is servicing required?",
+        "options": [
+          {
+            "label": "Yes — oil low",
+            "nextNodeId": "m831e-lo1a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m831e-loz"
+          }
+        ],
+        "tmPage": "WP 0008-3"
+      },
+      "m831e-lo1a": {
+        "id": "m831e-lo1a",
+        "type": "action",
+        "text": "Service engine oil",
+        "actionText": "Service as required (WP 0001). (Oil check/add steps: WP 0010, Lubrication Instructions.) Press FAULT RESET pushbutton to reset fault indicator module.",
+        "nextNodeId": "m831e-lo1b",
+        "tmPage": "WP 0008-3"
+      },
+      "m831e-lo1b": {
+        "id": "m831e-lo1b",
+        "type": "question",
+        "text": "Is the malfunction corrected?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m831e-lo1by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m831e-loz"
+          }
+        ]
+      },
+      "m831e-lo1by": {
+        "id": "m831e-lo1by",
+        "type": "terminal",
+        "text": "LOW OIL PRESSURE fault — service engine oil. Corrected by the operator action authorized in the TM.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "LOW OIL PRESSURE fault — service engine oil"
+        }
+      },
+      "m831e-loz": {
+        "id": "m831e-loz",
+        "type": "terminal",
+        "text": "Performing the listed steps does not yield results. Refer trouble to field level maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "LOW OIL PRESSURE fault — not corrected by operator checks"
+        },
+        "tmPage": "WP 0008-3"
+      },
+      "m831e-s1": {
+        "id": "m831e-s1",
+        "type": "question",
+        "text": "Was the PREHEAT switch left in the wrong position for conditions (cold weather operation)?",
+        "options": [
+          {
+            "label": "Yes — wrong position",
+            "nextNodeId": "m831e-s1a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m831e-s2"
+          }
+        ],
+        "tmPage": "WP 0008-1"
+      },
+      "m831e-s1a": {
+        "id": "m831e-s1a",
+        "type": "action",
+        "text": "Set the PREHEAT switch",
+        "actionText": "Place switch in proper position.",
+        "nextNodeId": "m831e-s1b",
+        "tmPage": "WP 0008-1"
+      },
+      "m831e-s1b": {
+        "id": "m831e-s1b",
+        "type": "question",
+        "text": "Is the malfunction corrected?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m831e-s1by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m831e-s2"
+          }
+        ]
+      },
+      "m831e-s1by": {
+        "id": "m831e-s1by",
+        "type": "terminal",
+        "text": "Cranks but fails to start — set the preheat switch. Corrected by the operator action authorized in the TM.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Cranks but fails to start — set the preheat switch"
+        }
+      },
+      "m831e-s2": {
+        "id": "m831e-s2",
+        "type": "question",
+        "text": "Is the mechanical governor speed control knob out of the START position or loose?",
+        "options": [
+          {
+            "label": "Yes",
+            "nextNodeId": "m831e-s2a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m831e-s3"
+          }
+        ],
+        "tmPage": "WP 0008-1"
+      },
+      "m831e-s2a": {
+        "id": "m831e-s2a",
+        "type": "action",
+        "text": "Set the speed control knob",
+        "actionText": "Adjust speed control knob and tighten (see WP 0006, Figure 1, Item 6).",
+        "nextNodeId": "m831e-s2b",
+        "tmPage": "WP 0008-1"
+      },
+      "m831e-s2b": {
+        "id": "m831e-s2b",
+        "type": "question",
+        "text": "Is the malfunction corrected?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m831e-s2by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m831e-s3"
+          }
+        ]
+      },
+      "m831e-s2by": {
+        "id": "m831e-s2by",
+        "type": "terminal",
+        "text": "Cranks but fails to start — set the speed control knob. Corrected by the operator action authorized in the TM.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Cranks but fails to start — set the speed control knob"
+        }
+      },
+      "m831e-s3": {
+        "id": "m831e-s3",
+        "type": "question",
+        "text": "With START/RUN/STOP in RUN, does the governor actuator lever (WP 0006, Figure 1, Item 1) fail to release from the magnet?",
+        "options": [
+          {
+            "label": "Yes — lever does not release",
+            "nextNodeId": "m831e-s3a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m831e-s4"
+          }
+        ],
+        "tmPage": "WP 0008-1"
+      },
+      "m831e-s3a": {
+        "id": "m831e-s3a",
+        "type": "terminal",
+        "text": "Governor actuator lever does not release from magnet. Refer trouble to field level maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Cranks but fails to start — governor actuator lever does not release from magnet"
+        },
+        "tmPage": "WP 0008-1"
+      },
+      "m831e-s4": {
+        "id": "m831e-s4",
+        "type": "question",
+        "text": "Is the fuel tank level low (WP 0011, Fuel System)?",
+        "options": [
+          {
+            "label": "Yes — low",
+            "nextNodeId": "m831e-s4a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m831e-s5"
+          }
+        ],
+        "tmPage": "WP 0008-2"
+      },
+      "m831e-s4a": {
+        "id": "m831e-s4a",
+        "type": "action",
+        "text": "Service the fuel tank",
+        "actionText": "Service fuel tank as required. Press FAULT RESET pushbutton to reset fault indicator module.",
+        "nextNodeId": "m831e-s4b",
+        "tmPage": "WP 0008-2"
+      },
+      "m831e-s4b": {
+        "id": "m831e-s4b",
+        "type": "question",
+        "text": "Is the malfunction corrected?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m831e-s4by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m831e-s5"
+          }
+        ]
+      },
+      "m831e-s4by": {
+        "id": "m831e-s4by",
+        "type": "terminal",
+        "text": "Cranks but fails to start — service the fuel tank. Corrected by the operator action authorized in the TM.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Cranks but fails to start — service the fuel tank"
+        }
+      },
+      "m831e-s5": {
+        "id": "m831e-s5",
+        "type": "question",
+        "text": "Operating on AUX FUEL — is the AUX FUEL switch OFF?",
+        "options": [
+          {
+            "label": "Yes — OFF",
+            "nextNodeId": "m831e-s5a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m831e-s6"
+          }
+        ],
+        "tmPage": "WP 0008-2"
+      },
+      "m831e-s5a": {
+        "id": "m831e-s5a",
+        "type": "action",
+        "text": "Place AUX FUEL switch ON",
+        "actionText": "Place switch in ON position. Press FAULT RESET pushbutton to reset fault indicator module.",
+        "nextNodeId": "m831e-s5b",
+        "tmPage": "WP 0008-2"
+      },
+      "m831e-s5b": {
+        "id": "m831e-s5b",
+        "type": "question",
+        "text": "Is the malfunction corrected?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m831e-s5by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m831e-s6"
+          }
+        ]
+      },
+      "m831e-s5by": {
+        "id": "m831e-s5by",
+        "type": "terminal",
+        "text": "Cranks but fails to start — place aux fuel switch on. Corrected by the operator action authorized in the TM.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Cranks but fails to start — place aux fuel switch on"
+        }
+      },
+      "m831e-s6": {
+        "id": "m831e-s6",
+        "type": "question",
+        "text": "Are any fuel lines crimped or pinched?",
+        "options": [
+          {
+            "label": "Yes",
+            "nextNodeId": "m831e-s6a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m831e-s7"
+          }
+        ],
+        "tmPage": "WP 0008-2"
+      },
+      "m831e-s6a": {
+        "id": "m831e-s6a",
+        "type": "action",
+        "text": "Straighten flexible fuel lines",
+        "actionText": "Straighten flexible fuel lines. Refer to field level maintenance if fuel line is damaged.",
+        "nextNodeId": "m831e-s6b",
+        "tmPage": "WP 0008-2"
+      },
+      "m831e-s6b": {
+        "id": "m831e-s6b",
+        "type": "question",
+        "text": "Is the malfunction corrected?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m831e-s6by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m831e-s7"
+          }
+        ]
+      },
+      "m831e-s6by": {
+        "id": "m831e-s6by",
+        "type": "terminal",
+        "text": "Cranks but fails to start — straighten flexible fuel lines. Corrected by the operator action authorized in the TM.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Cranks but fails to start — straighten flexible fuel lines"
+        }
+      },
+      "m831e-s7": {
+        "id": "m831e-s7",
+        "type": "question",
+        "text": "Is there water in the fuel filter/water separator (WP 0011, Fuel Filter/Water Separator)?",
+        "options": [
+          {
+            "label": "Yes — water present",
+            "nextNodeId": "m831e-s7a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m831e-sz"
+          }
+        ],
+        "tmPage": "WP 0011-2"
+      },
+      "m831e-s7a": {
+        "id": "m831e-s7a",
+        "type": "action",
+        "text": "Drain the fuel filter/water separator",
+        "actionText": "Drain water from fuel filter/water separator by turning valve.",
+        "nextNodeId": "m831e-s7b",
+        "tmPage": "WP 0011-2"
+      },
+      "m831e-s7b": {
+        "id": "m831e-s7b",
+        "type": "question",
+        "text": "Is the malfunction corrected?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m831e-s7by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m831e-sz"
+          }
+        ]
+      },
+      "m831e-s7by": {
+        "id": "m831e-s7by",
+        "type": "terminal",
+        "text": "Cranks but fails to start — drain the fuel filter/water separator. Corrected by the operator action authorized in the TM.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Cranks but fails to start — drain the fuel filter/water separator"
+        }
+      },
+      "m831e-sz": {
+        "id": "m831e-sz",
+        "type": "terminal",
+        "text": "Performing the listed steps does not yield results. Refer trouble to field level maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Cranks but fails to start — not corrected by operator checks"
+        },
+        "tmPage": "WP 0008-2"
+      },
+      "m831e-r1": {
+        "id": "m831e-r1",
+        "type": "question",
+        "text": "Are any electrical connections loose?",
+        "options": [
+          {
+            "label": "Yes — loose",
+            "nextNodeId": "m831e-r1a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m831e-r2"
+          }
+        ],
+        "tmPage": "WP 0008-2"
+      },
+      "m831e-r1a": {
+        "id": "m831e-r1a",
+        "type": "action",
+        "text": "Tighten connections",
+        "actionText": "Tighten connections.",
+        "nextNodeId": "m831e-r1b",
+        "tmPage": "WP 0008-2"
+      },
+      "m831e-r1b": {
+        "id": "m831e-r1b",
+        "type": "question",
+        "text": "Is the malfunction corrected?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m831e-r1by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m831e-r2"
+          }
+        ]
+      },
+      "m831e-r1by": {
+        "id": "m831e-r1by",
+        "type": "terminal",
+        "text": "Engine starts and stops — tighten connections. Corrected by the operator action authorized in the TM.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Engine starts and stops — tighten connections"
+        }
+      },
+      "m831e-r2": {
+        "id": "m831e-r2",
+        "type": "question",
+        "text": "Is any fuel line leaking or damaged?",
+        "options": [
+          {
+            "label": "Yes",
+            "nextNodeId": "m831e-r2a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m831e-r3"
+          }
+        ],
+        "tmPage": "WP 0008-2"
+      },
+      "m831e-r2a": {
+        "id": "m831e-r2a",
+        "type": "terminal",
+        "text": "Fuel line is leaking or damaged. Refer to field level maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Engine starts and stops — fuel line is leaking or damaged"
+        },
+        "tmPage": "WP 0008-2"
+      },
+      "m831e-r3": {
+        "id": "m831e-r3",
+        "type": "question",
+        "text": "Are any fuel lines crimped or pinched?",
+        "options": [
+          {
+            "label": "Yes",
+            "nextNodeId": "m831e-r3a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m831e-r4"
+          }
+        ],
+        "tmPage": "WP 0008-2"
+      },
+      "m831e-r3a": {
+        "id": "m831e-r3a",
+        "type": "action",
+        "text": "Straighten flexible fuel lines",
+        "actionText": "Straighten flexible fuel lines.",
+        "nextNodeId": "m831e-r3b",
+        "tmPage": "WP 0008-2"
+      },
+      "m831e-r3b": {
+        "id": "m831e-r3b",
+        "type": "question",
+        "text": "Is the malfunction corrected?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m831e-r3by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m831e-r4"
+          }
+        ]
+      },
+      "m831e-r3by": {
+        "id": "m831e-r3by",
+        "type": "terminal",
+        "text": "Engine starts and stops — straighten flexible fuel lines. Corrected by the operator action authorized in the TM.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Engine starts and stops — straighten flexible fuel lines"
+        }
+      },
+      "m831e-r4": {
+        "id": "m831e-r4",
+        "type": "question",
+        "text": "Is there water in the fuel filter/water separator?",
+        "options": [
+          {
+            "label": "Yes — water present",
+            "nextNodeId": "m831e-r4a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m831e-rz"
+          }
+        ],
+        "tmPage": "WP 0011-2"
+      },
+      "m831e-r4a": {
+        "id": "m831e-r4a",
+        "type": "action",
+        "text": "Drain the fuel filter/water separator",
+        "actionText": "Drain water from fuel filter/water separator by turning valve.",
+        "nextNodeId": "m831e-r4b",
+        "tmPage": "WP 0011-2"
+      },
+      "m831e-r4b": {
+        "id": "m831e-r4b",
+        "type": "question",
+        "text": "Is the malfunction corrected?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m831e-r4by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m831e-rz"
+          }
+        ]
+      },
+      "m831e-r4by": {
+        "id": "m831e-r4by",
+        "type": "terminal",
+        "text": "Engine starts and stops — drain the fuel filter/water separator. Corrected by the operator action authorized in the TM.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Engine starts and stops — drain the fuel filter/water separator"
+        }
+      },
+      "m831e-rz": {
+        "id": "m831e-rz",
+        "type": "terminal",
+        "text": "Performing the listed steps does not yield results. Refer trouble to field level maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Engine starts and stops — not corrected by operator checks"
+        },
+        "tmPage": "WP 0008-2"
+      },
+      "m831e-nf1": {
+        "id": "m831e-nf1",
+        "type": "question",
+        "text": "Check fuel tank level (WP 0011, Fuel System). Is the tank low or empty?",
+        "options": [
+          {
+            "label": "Yes — low/empty",
+            "nextNodeId": "m831e-nf1a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m831e-nf2"
+          }
+        ],
+        "tmPage": "WP 0008-3"
+      },
+      "m831e-nf1a": {
+        "id": "m831e-nf1a",
+        "type": "action",
+        "text": "Service the fuel tank",
+        "actionText": "Service fuel tank as required. Press FAULT RESET pushbutton to reset fault indicator module.",
+        "nextNodeId": "m831e-nf1b",
+        "tmPage": "WP 0008-3"
+      },
+      "m831e-nf1b": {
+        "id": "m831e-nf1b",
+        "type": "question",
+        "text": "Is the malfunction corrected?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m831e-nf1by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m831e-nf2"
+          }
+        ]
+      },
+      "m831e-nf1by": {
+        "id": "m831e-nf1by",
+        "type": "terminal",
+        "text": "NO FUEL indicator — service the fuel tank. Corrected by the operator action authorized in the TM.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "NO FUEL indicator — service the fuel tank"
+        }
+      },
+      "m831e-nf2": {
+        "id": "m831e-nf2",
+        "type": "question",
+        "text": "Operating on AUX FUEL? Is the AUX FUEL switch OFF?",
+        "options": [
+          {
+            "label": "Yes — AUX FUEL switch is OFF",
+            "nextNodeId": "m831e-nf2a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m831e-nfz"
+          }
+        ],
+        "tmPage": "WP 0008-3"
+      },
+      "m831e-nf2a": {
+        "id": "m831e-nf2a",
+        "type": "action",
+        "text": "Place AUX FUEL switch ON",
+        "actionText": "Place switch in ON position. Press FAULT RESET pushbutton to reset fault indicator module.",
+        "nextNodeId": "m831e-nf2b",
+        "tmPage": "WP 0008-3"
+      },
+      "m831e-nf2b": {
+        "id": "m831e-nf2b",
+        "type": "question",
+        "text": "Is the malfunction corrected?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m831e-nf2by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m831e-nfz"
+          }
+        ]
+      },
+      "m831e-nf2by": {
+        "id": "m831e-nf2by",
+        "type": "terminal",
+        "text": "NO FUEL indicator — place aux fuel switch on. Corrected by the operator action authorized in the TM.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "NO FUEL indicator — place aux fuel switch on"
+        }
+      },
+      "m831e-nfz": {
+        "id": "m831e-nfz",
+        "type": "terminal",
+        "text": "Performing the listed steps does not yield results. Refer trouble to field level maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "NO FUEL indicator — not corrected by operator checks"
+        },
+        "tmPage": "WP 0008-3"
+      },
+      "m831e-w1": {
+        "id": "m831e-w1",
+        "type": "question",
+        "text": "Is the PREHEAT switch OFF?",
+        "options": [
+          {
+            "label": "Yes — OFF",
+            "nextNodeId": "m831e-w1a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m831e-w2"
+          }
+        ],
+        "tmPage": "WP 0008-4"
+      },
+      "m831e-w1a": {
+        "id": "m831e-w1a",
+        "type": "action",
+        "text": "Place PREHEAT switch ON",
+        "actionText": "Place switch in ON position.",
+        "nextNodeId": "m831e-w1b",
+        "tmPage": "WP 0008-4"
+      },
+      "m831e-w1b": {
+        "id": "m831e-w1b",
+        "type": "question",
+        "text": "Is the malfunction corrected?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m831e-w1by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m831e-w2"
+          }
+        ]
+      },
+      "m831e-w1by": {
+        "id": "m831e-w1by",
+        "type": "terminal",
+        "text": "Fails to start in cold weather — place preheat switch on. Corrected by the operator action authorized in the TM.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Fails to start in cold weather — place preheat switch on"
+        }
+      },
+      "m831e-w2": {
+        "id": "m831e-w2",
+        "type": "question",
+        "text": "Is improper fuel being used for cold weather operation?",
+        "options": [
+          {
+            "label": "Yes",
+            "nextNodeId": "m831e-w2a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m831e-w3"
+          }
+        ],
+        "tmPage": "WP 0008-4"
+      },
+      "m831e-w2a": {
+        "id": "m831e-w2a",
+        "type": "action",
+        "text": "Use proper fuel",
+        "actionText": "Use proper fuel as noted on FUEL CAPACITY data plate (WP 0002, Figure 4, Sheet 3 of 7).",
+        "nextNodeId": "m831e-w2b",
+        "tmPage": "WP 0008-4"
+      },
+      "m831e-w2b": {
+        "id": "m831e-w2b",
+        "type": "question",
+        "text": "Is the malfunction corrected?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m831e-w2by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m831e-w3"
+          }
+        ]
+      },
+      "m831e-w2by": {
+        "id": "m831e-w2by",
+        "type": "terminal",
+        "text": "Fails to start in cold weather — use proper fuel. Corrected by the operator action authorized in the TM.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Fails to start in cold weather — use proper fuel"
+        }
+      },
+      "m831e-w3": {
+        "id": "m831e-w3",
+        "type": "question",
+        "text": "Are any fuel lines crimped or pinched?",
+        "options": [
+          {
+            "label": "Yes",
+            "nextNodeId": "m831e-w3a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m831e-w4"
+          }
+        ],
+        "tmPage": "WP 0008-4"
+      },
+      "m831e-w3a": {
+        "id": "m831e-w3a",
+        "type": "action",
+        "text": "Straighten flexible fuel lines",
+        "actionText": "Straighten flexible fuel lines.",
+        "nextNodeId": "m831e-w3b",
+        "tmPage": "WP 0008-4"
+      },
+      "m831e-w3b": {
+        "id": "m831e-w3b",
+        "type": "question",
+        "text": "Is the malfunction corrected?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m831e-w3by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m831e-w4"
+          }
+        ]
+      },
+      "m831e-w3by": {
+        "id": "m831e-w3by",
+        "type": "terminal",
+        "text": "Fails to start in cold weather — straighten flexible fuel lines. Corrected by the operator action authorized in the TM.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Fails to start in cold weather — straighten flexible fuel lines"
+        }
+      },
+      "m831e-w4": {
+        "id": "m831e-w4",
+        "type": "question",
+        "text": "Are there clogs or frozen water in the fuel lines or filter separator, or is a fuel line or the filter separator damaged?",
+        "options": [
+          {
+            "label": "Yes",
+            "nextNodeId": "m831e-w4a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m831e-wz"
+          }
+        ],
+        "tmPage": "WP 0008-4"
+      },
+      "m831e-w4a": {
+        "id": "m831e-w4a",
+        "type": "terminal",
+        "text": "Fuel line or filter separator is frozen or damaged. Refer to field level maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Fails to start in cold weather — fuel line or filter separator is frozen or damaged"
+        },
+        "tmPage": "WP 0008-4"
+      },
+      "m831e-wz": {
+        "id": "m831e-wz",
+        "type": "terminal",
+        "text": "Performing the listed steps does not yield results. Refer trouble to field level maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Fails to start in cold weather — not corrected by operator checks"
+        },
+        "tmPage": "WP 0008-4"
+      },
+      "m831e-x1": {
+        "id": "m831e-x1",
+        "type": "action",
+        "text": "Move the actuator lever to the magnet",
+        "actionText": "Verify the actuator lever is touching the magnet; manually move the actuator lever to the magnet.",
+        "nextNodeId": "m831e-x2",
+        "tmPage": "WP 0008-4"
+      },
+      "m831e-x2": {
+        "id": "m831e-x2",
+        "type": "terminal",
+        "text": "Engine fails to stop with EMERGENCY STOP or STOP position. Notify field level maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Fails to stop — needs field maintenance"
+        },
+        "tmPage": "WP 0008-4"
+      }
+    }
+  },
+  {
+    "categoryId": "gen-exhaust",
+    "vehicleType": "MEP831A",
+    "tmReference": "TM 9-6115-639-13&P, WP 0008 Table 1, malfunctions 10 and 11",
+    "rootNodeId": "m831x-q1",
+    "nodes": {
+      "m831x-q1": {
+        "id": "m831x-q1",
+        "type": "question",
+        "text": "What color is the exhaust smoke?",
+        "options": [
+          {
+            "label": "White",
+            "nextNodeId": "m831x-w1"
+          },
+          {
+            "label": "Black",
+            "nextNodeId": "m831x-k1"
+          }
+        ],
+        "tmPage": "WP 0007-3"
+      },
+      "m831x-w1": {
+        "id": "m831x-w1",
+        "type": "question",
+        "text": "Check the engine oil level. Is it too high?",
+        "options": [
+          {
+            "label": "Yes — too high",
+            "nextNodeId": "m831x-w1a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m831x-w2"
+          }
+        ],
+        "tmPage": "WP 0008-3"
+      },
+      "m831x-w1a": {
+        "id": "m831x-w1a",
+        "type": "terminal",
+        "text": "Engine oil level is too high. Refer trouble to field level maintenance to drain and service engine oil.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "White exhaust smoke — engine oil level is too high"
+        },
+        "tmPage": "WP 0008-3"
+      },
+      "m831x-w2": {
+        "id": "m831x-w2",
+        "type": "question",
+        "text": "Is there water in the fuel filter/water separator?",
+        "options": [
+          {
+            "label": "Yes — water present",
+            "nextNodeId": "m831x-w2a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m831x-wz"
+          }
+        ],
+        "tmPage": "WP 0008-4"
+      },
+      "m831x-w2a": {
+        "id": "m831x-w2a",
+        "type": "action",
+        "text": "Drain the fuel filter/water separator",
+        "actionText": "Drain water from fuel filter/water separator by turning valve.",
+        "nextNodeId": "m831x-w2b",
+        "tmPage": "WP 0008-4"
+      },
+      "m831x-w2b": {
+        "id": "m831x-w2b",
+        "type": "question",
+        "text": "Is the malfunction corrected?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m831x-w2by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m831x-wz"
+          }
+        ]
+      },
+      "m831x-w2by": {
+        "id": "m831x-w2by",
+        "type": "terminal",
+        "text": "White exhaust smoke — drain the fuel filter/water separator. Corrected by the operator action authorized in the TM.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "White exhaust smoke — drain the fuel filter/water separator"
+        }
+      },
+      "m831x-wz": {
+        "id": "m831x-wz",
+        "type": "terminal",
+        "text": "Performing the listed steps does not yield results. Refer trouble to field level maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "White exhaust smoke — not corrected by operator checks"
+        },
+        "tmPage": "WP 0008-4"
+      },
+      "m831x-k1": {
+        "id": "m831x-k1",
+        "type": "question",
+        "text": "Is the air filter clogged or dirty?",
+        "options": [
+          {
+            "label": "Yes",
+            "nextNodeId": "m831x-k1a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m831x-k2"
+          }
+        ],
+        "tmPage": "WP 0008-4"
+      },
+      "m831x-k1a": {
+        "id": "m831x-k1a",
+        "type": "action",
+        "text": "Service the air filter",
+        "actionText": "Remove filter and inspect (see WP 0011, Air Filter). Replace filter as required.",
+        "nextNodeId": "m831x-k1b",
+        "tmPage": "WP 0008-4"
+      },
+      "m831x-k1b": {
+        "id": "m831x-k1b",
+        "type": "question",
+        "text": "Is the malfunction corrected?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m831x-k1by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m831x-k2"
+          }
+        ]
+      },
+      "m831x-k1by": {
+        "id": "m831x-k1by",
+        "type": "terminal",
+        "text": "Black exhaust smoke — service the air filter. Corrected by the operator action authorized in the TM.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Black exhaust smoke — service the air filter"
+        }
+      },
+      "m831x-k2": {
+        "id": "m831x-k2",
+        "type": "question",
+        "text": "Has the engine run for prolonged periods at idle speed (no load)?",
+        "options": [
+          {
+            "label": "Yes",
+            "nextNodeId": "m831x-k2a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m831x-kz"
+          }
+        ],
+        "tmPage": "WP 0008-4"
+      },
+      "m831x-k2a": {
+        "id": "m831x-k2a",
+        "type": "action",
+        "text": "Operate at rated load",
+        "actionText": "Operate engine at rated load only.",
+        "nextNodeId": "m831x-k2b",
+        "tmPage": "WP 0008-4"
+      },
+      "m831x-k2b": {
+        "id": "m831x-k2b",
+        "type": "question",
+        "text": "Is the malfunction corrected?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m831x-k2by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m831x-kz"
+          }
+        ]
+      },
+      "m831x-k2by": {
+        "id": "m831x-k2by",
+        "type": "terminal",
+        "text": "Black exhaust smoke — operate at rated load. Corrected by the operator action authorized in the TM.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Black exhaust smoke — operate at rated load"
+        }
+      },
+      "m831x-kz": {
+        "id": "m831x-kz",
+        "type": "terminal",
+        "text": "Performing the listed steps does not yield results. Refer trouble to field level maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Black exhaust smoke — not corrected by operator checks"
+        },
+        "tmPage": "WP 0008-4"
+      }
+    }
+  },
+  {
+    "categoryId": "gen-oil-pressure",
+    "vehicleType": "MEP831A",
+    "tmReference": "TM 9-6115-639-13&P, WP 0008 Table 1, malfunction 7 (LOW OIL PRESSURE indicator)",
+    "rootNodeId": "m831o-q1",
+    "nodes": {
+      "m831o-q1": {
+        "id": "m831o-q1",
+        "type": "question",
+        "text": "Check engine oil level. Is servicing required?",
+        "options": [
+          {
+            "label": "Yes — oil low",
+            "nextNodeId": "m831o-q1a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m831o-qz"
+          }
+        ],
+        "tmPage": "WP 0008-3"
+      },
+      "m831o-q1a": {
+        "id": "m831o-q1a",
+        "type": "action",
+        "text": "Service engine oil",
+        "actionText": "Service as required (WP 0001). (Oil check/add steps: WP 0010, Lubrication Instructions.) Press FAULT RESET pushbutton to reset fault indicator module.",
+        "nextNodeId": "m831o-q1b",
+        "tmPage": "WP 0008-3"
+      },
+      "m831o-q1b": {
+        "id": "m831o-q1b",
+        "type": "question",
+        "text": "Is the malfunction corrected?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m831o-q1by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m831o-qz"
+          }
+        ]
+      },
+      "m831o-q1by": {
+        "id": "m831o-q1by",
+        "type": "terminal",
+        "text": "LOW OIL PRESSURE indicator — service engine oil. Corrected by the operator action authorized in the TM.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "LOW OIL PRESSURE indicator — service engine oil"
+        }
+      },
+      "m831o-qz": {
+        "id": "m831o-qz",
+        "type": "terminal",
+        "text": "Performing the listed steps does not yield results. Refer trouble to field level maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "LOW OIL PRESSURE indicator — not corrected by operator checks"
+        },
+        "tmPage": "WP 0008-3"
+      }
+    }
+  },
+  {
+    "categoryId": "gen-overheat",
+    "vehicleType": "MEP831A",
+    "tmReference": "TM 9-6115-639-13&P, WP 0008 Table 1, malfunction 6 (ENGINE HIGH TEMP indicator)",
+    "rootNodeId": "m831c-q1",
+    "nodes": {
+      "m831c-q1": {
+        "id": "m831c-q1",
+        "type": "question",
+        "text": "Are the air inlet ducts clogged or obstructed?",
+        "options": [
+          {
+            "label": "Yes — clogged/obstructed",
+            "nextNodeId": "m831c-q1a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m831c-q2"
+          }
+        ],
+        "tmPage": "WP 0008-3"
+      },
+      "m831c-q1a": {
+        "id": "m831c-q1a",
+        "type": "action",
+        "text": "Clear the air inlet ducts",
+        "actionText": "Clear restrictions and blockages. Press FAULT RESET pushbutton to reset fault indicator module.",
+        "nextNodeId": "m831c-q1b",
+        "tmPage": "WP 0008-3"
+      },
+      "m831c-q1b": {
+        "id": "m831c-q1b",
+        "type": "question",
+        "text": "Is the malfunction corrected?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m831c-q1by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m831c-q2"
+          }
+        ]
+      },
+      "m831c-q1by": {
+        "id": "m831c-q1by",
+        "type": "terminal",
+        "text": "ENGINE HIGH TEMP indicator — clear the air inlet ducts. Corrected by the operator action authorized in the TM.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "ENGINE HIGH TEMP indicator — clear the air inlet ducts"
+        }
+      },
+      "m831c-q2": {
+        "id": "m831c-q2",
+        "type": "question",
+        "text": "Is the air inlet grill on the recoil starter clogged or obstructed?",
+        "options": [
+          {
+            "label": "Yes",
+            "nextNodeId": "m831c-q2a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m831c-q3"
+          }
+        ],
+        "tmPage": "WP 0008-3"
+      },
+      "m831c-q2a": {
+        "id": "m831c-q2a",
+        "type": "action",
+        "text": "Clear the recoil starter air inlet grill",
+        "actionText": "Clear restrictions and blockages. Press FAULT RESET pushbutton to reset fault indicator module.",
+        "nextNodeId": "m831c-q2b",
+        "tmPage": "WP 0008-3"
+      },
+      "m831c-q2b": {
+        "id": "m831c-q2b",
+        "type": "question",
+        "text": "Is the malfunction corrected?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m831c-q2by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m831c-q3"
+          }
+        ]
+      },
+      "m831c-q2by": {
+        "id": "m831c-q2by",
+        "type": "terminal",
+        "text": "ENGINE HIGH TEMP indicator — clear the recoil starter air inlet grill. Corrected by the operator action authorized in the TM.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "ENGINE HIGH TEMP indicator — clear the recoil starter air inlet grill"
+        }
+      },
+      "m831c-q3": {
+        "id": "m831c-q3",
+        "type": "question",
+        "text": "Is the air filter clogged?",
+        "options": [
+          {
+            "label": "Yes — clogged",
+            "nextNodeId": "m831c-q3a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m831c-q4"
+          }
+        ],
+        "tmPage": "WP 0011-2"
+      },
+      "m831c-q3a": {
+        "id": "m831c-q3a",
+        "type": "action",
+        "text": "Service the air filter",
+        "actionText": "Remove filter and inspect (WP 0011, Air Filter). Replace filter as required.",
+        "nextNodeId": "m831c-q3b",
+        "tmPage": "WP 0011-2"
+      },
+      "m831c-q3b": {
+        "id": "m831c-q3b",
+        "type": "question",
+        "text": "Is the malfunction corrected?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m831c-q3by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m831c-q4"
+          }
+        ]
+      },
+      "m831c-q3by": {
+        "id": "m831c-q3by",
+        "type": "terminal",
+        "text": "ENGINE HIGH TEMP indicator — service the air filter. Corrected by the operator action authorized in the TM.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "ENGINE HIGH TEMP indicator — service the air filter"
+        }
+      },
+      "m831c-q4": {
+        "id": "m831c-q4",
+        "type": "question",
+        "text": "Is the generator set overloaded?",
+        "options": [
+          {
+            "label": "Yes — overloaded",
+            "nextNodeId": "m831c-q4a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m831c-qz"
+          }
+        ],
+        "tmPage": "WP 0008-3"
+      },
+      "m831c-q4a": {
+        "id": "m831c-q4a",
+        "type": "action",
+        "text": "Reduce the load",
+        "actionText": "Reduce load. Press FAULT RESET pushbutton to reset fault indicator module.",
+        "nextNodeId": "m831c-q4b",
+        "tmPage": "WP 0008-3"
+      },
+      "m831c-q4b": {
+        "id": "m831c-q4b",
+        "type": "question",
+        "text": "Is the malfunction corrected?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m831c-q4by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m831c-qz"
+          }
+        ]
+      },
+      "m831c-q4by": {
+        "id": "m831c-q4by",
+        "type": "terminal",
+        "text": "ENGINE HIGH TEMP indicator — reduce the load. Corrected by the operator action authorized in the TM.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "ENGINE HIGH TEMP indicator — reduce the load"
+        }
+      },
+      "m831c-qz": {
+        "id": "m831c-qz",
+        "type": "terminal",
+        "text": "Performing the listed steps does not yield results. Refer trouble to field level maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "ENGINE HIGH TEMP indicator — not corrected by operator checks"
+        },
+        "tmPage": "WP 0008-3"
+      }
+    }
+  },
+  {
+    "categoryId": "gen-electrical",
+    "vehicleType": "MEP831A",
+    "tmReference": "TM 9-6115-639-13&P, WP 0008 Table 1, malfunctions 4, 5, 9, 13",
+    "rootNodeId": "m831l-q1",
+    "nodes": {
+      "m831l-q1": {
+        "id": "m831l-q1",
+        "type": "question",
+        "text": "What is the electrical problem?",
+        "options": [
+          {
+            "label": "Generator set fails to build up to rated voltage",
+            "nextNodeId": "m831l-v1"
+          },
+          {
+            "label": "Generator set fails to supply power to the load",
+            "nextNodeId": "m831l-p1"
+          },
+          {
+            "label": "Generator set causes radio interference",
+            "nextNodeId": "m831l-r1"
+          },
+          {
+            "label": "No power at convenience receptacle",
+            "nextNodeId": "m831l-g1"
+          }
+        ],
+        "tmPage": "WP 0007-3"
+      },
+      "m831l-v1": {
+        "id": "m831l-v1",
+        "type": "question",
+        "text": "Is the VOLTAGE ADJUST rheostat set incorrectly?",
+        "options": [
+          {
+            "label": "Yes",
+            "nextNodeId": "m831l-v1a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m831l-v2"
+          }
+        ],
+        "tmPage": "WP 0008-2"
+      },
+      "m831l-v1a": {
+        "id": "m831l-v1a",
+        "type": "action",
+        "text": "Adjust the VOLTAGE ADJUST rheostat",
+        "actionText": "Adjust rheostat to achieve rated voltage.",
+        "nextNodeId": "m831l-v1b",
+        "tmPage": "WP 0008-2"
+      },
+      "m831l-v1b": {
+        "id": "m831l-v1b",
+        "type": "question",
+        "text": "Is the malfunction corrected?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m831l-v1by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m831l-v2"
+          }
+        ]
+      },
+      "m831l-v1by": {
+        "id": "m831l-v1by",
+        "type": "terminal",
+        "text": "Fails to build up to rated voltage — adjust the voltage adjust rheostat. Corrected by the operator action authorized in the TM.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Fails to build up to rated voltage — adjust the voltage adjust rheostat"
+        }
+      },
+      "m831l-v2": {
+        "id": "m831l-v2",
+        "type": "question",
+        "text": "Is the Voltage Selector Switch access door not fully closed and secured (WP 0005, Operating Procedures)?",
+        "options": [
+          {
+            "label": "Yes — not secured",
+            "nextNodeId": "m831l-v2a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m831l-vz"
+          }
+        ],
+        "tmPage": "WP 0008-2"
+      },
+      "m831l-v2a": {
+        "id": "m831l-v2a",
+        "type": "action",
+        "text": "Close and secure the access door",
+        "actionText": "Close and secure access door.",
+        "nextNodeId": "m831l-v2b",
+        "tmPage": "WP 0008-2"
+      },
+      "m831l-v2b": {
+        "id": "m831l-v2b",
+        "type": "question",
+        "text": "Is the malfunction corrected?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m831l-v2by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m831l-vz"
+          }
+        ]
+      },
+      "m831l-v2by": {
+        "id": "m831l-v2by",
+        "type": "terminal",
+        "text": "Fails to build up to rated voltage — close and secure the access door. Corrected by the operator action authorized in the TM.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Fails to build up to rated voltage — close and secure the access door"
+        }
+      },
+      "m831l-vz": {
+        "id": "m831l-vz",
+        "type": "terminal",
+        "text": "Performing the listed steps does not yield results. Refer trouble to field level maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Fails to build up to rated voltage — not corrected by operator checks"
+        },
+        "tmPage": "WP 0008-2"
+      },
+      "m831l-p1": {
+        "id": "m831l-p1",
+        "type": "question",
+        "text": "Is the CIRCUIT INTERRUPTER switch in the OPEN position?",
+        "options": [
+          {
+            "label": "Yes — OPEN",
+            "nextNodeId": "m831l-p1a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m831l-p2"
+          }
+        ],
+        "tmPage": "WP 0008-2"
+      },
+      "m831l-p1a": {
+        "id": "m831l-p1a",
+        "type": "action",
+        "text": "Close the CIRCUIT INTERRUPTER",
+        "actionText": "Move switch to CLOSED position (WP 0004, Figure 1, Item 13).",
+        "nextNodeId": "m831l-p1b",
+        "tmPage": "WP 0008-2"
+      },
+      "m831l-p1b": {
+        "id": "m831l-p1b",
+        "type": "question",
+        "text": "Is the malfunction corrected?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m831l-p1by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m831l-p2"
+          }
+        ]
+      },
+      "m831l-p1by": {
+        "id": "m831l-p1by",
+        "type": "terminal",
+        "text": "Fails to supply power to the load — close the circuit interrupter. Corrected by the operator action authorized in the TM.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Fails to supply power to the load — close the circuit interrupter"
+        }
+      },
+      "m831l-p2": {
+        "id": "m831l-p2",
+        "type": "question",
+        "text": "Is the Ground Fault Circuit Interrupter (GFCI) tripped?",
+        "options": [
+          {
+            "label": "Yes — tripped",
+            "nextNodeId": "m831l-p2a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m831l-p3"
+          }
+        ],
+        "tmPage": "WP 0008-2"
+      },
+      "m831l-p2a": {
+        "id": "m831l-p2a",
+        "type": "action",
+        "text": "Reset the GFCI",
+        "actionText": "Reset GFCI by depressing button (WP 0004, Figure 1, Item 9).",
+        "nextNodeId": "m831l-p2b",
+        "tmPage": "WP 0008-2"
+      },
+      "m831l-p2b": {
+        "id": "m831l-p2b",
+        "type": "question",
+        "text": "Is the malfunction corrected?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m831l-p2by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m831l-p3"
+          }
+        ]
+      },
+      "m831l-p2by": {
+        "id": "m831l-p2by",
+        "type": "terminal",
+        "text": "Fails to supply power to the load — reset the gfci. Corrected by the operator action authorized in the TM.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Fails to supply power to the load — reset the gfci"
+        }
+      },
+      "m831l-p3": {
+        "id": "m831l-p3",
+        "type": "question",
+        "text": "Is the load hook-up incorrect?",
+        "options": [
+          {
+            "label": "Yes — incorrect",
+            "nextNodeId": "m831l-p3a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m831l-pz"
+          }
+        ],
+        "tmPage": "WP 0008-2"
+      },
+      "m831l-p3a": {
+        "id": "m831l-p3a",
+        "type": "action",
+        "text": "Correct the load hook-up",
+        "actionText": "Shut down the set (never connect or disconnect load cables while running). Match generator voltage output (Voltage Selector Switch position) with load requirement (see WP 0005, Operating Procedures). Set wiring in accordance with TERMINAL VOLTAGE data plate (WP 0002, Figure 4, Sheet 6 of 7).",
+        "nextNodeId": "m831l-p3b",
+        "tmPage": "WP 0008-2"
+      },
+      "m831l-p3b": {
+        "id": "m831l-p3b",
+        "type": "question",
+        "text": "Is the malfunction corrected?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m831l-p3by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m831l-pz"
+          }
+        ]
+      },
+      "m831l-p3by": {
+        "id": "m831l-p3by",
+        "type": "terminal",
+        "text": "Fails to supply power to the load — correct the load hook-up. Corrected by the operator action authorized in the TM.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Fails to supply power to the load — correct the load hook-up"
+        }
+      },
+      "m831l-pz": {
+        "id": "m831l-pz",
+        "type": "terminal",
+        "text": "Performing the listed steps does not yield results. Refer trouble to field level maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Fails to supply power to the load — not corrected by operator checks"
+        },
+        "tmPage": "WP 0008-3"
+      },
+      "m831l-r1": {
+        "id": "m831l-r1",
+        "type": "question",
+        "text": "Are output terminals and cables loose?",
+        "options": [
+          {
+            "label": "Yes — loose",
+            "nextNodeId": "m831l-r1a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m831l-r2"
+          }
+        ],
+        "tmPage": "WP 0008-3"
+      },
+      "m831l-r1a": {
+        "id": "m831l-r1a",
+        "type": "action",
+        "text": "Tighten output connections",
+        "actionText": "Shut down the set. Tighten connections using load wrench.",
+        "nextNodeId": "m831l-r1b",
+        "tmPage": "WP 0008-3"
+      },
+      "m831l-r1b": {
+        "id": "m831l-r1b",
+        "type": "question",
+        "text": "Is the malfunction corrected?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m831l-r1by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m831l-r2"
+          }
+        ]
+      },
+      "m831l-r1by": {
+        "id": "m831l-r1by",
+        "type": "terminal",
+        "text": "Radio interference — tighten output connections. Corrected by the operator action authorized in the TM.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Radio interference — tighten output connections"
+        }
+      },
+      "m831l-r2": {
+        "id": "m831l-r2",
+        "type": "question",
+        "text": "Is the ground wire loose?",
+        "options": [
+          {
+            "label": "Yes — loose",
+            "nextNodeId": "m831l-r2a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m831l-r3"
+          }
+        ],
+        "tmPage": "WP 0008-3"
+      },
+      "m831l-r2a": {
+        "id": "m831l-r2a",
+        "type": "action",
+        "text": "Tighten ground connection",
+        "actionText": "Tighten connection using load wrench.",
+        "nextNodeId": "m831l-r2b",
+        "tmPage": "WP 0008-3"
+      },
+      "m831l-r2b": {
+        "id": "m831l-r2b",
+        "type": "question",
+        "text": "Is the malfunction corrected?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m831l-r2by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m831l-r3"
+          }
+        ]
+      },
+      "m831l-r2by": {
+        "id": "m831l-r2by",
+        "type": "terminal",
+        "text": "Radio interference — tighten ground connection. Corrected by the operator action authorized in the TM.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Radio interference — tighten ground connection"
+        }
+      },
+      "m831l-r3": {
+        "id": "m831l-r3",
+        "type": "question",
+        "text": "Is the ground rod improperly installed or not operational?",
+        "options": [
+          {
+            "label": "Yes",
+            "nextNodeId": "m831l-r3a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m831l-rz"
+          }
+        ],
+        "tmPage": "WP 0008-3"
+      },
+      "m831l-r3a": {
+        "id": "m831l-r3a",
+        "type": "action",
+        "text": "Replace the ground rod",
+        "actionText": "Replace ground rod.",
+        "nextNodeId": "m831l-r3b",
+        "tmPage": "WP 0008-3"
+      },
+      "m831l-r3b": {
+        "id": "m831l-r3b",
+        "type": "question",
+        "text": "Is the malfunction corrected?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m831l-r3by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m831l-rz"
+          }
+        ]
+      },
+      "m831l-r3by": {
+        "id": "m831l-r3by",
+        "type": "terminal",
+        "text": "Radio interference — replace the ground rod. Corrected by the operator action authorized in the TM.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "Radio interference — replace the ground rod"
+        }
+      },
+      "m831l-rz": {
+        "id": "m831l-rz",
+        "type": "terminal",
+        "text": "Performing the listed steps does not yield results. Refer trouble to field level maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "Radio interference — not corrected by operator checks"
+        },
+        "tmPage": "WP 0008-3"
+      },
+      "m831l-g1": {
+        "id": "m831l-g1",
+        "type": "question",
+        "text": "Is the Ground Fault Circuit Interrupter (GFCI) tripped?",
+        "options": [
+          {
+            "label": "Yes — tripped",
+            "nextNodeId": "m831l-g1a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m831l-g2"
+          }
+        ],
+        "tmPage": "WP 0008-4"
+      },
+      "m831l-g1a": {
+        "id": "m831l-g1a",
+        "type": "action",
+        "text": "Reset the GFCI",
+        "actionText": "Reset GFCI by depressing button.",
+        "nextNodeId": "m831l-g1b",
+        "tmPage": "WP 0008-4"
+      },
+      "m831l-g1b": {
+        "id": "m831l-g1b",
+        "type": "question",
+        "text": "Is the malfunction corrected?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m831l-g1by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m831l-g2"
+          }
+        ]
+      },
+      "m831l-g1by": {
+        "id": "m831l-g1by",
+        "type": "terminal",
+        "text": "No power at convenience receptacle — reset the gfci. Corrected by the operator action authorized in the TM.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "No power at convenience receptacle — reset the gfci"
+        }
+      },
+      "m831l-g2": {
+        "id": "m831l-g2",
+        "type": "question",
+        "text": "Is the 10 Amp circuit breaker (on the back of the GFCI) tripped?",
+        "options": [
+          {
+            "label": "Yes — tripped",
+            "nextNodeId": "m831l-g2a"
+          },
+          {
+            "label": "No",
+            "nextNodeId": "m831l-gz"
+          }
+        ],
+        "tmPage": "WP 0008-4"
+      },
+      "m831l-g2a": {
+        "id": "m831l-g2a",
+        "type": "action",
+        "text": "Reset the 10 A circuit breaker",
+        "actionText": "Reset circuit breaker if tripped.",
+        "nextNodeId": "m831l-g2b",
+        "tmPage": "WP 0008-4"
+      },
+      "m831l-g2b": {
+        "id": "m831l-g2b",
+        "type": "question",
+        "text": "Is the malfunction corrected?",
+        "options": [
+          {
+            "label": "Yes — corrected",
+            "nextNodeId": "m831l-g2by"
+          },
+          {
+            "label": "No — still present",
+            "nextNodeId": "m831l-gz"
+          }
+        ]
+      },
+      "m831l-g2by": {
+        "id": "m831l-g2by",
+        "type": "terminal",
+        "text": "No power at convenience receptacle — reset the 10 a circuit breaker. Corrected by the operator action authorized in the TM.",
+        "terminal": {
+          "resolution": "operator-fix",
+          "readiness": "PMC",
+          "summary": "No power at convenience receptacle — reset the 10 a circuit breaker"
+        }
+      },
+      "m831l-gz": {
+        "id": "m831l-gz",
+        "type": "terminal",
+        "text": "Performing the listed steps does not yield results. Refer trouble to field level maintenance.",
+        "terminal": {
+          "resolution": "needs-maintenance",
+          "readiness": "NMC",
+          "summary": "No power at convenience receptacle — not corrected by operator checks"
+        },
+        "tmPage": "WP 0008-4"
+      }
+    }
+  }
+]

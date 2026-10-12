@@ -50,3 +50,36 @@ describe('DA 2404 rows', () => {
     expect(buildRows([], null)[0].deficiency).toMatch(/NO DEFICIENCIES/);
   });
 });
+
+describe('DA 2404 TM number and date', () => {
+  it.each([
+    // app VehicleType ids (what the field app syncs as vehicle_type)
+    ['M1151', 'TM 9-2320-387-10', '20090630'],
+    ['M1152', 'TM 9-2320-387-10', '20090630'],
+    ['LMTV_M1078', 'TM 9-2320-365-10', '20010531'],
+    ['M1101_TRAILER', 'TM 9-2330-392-14&P', '20010427'],
+    ['MEP803A', 'TM 9-6115-642-10', '19961030'],
+    ['M1097', 'TM 9-2320-280-10', '20040715'],
+    ['MEP802A', 'TM 9-6115-641-10', '20091015'],
+    ['MEP1030', 'TM 9-6115-749-10', '20110201'],
+    ['MEP831A', 'TM 9-6115-639-13&P', '20100430'],
+    // roster model strings
+    ['M1097A2', 'TM 9-2320-280-10', '20040715'],
+    ['m1097a1', 'TM 9-2320-280-10', '20040715'],
+    ['M1165A1', 'TM 9-2320-387-10', '20090630'],
+    ['MEP-802A', 'TM 9-6115-641-10', '20091015'],
+    ['MEP812A', 'TM 9-6115-641-10', '20091015'],
+    ['MEP-1030', 'TM 9-6115-749-10', '20110201'],
+    ['MEP-1031', 'TM 9-6115-749-10', '20110201'],
+    ['MEP831', 'TM 9-6115-639-13&P', '20100430'],
+    ['MEP-832A', 'TM 9-6115-639-13&P', '20100430'],
+  ])('%s -> %s (%s)', async (type, tm, tmDate) => {
+    const { tmFor } = await import('../src/da2404');
+    expect(tmFor(type)).toEqual(expect.objectContaining({ tm, tmDate }));
+  });
+
+  it('leaves the TM blank for unknown models', async () => {
+    const { tmFor } = await import('../src/da2404');
+    for (const m of [null, '', 'M1083A1', 'MEP804A', 'PP-3102']) expect(tmFor(m)).toEqual(expect.objectContaining({ tm: '', tmDate: '' }));
+  });
+});

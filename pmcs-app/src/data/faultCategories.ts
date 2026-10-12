@@ -26,6 +26,9 @@ export const FAULT_CATEGORIES: FaultCategory[] = [
   { id: 'missing-bii', label: 'Missing BII/Item', icon: 'package-x', hasDiagnosisTree: false, affectsReadiness: 'determined-by-tree' },
   { id: 'weapon-station', label: 'Weapon Station', icon: 'shield-alert', hasDiagnosisTree: false, affectsReadiness: 'determined-by-tree' },
   { id: 'controls', label: 'Controls / Pedals', icon: 'triangle-alert', hasDiagnosisTree: false, affectsReadiness: 'determined-by-tree' },
+  // M1097 (TM 9-2320-280-10) categories
+  { id: 'heater', label: 'Heater', icon: 'flame', hasDiagnosisTree: true, affectsReadiness: 'determined-by-tree' },
+  { id: 'winch', label: 'Winch', icon: 'cable', hasDiagnosisTree: true, affectsReadiness: 'determined-by-tree' },
   // Trailer-specific categories
   { id: 'trailer-electrical', label: 'Trailer Lights', icon: 'lightbulb', hasDiagnosisTree: true, affectsReadiness: 'determined-by-tree' },
   { id: 'trailer-brakes', label: 'Trailer Brakes', icon: 'octagon-alert', hasDiagnosisTree: true, affectsReadiness: 'determined-by-tree' },
@@ -40,6 +43,7 @@ export const FAULT_CATEGORIES: FaultCategory[] = [
   { id: 'gen-electrical', label: 'Electrical / Output', icon: 'zap', hasDiagnosisTree: true, affectsReadiness: 'determined-by-tree' },
   { id: 'gen-fuel', label: 'Fuel System', icon: 'fuel', hasDiagnosisTree: false, affectsReadiness: 'NMC' },
   { id: 'gen-housing', label: 'Housing / Skid Base', icon: 'shield-alert', hasDiagnosisTree: false, affectsReadiness: 'determined-by-tree' },
+  { id: 'gen-winterization', label: 'Winterization Kit', icon: 'snowflake', hasDiagnosisTree: false, affectsReadiness: 'determined-by-tree' },
 ];
 
 // Maps PMCS steps to relevant fault categories.
@@ -357,6 +361,250 @@ export const STEP_CATEGORIES: Record<string, string[]> = {
   'm1078-b-085': ['body-damage'],                                   // T2-2 #8 Troopseats (If Equipped)
   'm1078-b-086': ['body-damage'],                                   // T2-2 #9 Cargo Cover
   'm1078-b-087': ['body-damage', 'electrical'],                     // T2-2 #10 LMHC (If Equipped)
+  // ── M1097 HMMWV heavy variant (TM 9-2320-280-10 w/C3, Table 2-2) ──
+  'm1097-b-001': ['fluid-leak', 'body-damage'],  // BEFORE 1 Left Front, Side Exterior
+  'm1097-b-002': ['tire-damage'],  // BEFORE 2 Left Side Tires
+  'm1097-b-003': ['fluid-leak', 'body-damage'],  // BEFORE 3 Rear Exterior
+  'm1097-b-004': ['fluid-leak', 'body-damage'],  // BEFORE 5 Right Front, Side Exterior
+  'm1097-b-005': ['tire-damage'],  // BEFORE 6 Right Side Tires
+  'm1097-b-006': ['fluid-leak', 'body-damage'],  // BEFORE 7 Front
+  'm1097-b-007': ['steering', 'fluid-leak'],  // BEFORE 7.1 Power Steering Reservoir
+  'm1097-b-008': ['cooling-system', 'engine-overheat'],  // BEFORE 8 Cooling System
+  'm1097-b-009': ['missing-bii', 'body-damage'],  // BEFORE 9 Seat and Seatbelts
+  'm1097-b-010': ['missing-bii'],  // BEFORE 10 Fire Extinguisher
+  'm1097-b-011': ['wont-start', 'electrical', 'engine-oil-pressure', 'engine-overheat', 'engine-smoke', 'brake-issue', 'fuel-system'],  // BEFORE 12 Instrument Panel
+  'm1097-b-012': ['brake-issue'],  // BEFORE 14 Brakes
+  'm1097-b-013': ['engine-oil-pressure', 'engine-overheat', 'engine-smoke', 'electrical'],  // DURING 17 Controls and Indicators
+  'm1097-b-014': ['brake-issue', 'unusual-noise'],  // DURING 18 Brakes
+  'm1097-b-015': ['steering', 'tire-damage'],  // DURING 19 Steering
+  'm1097-b-016': ['controls'],  // DURING 19.1 Accelerator Pedal
+  'm1097-b-017': ['unusual-noise', 'transmission'],  // DURING 20 Powertrain
+  'm1097-b-018': ['transmission'],  // DURING 21 Transmission
+  'm1097-b-019': ['transmission'],  // AFTER 22.1 Gear Shifter Lever
+  'm1097-b-020': ['transmission', 'fluid-leak'],  // AFTER 23 Transmission Fluid
+  'm1097-b-021': ['fuel-system', 'fluid-leak'],  // AFTER 24 Fuel Filter
+  'm1097-b-022': ['tire-damage'],  // AFTER 25 Left Side Tires
+  'm1097-b-023': ['glass-damage', 'missing-bii'],  // AFTER 26 Mirror (Left Side)
+  'm1097-b-024': ['fluid-leak', 'body-damage'],  // AFTER 27 Left Front, Side Exterior
+  'm1097-b-025': ['fluid-leak', 'body-damage'],  // AFTER 28 Rear Exterior
+  'm1097-b-026': ['tire-damage'],  // AFTER 30 Right Side Tires
+  'm1097-b-027': ['glass-damage', 'missing-bii'],  // AFTER 31 Mirror (Right Side)
+  'm1097-b-028': ['fluid-leak', 'body-damage'],  // AFTER 32 Right Front, Side Exterior
+  'm1097-b-029': ['engine-oil-pressure', 'fluid-leak'],  // AFTER 33 Engine Oil
+  'm1097-b-030': ['steering', 'fluid-leak'],  // AFTER 34 Power Steering Lines and Fittings
+  'm1097-b-031': ['cooling-system', 'fluid-leak'],  // AFTER 36 Cooling System
+  'm1097-b-032': ['brake-issue', 'fluid-leak'],  // AFTER 37 Master Cylinder
+  'm1097-b-033': ['body-damage'],  // AFTER 37.1 Windshield Washer Jar
+  'm1097-b-034': ['electrical'],  // AFTER 38 Lights
+  'm1097-b-035': ['electrical'],  // AFTER 39 Horn
+  'm1097-b-036': ['glass-damage', 'electrical'],  // AFTER 40 Windshield and Wipers
+  'm1097-b-037': ['electrical'],  // AFTER 41 Light Switches
+  'm1097-b-038': ['controls'],  // WEEKLY 41.1 Hand Throttle
+  'm1097-b-039': ['tire-damage'],  // WEEKLY 42 Tires
+  'm1097-b-040': ['unusual-noise', 'engine-smoke'],  // WEEKLY 43 Exhaust System
+  'm1097-b-041': ['fluid-leak', 'unusual-noise'],  // WEEKLY 44 Shock Absorbers
+  'm1097-b-042': ['body-damage', 'glass-damage'],  // WEEKLY 45 Doors and Windows
+  'm1097-b-043': ['body-damage'],  // WEEKLY 46 Tailgate
+  'm1097-b-044': ['heater', 'fuel-system'],  // WEEKLY 49 Front Arctic Heater and/or Rear Troop/Cargo Heater (Vehicle 
+  'm1097-b-045': ['engine-smoke'],  // WEEKLY 51 Air Cleaner
+  'm1097-b-046': ['electrical', 'steering'],  // WEEKLY 52 Alternator Brackets
+  'm1097-b-047': ['cooling-system', 'engine-overheat', 'fluid-leak', 'unusual-noise'],  // WEEKLY 53 Cooling System
+  'm1097-b-048': ['electrical', 'wont-start'],  // WEEKLY 54 Batteries
+  'm1097-b-049': ['missing-bii'],  // WEEKLY 58 Tiedowns
+  'm1097-b-050': ['body-damage'],  // WEEKLY 63 Tow Pintle
+  'm1097-b-051': ['body-damage'],  // WEEKLY 64 Tow Hooks
+  'm1097-b-052': ['electrical'],  // WEEKLY 65 Trailer Electrical Connector
+  'm1097-b-053': ['brake-issue'],  // WEEKLY 66 Parking Brake
+  'm1097-b-054': ['body-damage'],  // MONTHLY 68 Corrosion
+  'm1097-b-055': ['body-damage'],  // MONTHLY 69 Tailgate
+  'm1097-b-056': ['body-damage'],  // MONTHLY 71 Shelter Mount Kit (M1037, M1042, M1097, M1097A1, M1097A2, an
+  'm1097-b-057': ['winch'],  // MONTHLY 72 Winch (Vehicles with winch)
+  'm1097-b-058': ['body-damage'],  // MONTHLY 75 Zippers
+  'm1097-b-059': ['body-damage'],  // MONTHLY 76 Skid Plates (Vehicles equipped with skid plate)
+  // ── MEP802A (TM 9-6115-641-10) ──
+  'mep802a-b-001': ['gen-housing'],                                                   // BEFORE 1 Housing
+  'mep802a-b-002': ['gen-housing'],                                                   // BEFORE 2 Identification Plates
+  'mep802a-b-003': ['gen-housing'],                                                   // BEFORE 3 Skid Base
+  'mep802a-b-004': ['gen-housing'],                                                   // BEFORE 4 Acoustical Materials
+  'mep802a-b-005': ['gen-engine'],                                                    // BEFORE 5 Engine Assembly
+  'mep802a-b-006': ['gen-fuel'],                                                      // BEFORE 6 Fuel System
+  'mep802a-b-007': ['gen-fuel'],                                                      // BEFORE 7 Fuel Filter/Water Separator
+  'mep802a-b-008': ['gen-oil-pressure'],                                              // BEFORE 8 Lubrication System
+  'mep802a-b-009': ['gen-overheat'],                                                  // BEFORE 9 Radiator
+  'mep802a-b-010': ['gen-overheat'],                                                  // BEFORE 10 Hoses
+  'mep802a-b-011': ['gen-overheat', 'gen-engine'],                                    // BEFORE 11 Cooling Fan
+  'mep802a-b-012': ['gen-overheat'],                                                  // BEFORE 11.1 Water Pump
+  'mep802a-b-013': ['gen-overheat', 'gen-electrical', 'gen-engine'],                  // BEFORE 12 Fan Belt
+  'mep802a-b-014': ['gen-overheat'],                                                  // BEFORE 13 Overflow Bottle
+  'mep802a-b-015': ['gen-exhaust'],                                                   // BEFORE 14 Exhaust System
+  'mep802a-b-016': ['gen-engine', 'gen-exhaust'],                                     // BEFORE 15 Air Cleaner Assembly
+  'mep802a-b-017': ['gen-electrical'],                                                // BEFORE 16 Ground Rod Cable and Connections
+  'mep802a-b-018': ['gen-electrical'],                                                // BEFORE 17 Batteries
+  'mep802a-b-019': ['gen-electrical'],                                                // BEFORE 18 Battery Cables
+  'mep802a-b-020': ['gen-electrical'],                                                // BEFORE 19 Output Box Assembly
+  'mep802a-b-021': ['gen-electrical'],                                                // BEFORE 20 Controls and Indicators
+  'mep802a-b-022': ['gen-electrical'],                                                // BEFORE 21 Control Box Harness
+  'mep802a-b-023': ['gen-housing'],                                                   // DURING 22 Housing
+  'mep802a-b-024': ['gen-engine'],                                                    // DURING 23 Engine Assembly
+  'mep802a-b-025': ['gen-fuel'],                                                      // DURING 24 Fuel System
+  'mep802a-b-026': ['gen-oil-pressure'],                                              // DURING 25 Lubrication System
+  'mep802a-b-027': ['gen-overheat', 'gen-engine'],                                    // DURING 26 Cooling Fan
+  'mep802a-b-028': ['gen-overheat'],                                                  // DURING 27 Overflow Bottle
+  'mep802a-b-029': ['gen-electrical'],                                                // DURING 28 Ground Rod Cable and Connections
+  'mep802a-b-030': ['gen-electrical', 'gen-oil-pressure', 'gen-overheat'],            // DURING 29 Controls and Indicators
+  'mep802a-b-031': ['gen-housing'],                                                   // AFTER 30 Housing
+  'mep802a-b-032': ['gen-housing'],                                                   // AFTER 31 Identification Plates
+  'mep802a-b-033': ['gen-housing'],                                                   // AFTER 32 Skid Base
+  'mep802a-b-034': ['gen-engine'],                                                    // AFTER 33 Engine Assembly
+  'mep802a-b-035': ['gen-fuel'],                                                      // AFTER 34 Fuel System
+  'mep802a-b-036': ['gen-fuel'],                                                      // AFTER 35 Fuel Filter/Water Separator
+  'mep802a-b-037': ['gen-oil-pressure'],                                              // AFTER 36 Lubrication System
+  'mep802a-b-038': ['gen-overheat'],                                                  // AFTER 37 Radiator
+  'mep802a-b-039': ['gen-overheat'],                                                  // AFTER 38 Hoses
+  'mep802a-b-040': ['gen-overheat', 'gen-electrical', 'gen-engine'],                  // AFTER 39 Fan Belt
+  'mep802a-b-041': ['gen-electrical'],                                                // AFTER 40 Controls and Indicators
+  'mep802a-b-042': ['gen-winterization'],                                             // BEFORE 41 Heater Assembly
+  'mep802a-b-043': ['gen-winterization'],                                             // BEFORE 42 Control Unit
+  'mep802a-b-044': ['gen-winterization'],                                             // BEFORE 43 Fuel Pump
+  'mep802a-b-045': ['gen-winterization'],                                             // BEFORE 44 Fuel Tank
+  'mep802a-b-046': ['gen-winterization'],                                             // BEFORE 45 Fuel Lines
+  'mep802a-b-047': ['gen-winterization'],                                             // BEFORE 46 Heater
+  'mep802a-b-048': ['gen-winterization'],                                             // BEFORE 47 Exhaust Hose
+  'mep802a-b-049': ['gen-winterization'],                                             // BEFORE 48 Air Inlet Hose
+  'mep802a-b-050': ['gen-winterization'],                                             // BEFORE 49 Winterization Kit Coolant Lines
+  'mep802a-b-051': ['gen-winterization'],                                             // BEFORE 50 Coolant Pump
+  'mep802a-b-052': ['gen-winterization'],                                             // BEFORE 51 Coolant Lines
+  'mep802a-b-053': ['gen-winterization'],                                             // BEFORE 52 Wire Harness
+  'mep802a-b-054': ['gen-winterization', 'gen-electrical'],                           // BEFORE 53 Heater Control and Switch Lamp
+  'mep802a-b-055': ['gen-winterization'],                                             // DURING 54 Heater Assembly
+  'mep802a-b-056': ['gen-winterization'],                                             // DURING 55 All Fuel Connections
+  'mep802a-b-057': ['gen-winterization'],                                             // DURING 56 All Coolant Connections
+  'mep802a-b-058': ['gen-winterization'],                                             // AFTER 57 Heater Assembly
+  'mep802a-b-059': ['gen-winterization'],                                             // AFTER 58 Control Unit
+  'mep802a-b-060': ['gen-winterization'],                                             // AFTER 59 All Fuel Connections
+  'mep802a-b-061': ['gen-winterization'],                                             // AFTER 60 Fuel Pump
+  'mep802a-b-062': ['gen-winterization'],                                             // AFTER 61 Heater
+  'mep802a-b-063': ['gen-winterization'],                                             // AFTER 62 Exhaust Hose
+  'mep802a-b-064': ['gen-winterization'],                                             // AFTER 63 Air Inlet Hose
+  'mep802a-b-065': ['gen-winterization'],                                             // AFTER 64 All Coolant Connections
+  'mep802a-b-066': ['gen-winterization'],                                             // AFTER 65 Wire Harness
+  // ── MEP1030 (TM 9-6115-749-10) ──
+  'mep1030-b-001': ['gen-electrical'],                                                // BEFORE 1 Ground Rod, Clamp, and Cable
+  'mep1030-b-002': ['gen-housing'],                                                   // BEFORE 2 Rear Panel
+  'mep1030-b-003': ['gen-housing'],                                                   // BEFORE 3 ID Plates and Labels
+  'mep1030-b-004': ['gen-housing'],                                                   // BEFORE 4 DCS Cover
+  'mep1030-b-005': ['gen-electrical'],                                                // BEFORE 5 DCS
+  'mep1030-b-006': ['gen-electrical'],                                                // BEFORE 6 Convenience Receptacle
+  'mep1030-b-007': ['gen-housing'],                                                   // BEFORE 7 Flexible Sleeve
+  'mep1030-b-008': ['gen-fuel'],                                                      // BEFORE 8 Fuel Fill
+  'mep1030-b-009': ['gen-housing'],                                                   // BEFORE 9 Rear Door
+  'mep1030-b-010': ['gen-fuel'],                                                      // BEFORE 10 Fuel Tank
+  'mep1030-b-011': ['gen-fuel'],                                                      // BEFORE 11 Fuel System Hoses
+  'mep1030-b-012': ['gen-fuel'],                                                      // BEFORE 12 Fuel Pumps and Fuel Manifold
+  'mep1030-b-013': ['gen-electrical'],                                                // BEFORE 13 Electrical Connections
+  'mep1030-b-014': ['gen-housing', 'gen-overheat'],                                   // BEFORE 14 Top Panel
+  'mep1030-b-015': ['gen-housing'],                                                   // BEFORE 15 ID Plates and Labels
+  'mep1030-b-016': ['gen-overheat'],                                                  // BEFORE 16 Radiator, Exterior
+  'mep1030-b-017': ['gen-overheat'],                                                  // BEFORE 17 Radiator, Interior
+  'mep1030-b-018': ['gen-exhaust'],                                                   // BEFORE 18 Muffler
+  'mep1030-b-019': ['gen-housing'],                                                   // BEFORE 19 Right-Side Panel
+  'mep1030-b-020': ['gen-housing'],                                                   // BEFORE 20 ID Plates and Labels
+  'mep1030-b-021': ['gen-housing'],                                                   // BEFORE 21 Skid Base
+  'mep1030-b-022': ['gen-oil-pressure'],                                              // BEFORE 22 Oil Drain Outlet
+  'mep1030-b-023': ['gen-housing'],                                                   // BEFORE 23 Output Box Door
+  'mep1030-b-024': ['gen-housing'],                                                   // BEFORE 24 Right-Side Door
+  'mep1030-b-025': ['gen-electrical'],                                                // BEFORE 25 Output Connections
+  'mep1030-b-026': ['gen-housing'],                                                   // BEFORE 26 Output Terminal Board Protective Cover
+  'mep1030-b-027': ['gen-housing'],                                                   // BEFORE 27 ID Plates and Labels
+  'mep1030-b-028': ['gen-housing'],                                                   // BEFORE 28 Terminal Nut Wrench
+  'mep1030-b-029': ['gen-engine', 'gen-fuel'],                                        // BEFORE 29 Engine and Compartment Base
+  'mep1030-b-030': ['gen-exhaust'],                                                   // BEFORE 30 Internal Exhaust Pipe
+  'mep1030-b-031': ['gen-overheat'],                                                  // BEFORE 31 Radiator Hoses and Pipes
+  'mep1030-b-032': ['gen-winterization'],                                             // BEFORE 32 Winterization Kit (If Installed)
+  'mep1030-b-033': ['gen-oil-pressure'],                                              // BEFORE 33 Oil Drain Line
+  'mep1030-b-034': ['gen-oil-pressure'],                                              // BEFORE 34 Oil Level
+  'mep1030-b-035': ['gen-fuel'],                                                      // BEFORE 35 Fuel Lines
+  'mep1030-b-036': ['gen-fuel'],                                                      // BEFORE 36 Fuel Filter/Water Separator
+  'mep1030-b-037': ['gen-engine', 'gen-exhaust'],                                     // BEFORE 37 Air Cleaner Assembly
+  'mep1030-b-038': ['gen-electrical'],                                                // BEFORE 38 AC Generator
+  'mep1030-b-039': ['gen-housing'],                                                   // BEFORE 39 Storage Box
+  'mep1030-b-040': ['gen-housing'],                                                   // BEFORE 40 Front Panel
+  'mep1030-b-041': ['gen-housing'],                                                   // BEFORE 41 ID Plates and Labels
+  'mep1030-b-042': ['gen-electrical'],                                                // BEFORE 42 NATO Slave Receptacle
+  'mep1030-b-043': ['gen-housing'],                                                   // BEFORE 43 Grounding Rod Storage Door
+  'mep1030-b-044': ['gen-housing'],                                                   // BEFORE 44 Left-Side Panel
+  'mep1030-b-045': ['gen-fuel'],                                                      // BEFORE 45 Fuel Drain Fitting
+  'mep1030-b-046': ['gen-housing'],                                                   // BEFORE 46 Skid Base
+  'mep1030-b-047': ['gen-housing'],                                                   // BEFORE 47 Left-Side Door
+  'mep1030-b-048': ['gen-oil-pressure'],                                              // BEFORE 48 Oil Filter
+  'mep1030-b-049': ['gen-engine', 'gen-fuel'],                                        // BEFORE 49 Engine and Compartment Base
+  'mep1030-b-050': ['gen-overheat'],                                                  // BEFORE 50 Coolant Overflow Bottle
+  'mep1030-b-051': ['gen-electrical', 'gen-overheat'],                                // BEFORE 51 Battery-Charging Alternator
+  'mep1030-b-052': ['gen-electrical'],                                                // BEFORE 52 Batteries
+  'mep1030-b-053': ['gen-electrical', 'gen-engine'],                                  // BEFORE 53 Starter
+  'mep1030-b-054': ['gen-electrical'],                                                // BEFORE 54 AC Generator
+  'mep1030-b-055': ['gen-housing'],                                                   // BEFORE 55 ID Plates and Labels
+  'mep1030-b-056': ['gen-overheat'],                                                  // BEFORE 56 Radiator Hoses and Pipes
+  'mep1030-b-057': ['gen-housing'],                                                   // BEFORE 57 Document Box
+  'mep1030-b-058': ['gen-electrical', 'gen-engine', 'gen-oil-pressure', 'gen-overheat'],// DURING 58 DCS
+  'mep1030-b-059': ['gen-engine', 'gen-exhaust'],                                     // DURING 59 Engine
+  'mep1030-b-060': ['gen-electrical'],                                                // DURING 60 Ground Rod and Connections
+  'mep1030-b-061': ['gen-housing'],                                                   // DURING 61 Rear Door
+  'mep1030-b-062': ['gen-electrical'],                                                // DURING 62 Convenience Receptacle
+  'mep1030-b-063': ['gen-fuel'],                                                      // DURING 63 Fuel Tank
+  'mep1030-b-064': ['gen-fuel'],                                                      // DURING 64 Fuel System Hoses
+  'mep1030-b-065': ['gen-fuel'],                                                      // DURING 65 Fuel Pumps and Fuel Manifold
+  'mep1030-b-066': ['gen-electrical'],                                                // DURING 66 Electrical Connections
+  'mep1030-b-067': ['gen-electrical'],                                                // DURING 67 Relay Panel and Electrical Connections
+  'mep1030-b-068': ['gen-engine', 'gen-fuel'],                                        // DURING 68 Engine and Compartment Base
+  'mep1030-b-069': ['gen-oil-pressure'],                                              // DURING 69 Oil Drain Line
+  'mep1030-b-070': ['gen-fuel'],                                                      // DURING 70 Fuel Lines and Fuel Filter/Water Separator
+  'mep1030-b-071': ['gen-oil-pressure'],                                              // DURING 71 Oil Level
+  'mep1030-b-072': ['gen-electrical'],                                                // DURING 72 AC Generator
+  'mep1030-b-073': ['gen-fuel'],                                                      // DURING 73 Fuel Drain Fitting
+  'mep1030-b-074': ['gen-overheat'],                                                  // DURING 74 Cooling Fan
+  'mep1030-b-075': ['gen-engine', 'gen-fuel'],                                        // DURING 75 Engine and Compartment Base
+  'mep1030-b-076': ['gen-overheat'],                                                  // DURING 76 Coolant Overflow Bottle
+  'mep1030-b-077': ['gen-electrical'],                                                // DURING 77 AC Generator
+  'mep1030-b-078': ['gen-fuel'],                                                      // AFTER 78 Fuel Fill
+  'mep1030-b-079': ['gen-fuel'],                                                      // AFTER 79 Fuel Tank
+  'mep1030-b-080': ['gen-electrical'],                                                // AFTER 80 Output Connections
+  'mep1030-b-081': ['gen-housing'],                                                   // AFTER 81 Output Terminal Board Protective Cover
+  'mep1030-b-082': ['gen-oil-pressure'],                                              // AFTER 82 Oil Drain Outlet
+  'mep1030-b-083': ['gen-engine', 'gen-fuel'],                                        // AFTER 83 Engine and Compartment Base
+  'mep1030-b-084': ['gen-oil-pressure'],                                              // AFTER 84 Oil Level
+  'mep1030-b-085': ['gen-fuel'],                                                      // AFTER 85 Fuel Drain Fitting
+  'mep1030-b-086': ['gen-electrical'],                                                // AFTER 86 Batteries
+  'mep1030-b-087': ['gen-electrical'],                                                // AFTER 87 Battery Cables
+  'mep1030-b-088': ['gen-engine', 'gen-fuel'],                                        // AFTER 88 Engine and Compartment Base
+  'mep1030-b-089': ['gen-overheat'],                                                  // AFTER 89 Coolant Overflow Bottle
+  'mep1030-b-090': ['gen-housing', 'gen-overheat'],                                   // AFTER 90 Intake and Exhaust Grates
+  'mep1030-b-091': ['gen-overheat'],                                                  // AFTER 91 Radiator, Interior
+  // ── MEP831A (TM 9-6115-639-13&P) ──
+  'mep831a-b-001': ['gen-housing'],                                                   // BEFORE 1 Overall Generator Set
+  'mep831a-b-002': ['gen-housing', 'gen-overheat'],                                   // BEFORE 2 Generator Set Main Access Cover
+  'mep831a-b-003': ['gen-electrical'],                                                // BEFORE 3 Control Box and Output Panel
+  'mep831a-b-004': ['gen-electrical'],                                                // BEFORE 4 Convenience Receptacle (60 Hz Only)
+  'mep831a-b-005': ['gen-electrical'],                                                // BEFORE 5 NATO Slave Receptacle
+  'mep831a-b-006': ['gen-electrical'],                                                // BEFORE 6 Output Panel
+  'mep831a-b-007': ['gen-exhaust'],                                                   // BEFORE 7 Exhaust System
+  'mep831a-b-008': ['gen-fuel'],                                                      // BEFORE 8 Fuel Fill Ports
+  'mep831a-b-009': ['gen-fuel'],                                                      // BEFORE 9 Fuel Tank and Hoses
+  'mep831a-b-010': ['gen-fuel'],                                                      // BEFORE 10 Fuel Filter/Water Separator
+  'mep831a-b-011': ['gen-housing'],                                                   // BEFORE 11 Skid Base
+  'mep831a-b-012': ['gen-electrical', 'gen-engine'],                                  // BEFORE 12 Battery
+  'mep831a-b-013': ['gen-electrical'],                                                // BEFORE 13 Frequency Converter (A8)
+  'mep831a-b-014': ['gen-oil-pressure'],                                              // BEFORE 14 Engine Oil
+  'mep831a-b-015': ['gen-engine', 'gen-exhaust', 'gen-overheat'],                     // BEFORE 15 Engine Air Filter
+  'mep831a-b-016': ['gen-electrical'],                                                // BEFORE 16 Engine Alternator Compartment
+  'mep831a-b-017': ['gen-electrical'],                                                // DURING 17 VOLTAGE and LOAD Meters (Control Panel)
+  'mep831a-b-018': ['gen-fuel', 'gen-engine'],                                        // DURING 18 FUEL LEVEL Meter (Located on Control Panel)
+  'mep831a-b-019': ['gen-oil-pressure'],                                              // DURING 19 Engine Oil (After 8 Hours of Constant Use)
+  'mep831a-b-020': ['gen-fuel'],                                                      // DURING 20 Fuel Filter/Water Separator (After 8 Hours of Constant Use)
+  'mep831a-b-021': ['gen-fuel'],                                                      // AFTER 21 Fuel Lines
+  'mep831a-b-022': ['gen-housing'],                                                   // AFTER 22 Overall Generator Set
+  'mep831a-b-023': ['gen-housing'],                                                   // AFTER 23 Data Plates
+  'mep831a-b-024': ['gen-fuel', 'gen-engine'],                                        // AFTER 24 Engine
 };
 
 export function getCategoriesForStep(stepId: string): FaultCategory[] {

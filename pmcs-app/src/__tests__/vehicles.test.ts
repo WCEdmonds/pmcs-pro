@@ -4,7 +4,9 @@ import type { VehicleType } from '../types';
 
 describe('VEHICLE_REGISTRY', () => {
   it('has entries for all supported vehicle types', () => {
-    const expectedTypes: VehicleType[] = ['M1151', 'M1152', 'LMTV_M1078', 'M1101_TRAILER', 'MEP803A'];
+    const expectedTypes: VehicleType[] = [
+      'M1151', 'M1152', 'M1097', 'LMTV_M1078', 'M1101_TRAILER', 'MEP803A', 'MEP802A', 'MEP1030', 'MEP831A',
+    ];
     for (const type of expectedTypes) {
       const entry = VEHICLE_REGISTRY.find((v) => v.type === type);
       expect(entry, `Missing registry entry for ${type}`).toBeDefined();
@@ -39,6 +41,8 @@ describe('vehicle item counts', () => {
     const files: Record<string, string> = {
       M1151: 'm1151-hmmwv', M1152: 'm1152-hmmwv', LMTV_M1078: 'm1078-lmtv',
       M1101_TRAILER: 'm1101-trailer', MEP803A: 'mep803a-generator',
+      M1097: 'm1097-hmmwv', MEP802A: 'mep802a-generator', MEP1030: 'mep1030-generator',
+      MEP831A: 'mep831a-generator',
     };
     for (const v of VEHICLE_REGISTRY) {
       const data = (await import(`../data/pmcs/${files[v.type]}.json`)).default as { zones: { steps: unknown[] }[] };

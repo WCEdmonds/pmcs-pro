@@ -28,6 +28,8 @@ interface VehicleFamily {
   id: string;
   name: string;
   image: string;
+  /** Where to find the model number, shown on the variant picker. */
+  variantHint?: string;
   variants: VehicleVariant[];
 }
 
@@ -50,6 +52,12 @@ const VEHICLE_FAMILIES: VehicleFamily[] = [
         name: 'M1152 / M1152A1',
         hint: 'Shelter Carrier — soft-top or expandable shelter on back',
         itemCount: itemCountFor('M1152'),
+      },
+      {
+        type: 'M1097',
+        name: 'M1097 / M1097A1 / M1097A2',
+        hint: 'Heavy Variant — 2-door cargo/troop or shelter carrier (TM 9-2320-280-10)',
+        itemCount: itemCountFor('M1097'),
       },
     ],
   },
@@ -83,12 +91,31 @@ const VEHICLE_FAMILIES: VehicleFamily[] = [
     id: 'generator',
     name: 'Generator',
     image: mep803aHome,
+    variantHint: 'Not sure? Check the model number on the generator set identification plate.',
     variants: [
       {
         type: 'MEP803A',
         name: 'MEP-803A / MEP-813A',
         hint: '10kW Tactical Quiet Generator Set',
         itemCount: itemCountFor('MEP803A'),
+      },
+      {
+        type: 'MEP802A',
+        name: 'MEP-802A / MEP-812A',
+        hint: '5kW Tactical Quiet Generator Set',
+        itemCount: itemCountFor('MEP802A'),
+      },
+      {
+        type: 'MEP1030',
+        name: 'MEP-1030 / MEP-1031',
+        hint: '5kW AMMPS Generator Set',
+        itemCount: itemCountFor('MEP1030'),
+      },
+      {
+        type: 'MEP831A',
+        name: 'MEP-831A / MEP-832A',
+        hint: '3kW Tactical Quiet Generator Set',
+        itemCount: itemCountFor('MEP831A'),
       },
     ],
   },
@@ -158,7 +185,7 @@ export default function HomePage() {
             Which {selectedFamily.name}?
           </h1>
           <p className="mt-1 text-text-secondary text-sm">
-            Not sure? Check the data plate on the driver's door frame.
+            {selectedFamily.variantHint ?? "Not sure? Check the data plate on the driver's door frame."}
           </p>
         </div>
 

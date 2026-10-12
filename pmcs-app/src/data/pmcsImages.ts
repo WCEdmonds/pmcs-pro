@@ -4,7 +4,10 @@
 // when a step that uses them is shown). Keep each glob list in sync with the item maps: every page
 // referenced by an item map must be listed, and nothing else (unlisted files are not shipped).
 // File names: m1078/m1151 `page-<PDF page>.png` are crops of that PDF page of the TM;
-// m1101/mep803a `fig-<figure no.>.png` are TM figures. All images are ≤150 KB grayscale PNGs.
+// m1097 `page-<PDF page>.png` likewise (TM 9-2320-280-10);
+// m1101/mep803a `fig-<figure no.>.png` are TM figures; mep802a/mep1030/mep831a `fig-<WP>-<figure no.>.png` are
+// work-package figures (e.g. fig-0010-1 = WP 0010, Figure 1; fig-0004-1-4 = WP 0004 Figure 1 sheet 4).
+// All images are ≤150 KB grayscale PNGs.
 
 type UrlMap = Record<string, string>;
 
@@ -72,8 +75,80 @@ const hmmwvPages = import.meta.glob([
   '../assets/images/m1151/pmcs/page-182.png',
 ], { eager: true, query: '?url', import: 'default' }) as UrlMap;
 
+// TM 9-2320-280-10 w/C3 (M1097) — PDF page renders of Table 2-2 rows; only pages mapped in M1097_ITEM_TO_PAGE.
+const m1097Pages = import.meta.glob([
+  '../assets/images/m1097/pmcs/page-120.png',
+  '../assets/images/m1097/pmcs/page-121.png',
+  '../assets/images/m1097/pmcs/page-122.png',
+  '../assets/images/m1097/pmcs/page-123.png',
+  '../assets/images/m1097/pmcs/page-124.png',
+  '../assets/images/m1097/pmcs/page-125.png',
+  '../assets/images/m1097/pmcs/page-127.png',
+  '../assets/images/m1097/pmcs/page-128.png',
+  '../assets/images/m1097/pmcs/page-130.png',
+  '../assets/images/m1097/pmcs/page-131.png',
+  '../assets/images/m1097/pmcs/page-132.png',
+  '../assets/images/m1097/pmcs/page-133.png',
+  '../assets/images/m1097/pmcs/page-134.png',
+  '../assets/images/m1097/pmcs/page-135.png',
+  '../assets/images/m1097/pmcs/page-137.png',
+  '../assets/images/m1097/pmcs/page-138.png',
+  '../assets/images/m1097/pmcs/page-139.png',
+  '../assets/images/m1097/pmcs/page-140.png',
+  '../assets/images/m1097/pmcs/page-141.png',
+  '../assets/images/m1097/pmcs/page-142.png',
+  '../assets/images/m1097/pmcs/page-143.png',
+  '../assets/images/m1097/pmcs/page-147.png',
+  '../assets/images/m1097/pmcs/page-148.png',
+  '../assets/images/m1097/pmcs/page-150.png',
+  '../assets/images/m1097/pmcs/page-151.png',
+  '../assets/images/m1097/pmcs/page-152.png',
+  '../assets/images/m1097/pmcs/page-153.png',
+  '../assets/images/m1097/pmcs/page-155.png',
+  '../assets/images/m1097/pmcs/page-158.png',
+  '../assets/images/m1097/pmcs/page-159.png',
+  '../assets/images/m1097/pmcs/page-160.png',
+  '../assets/images/m1097/pmcs/page-162.png',
+], { eager: true, query: '?url', import: 'default' }) as UrlMap;
+
 const trailerFigs = import.meta.glob('../assets/images/m1101/pmcs/fig-*.png', { eager: true, query: '?url', import: 'default' }) as UrlMap;
 const mepFigs = import.meta.glob('../assets/images/mep803a/pmcs/fig-*.png', { eager: true, query: '?url', import: 'default' }) as UrlMap;
+
+// TM 9-6115-641-10 (MEP802A) — only figures mapped in MEP802A_ITEM_TO_FIG.
+const mep802aFigs = import.meta.glob([
+  '../assets/images/mep802a/pmcs/fig-0004-1.png',
+  '../assets/images/mep802a/pmcs/fig-0005-1.png',
+  '../assets/images/mep802a/pmcs/fig-0009-1.png',
+  '../assets/images/mep802a/pmcs/fig-0010-1.png',
+  '../assets/images/mep802a/pmcs/fig-0010-2.png',
+  '../assets/images/mep802a/pmcs/fig-0012-1.png',
+  '../assets/images/mep802a/pmcs/fig-0012-2.png',
+], { eager: true, query: '?url', import: 'default' }) as UrlMap;
+
+// TM 9-6115-749-10 (MEP1030) — only figures mapped in MEP1030_ITEM_TO_FIG.
+const mep1030Figs = import.meta.glob([
+  '../assets/images/mep1030/pmcs/fig-0004-2.png',
+  '../assets/images/mep1030/pmcs/fig-0005-2.png',
+  '../assets/images/mep1030/pmcs/fig-0013-1.png',
+  '../assets/images/mep1030/pmcs/fig-0013-2.png',
+  '../assets/images/mep1030/pmcs/fig-0013-3.png',
+  '../assets/images/mep1030/pmcs/fig-0013-4.png',
+  '../assets/images/mep1030/pmcs/fig-0014-2.png',
+  '../assets/images/mep1030/pmcs/fig-0015-1.png',
+  '../assets/images/mep1030/pmcs/fig-0016-2.png',
+  '../assets/images/mep1030/pmcs/fig-0017-1.png',
+], { eager: true, query: '?url', import: 'default' }) as UrlMap;
+
+// TM 9-6115-639-13&P (MEP831A) — only figures mapped in MEP831A_ITEM_TO_FIG.
+const mep831aFigs = import.meta.glob([
+  '../assets/images/mep831a/pmcs/fig-0002-1.png',
+  '../assets/images/mep831a/pmcs/fig-0002-3.png',
+  '../assets/images/mep831a/pmcs/fig-0004-1.png',
+  '../assets/images/mep831a/pmcs/fig-0004-1-4.png',
+  '../assets/images/mep831a/pmcs/fig-0005-1.png',
+  '../assets/images/mep831a/pmcs/fig-0010-1.png',
+  '../assets/images/mep831a/pmcs/fig-0011-1.png',
+], { eager: true, query: '?url', import: 'default' }) as UrlMap;
 
 // LMTV M1078: PMCS item -> PDF page whose figure belongs to that item (figure sits above the item row).
 // Items 'T2-2 #n' are Table 2-2 (M1078/M1081) items.
@@ -105,6 +180,21 @@ export const HMMWV_ITEM_TO_PAGE: Record<string, number> = {
   '59': 182,
 };
 
+// M1097: TM 9-2320-280-10 Table 2-2 item number -> PDF page image (page-NNN.png). Row page, or the
+// continuation page holding the item's figure (12 -> 127 gauges, 33 -> 139, 42 -> 143 tread, 53 -> 152).
+export const M1097_ITEM_TO_PAGE: Record<string, number> = {
+  '1': 120, '2': 121, '3': 121, '5': 122, '6': 123, '7': 123,
+  '7.1': 123, '8': 124, '9': 124, '10': 125, '12': 127, '14': 128,
+  '17': 130, '18': 130, '19': 130, '19.1': 131, '20': 131, '21': 131,
+  '22.1': 131, '23': 132, '24': 133, '25': 134, '26': 134, '27': 134,
+  '28': 135, '30': 137, '31': 137, '32': 138, '33': 139, '34': 139,
+  '36': 140, '37': 140, '37.1': 140, '38': 140, '39': 141, '40': 141,
+  '41': 141, '41.1': 142, '42': 143, '43': 147, '44': 147, '45': 148,
+  '46': 148, '49': 150, '51': 151, '52': 151, '53': 152, '54': 153,
+  '58': 155, '63': 158, '64': 158, '65': 158, '66': 158, '68': 159,
+  '69': 159, '71': 159, '72': 160, '75': 162, '76': 162,
+};
+
 // M1101/M1102 (TM 9-2330-392-14&P): the PMCS table has no figures; Figure 2-2 (para 2-2, PDF p. 34,
 // Controls and Indicators) shows handbrake levers, breakaway cable, lunette, intervehicular cable,
 // safety chains, and front support leg.
@@ -120,6 +210,44 @@ export const MEP_ITEM_TO_FIG: Record<string, string> = {
   '14': '1-2', '15': '3-1', '16': '2-4', '17': '1-2', '18': '1-2', '19': '1-2', '20': '2-1', '21': '2-1',
   '22': '1-2', '23': '1-2', '24': '1-2', '25': '1-2', '28': '2-4', '29': '2-1',
   '30': '1-2', '32': '1-2', '33': '1-2', '34': '1-2', '35': '3-2', '36': '1-2', '37': '1-2', '39': '1-2', '40': '2-1',
+};
+
+// MEP802A (TM 9-6115-641-10): work-package figures under assets/images/mep802a/pmcs.
+export const MEP802A_ITEM_TO_FIG: Record<string, string> = {
+  '1': '0010-1', '3': '0010-1', '5': '0010-1', '6': '0010-1', '8': '0010-1', '9': '0010-1', '10': '0010-1',
+  '11': '0010-1', '11.1': '0010-1', '12': '0010-1', '14': '0010-1', '17': '0010-1', '18': '0010-1', '19': '0010-1',
+  '22': '0010-1', '23': '0010-1', '24': '0010-1', '25': '0010-1', '26': '0010-1', '30': '0010-1', '32': '0010-1',
+  '33': '0010-1', '34': '0010-1', '36': '0010-1', '37': '0010-1', '38': '0010-1', '39': '0010-1', '44': '0010-1',
+  '7': '0012-2', '35': '0012-2', '15': '0012-1', '16': '0005-1', '28': '0005-1', '20': '0004-1', '21': '0004-1',
+  '29': '0004-1', '40': '0004-1', '41': '0010-2', '42': '0010-2', '43': '0010-2', '45': '0010-2', '46': '0010-2',
+  '47': '0010-2', '48': '0010-2', '49': '0010-2', '50': '0010-2', '51': '0010-2', '52': '0010-2', '54': '0010-2',
+  '55': '0010-2', '56': '0010-2', '57': '0010-2', '58': '0010-2', '59': '0010-2', '60': '0010-2', '61': '0010-2',
+  '62': '0010-2', '63': '0010-2', '64': '0010-2', '65': '0010-2', '53': '0009-1',
+};
+
+// MEP1030 (TM 9-6115-749-10): work-package figures under assets/images/mep1030/pmcs.
+export const MEP1030_ITEM_TO_FIG: Record<string, string> = {
+  '1': '0005-2', '60': '0005-2', '4': '0004-2', '5': '0004-2', '58': '0004-2', '2': '0013-1', '3': '0013-1',
+  '6': '0013-1', '7': '0013-1', '8': '0013-1', '9': '0013-1', '10': '0013-1', '11': '0013-1', '12': '0013-1',
+  '13': '0013-1', '61': '0013-1', '62': '0013-1', '63': '0013-1', '64': '0013-1', '65': '0013-1', '66': '0013-1',
+  '67': '0013-1', '78': '0013-1', '79': '0013-1', '85': '0013-1', '19': '0013-2', '20': '0013-2', '21': '0013-2',
+  '22': '0013-2', '23': '0013-2', '24': '0013-2', '25': '0013-2', '26': '0013-2', '27': '0013-2', '28': '0013-2',
+  '29': '0013-2', '30': '0013-2', '31': '0013-2', '32': '0013-2', '33': '0013-2', '35': '0013-2', '38': '0013-2',
+  '39': '0013-2', '68': '0013-2', '69': '0013-2', '70': '0016-2', '72': '0013-2', '80': '0013-2', '81': '0013-2',
+  '82': '0013-2', '83': '0013-2', '17': '0015-1', '50': '0015-1', '76': '0015-1', '89': '0015-1', '91': '0015-1',
+  '34': '0017-1', '71': '0017-1', '84': '0017-1', '36': '0016-2', '37': '0014-2', '40': '0013-3', '41': '0013-3',
+  '42': '0013-3', '43': '0013-3', '44': '0013-4', '45': '0013-4', '46': '0013-4', '47': '0013-4', '48': '0013-4',
+  '49': '0013-4', '51': '0013-4', '52': '0013-4', '53': '0013-4', '54': '0013-4', '55': '0013-4', '56': '0013-4',
+  '57': '0013-4', '73': '0013-4', '74': '0013-4', '75': '0013-4', '77': '0013-4', '86': '0013-4', '87': '0013-4',
+  '88': '0013-4',
+};
+
+// MEP831A (TM 9-6115-639-13&P): work-package figures under assets/images/mep831a/pmcs.
+export const MEP831A_ITEM_TO_FIG: Record<string, string> = {
+  '1': '0002-1', '2': '0002-1', '4': '0002-1', '5': '0002-1', '7': '0002-1', '11': '0002-1', '16': '0002-1',
+  '22': '0002-1', '3': '0004-1', '17': '0004-1', '6': '0005-1', '8': '0002-3', '9': '0002-3', '10': '0002-3',
+  '18': '0002-3', '20': '0002-3', '21': '0002-3', '24': '0002-3', '13': '0004-1-4', '14': '0010-1', '19': '0010-1',
+  '15': '0011-1',
 };
 
 export function getPmcsItemImage(vehicleType: string, itemNumber: string): string | undefined {
@@ -138,6 +266,22 @@ export function getPmcsItemImage(vehicleType: string, itemNumber: string): strin
   if (vehicleType === 'MEP803A') {
     const fig = MEP_ITEM_TO_FIG[itemNumber];
     return fig ? mepFigs[`../assets/images/mep803a/pmcs/fig-${fig}.png`] : undefined;
+  }
+  if (vehicleType === 'M1097') {
+    const pageNum = M1097_ITEM_TO_PAGE[itemNumber];
+    return pageNum ? m1097Pages[`../assets/images/m1097/pmcs/page-${pageNum}.png`] : undefined;
+  }
+  if (vehicleType === 'MEP802A') {
+    const fig = MEP802A_ITEM_TO_FIG[itemNumber];
+    return fig ? mep802aFigs[`../assets/images/mep802a/pmcs/fig-${fig}.png`] : undefined;
+  }
+  if (vehicleType === 'MEP1030') {
+    const fig = MEP1030_ITEM_TO_FIG[itemNumber];
+    return fig ? mep1030Figs[`../assets/images/mep1030/pmcs/fig-${fig}.png`] : undefined;
+  }
+  if (vehicleType === 'MEP831A') {
+    const fig = MEP831A_ITEM_TO_FIG[itemNumber];
+    return fig ? mep831aFigs[`../assets/images/mep831a/pmcs/fig-${fig}.png`] : undefined;
   }
   return undefined;
 }
