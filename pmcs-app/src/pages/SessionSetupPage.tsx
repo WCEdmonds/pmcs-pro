@@ -74,7 +74,10 @@ export default function SessionSetupPage() {
         if (!cancelled && Array.isArray(data) && data.length > 0) {
           const mapped = data
             .map((v): PickerVehicle | null => {
-              const vt = toVehicleType(v.vehicle_type);
+              // Vehicles first created by this app's sync carry the app's own type id (e.g. LMTV_M1078).
+              const vt = VEHICLE_REGISTRY.some((r) => r.type === v.vehicle_type)
+                ? (v.vehicle_type as VehicleType)
+                : toVehicleType(v.vehicle_type);
               if (!vt || !v.bumper_number) return null;
               return {
                 bumperNumber: v.bumper_number,

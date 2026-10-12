@@ -24,16 +24,9 @@ export interface Da2404Row {
   corrective: string;
 }
 
-// Fallback TM publication dates (YYYYMMDD) when VEHICLE_REGISTRY has no tmDate.
-const FALLBACK_TM_DATES: Record<string, string> = {
-  M1151: '20060901', // TM 9-2320-387-10, Sep 2006
-  M1152: '20060901',
-  LMTV_M1078: '19981001', // TM 9-2320-365-10, Oct 1998
-};
-
+/** TM publication date (YYYYMMDD) for DA 2404 block 5b, from VEHICLE_REGISTRY. */
 export function tmDateFor(vehicleType: string): string {
-  const entry = VEHICLE_REGISTRY.find((v) => v.type === vehicleType) as { tmDate?: string } | undefined;
-  return entry?.tmDate || FALLBACK_TM_DATES[vehicleType] || '';
+  return VEHICLE_REGISTRY.find((v) => v.type === vehicleType)?.tmDate ?? '';
 }
 
 const REMARK_CHUNK = 70;

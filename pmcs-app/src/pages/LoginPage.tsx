@@ -67,7 +67,8 @@ export default function LoginPage() {
     try {
       const profile = await remoteSignIn(cleanDodId, pin);
       await useUserStore.getState().setFromProfile(profile);
-      navigate(from && from !== '/login' ? from : '/', { replace: true });
+      // Return to an inspection deep link (e.g. after the session expired); otherwise Home.
+      navigate(from && from.startsWith('/session/') ? from : '/', { replace: true });
     } catch (err) {
       setError(loginErrorMessage(err));
       setIsLoading(false);
