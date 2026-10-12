@@ -23,7 +23,14 @@ export interface Profile {
   role?: UserRole
   /** 0/1: signed in with an admin-issued temporary PIN; must set a new one. */
   must_change_pin?: number | boolean
+  /** Personal email for PIN reset codes. Absent from older API versions. */
+  email?: string | null
+  /** When the email was confirmed with an emailed code; null while unconfirmed. */
+  email_verified_at?: string | null
 }
+
+/** PUT /me/email: the profile plus whether a confirmation code went out (false = hourly cap hit). */
+export type EmailUpdateResponse = Profile & { email_code_sent?: boolean }
 
 export type UserRole = 'member' | 'admin'
 
@@ -172,6 +179,9 @@ export interface AdminUser {
   created_at: string
   locked_until: string | null
   must_change_pin: number | boolean
+  email?: string | null
+  /** True once the user confirmed their email (they can reset their own PIN). */
+  email_verified?: boolean
 }
 
 /** GET /admin/audit item */

@@ -26,6 +26,8 @@ export interface ApiProfile {
   role?: 'member' | 'admin'
   /** 1 while the user signs in with an admin-issued temporary PIN and must set their own. */
   must_change_pin?: number | boolean
+  email?: string | null
+  email_verified_at?: string | null
 }
 
 export class ApiError extends Error {
@@ -172,7 +174,7 @@ export interface ApiOptions {
 }
 
 // A 401 on these is a wrong DOD ID / PIN, not an expired session.
-const AUTH_PATHS = new Set(['/auth/login', '/auth/signup', '/auth/change-pin'])
+const AUTH_PATHS = new Set(['/auth/login', '/auth/signup', '/auth/change-pin', '/auth/pin-reset/request', '/auth/pin-reset/confirm'])
 
 export async function api<T = unknown>(method: string, path: string, opts: ApiOptions = {}): Promise<T> {
   const url = new URL(API_URL + path, window.location.origin)
@@ -310,6 +312,38 @@ export async function changePin(currentPin: string, newPin: string): Promise<Api
   if (token) writeToken(token)
   setPinChangeRequired(false)
   return profile
+}
+
+/**
+ * "Forgot PIN" step 1: emails a reset code if the account has a confirmed email.
+ * The server answers the same either way, so this never reveals whether it did.
+ */
+export async function requestPinReset(dodId: string): Promise<void> {
+  await api('POST', '/auth/pin-reset/request', { body: { dod_id: dodId } })
+}
+
+/**
+ * "Forgot PIN" step 2: the emailed code plus a new PIN. Signs in like signIn()
+ * (the server ends every other session and clears any lockout).
+ */
+export async function confirmPinReset(dodId: string, code: string, newPin: string): Promise<ApiProfile> {
+  const { token, profile } = await api<{ token: string; profile: ApiProfile }>('POST', '/auth/pin-reset/confirm', {
+    body: { dod_id: dodId, code, new_pin: newPin },
+  })
+  writeToken(token)
+  setPinChangeRequired(false)
+  return profile
+}
+
+/** Error codes for emailed one-time codes (PIN reset, email confirmation). */
+export const CODE_INVALID = 'CODE_INVALID'
+export const CODE_EXPIRED = 'CODE_EXPIRED'
+export const CODE_LOCKED = 'CODE_LOCKED'
+export const CODE_LIMIT = 'CODE_LIMIT'
+
+/** True when the code can no longer be used and the user should request a new one. */
+export function needsNewCode(err: unknown): boolean {
+  return err instanceof ApiError && (err.code === CODE_EXPIRED || err.code === CODE_LOCKED)
 }
 
 /** Ends every session for the signed-in user (all devices), then signs out here. */

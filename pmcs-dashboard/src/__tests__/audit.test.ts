@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { describeAction, formatAuditDetails, humanizeKey, rawDetails } from '../lib/audit'
+import { AUDIT_ACTION_PREFIXES, KNOWN_AUDIT_ACTIONS, describeAction, formatAuditDetails, humanizeKey, rawDetails } from '../lib/audit'
 
 describe('audit details formatting', () => {
   it('humanizes keys and actions', () => {
@@ -11,6 +11,18 @@ describe('audit details formatting', () => {
     expect(describeAction('login')).toBe('Login')
     expect(describeAction('admin.pin_reset')).toBe('Admin: PIN reset')
     expect(describeAction('admin.role_change')).toBe('Admin: role change')
+  })
+
+  it('lists every known action sorted, under a known prefix, including the email actions', () => {
+    expect([...KNOWN_AUDIT_ACTIONS]).toEqual([...KNOWN_AUDIT_ACTIONS].sort())
+    for (const a of KNOWN_AUDIT_ACTIONS) expect(AUDIT_ACTION_PREFIXES.some((p) => a.startsWith(p))).toBe(true)
+    expect(KNOWN_AUDIT_ACTIONS).toEqual(
+      expect.arrayContaining(['user.email_change', 'user.email_verified', 'user.email_remove', 'user.pin_reset_email']),
+    )
+    expect(describeAction('user.email_change')).toBe('User: email change')
+    expect(describeAction('user.email_verified')).toBe('User: email verified')
+    expect(describeAction('user.email_remove')).toBe('User: email remove')
+    expect(describeAction('user.pin_reset_email')).toBe('User: PIN reset email')
   })
 
   it('renders from/to objects and paired old_/new_ keys as one change line', () => {

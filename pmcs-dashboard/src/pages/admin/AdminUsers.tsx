@@ -188,6 +188,7 @@ export function AdminUsers() {
                   <tr className="text-left text-xs text-text-secondary uppercase tracking-wider">
                     <th className="px-6 py-3">Name</th>
                     <th className="px-6 py-3">DOD ID</th>
+                    <th className="px-6 py-3">Email</th>
                     <th className="px-6 py-3">Unit</th>
                     <th className="px-6 py-3">Role</th>
                     <th className="px-6 py-3">Status</th>
@@ -206,6 +207,20 @@ export function AdminUsers() {
                           {isSelf(u) && <span className="ml-2 text-xs text-text-secondary">(you)</span>}
                         </td>
                         <td className="px-6 py-3 text-sm font-display text-text-secondary">{u.dod_last4 ? `…${u.dod_last4}` : '---'}</td>
+                        <td className="px-6 py-3 text-sm" data-testid="user-email">
+                          {u.email ? (
+                            <>
+                              <span className="block text-text-primary break-all">{u.email}</span>
+                              {u.email_verified ? (
+                                <span className="text-xs font-semibold text-accent-green">Confirmed</span>
+                              ) : (
+                                <span className="text-xs font-semibold text-accent-amber">Unconfirmed</span>
+                              )}
+                            </>
+                          ) : (
+                            <span className="text-text-secondary" aria-label="No email">—</span>
+                          )}
+                        </td>
                         <td className="px-6 py-3 text-sm font-display text-text-secondary">{u.unit ?? '---'}</td>
                         <td className="px-6 py-3 text-sm">
                           {u.role === 'admin' ? (
@@ -246,7 +261,7 @@ export function AdminUsers() {
                   })}
                   {rows.length === 0 && (
                     <tr>
-                      <td colSpan={7} className="px-6 py-12 text-center text-text-secondary">No users match</td>
+                      <td colSpan={8} className="px-6 py-12 text-center text-text-secondary">No users match</td>
                     </tr>
                   )}
                 </tbody>
@@ -274,6 +289,14 @@ export function AdminUsers() {
           <p>
             Their current PIN stops working immediately, they are signed out on every device, and any wrong-PIN lock is cleared. You'll
             get a one-time temporary PIN to hand to them in person; they must set a new PIN the next time they sign in.
+          </p>
+          <p>
+            Users with a confirmed email can reset their own PIN with "Forgot PIN?" on the sign-in page.{' '}
+            {pending.user.email_verified === undefined
+              ? null
+              : pending.user.email_verified
+                ? 'This user has a confirmed email, so they may not need you to do this.'
+                : 'This user has no confirmed email, so an admin reset is their only option.'}
           </p>
         </ConfirmDialog>
       )}

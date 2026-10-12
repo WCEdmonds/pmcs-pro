@@ -2,6 +2,7 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import { LayoutDashboard, AlertTriangle, ClipboardCheck, LogOut, Shield, ShieldCheck, Settings } from 'lucide-react'
 import { signOut } from '../lib/api'
 import { useUnits } from '../hooks/useUnits'
+import { EmailPromptBanner } from './EmailPromptBanner'
 
 const navItems = [
   { to: '/', icon: LayoutDashboard, label: 'Fleet Overview' },
@@ -83,6 +84,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
 
       {/* Main content */}
       <main className="flex-1 overflow-y-auto p-8">
+        <EmailPromptBanner />
         {children}
       </main>
     </div>

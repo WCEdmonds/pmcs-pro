@@ -1,4 +1,5 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { Plus, X, Loader2, Eye, User, Save, Lock, LogOut, ShieldCheck } from 'lucide-react'
 import { api, errorMessage, isAbortedError, signOutEverywhere } from '../lib/api'
 import { useLoader } from '../hooks/useLoader'
@@ -7,6 +8,7 @@ import { normalizeUic, uicError } from '../lib/uic'
 import { UicInput } from '../components/UicInput'
 import { ActionError, ErrorState } from '../components/Feedback'
 import { ChangePinForm } from '../components/ChangePinForm'
+import { EmailSettings } from '../components/EmailSettings'
 import { ConfirmDialog } from '../components/Dialog'
 import type { Profile, ProfileUpdate, WatchedUic } from '../types/database'
 
@@ -225,6 +227,13 @@ export function Settings() {
   const addingRef = useRef(false)
   const [removingId, setRemovingId] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const { hash } = useLocation()
+
+  // Links such as /settings#email (the add-email prompt) scroll to that section once it renders.
+  useEffect(() => {
+    if (!hash || profileLoading) return
+    document.getElementById(decodeURIComponent(hash.slice(1)))?.scrollIntoView?.({ behavior: 'smooth', block: 'start' })
+  }, [hash, profileLoading])
 
   async function handleAdd() {
     if (addingRef.current) return // Enter + click (or key repeat) must not double-submit
@@ -279,7 +288,7 @@ export function Settings() {
     <div className="space-y-8 max-w-2xl">
       <div>
         <h1 className="font-display text-2xl font-bold text-text-primary">Settings</h1>
-        <p className="text-text-secondary mt-1">Your profile, PIN and the units you watch</p>
+        <p className="text-text-secondary mt-1">Your profile, email, PIN and the units you watch</p>
       </div>
 
       {profile ? (
@@ -287,6 +296,8 @@ export function Settings() {
       ) : (
         <ErrorState title="Couldn't load your profile" message={profileError ?? 'Unknown error'} onRetry={reloadProfile} />
       )}
+
+      {profile && <EmailSettings profile={profile} />}
 
       <div className="bg-bg-secondary border border-border rounded-xl p-6">
         <div className="flex items-center gap-3 mb-4">

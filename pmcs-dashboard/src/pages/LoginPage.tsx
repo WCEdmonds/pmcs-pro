@@ -4,6 +4,7 @@ import { Shield, Loader2 } from 'lucide-react'
 import { errorMessage, getSessionUserId, onAuthChange, signIn, signUp } from '../lib/api'
 import { normalizeUic, uicError } from '../lib/uic'
 import { UicInput } from '../components/UicInput'
+import { PinResetForm } from '../components/PinResetForm'
 
 const DOD_ID_RE = /^\d{10}$/
 const PIN_RE = /^\d{6,12}$/
@@ -14,7 +15,7 @@ export function LoginPage() {
   useEffect(() => onAuthChange(() => setSignedIn(!!getSessionUserId())), [])
   const [mi, setMi] = useState('')
   const [submitted, setSubmitted] = useState(false)
-  const [mode, setMode] = useState<'login' | 'register'>('login')
+  const [mode, setMode] = useState<'login' | 'register' | 'reset'>('login')
   const [dodId, setDodId] = useState('')
   const [pin, setPin] = useState('')
   const [pinConfirm, setPinConfirm] = useState('')
@@ -102,7 +103,7 @@ export function LoginPage() {
           <div className="flex bg-bg-tertiary rounded-lg p-1 mb-6">
             <button type="button"
               onClick={() => { setMode('login'); setError(''); }}
-              className={`flex-1 py-2 rounded-md text-sm font-medium transition-colors ${mode === 'login' ? 'bg-accent-green text-bg-primary' : 'text-text-secondary'}`}
+              className={`flex-1 py-2 rounded-md text-sm font-medium transition-colors ${mode !== 'register' ? 'bg-accent-green text-bg-primary' : 'text-text-secondary'}`}
             >
               Sign In
             </button>
@@ -114,7 +115,13 @@ export function LoginPage() {
             </button>
           </div>
 
-          {mode === 'login' ? (
+          {mode === 'reset' ? (
+            <PinResetForm
+              initialDodId={dodId}
+              onCancel={() => { setMode('login'); setError(''); }}
+              onDone={() => navigate('/', { replace: true })}
+            />
+          ) : mode === 'login' ? (
             <form onSubmit={handleLogin} className="space-y-4">
               <div>
                 <label htmlFor="dodId" className="block text-sm font-medium text-text-secondary mb-1.5">DOD ID</label>
@@ -132,7 +139,10 @@ export function LoginPage() {
                 {loading && <Loader2 className="w-4 h-4 animate-spin" />}
                 Sign In
               </button>
-              <p className="text-xs text-text-secondary text-center">Forgot your PIN? Ask an admin to reset it.</p>
+              <button type="button" onClick={() => { setMode('reset'); setError(''); setPin(''); }}
+                className="block mx-auto text-sm text-accent-blue hover:underline">
+                Forgot PIN?
+              </button>
             </form>
           ) : (
             <form onSubmit={handleRegister} noValidate className="space-y-3">

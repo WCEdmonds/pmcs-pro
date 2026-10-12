@@ -71,6 +71,29 @@ describe('admin users', () => {
     expect(screen.queryByText('824613')).toBeNull()
   })
 
+  it('shows each user\'s email with a Confirmed / Unconfirmed marker, or a dash when none', async () => {
+    mockFetch({
+      'GET /admin/users': () =>
+        json([
+          { ...me, email: 'terry@example.com', email_verified: true },
+          { ...soldier, email: 'pat@example.com', email_verified: false },
+          { ...soldier, id: 'u3', email: null, email_verified: false },
+        ]),
+    })
+    renderUsers()
+    const confirmed = within(await screen.findByTestId('user-row-u1')).getByTestId('user-email')
+    expect(screen.getByRole('columnheader', { name: 'Email' })).toBeTruthy()
+    expect(confirmed.textContent).toBe('terry@example.comConfirmed')
+    expect(within(screen.getByTestId('user-row-u2')).getByTestId('user-email').textContent).toBe('pat@example.comUnconfirmed')
+    expect(within(screen.getByTestId('user-row-u3')).getByTestId('user-email').textContent).toBe('—')
+
+    // The reset dialog says users with a confirmed email can reset their own PIN.
+    fireEvent.click(within(screen.getByTestId('user-row-u1')).getByRole('button', { name: /Reset PIN/ }))
+    const dialog = screen.getByRole('dialog')
+    expect(dialog.textContent).toContain('Users with a confirmed email can reset their own PIN')
+    expect(dialog.textContent).toContain('This user has a confirmed email')
+  })
+
   it('keeps the dialog open and shows the server error when demoting the last admin', async () => {
     mockFetch({
       'GET /admin/users': () => json([me]),
