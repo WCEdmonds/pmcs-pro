@@ -64,3 +64,40 @@ export async function sendJoinEmail(env: Env, uic: string, member: Member, at = 
       .map(([k, v]) => `<tr><td><b>${escapeHtml(k)}</b></td><td>${escapeHtml(v)}</td></tr>`).join('')}</table><p>${escapeHtml(note)}</p>`,
   });
 }
+
+const CODE_TEXT = {
+  verify: {
+    subject: 'PMCS Pro: confirm your email',
+    lead: 'Enter this code in PMCS Pro to confirm your email address:',
+    ignore: 'If you did not add this address to a PMCS Pro account, ignore this email.',
+  },
+  reset: {
+    subject: 'PMCS Pro: PIN reset code',
+    lead: 'Enter this code in PMCS Pro to set a new PIN:',
+    ignore: 'If you did not ask to reset your PIN, ignore this email. Your PIN has not changed.',
+  },
+} as const;
+
+/** A one-time code (verify or PIN reset) to one user. */
+export async function sendCodeEmail(env: Env, to: string, purpose: keyof typeof CODE_TEXT, code: string, ttlMinutes: number) {
+  const t = CODE_TEXT[purpose];
+  const expiry = `The code expires in ${ttlMinutes} minutes.`;
+  await sendEmail(env, {
+    to: [to],
+    subject: t.subject,
+    text: `${t.lead}\n\n${code}\n\n${expiry}\n${t.ignore}`,
+    html: `<p>${escapeHtml(t.lead)}</p><p style="font-size:28px;font-weight:bold;letter-spacing:4px">${escapeHtml(code)}</p>`
+      + `<p>${escapeHtml(expiry)}<br>${escapeHtml(t.ignore)}</p>`,
+  });
+}
+
+/** A security notice to a user's verified address (PIN changed, email changed, ...). */
+export async function sendNoticeEmail(env: Env, to: string, subject: string, body: string, at = new Date().toISOString()) {
+  const tail = `Time (UTC): ${at}\nIf this was not you, contact your unit's PMCS Pro admin right away.`;
+  await sendEmail(env, {
+    to: [to],
+    subject: `PMCS Pro: ${subject}`,
+    text: `${body}\n\n${tail}`,
+    html: `<p>${escapeHtml(body)}</p><p>${escapeHtml(tail).replace(/\n/g, '<br>')}</p>`,
+  });
+}

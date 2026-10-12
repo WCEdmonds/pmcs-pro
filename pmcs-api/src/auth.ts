@@ -67,6 +67,9 @@ async function hmac(secret: string, data: string): Promise<string> {
   return toB64Url(new Uint8Array(sig));
 }
 
+/** HMAC of a one-time email code (bound to its row id), so the database never holds the code. */
+export const hashCode = (secret: string, codeId: string, code: string) => hmac(secret, `email-code:${codeId}:${code}`);
+
 export interface TokenClaims {
   sub: string;
   dod_id: string;

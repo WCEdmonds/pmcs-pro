@@ -212,7 +212,7 @@ describe('admin', () => {
     expect(all.json).toHaveLength(3);
     expect(JSON.stringify(all.json)).not.toMatch(/100000003|9000000001/);
     expect(Object.keys(all.json[0]).sort()).toEqual(
-      ['created_at', 'dod_last4', 'first_name', 'id', 'last_name', 'locked_until', 'mi', 'must_change_pin', 'rank', 'role', 'unit'].sort());
+      ['created_at', 'dod_last4', 'email', 'email_verified', 'first_name', 'id', 'last_name', 'locked_until', 'mi', 'must_change_pin', 'rank', 'role', 'unit'].sort());
     expect((await req('GET', `/admin/users?unit=${B.toLowerCase()}`, { token: admin.token })).json).toHaveLength(2);
     expect((await req('GET', '/admin/users?q=brav', { token: admin.token })).json.map((u: any) => u.last_name)).toEqual(['Bravo']);
     expect((await req('GET', '/admin/users?q=0031', { token: admin.token })).json.map((u: any) => u.dod_last4)).toEqual(['0031']);

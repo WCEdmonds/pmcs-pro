@@ -45,6 +45,21 @@ export function str(o: Obj, key: string, opts: StrOpts = {}): string | null {
 
 const EMAIL_RE = /^[^\s@<>",;]+@[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?(?:\.[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?)+$/;
 
+/** One email address: trimmed and lower-cased. */
+export function parseEmail(v: unknown, key = 'email'): string {
+  if (typeof v !== 'string') throw bad(`${key} must be an email address`);
+  const s = v.trim().toLowerCase();
+  if (s.length > 254 || !EMAIL_RE.test(s)) throw bad('Enter a valid email address');
+  return s;
+}
+
+/** "jdoe@army.mil" → "j***@army.mil", for audit details and on-screen hints. */
+export function maskEmail(e: string | null | undefined): string | null {
+  if (!e) return null;
+  const at = e.lastIndexOf('@');
+  return at < 1 ? '***' : `${e[0]}***${e.slice(at)}`;
+}
+
 /** A list of email addresses: trimmed, lower-cased, de-duplicated, at most `max`. */
 export function emailList(v: unknown, key: string, max = 10): string[] {
   if (!Array.isArray(v)) throw bad(`${key} must be an array of email addresses`);

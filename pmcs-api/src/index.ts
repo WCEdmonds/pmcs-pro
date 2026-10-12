@@ -1,15 +1,15 @@
 import { Hono, type Context } from 'hono';
 import { cors } from 'hono/cors';
 import {
-  hashPin, verifyPin, dummyVerifyPin, signToken, verifyToken, signFileUrl, verifyFileUrl, safeEqual, randomDigits,
+  hashPin, verifyPin, dummyVerifyPin, signToken, verifyToken, signFileUrl, verifyFileUrl, safeEqual, randomDigits, hashCode,
 } from './auth';
 import { fillDa2404 } from './da2404';
 import {
   HttpError, bad, isObj, parseUic, normalizeBumper, str, num, int, bool01, timestamp, dateOnly, id as idField,
-  readCapped, sniffImage, isPdf, toBase64, emailList, type Obj,
+  readCapped, sniffImage, isPdf, toBase64, emailList, parseEmail, maskEmail, type Obj,
 } from './validate';
 import { AUDIT_INSERT, actorOf, actorParams, audit, auditStmt, type Actor, type AuditEntry } from './audit';
-import { recipientsFor, sendEmail, sendJoinEmail, type Member } from './email';
+import { recipientsFor, sendEmail, sendJoinEmail, sendCodeEmail, sendNoticeEmail, type Member } from './email';
 import { runBackup, DAILY_CRON } from './backup';
 
 export interface Env {
@@ -186,7 +186,7 @@ async function readOptionalObject(c: Ctx): Promise<Obj> {
 /** Repeated query parameter values (`?id=a&id=b`), blanks dropped. */
 const queries = (c: Ctx, name: string) => (c.req.queries(name) ?? []).map((s) => s.trim()).filter(Boolean);
 
-const PROFILE_COLS = 'id, dod_id, rank, last_name, first_name, mi, unit, role, must_change_pin, created_at';
+const PROFILE_COLS = 'id, dod_id, rank, last_name, first_name, mi, unit, role, must_change_pin, email, email_verified_at, created_at';
 /** PROFILE_COLS plus what signing a session needs (stripped from responses by out()). */
 const SESSION_COLS = `${PROFILE_COLS}, token_version`;
 
@@ -297,17 +297,18 @@ app.post('/auth/signup', async (c) => {
   const pin = body.pin;
   const unit = parseUic(body.unit);
   const names = parseNameFields(body);
+  const email = body.email == null || body.email === '' ? null : parseEmail(body.email);
   await rateLimit(c, `signup:${dodId}`);
 
   const db = c.env.DB;
   const pinHash = await hashPin(pin);
   try {
     const inserted = await db.prepare(
-      `INSERT INTO profiles (id, dod_id, pin_hash, rank, last_name, first_name, mi, unit, created_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `INSERT INTO profiles (id, dod_id, pin_hash, rank, last_name, first_name, mi, unit, email, created_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
        ON CONFLICT (dod_id) DO NOTHING
        RETURNING ${SESSION_COLS}`,
-    ).bind(uuid(), dodId, pinHash, names.rank, names.last_name, names.first_name, names.mi, unit, now()).first<Row>();
+    ).bind(uuid(), dodId, pinHash, names.rank, names.last_name, names.first_name, names.mi, unit, email, now()).first<Row>();
     if (inserted) return signedUp(c, inserted, false);
 
     // Imported Supabase profile that never had an auth user (pin_hash '!'):
@@ -317,10 +318,11 @@ app.post('/auth/signup', async (c) => {
       `UPDATE profiles SET pin_hash = ?, failed_logins = 0, locked_until = NULL,
          rank = COALESCE(NULLIF(rank, ''), ?), last_name = COALESCE(NULLIF(last_name, ''), ?),
          first_name = COALESCE(NULLIF(first_name, ''), ?), mi = COALESCE(NULLIF(mi, ''), ?),
-         unit = COALESCE(NULLIF(unit, ''), ?)
+         unit = COALESCE(NULLIF(unit, ''), ?),
+         email = COALESCE(?, email), email_verified_at = CASE WHEN ? IS NULL THEN email_verified_at END
        WHERE dod_id = ? AND pin_hash = '!'
        RETURNING ${SESSION_COLS}`,
-    ).bind(pinHash, names.rank, names.last_name, names.first_name, names.mi, unit, dodId).first<Row>();
+    ).bind(pinHash, names.rank, names.last_name, names.first_name, names.mi, unit, email, email, dodId).first<Row>();
     if (claimed) return signedUp(c, claimed, true);
   } catch (err) {
     if (!String((err as Error)?.message).includes('UNIQUE')) throw err;
@@ -335,6 +337,9 @@ async function signedUp(c: Ctx, profile: Row, claimed: boolean) {
     details: { unit, ...(claimed ? { claimed_imported_profile: true } : {}) },
   });
   notifyJoin(c, unit, profile);
+  if (typeof profile.email === 'string' && !profile.email_verified_at) {
+    await issueCode(c, profile.id as string, 'verify', profile.email);
+  }
   return sessionResponse(c, profile);
 }
 
@@ -410,6 +415,129 @@ app.post('/auth/login', async (c) => {
   }
   await db.batch(stmts);
   return sessionResponse(c, row);
+});
+
+// ---------------------------------------------------------------------------
+// Emailed one-time codes: verifying a user's email, and self-service PIN reset.
+// ---------------------------------------------------------------------------
+
+const CODE_TTL_MINUTES = 15;
+const MAX_CODE_ATTEMPTS = 5;
+/** Per user and purpose, so nobody can flood an inbox. */
+const MAX_CODES_PER_HOUR = 3;
+type CodePurpose = 'verify' | 'reset';
+
+/**
+ * Creates a 6-digit code and emails it (after the response). The hourly cap is checked in the
+ * same statement as the insert, so parallel requests can't exceed it. A new code supersedes the
+ * user's older unused codes of the same purpose. Returns false (nothing sent) when capped.
+ */
+async function issueCode(c: Ctx, userId: string, purpose: CodePurpose, email: string): Promise<boolean> {
+  const db = c.env.DB;
+  const id = uuid();
+  const code = randomDigits(6);
+  const at = now();
+  const hourAgo = new Date(Date.now() - 3_600_000).toISOString();
+  const expires = new Date(Date.now() + CODE_TTL_MINUTES * 60_000).toISOString();
+  const [inserted] = await db.batch([
+    db.prepare(
+      `INSERT INTO email_codes (id, user_id, purpose, email, code_hash, created_at, expires_at)
+       SELECT ?, ?, ?, ?, ?, ?, ?
+       WHERE (SELECT COUNT(*) FROM email_codes WHERE user_id = ? AND purpose = ? AND created_at >= ?) < ?`,
+    ).bind(id, userId, purpose, email, await hashCode(c.env.JWT_SECRET, id, code), at, expires, userId, purpose, hourAgo, MAX_CODES_PER_HOUR),
+    db.prepare(
+      `UPDATE email_codes SET used_at = ? WHERE user_id = ? AND purpose = ? AND used_at IS NULL AND id != ?
+         AND EXISTS (SELECT 1 FROM email_codes WHERE id = ?)`,
+    ).bind(at, userId, purpose, id, id),
+  ]);
+  if (!inserted.meta.changes) return false;
+  background(c, sendCodeEmail(c.env, email, purpose, code, CODE_TTL_MINUTES));
+  return true;
+}
+
+const codeExpired = () => new HttpError(400, 'That code has expired or was already used. Request a new one.', 'CODE_EXPIRED');
+
+/**
+ * Checks `code` against the user's newest live code of `purpose`. Each attempt is reserved
+ * atomically first, so a code can be guessed at most MAX_CODE_ATTEMPTS times in total.
+ * Does not mark the code used: callers do that in the same batch as the change it allows.
+ */
+async function checkCode(c: Ctx, userId: string, purpose: CodePurpose, code: unknown) {
+  const digits = typeof code === 'string' ? code.replace(/\s/g, '') : '';
+  if (!/^\d{6}$/.test(digits)) throw new HttpError(400, 'Enter the 6-digit code from the email', 'CODE_INVALID');
+  const db = c.env.DB;
+  const row = await db.prepare(
+    `SELECT id, email, code_hash FROM email_codes
+     WHERE user_id = ? AND purpose = ? AND used_at IS NULL AND expires_at > ?
+     ORDER BY created_at DESC, rowid DESC LIMIT 1`,
+  ).bind(userId, purpose, now()).first<{ id: string; email: string; code_hash: string }>();
+  if (!row) throw codeExpired();
+  const reserved = await db.prepare(
+    'UPDATE email_codes SET attempts = attempts + 1 WHERE id = ? AND used_at IS NULL AND attempts < ? RETURNING attempts',
+  ).bind(row.id, MAX_CODE_ATTEMPTS).first();
+  if (!reserved) throw new HttpError(429, 'Too many wrong codes. Request a new one.', 'CODE_LOCKED');
+  if (!(await safeEqual(await hashCode(c.env.JWT_SECRET, row.id, digits), row.code_hash))) {
+    throw new HttpError(400, 'Incorrect code', 'CODE_INVALID');
+  }
+  return row;
+}
+
+/** Marks a checked code used; the statement before it in a batch should require it unused. */
+const useCodeStmt = (db: D1Database, codeId: string) =>
+  db.prepare('UPDATE email_codes SET used_at = ? WHERE id = ? AND used_at IS NULL').bind(now(), codeId);
+const codeUnused = 'EXISTS (SELECT 1 FROM email_codes WHERE id = ? AND used_at IS NULL)';
+
+/** Security notice to a user's verified address, after the response. */
+function notifyUser(c: Ctx, profile: Row | null | undefined, subject: string, body: string) {
+  if (profile && typeof profile.email === 'string' && profile.email_verified_at) {
+    background(c, sendNoticeEmail(c.env, profile.email, subject, body));
+  }
+}
+
+/**
+ * Step 1 of "Forgot PIN": emails a reset code to the account's verified address. Always answers
+ * the same way, so it doesn't reveal whether the DoD ID exists or has an email.
+ */
+app.post('/auth/pin-reset/request', async (c) => {
+  const body = await readObject(c);
+  const dodId = parseDodId(body.dod_id);
+  await rateLimit(c, `pin-reset:${dodId}`);
+  const row = await c.env.DB.prepare(
+    "SELECT id, email FROM profiles WHERE dod_id = ? AND pin_hash != '!' AND email IS NOT NULL AND email_verified_at IS NOT NULL",
+  ).bind(dodId).first<{ id: string; email: string }>();
+  if (row) await issueCode(c, row.id, 'reset', row.email);
+  return c.json({ ok: true });
+});
+
+/** Step 2: the code plus a new PIN. Unlocks the account, ends every session and signs in. */
+app.post('/auth/pin-reset/confirm', async (c) => {
+  const body = await readObject(c);
+  const dodId = parseDodId(body.dod_id);
+  if (typeof body.new_pin !== 'string' || !PIN_RE.test(body.new_pin)) throw bad('New PIN must be 6 to 12 digits');
+  await rateLimit(c, `pin-reset-confirm:${dodId}`);
+  const db = c.env.DB;
+  const row = await db.prepare(`SELECT ${SESSION_COLS} FROM profiles WHERE dod_id = ? AND pin_hash != '!'`).bind(dodId).first<Row>();
+  if (!row || !row.email_verified_at) throw codeExpired();
+  const code = await checkCode(c, row.id as string, 'reset', body.code);
+  if (code.email !== row.email) throw codeExpired();
+
+  const [updated] = await db.batch([
+    db.prepare(
+      `UPDATE profiles SET pin_hash = ?, must_change_pin = 0, failed_logins = 0, locked_until = NULL,
+         token_version = token_version + 1
+       WHERE id = ? AND ${codeUnused} RETURNING ${SESSION_COLS}`,
+    ).bind(await hashPin(body.new_pin), row.id, code.id),
+    useCodeStmt(db, code.id),
+  ]);
+  const profile = updated.results[0] as Row | undefined;
+  if (!profile) throw codeExpired();
+  await audit(db, actorOf(row), {
+    action: 'user.pin_reset_email', unit: (row.unit as string | null) ?? null, targetType: 'profile', targetId: row.id as string,
+    details: { email: maskEmail(row.email as string) },
+  });
+  notifyUser(c, row, 'your PIN was reset',
+    'Your PMCS Pro PIN was reset with a code sent to this address. Every device that was signed in has been signed out.');
+  return sessionResponse(c, profile);
 });
 
 /** Used by the field app's login flow. Unclaimed imported profiles report false so the app offers signup. */
@@ -524,14 +652,17 @@ app.post('/auth/change-pin', async (c) => {
       details: { was_required: row.must_change_pin === 1 },
     }),
   ]);
+  if (row.must_change_pin !== 1) {
+    notifyUser(c, row, 'your PIN was changed', 'Your PMCS Pro PIN was changed. Every other device has been signed out.');
+  }
   return sessionResponse(c, updated.results[0] as Row);
 });
 
-async function meResponse(c: Ctx) {
+async function meResponse(c: Ctx, extra: Record<string, unknown> = {}) {
   const access = (await visibleUnits(c.env.DB, c.get('access').userId))!;
   const profile = await first(c.env.DB, `SELECT ${PROFILE_COLS} FROM profiles WHERE id = ?`, [access.userId]);
   if (!profile) throw new HttpError(404, 'Profile not found');
-  return c.json({ ...profile, role: asRole(profile.role), visible_units: access.read });
+  return c.json({ ...profile, role: asRole(profile.role), visible_units: access.read, ...extra });
 }
 
 app.get('/me', (c) => meResponse(c));
@@ -575,6 +706,81 @@ app.patch('/me', async (c) => {
     const member: Row = { ...before };
     for (const k of NAME_FIELDS) if (k in body) member[k] = names[k];
     notifyJoin(c, newUnit, member);
+  }
+  return meResponse(c);
+});
+
+// --- The caller's own email ------------------------------------------------
+
+const tooManyCodes = () => new HttpError(429, 'Too many codes requested. Try again in an hour.', 'CODE_LIMIT');
+
+/**
+ * Sets the caller's email (unverified) and emails a confirmation code. The same, still
+ * unverified address just gets a new code. The old verified address is told about a change.
+ * Responds with the profile plus `email_code_sent` (false when the hourly code cap was hit).
+ */
+app.put('/me/email', async (c) => {
+  const body = await readObject(c);
+  const email = parseEmail(body.email);
+  const { userId, own } = c.get('access');
+  await rateLimit(c, `email:${userId}`, { perIp: false });
+  const db = c.env.DB;
+  const before = (await db.prepare(`SELECT ${PROFILE_COLS} FROM profiles WHERE id = ?`).bind(userId).first<Row>())!;
+  if (before.email === email && before.email_verified_at) return meResponse(c, { email_code_sent: false });
+  if (before.email !== email) {
+    await db.batch([
+      db.prepare('UPDATE profiles SET email = ?, email_verified_at = NULL WHERE id = ?').bind(email, userId),
+      auditStmtAs(c, {
+        action: 'user.email_change', unit: own, targetType: 'profile', targetId: userId,
+        details: { from: maskEmail(before.email as string | null), to: maskEmail(email) },
+      }),
+    ]);
+    notifyUser(c, before, 'your email was changed',
+      `The email on your PMCS Pro account was changed to ${maskEmail(email)}. This address will no longer receive PIN reset codes.`);
+  }
+  return meResponse(c, { email_code_sent: await issueCode(c, userId, 'verify', email) });
+});
+
+/** Sends a new confirmation code to the caller's unverified email. */
+app.post('/me/email/resend', async (c) => {
+  const { userId } = c.get('access');
+  await rateLimit(c, `email:${userId}`, { perIp: false });
+  const row = await c.env.DB.prepare('SELECT email, email_verified_at FROM profiles WHERE id = ?').bind(userId)
+    .first<{ email: string | null; email_verified_at: string | null }>();
+  if (!row?.email) throw bad('Add an email address first');
+  if (row.email_verified_at) throw new HttpError(409, 'This email is already confirmed');
+  if (!(await issueCode(c, userId, 'verify', row.email))) throw tooManyCodes();
+  return c.json({ ok: true });
+});
+
+/** Confirms the caller's email with the emailed code. */
+app.post('/me/email/verify', async (c) => {
+  const body = await readObject(c);
+  const { userId, own } = c.get('access');
+  await rateLimit(c, `email-verify:${userId}`, { perIp: false });
+  const db = c.env.DB;
+  const code = await checkCode(c, userId, 'verify', body.code);
+  const [updated] = await db.batch([
+    db.prepare(`UPDATE profiles SET email_verified_at = ? WHERE id = ? AND email = ? AND ${codeUnused} RETURNING id`)
+      .bind(now(), userId, code.email, code.id),
+    useCodeStmt(db, code.id),
+  ]);
+  if (!updated.results.length) throw codeExpired();
+  await auditAs(c, { action: 'user.email_verified', unit: own, targetType: 'profile', targetId: userId, details: { email: maskEmail(code.email) } });
+  return meResponse(c);
+});
+
+/** Removes the caller's email (and any pending codes). */
+app.delete('/me/email', async (c) => {
+  const { userId, own } = c.get('access');
+  const db = c.env.DB;
+  const before = await db.prepare('SELECT email FROM profiles WHERE id = ?').bind(userId).first<{ email: string | null }>();
+  if (before?.email) {
+    await db.batch([
+      db.prepare('UPDATE profiles SET email = NULL, email_verified_at = NULL WHERE id = ?').bind(userId),
+      db.prepare('UPDATE email_codes SET used_at = ? WHERE user_id = ? AND used_at IS NULL').bind(now(), userId),
+      auditStmtAs(c, { action: 'user.email_remove', unit: own, targetType: 'profile', targetId: userId, details: { from: maskEmail(before.email) } }),
+    ]);
   }
   return meResponse(c);
 });
@@ -1268,7 +1474,7 @@ app.use('/admin/*', async (c, next) => {
 });
 
 const ADMIN_USER_COLS = `id, substr(dod_id, -4) AS dod_last4, rank, first_name, last_name, mi, unit, role, created_at,
-  locked_until, must_change_pin`;
+  locked_until, must_change_pin, email, email_verified_at`;
 
 /** Admin view of a profile. Never the full DoD ID. `locked_until` is null unless the lock is still in force. */
 function adminUser(r: Row) {
@@ -1276,6 +1482,7 @@ function adminUser(r: Row) {
   return {
     id: r.id, dod_last4: r.dod_last4, rank: r.rank, first_name: r.first_name, last_name: r.last_name, mi: r.mi,
     unit: r.unit, role: asRole(r.role), created_at: r.created_at, locked_until: locked, must_change_pin: r.must_change_pin === 1,
+    email: r.email ?? null, email_verified: !!r.email_verified_at,
   };
 }
 
@@ -1329,6 +1536,8 @@ app.post('/admin/users/:id/reset-pin', async (c) => {
       details: { target_dod_last4: user.dod_last4 },
     }),
   ]);
+  notifyUser(c, user, 'an admin reset your PIN',
+    'An admin reset your PMCS Pro PIN and signed out all your devices. Get the temporary PIN from them; you will set a new one when you sign in.');
   return c.json({ temp_pin: tempPin });
 });
 
