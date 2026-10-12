@@ -12,6 +12,7 @@ dist
 *.md
 !README.md
 !**/README.md
+!docs/DEPLOYING.md
 .claude/
 .agents/
 docs/superpowers/

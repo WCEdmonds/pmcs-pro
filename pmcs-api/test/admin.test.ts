@@ -326,6 +326,11 @@ describe('admin', () => {
     expect(byUnit.json.items[0].details).toEqual({ unit: B });
     const byAction = await req('GET', '/admin/audit?action=watch.add', { token: admin.token });
     expect(byAction.json.items).toHaveLength(3);
+    const byFamily = await req('GET', '/admin/audit?action=watch.', { token: admin.token });
+    expect(byFamily.json.items).toHaveLength(3);
+    expect((await req('GET', '/admin/audit?action=watch', { token: admin.token })).json.items).toHaveLength(0);
+    const adminFamily = await req('GET', '/admin/audit?action=admin.', { token: admin.token });
+    expect(adminFamily.json.items.every((i: any) => i.action.startsWith('admin.'))).toBe(true);
     expect((await req('GET', `/admin/audit?actor_id=${admin.profile.id}`, { token: admin.token })).json.items.map((i: any) => i.action))
       .toEqual(['admin.claim', 'user.signup']);
     expect((await req('GET', '/admin/audit?since=2999-01-01', { token: admin.token })).json).toEqual({ items: [], next_before: null });

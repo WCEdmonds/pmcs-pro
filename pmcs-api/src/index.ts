@@ -1404,7 +1404,11 @@ app.get('/admin/audit', async (c) => {
   const actorId = c.req.query('actor_id');
   if (actorId) { where.push('actor_id = ?'); params.push(actorId); }
   const action = c.req.query('action');
-  if (action) { where.push('action = ?'); params.push(action); }
+  if (action) {
+    // "admin." (trailing dot) filters a whole family; anything else is an exact action.
+    if (action.endsWith('.')) { where.push("substr(action, 1, length(?)) = ?"); params.push(action, action); }
+    else { where.push('action = ?'); params.push(action); }
+  }
   const since = auditTime(c.req.query('since'), 'since');
   if (since) { where.push('at >= ?'); params.push(since); }
   const until = auditTime(c.req.query('until'), 'until', true);

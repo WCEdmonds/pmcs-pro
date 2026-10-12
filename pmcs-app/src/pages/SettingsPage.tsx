@@ -247,7 +247,7 @@ export default function SettingsPage() {
       <Modal open={showSignOutModal} onClose={() => setShowSignOutModal(false)} title="Sign out?">
         {unsentCount > 0 ? (
           <p className="text-accent-amber text-sm mb-4" role="alert">
-            {unsentCount} of your inspection{unsentCount === 1 ? ' has' : 's have'} not been sent to the server yet. They stay on this phone and will send the next time you sign in here.
+            {unsentCount === 1 ? '1 of your inspections has' : `${unsentCount} of your inspections have`} not been sent to the server yet. They stay on this phone and will send the next time you sign in here.
           </p>
         ) : (
           <p className="text-text-secondary text-sm mb-4">Your inspections stay on this device.</p>
@@ -276,7 +276,7 @@ export default function SettingsPage() {
         </p>
         {unsentCount > 0 ? (
           <p className="text-accent-amber text-sm mb-3" role="alert">
-            {unsentCount} of your inspection{unsentCount === 1 ? ' has' : 's have'} not been sent to the server yet. They stay on this phone and will send after you sign in again.
+            {unsentCount === 1 ? '1 of your inspections has' : `${unsentCount} of your inspections have`} not been sent to the server yet. They stay on this phone and will send after you sign in again.
           </p>
         ) : (
           <p className="text-text-secondary text-sm mb-3">Your inspections stay on this device.</p>
