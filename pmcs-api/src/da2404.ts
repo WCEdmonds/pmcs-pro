@@ -55,6 +55,8 @@ function formatInspectionType(type: string | null): string {
     case 'DURING': return 'D';
     case 'AFTER': return 'A';
     case '30_DAY': return '30-Day';
+    case 'WEEKLY': return 'Weekly';
+    case 'MONTHLY': return 'Monthly';
     default: return type ?? '';
   }
 }
