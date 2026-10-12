@@ -26,7 +26,7 @@ export const VEHICLE_REGISTRY: VehicleRegistryEntryWithTm[] = [
     tmDate: '20090630', // Change 6, 30 June 2009
     tmBaseDate: '19971017', // 17 October 1997
     tmChange: 6,
-    itemCount: 21,
+    itemCount: 72,
   },
   {
     type: 'M1152',
@@ -36,7 +36,7 @@ export const VEHICLE_REGISTRY: VehicleRegistryEntryWithTm[] = [
     tmDate: '20090630', // Change 6, 30 June 2009
     tmBaseDate: '19971017',
     tmChange: 6,
-    itemCount: 20,
+    itemCount: 67,
   },
   {
     type: 'LMTV_M1078',

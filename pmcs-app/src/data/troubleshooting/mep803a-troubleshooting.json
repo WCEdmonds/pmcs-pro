@@ -1663,7 +1663,7 @@
       "gl-q4": {
         "id": "gl-q4",
         "type": "question",
-        "text": "Check for loose or broken wires at the battery and alternator. Any problems?",
+        "text": "Check for loose or broken wires at the back of the battery charging alternator and at the BATTERY CHARGE ammeter. Any problems?",
         "options": [
           {
             "label": "Yes — loose or broken wires found",

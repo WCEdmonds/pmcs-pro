@@ -9,6 +9,7 @@ import { db } from '../utils/db';
 import { Button } from '../components/ui/Button';
 import { SyncBanner } from '../components/sync/SyncStatus';
 import type { VehicleType } from '../types';
+import { VEHICLE_REGISTRY } from '../data/vehicles';
 
 import m1151Home from '../assets/images/m1151/m1151-home.jpg';
 import m1078Home from '../assets/images/m1078/m1078-home.jpg';
@@ -30,6 +31,8 @@ interface VehicleFamily {
   variants: VehicleVariant[];
 }
 
+const itemCountFor = (type: VehicleType) => VEHICLE_REGISTRY.find((v) => v.type === type)?.itemCount ?? 0;
+
 const VEHICLE_FAMILIES: VehicleFamily[] = [
   {
     id: 'hmmwv',
@@ -40,13 +43,13 @@ const VEHICLE_FAMILIES: VehicleFamily[] = [
         type: 'M1151',
         name: 'M1151 / M1151A1',
         hint: 'Up-Armored — hardened doors, turret ring, ballistic glass',
-        itemCount: 21,
+        itemCount: itemCountFor('M1151'),
       },
       {
         type: 'M1152',
         name: 'M1152 / M1152A1',
         hint: 'Shelter Carrier — soft-top or expandable shelter on back',
-        itemCount: 20,
+        itemCount: itemCountFor('M1152'),
       },
     ],
   },
@@ -59,7 +62,7 @@ const VEHICLE_FAMILIES: VehicleFamily[] = [
         type: 'LMTV_M1078',
         name: 'M1078 LMTV',
         hint: '2.5-ton cargo truck — the standard "deuce and a half"',
-        itemCount: 24,
+        itemCount: itemCountFor('LMTV_M1078'),
       },
     ],
   },
@@ -72,7 +75,7 @@ const VEHICLE_FAMILIES: VehicleFamily[] = [
         type: 'M1101_TRAILER',
         name: 'M1101 / M1102',
         hint: '3/4-ton and 1¼-ton cargo trailers',
-        itemCount: 19,
+        itemCount: itemCountFor('M1101_TRAILER'),
       },
     ],
   },
@@ -85,7 +88,7 @@ const VEHICLE_FAMILIES: VehicleFamily[] = [
         type: 'MEP803A',
         name: 'MEP-803A / MEP-813A',
         hint: '10kW Tactical Quiet Generator Set',
-        itemCount: 40,
+        itemCount: itemCountFor('MEP803A'),
       },
     ],
   },

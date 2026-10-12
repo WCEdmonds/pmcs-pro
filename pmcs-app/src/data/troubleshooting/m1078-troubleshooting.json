@@ -3193,7 +3193,7 @@
       "st-t5": {
         "id": "st-t5",
         "type": "terminal",
-        "text": "Tire pressures do not match the CTIS setting — notify Unit Maintenance (p1). Steering that binds or is unresponsive is NMC (PMCS item 27).",
+        "text": "Steering binds or is unresponsive — NMC per PMCS item 27. Tire pressures also do not match the CTIS setting; notify Unit Maintenance (p1).",
         "tmPage": "3-3 p1",
         "terminal": {
           "resolution": "needs-maintenance",
@@ -3300,7 +3300,7 @@
       "st-t10": {
         "id": "st-t10",
         "type": "terminal",
-        "text": "Tire pressures do not match the CTIS setting — notify Unit Maintenance (p2).",
+        "text": "Vehicle wanders or pulls — rated NMC for handling. Tire pressures also do not match the CTIS setting; notify Unit Maintenance (p2).",
         "tmPage": "3-3 p2",
         "terminal": {
           "resolution": "needs-maintenance",

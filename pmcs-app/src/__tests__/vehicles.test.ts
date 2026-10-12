@@ -32,3 +32,18 @@ describe('VEHICLE_REGISTRY', () => {
     }
   });
 });
+
+describe('vehicle item counts', () => {
+  it('match the number of PMCS steps in each data file', async () => {
+    const { VEHICLE_REGISTRY } = await import('../data/vehicles');
+    const files: Record<string, string> = {
+      M1151: 'm1151-hmmwv', M1152: 'm1152-hmmwv', LMTV_M1078: 'm1078-lmtv',
+      M1101_TRAILER: 'm1101-trailer', MEP803A: 'mep803a-generator',
+    };
+    for (const v of VEHICLE_REGISTRY) {
+      const data = (await import(`../data/pmcs/${files[v.type]}.json`)).default as { zones: { steps: unknown[] }[] };
+      const steps = data.zones.reduce((n, z) => n + z.steps.length, 0);
+      expect(v.itemCount, v.type).toBe(steps);
+    }
+  });
+});

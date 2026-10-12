@@ -751,8 +751,8 @@
         "text": "Engine started by slave-start and voltmeter is in the green. Batteries are weak — notify unit maintenance.",
         "terminal": {
           "resolution": "needs-maintenance",
-          "readiness": "PMC",
-          "summary": "Engine needed slave-start, voltmeter normal — batteries weak, maintenance to check"
+          "readiness": "NMC",
+          "summary": "Engine will not start without slave-start (PMCS 12b) — batteries weak, maintenance to check"
         },
         "tmPage": "2-23"
       },
@@ -1665,7 +1665,7 @@
       "op-q2": {
         "id": "op-q2",
         "type": "question",
-        "text": "After adding oil, is oil pressure at least 6 psi at idle (Before check) — or, while driving, at least about 30 psi under normal driving and 10 psi at idle?",
+        "text": "After adding oil, is oil pressure at least 6 psi (41 kPa) at idle and 15 psi (103 kPa) under load (Before check, item 12c) — or, while driving, at least about 30 psi (207 kPa) under normal driving and 10 psi (69 kPa) at idle (item 16b)?",
         "options": [
           {
             "label": "Yes — pressure normal",

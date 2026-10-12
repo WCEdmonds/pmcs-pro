@@ -1067,10 +1067,10 @@
           "zoneId": "zone-9",
           "item": "T2-2 #10",
           "itemDescription": "LMHC (If Equipped)",
-          "procedure": "Only if equipped with the LMHC. WARNING: wear heavy leather-palmed gloves when handling wire rope. (a) Check the LMHC for corrosion, cracks, and security of mounting hardware. (b) Pay out the cable completely and inspect for kinks, sharp bends, abrasions, and broken wires (para 2-24). (e) Check the security of the electrical connectors on the overload shutdown box. (f) Inspect electrical cables for cracking, fraying, and chafing. TM Table 2-2 item 10.",
+          "procedure": "Only if equipped with the LMHC. WARNING: wear heavy leather-palmed gloves when handling wire rope. (a) Check the LMHC for corrosion, cracks, and security of mounting hardware. (b) Pay out the cable completely and inspect for kinks, sharp bends, abrasions, and broken wires (para 2-24). (c) Replace the cable if there are six randomly distributed broken wires in any 6 in. (150 mm) section or three broken wires in one bundle in a 6 in. section. (d) Replace the cable if there is kinking, crushing, or other distortion of the cable structure. (e) Check the security of the electrical connectors on the overload shutdown box. (f) Inspect electrical cables for cracking, fraying, and chafing. TM Table 2-2 item 10.",
           "conditionSet": "MONTHLY",
           "isNoGo": true,
-          "noGoCondition": "a. LMHC is damaged or not securely mounted. b. Cable is damaged or excessively worn — six randomly distributed broken wires in any 6 in. (150 mm) section or three broken wires in one bundle in a 6 in. section; kinking, crushing, or other distortion of the cable structure. f. Wiring is frayed, cracked, or excessively worn."
+          "noGoCondition": "a. LMHC is damaged or not securely mounted. b. Cable is damaged or excessively worn. f. Wiring is frayed, cracked, or excessively worn."
         }
       ]
     }

@@ -28,7 +28,7 @@
           "procedure": "(a) Inspect the area where the front roller pin goes through the brake actuator housing for damage and abnormal wear. (b) Inspect the master pin through the middle rear of the actuator for wear or damage. (c) Ensure the mounting nuts and bolts securely fasten the brake actuator assembly to the drawbar. (d) Visually check the breakaway cable and breakaway lever for damage and missing parts. Check that the breakaway lever is in the DOWN position.",
           "conditionSet": "BEFORE",
           "isNoGo": true,
-          "noGoCondition": "a./b. Damage is evident. c. Nuts and bolts missing or damaged. d. Breakaway cable or lever is missing or damaged."
+          "noGoCondition": "a. Damage is evident. b. Damage is evident. c. Nuts and bolts missing or damaged. d. Cable or lever is missing or damaged."
         },
         {
           "id": "m1101-b-003",
