@@ -7,7 +7,25 @@ export interface HistoryEntry {
   faultCount: number;
   /** NMC faults that were NOT corrected on site (matches Summary / DA 2404). */
   nogoCount: number;
+  /** Overall readiness from the open faults (same rule as the server). */
+  readiness: Readiness;
 }
+
+export type Readiness = 'FMC' | 'PMC' | 'NMC';
+
+/**
+ * Vehicle readiness from an inspection's faults, matching the server's status rule:
+ * NMC if any open NMC fault, else PMC if any open PMC fault, else FMC.
+ * A fault corrected on site is closed.
+ */
+export function readinessOf(faults: Pick<Fault, 'readiness' | 'correctedOnSite'>[]): Readiness {
+  const open = faults.filter((f) => !f.correctedOnSite);
+  if (open.some((f) => f.readiness === 'NMC')) return 'NMC';
+  if (open.some((f) => f.readiness === 'PMC')) return 'PMC';
+  return 'FMC';
+}
+
+export const READINESS_BADGE: Record<Readiness, 'green' | 'amber' | 'red'> = { FMC: 'green', PMC: 'amber', NMC: 'red' };
 
 /** Same rule as Summary and the 5988 page. */
 export function isNotMissionCapable(faults: Pick<Fault, 'readiness' | 'correctedOnSite'>[]): boolean {
@@ -42,6 +60,7 @@ export const useHistoryStore = create<HistoryState>((set) => ({
             session,
             faultCount: faults.length,
             nogoCount: faults.filter((f) => f.readiness === 'NMC' && !f.correctedOnSite).length,
+            readiness: readinessOf(faults),
           };
         })
       );

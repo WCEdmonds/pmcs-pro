@@ -9,6 +9,7 @@
 import { db, type SyncStateEntry, type PendingFaultResolution } from './db';
 import { api, ApiError, getSessionDodId, isNetworkError } from './api';
 import { postInspection, dataUrlToBlob } from './sync';
+import { localTimeHHMM } from './format';
 import { useUserStore } from '../stores/userStore';
 import type { InspectionSession } from '../types';
 
@@ -156,7 +157,22 @@ async function syncSession(session: InspectionSession, unit: string): Promise<vo
         completed_at: a.completedAt,
       }));
     if (payload.length) await api('POST', '/diagnosis-attempts', { body: payload });
-    await patchState(session.id, { diagnosisUploaded: true });
+    state = await patchState(session.id, { diagnosisUploaded: true });
+  }
+
+  // DA 2404 on the server, with the supervisor entered on the phone. Covers inspections saved
+  // offline (whose form was made on the device); the server reuses an existing form, so this
+  // never regenerates or re-emails one.
+  if (!state.formCreated) {
+    await api('POST', `/inspections/${encodeURIComponent(res.inspection_id)}/da2404`, {
+      body: {
+        supervisor_name: session.supervisorName || null,
+        supervisor_dod_id: session.supervisorDodId || null,
+        local_time: localTimeHHMM(session.completedAt ? new Date(session.completedAt) : new Date()),
+      },
+      timeoutMs: 30_000,
+    });
+    await patchState(session.id, { formCreated: true });
   }
 
   await patchState(session.id, {

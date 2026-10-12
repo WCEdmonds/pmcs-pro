@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Check, ExternalLink } from 'lucide-react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useSessionStore } from '../stores/sessionStore';
-import { isNotMissionCapable } from '../stores/historyStore';
+import { readinessOf, READINESS_BADGE } from '../stores/historyStore';
 import { useSessionLoader } from '../hooks/useSessionLoader';
 import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
@@ -91,7 +91,7 @@ export default function Form5988Page() {
   const vehicle = VEHICLE_REGISTRY.find((v) => v.type === session.vehicleType);
   const goCount = stepResults.filter((r) => r.status === 'GO').length;
   const faultCount = stepResults.filter((r) => r.status === 'FAULT').length;
-  const missionCapable = !isNotMissionCapable(faults);
+  const readiness = readinessOf(faults);
 
   const showPdf = (w: Window | null, url: string) => {
     setPdfUrl(url);
@@ -191,8 +191,8 @@ export default function Form5988Page() {
       <div className="px-4 pt-6 pb-4 flex-shrink-0">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold font-display text-text-primary">Inspection Review</h1>
-          <Badge variant={missionCapable ? 'green' : 'red'}>
-            {missionCapable ? 'FMC' : 'NMC'}
+          <Badge variant={READINESS_BADGE[readiness]}>
+            {readiness}
           </Badge>
         </div>
         {isCompleted && (

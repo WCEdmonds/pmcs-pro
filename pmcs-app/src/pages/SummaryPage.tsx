@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { useNavigate, useParams, Navigate } from 'react-router-dom';
 import { useSessionLoader } from '../hooks/useSessionLoader';
 import { SessionGate } from '../components/ui/NotFound';
-import { isNotMissionCapable } from '../stores/historyStore';
+import { readinessOf, READINESS_BADGE } from '../stores/historyStore';
 import { motion } from 'framer-motion';
 import { Check, OctagonAlert } from 'lucide-react';
 import { useSessionStore } from '../stores/sessionStore';
@@ -33,7 +33,7 @@ export default function SummaryPage() {
     const checked = stepResults.filter((r) => r.status !== 'NOT_CHECKED').length;
     const go = stepResults.filter((r) => r.status === 'GO').length;
     const fault = stepResults.filter((r) => r.status === 'FAULT').length;
-    return { total, checked, go, fault, missionCapable: !isNotMissionCapable(faults) };
+    return { total, checked, go, fault, readiness: readinessOf(faults) };
   }, [stepResults, faults]);
 
   const faultsByZone = useMemo(() => {
@@ -74,8 +74,8 @@ export default function SummaryPage() {
       <div className="px-4 pt-6 pb-4 border-b border-border flex-shrink-0">
         <div className="flex items-center justify-between mb-3">
           <h1 className="text-2xl font-bold font-display text-text-primary">Summary</h1>
-          <Badge variant={stats.missionCapable ? 'green' : 'red'}>
-            {stats.missionCapable ? 'FMC' : 'NMC'}
+          <Badge variant={READINESS_BADGE[stats.readiness]}>
+            {stats.readiness}
           </Badge>
         </div>
         <p className="text-sm text-text-secondary mb-3">{stats.checked}/{stats.total} items checked</p>

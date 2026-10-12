@@ -29,6 +29,8 @@ export interface SyncStateEntry {
   /** local photo ids already uploaded */
   uploadedPhotoIds?: string[];
   diagnosisUploaded?: boolean;
+  /** Server DA 2404 exists for this inspection (created by sync, so offline saves get one too). */
+  formCreated?: boolean;
   lastError?: string;
   attempts: number;
   lastAttempt?: string;

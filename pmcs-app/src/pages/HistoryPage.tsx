@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Clock, FileText, PlayCircle } from 'lucide-react';
-import { useHistoryStore } from '../stores/historyStore';
+import { useHistoryStore, READINESS_BADGE } from '../stores/historyStore';
 import { useUserStore } from '../stores/userStore';
 import { useSessionStore } from '../stores/sessionStore';
 import { Badge } from '../components/ui/Badge';
@@ -47,7 +47,6 @@ export default function HistoryPage() {
           {entries.map((entry, i) => {
             const vehicle = VEHICLE_REGISTRY.find((v) => v.type === entry.session.vehicleType);
             const inProgress = entry.session.status === 'IN_PROGRESS';
-            const hasNoGo = entry.nogoCount > 0;
             return (
               <motion.li
                 key={entry.session.id}
@@ -94,8 +93,8 @@ export default function HistoryPage() {
                     Resume
                   </Button>
                 ) : (
-                  <Badge variant={hasNoGo ? 'red' : 'green'}>
-                    {hasNoGo ? 'NMC' : 'FMC'}
+                  <Badge variant={READINESS_BADGE[entry.readiness]}>
+                    {entry.readiness}
                   </Badge>
                 )}
               </motion.li>

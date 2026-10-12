@@ -148,6 +148,19 @@ describe('recovery of old-app data', () => {
     expect(st).toMatchObject({ status: 'synced', remoteInspectionId: 'remote-sess-stuck', uploadedPhotoIds: ['photo-1'], diagnosisUploaded: true });
   });
 
+  it('asks the server for the DA 2404 once per inspection, with the supervisor from the phone', async () => {
+    await db.sessions.put({ ...oldSession('with-sup'), supervisorName: 'SSG Example', supervisorDodId: '1234567890' });
+    await syncAll({ force: true });
+    const form = calls.filter((c) => c.path === '/inspections/remote-with-sup/da2404');
+    expect(form).toHaveLength(1);
+    expect(form[0].method).toBe('POST');
+    expect(form[0].body).toMatchObject({ supervisor_name: 'SSG Example', supervisor_dod_id: '1234567890' });
+    expect((await db.syncState.get('with-sup'))?.formCreated).toBe(true);
+    await db.syncState.update('with-sup', { status: 'pending' });
+    await syncAll({ force: true });
+    expect(calls.filter((c) => c.path === '/inspections/remote-with-sup/da2404')).toHaveLength(1);
+  });
+
   it('recoverLocalData creates pending sync rows without network', async () => {
     await seedOldAppData();
     await recoverLocalData();

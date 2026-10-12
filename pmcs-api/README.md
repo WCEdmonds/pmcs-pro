@@ -22,7 +22,7 @@ Backend for PMCS Pro on Cloudflare: a Worker (Hono) with D1 and R2. It replaces 
 - **Write access** covers the own unit only: sync, fault acknowledge/resolve, photos, diagnosis attempts and DA 2404 generation or upload. `inspector_id` is always the caller.
 - **`uic_lookup`** is readable by anyone, including signed-out callers. A signed-in user may name a UIC that has no name yet, but only members of that unit may rename it.
 - **UICs** are trimmed and upper-cased, and must be 6 letters or digits (`/^[A-Z0-9]{6}$/`) everywhere one is accepted.
-- **Out-of-scope requests** behave as if the record does not exist: lists drop the rows and single records return 404. A write the caller could only read returns 403.
+- **Out-of-scope requests** behave as if the record does not exist: lists drop the rows and single records return 404. A write to a record the caller can only read returns 404 (fault updates, photos, diagnosis attempts) or 403 (sync, DA 2404 generate/upload); either way nothing changes.
 
 ## Endpoints
 
