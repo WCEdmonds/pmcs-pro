@@ -99,7 +99,7 @@ export default function ProfileSetupPage() {
         <p className="mt-1 text-text-secondary text-sm">DOD ID: {dodId}</p>
       </div>
 
-      <form onSubmit={handleSubmit} noValidate className="flex-1 flex flex-col gap-4 overflow-y-auto pb-4">
+      <form onSubmit={handleSubmit} noValidate className="flex-1 min-h-0 flex flex-col gap-4 overflow-y-auto pb-4">
         <Select
           label="Rank"
           options={ALL_RANKS}
