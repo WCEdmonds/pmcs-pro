@@ -9,6 +9,8 @@ describe('audit details formatting', () => {
     expect(describeAction('user.reset_pin')).toBe('User: reset PIN')
     expect(describeAction('unit_settings.update')).toBe('Unit settings: update')
     expect(describeAction('login')).toBe('Login')
+    expect(describeAction('admin.pin_reset')).toBe('Admin: PIN reset')
+    expect(describeAction('admin.role_change')).toBe('Admin: role change')
   })
 
   it('renders from/to objects and paired old_/new_ keys as one change line', () => {

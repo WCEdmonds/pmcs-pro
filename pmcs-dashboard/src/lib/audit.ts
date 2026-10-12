@@ -74,7 +74,10 @@ export function describeAction(action: string): string {
   if (dot < 0) return humanizeKey(action)
   const area = humanizeKey(action.slice(0, dot))
   const verb = humanizeKey(action.slice(dot + 1))
-  return `${area}: ${verb.charAt(0).toLowerCase()}${verb.slice(1)}`
+  // Lower-case the first word unless it is an acronym ("PIN reset", "UIC").
+  const firstWord = verb.split(' ')[0]
+  const keep = firstWord.length > 1 && firstWord === firstWord.toUpperCase()
+  return `${area}: ${keep ? verb : verb.charAt(0).toLowerCase() + verb.slice(1)}`
 }
 
 /** Details may arrive as an object or as a JSON string; anything else is kept as-is. */
