@@ -8,9 +8,9 @@ import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { VEHICLE_REGISTRY } from '../data/vehicles';
 import { generateDA2404 } from '../utils/generateDA2404';
-import { syncInspectionToSupabase } from '../utils/sync';
+import { syncInspection } from '../utils/sync';
 import { enqueueSync } from '../utils/syncQueue';
-import { supabase } from '../utils/supabase';
+import { api } from '../utils/api';
 import type { InspectionSession, Fault, StepResult } from '../types';
 
 export default function Form5988Page() {
@@ -92,11 +92,11 @@ export default function Form5988Page() {
     await completeSession(remarks);
     setSaved(true);
 
-    // 2. Sync to Supabase — capture the Supabase inspection ID for PDF storage
-    let supabaseInspectionId: string | null = null;
+    // 2. Sync to the server — capture the server inspection ID for PDF storage
+    let remoteInspectionId: string | null = null;
     setSyncStatus('syncing');
     try {
-      supabaseInspectionId = await syncInspectionToSupabase(session, sessionFaults);
+      remoteInspectionId = await syncInspection(session, sessionFaults);
       setSyncStatus('synced');
     } catch (err) {
       console.warn('Sync failed, queuing for retry:', err);
@@ -105,23 +105,21 @@ export default function Form5988Page() {
     }
 
     // 3. Try server-side generation (includes prior faults, stores to generated_forms)
-    if (supabaseInspectionId) {
-      const { data: { session: authSession } } = await supabase.auth.getSession();
-      if (authSession) {
-        const { data, error } = await supabase.functions.invoke('generate-da2404', {
-          body: { inspection_id: supabaseInspectionId },
+    if (remoteInspectionId) {
+      try {
+        const data = await api<{ url: string }>('POST', `/inspections/${remoteInspectionId}/da2404`, {
+          body: { supervisor_name: supervisorName || null, supervisor_dod_id: supervisorDodId || null },
         });
-        if (!error && data?.url) {
-          window.open(data.url, '_blank');
-          setIsGenerating(false);
-          setTimeout(() => { clearSession(); navigate('/history'); }, 2000);
-          return;
-        }
-        console.warn('Server-side generation failed, falling back to client:', error || data?.error);
+        window.open(data.url, '_blank');
+        setIsGenerating(false);
+        setTimeout(() => { clearSession(); navigate('/history'); }, 2000);
+        return;
+      } catch (err) {
+        console.warn('Server-side generation failed, falling back to client:', err);
       }
     }
 
-    // 4. Client-side generation fallback
+    // 4. Client-side generation fallback (offline or server error)
     try {
       const pdfBytes = await generateDA2404({
         session,
@@ -132,32 +130,7 @@ export default function Form5988Page() {
       });
       const blob = new Blob([pdfBytes as BlobPart], { type: 'application/pdf' });
 
-      // If synced, upload PDF to storage so the dashboard can find it
-      if (supabaseInspectionId) {
-        const storagePath = `da2404/${supabaseInspectionId}.pdf`;
-        const { error: uploadError } = await supabase.storage
-          .from('generated')
-          .upload(storagePath, blob, { contentType: 'application/pdf' });
-        if (!uploadError) {
-          await supabase.from('generated_forms').insert({
-            inspection_id: supabaseInspectionId,
-            pdf_storage_path: storagePath,
-          } as never);
-          const { data: signedData } = await supabase.storage
-            .from('generated')
-            .createSignedUrl(storagePath, 3600);
-          if (signedData?.signedUrl) {
-            window.open(signedData.signedUrl, '_blank');
-            setIsGenerating(false);
-            setTimeout(() => { clearSession(); navigate('/history'); }, 2000);
-            return;
-          }
-        } else {
-          console.warn('Storage upload failed:', uploadError.message);
-        }
-      }
-
-      // Last resort: open as local blob URL
+      // Open as local blob URL
       const url = URL.createObjectURL(blob);
       window.open(url, '_blank');
       setTimeout(() => URL.revokeObjectURL(url), 60000);

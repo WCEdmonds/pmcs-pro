@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Plus, X, Loader2, Eye } from 'lucide-react'
-import { supabase } from '../lib/supabase'
+import { api } from '../lib/api'
 
 interface WatchedUic {
   id: string
@@ -23,14 +23,16 @@ export function Settings() {
   async function loadData() {
     setLoading(true)
 
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return
-
-    const profileRes = await supabase.from('profiles').select('unit').eq('id', user.id).single()
-    const watchedRes = await supabase.from('dashboard_watched_uics').select('id, uic').eq('user_id', user.id).order('created_at', { ascending: true })
-
-    setOwnUic((profileRes.data as { unit: string | null } | null)?.unit ?? null)
-    setWatchedUics((watchedRes.data ?? []) as WatchedUic[])
+    try {
+      const [profile, watched] = await Promise.all([
+        api<{ unit: string | null }>('GET', '/me'),
+        api<WatchedUic[]>('GET', '/watched-uics'),
+      ])
+      setOwnUic(profile.unit ?? null)
+      setWatchedUics(watched)
+    } catch (err) {
+      setError((err as Error).message)
+    }
     setLoading(false)
   }
 
@@ -50,28 +52,20 @@ export function Settings() {
     setAdding(true)
     setError(null)
 
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return
-
-    const { data, error: insertError } = await supabase
-      .from('dashboard_watched_uics')
-      .insert({ user_id: user.id, uic } as never)
-      .select('id, uic')
-      .single()
-
-    if (insertError) {
-      setError(insertError.message)
-    } else if (data) {
-      setWatchedUics((prev) => [...prev, data as WatchedUic])
+    try {
+      const data = await api<WatchedUic>('POST', '/watched-uics', { body: { uic } })
+      setWatchedUics((prev) => [...prev, data])
       setNewUic('')
       window.dispatchEvent(new Event('watched-uics-changed'))
+    } catch (err) {
+      setError((err as Error).message)
     }
     setAdding(false)
   }
 
   async function handleRemove(id: string) {
     setRemovingId(id)
-    await supabase.from('dashboard_watched_uics').delete().eq('id', id)
+    await api('DELETE', `/watched-uics/${id}`)
     setWatchedUics((prev) => prev.filter((w) => w.id !== id))
     window.dispatchEvent(new Event('watched-uics-changed'))
     setRemovingId(null)

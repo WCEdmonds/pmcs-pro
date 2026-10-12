@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Shield, Loader2 } from 'lucide-react'
-import { supabase } from '../lib/supabase'
+import { signIn, signUp } from '../lib/api'
 
 export function LoginPage() {
   const navigate = useNavigate()
@@ -21,13 +21,10 @@ export function LoginPage() {
     setError('')
     setLoading(true)
 
-    const { error: authError } = await supabase.auth.signInWithPassword({
-      email: `${dodId}@id.pmcspro.app`,
-      password: pin,
-    })
-
-    if (authError) {
-      setError('Invalid DOD ID or PIN')
+    try {
+      await signIn(dodId, pin)
+    } catch (err) {
+      setError((err as Error).message || 'Invalid DOD ID or PIN')
       setLoading(false)
       return
     }
@@ -50,27 +47,11 @@ export function LoginPage() {
 
     setLoading(true)
 
-    // Use Edge Function to create user (bypasses email verification)
-    const { data: signupData, error: signUpError } = await supabase.functions.invoke('signup', {
-      body: { dod_id: dodId, pin, rank, first_name: firstName, last_name: lastName, mi: '', unit },
-    })
-
-    if (signUpError || signupData?.error) {
-      setError(signupData?.error || signUpError?.message || 'Registration failed')
+    try {
+      await signUp(dodId, pin, { rank, first_name: firstName, last_name: lastName, mi: '', unit })
+    } catch (err) {
+      setError((err as Error).message || 'Registration failed')
       setLoading(false)
-      return
-    }
-
-    // Sign in after successful registration
-    const { error: signInError } = await supabase.auth.signInWithPassword({
-      email: `${dodId}@id.pmcspro.app`,
-      password: pin,
-    })
-
-    if (signInError) {
-      setError('Account created but login failed. Try signing in.')
-      setLoading(false)
-      setMode('login')
       return
     }
 

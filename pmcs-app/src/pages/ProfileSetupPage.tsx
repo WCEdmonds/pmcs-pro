@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useUserStore } from '../stores/userStore';
-import { supabaseSignUp } from '../utils/auth';
+import { remoteSignUp } from '../utils/auth';
 import { getUnitName, saveUicMapping } from '../utils/uicLookup';
 import { Button } from '../components/ui/Button';
 import { UicUnitPrompt } from '../components/ui/UicUnitPrompt';
@@ -58,8 +58,8 @@ export default function ProfileSetupPage() {
     setError('');
 
     try {
-      // Register with Supabase
-      await supabaseSignUp(dodId, pin, {
+      // Register with the server
+      await remoteSignUp(dodId, pin, {
         rank,
         last_name: lastName.trim(),
         first_name: firstName.trim(),
@@ -67,7 +67,7 @@ export default function ProfileSetupPage() {
         unit: unit.trim(),
       });
     } catch (err: any) {
-      console.warn('Supabase signup failed, continuing with local only:', err);
+      console.warn('Server signup failed, continuing with local only:', err);
       // Don't block — local auth still works
     }
 

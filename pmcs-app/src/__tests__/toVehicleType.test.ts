@@ -11,7 +11,7 @@ function toVehicleType(model: string | null): string | null {
   return null;
 }
 
-describe('toVehicleType (Supabase model string mapping)', () => {
+describe('toVehicleType (server model string mapping)', () => {
   it('maps null to null', () => {
     expect(toVehicleType(null)).toBeNull();
   });

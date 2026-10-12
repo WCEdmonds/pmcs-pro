@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { supabase } from '../lib/supabase'
+import { api } from '../lib/api'
 
 interface UseWatchedUicsResult {
   uics: string[]
@@ -13,16 +13,19 @@ export function useWatchedUics(): UseWatchedUicsResult {
   const [loading, setLoading] = useState(true)
 
   const load = useCallback(async () => {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) { setLoading(false); return }
-
-    const [profileRes, watchedRes] = await Promise.all([
-      supabase.from('profiles').select('unit').eq('id', user.id).single(),
-      supabase.from('dashboard_watched_uics').select('uic').eq('user_id', user.id),
-    ])
-
-    const own = (profileRes.data as { unit: string | null } | null)?.unit ?? null
-    const watched = (watchedRes.data ?? []).map((w: { uic: string }) => w.uic)
+    let own: string | null = null
+    let watched: string[] = []
+    try {
+      const [profile, watchedRows] = await Promise.all([
+        api<{ unit: string | null }>('GET', '/me'),
+        api<{ uic: string }[]>('GET', '/watched-uics'),
+      ])
+      own = profile.unit ?? null
+      watched = watchedRows.map((w) => w.uic)
+    } catch {
+      setLoading(false)
+      return
+    }
 
     setOwnUic(own)
     setWatchedUics(watched)

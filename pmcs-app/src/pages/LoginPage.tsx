@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabaseSignIn, checkDodIdExists, getSupabaseProfile } from '../utils/auth';
+import { remoteSignIn, checkDodIdExists, getRemoteProfile } from '../utils/auth';
 import { useUserStore } from '../stores/userStore';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
@@ -38,8 +38,8 @@ export default function LoginPage() {
     setError('');
 
     try {
-      await supabaseSignIn(dodId.trim(), pin);
-      const profile = await getSupabaseProfile();
+      await remoteSignIn(dodId.trim(), pin);
+      const profile = await getRemoteProfile();
       if (profile) {
         useUserStore.getState().setUser({
           dodId: profile.dod_id,

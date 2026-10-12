@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { AlertTriangle, CheckCircle, ClipboardList, Loader2 } from 'lucide-react'
-import { supabase } from '../lib/supabase'
+import { api } from '../lib/api'
 import { useRealtimeRefresh } from '../hooks/useRealtimeRefresh'
 import { useWatchedUics } from '../hooks/useWatchedUics'
 import type { Fault, Vehicle } from '../types/database'
@@ -44,20 +44,11 @@ export function FaultQueue() {
     if (uicsLoading) return
     if (isInitialLoad.current) setLoading(true)
 
-    let vehicleQuery = supabase.from('vehicles').select('*').order('bumper_number')
-    if (uics.length > 0) {
-      vehicleQuery = vehicleQuery.in('unit', uics)
-    }
-
-    const vehiclesRes = await vehicleQuery
-    const allVehicles = (vehiclesRes.data ?? []) as Vehicle[]
+    const allVehicles = await api<Vehicle[]>('GET', '/vehicles', { query: { unit: uics } })
     setVehicles(allVehicles)
 
     const vehicleIds = allVehicles.map((v) => v.id)
-    let faultsQuery = supabase.from('faults').select('*').neq('resolution_status', 'CORRECTED').order('created_at', { ascending: false })
-    if (vehicleIds.length > 0) {
-      faultsQuery = faultsQuery.in('vehicle_id', vehicleIds)
-    } else if (uics.length > 0) {
+    if (vehicleIds.length === 0 && uics.length > 0) {
       // UICs are set but no vehicles matched — no faults to show
       setFaults([])
       isInitialLoad.current = false
@@ -65,8 +56,9 @@ export function FaultQueue() {
       return
     }
 
-    const faultsRes = await faultsQuery
-    const allFaults = (faultsRes.data ?? []) as Fault[]
+    const allFaults = await api<Fault[]>('GET', '/faults', {
+      query: uics.length > 0 ? { unit: uics, open: 1 } : { open: 1 },
+    })
 
     // Build vehicle map
     const vehicleMap = new Map<string, string>()
@@ -79,21 +71,13 @@ export function FaultQueue() {
     let inspectorNameByInspection = new Map<string, string>()
 
     if (inspectionIds.length > 0) {
-      const { data: inspections } = await supabase
-        .from('inspections')
-        .select('id, inspector_id')
-        .in('id', inspectionIds)
-
-      const insRecords = (inspections ?? []) as InspectionIdRecord[]
+      const insRecords = await api<InspectionIdRecord[]>('GET', '/inspections', { query: { id: inspectionIds } })
       const inspectorIds = [...new Set(insRecords.map((i) => i.inspector_id))]
       if (inspectorIds.length > 0) {
-        const { data: profiles } = await supabase
-          .from('profiles')
-          .select('id, rank, last_name')
-          .in('id', inspectorIds)
+        const profiles = await api<ProfileRecord[]>('GET', '/profiles', { query: { id: inspectorIds } })
 
         const profileMap = new Map<string, string>()
-        for (const p of (profiles ?? []) as ProfileRecord[]) {
+        for (const p of profiles) {
           profileMap.set(p.id, `${p.rank ?? ''} ${p.last_name ?? ''}`.trim())
         }
 
@@ -122,7 +106,7 @@ export function FaultQueue() {
     const wo = workOrderInputs[faultId]
     if (wo) updates.gcss_work_order = wo
 
-    await supabase.from('faults').update(updates as never).eq('id', faultId)
+    await api('PATCH', '/faults', { body: { ids: [faultId], ...updates } })
     setFaults((prev) =>
       prev.map((f) => f.id === faultId ? { ...f, resolution_status: 'ACKNOWLEDGED' as const, gcss_work_order: wo || f.gcss_work_order } : f)
     )
@@ -131,16 +115,14 @@ export function FaultQueue() {
 
   async function handleResolve(faultId: string) {
     setActionId(faultId)
-    const { data: { user } } = await supabase.auth.getUser()
     const wo = workOrderInputs[faultId]
-    const updates: { resolution_status: string; resolved_at: string; resolved_by: string | null; gcss_work_order?: string } = {
+    // The server stamps resolved_at / resolved_by from the session
+    const updates: { resolution_status: string; gcss_work_order?: string } = {
       resolution_status: 'CORRECTED',
-      resolved_at: new Date().toISOString(),
-      resolved_by: user?.id ?? null,
     }
     if (wo) updates.gcss_work_order = wo
 
-    await supabase.from('faults').update(updates as never).eq('id', faultId)
+    await api('PATCH', '/faults', { body: { ids: [faultId], ...updates } })
     setFaults((prev) => prev.filter((f) => f.id !== faultId))
     setActionId(null)
   }

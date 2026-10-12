@@ -15,3 +15,10 @@ dist
 .claude/
 .agents/
 docs/superpowers/
+
+# Cloudflare Worker local state
+.wrangler
+.dev.vars
+
+# Supabase export output (contains PIN hashes and data)
+supabase-export/

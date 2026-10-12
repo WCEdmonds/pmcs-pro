@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Check, HelpCircle, AlertTriangle } from 'lucide-react';
-import { supabase } from '../utils/supabase';
+import { api } from '../utils/api';
 import { useSessionStore } from '../stores/sessionStore';
 import { Button } from '../components/ui/Button';
 import { Badge } from '../components/ui/Badge';
@@ -12,7 +12,7 @@ interface OpenFault {
   item: string;
   item_description: string;
   description: string;
-  fault_type: string;
+  readiness: string | null;
   zone: string;
   created_at: string;
 }
@@ -41,24 +41,18 @@ export default function PriorFaultReviewPage() {
 
     // Find the vehicle by normalized bumper number
     const bumperNormalized = currentSession.bumperNumber.replace(/[-\s]/g, '').toUpperCase();
-    const { data: vehicle } = await supabase
-      .from('vehicles')
-      .select('id')
-      .eq('bumper_number_normalized', bumperNormalized)
-      .eq('unit', currentSession.unit)
-      .single();
+    const vehicle = await api<{ id: string }[]>('GET', '/vehicles', {
+      query: { bumper_normalized: bumperNormalized, unit: currentSession.unit },
+    }).then((rows) => rows[0] ?? null).catch(() => null);
 
     if (!vehicle) {
       setLoading(false);
       return;
     }
 
-    const { data: openFaults } = await supabase
-      .from('faults')
-      .select('id, item, item_description, description, fault_type, zone, created_at')
-      .eq('vehicle_id', vehicle.id)
-      .neq('resolution_status', 'CORRECTED')
-      .order('created_at');
+    const openFaults = await api<OpenFault[]>('GET', '/faults', {
+      query: { vehicle_id: vehicle.id, open: 1, order: 'asc' },
+    }).catch(() => [] as OpenFault[]);
 
     setFaults((openFaults || []) as OpenFault[]);
 
@@ -78,18 +72,15 @@ export default function PriorFaultReviewPage() {
   const handleContinue = async () => {
     setSaving(true);
 
-    // Update resolved faults in Supabase
-    const { data: { user } } = await supabase.auth.getUser();
+    // Mark resolved faults on the server
     const resolvedIds = Object.entries(decisions)
       .filter(([, d]) => d === 'resolved')
       .map(([id]) => id);
 
     if (resolvedIds.length > 0) {
-      await supabase.from('faults').update({
-        resolution_status: 'CORRECTED',
-        resolved_at: new Date().toISOString(),
-        resolved_by: user?.id || null,
-      } as never).in('id', resolvedIds);
+      await api('PATCH', '/faults', {
+        body: { ids: resolvedIds, resolution_status: 'CORRECTED' },
+      }).catch((err) => console.warn('Failed to resolve prior faults:', err));
     }
 
     setSaving(false);
@@ -143,8 +134,8 @@ export default function PriorFaultReviewPage() {
                   </p>
                   <p className="text-sm text-text-secondary mt-0.5">{fault.description}</p>
                 </div>
-                <Badge variant={fault.fault_type === 'NMC' ? 'red' : 'amber'}>
-                  {fault.fault_type === 'NMC' ? 'NMC' : 'PMC'}
+                <Badge variant={fault.readiness === 'NMC' ? 'red' : 'amber'}>
+                  {fault.readiness === 'NMC' ? 'NMC' : 'PMC'}
                 </Badge>
               </div>
               <p className="text-xs text-text-secondary/60 mb-3">

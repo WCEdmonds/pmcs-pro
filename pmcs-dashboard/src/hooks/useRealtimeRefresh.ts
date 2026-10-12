@@ -1,37 +1,35 @@
-import { useEffect, useRef } from 'react'
-import { supabase } from '../lib/supabase'
+import { useEffect, useLayoutEffect, useRef } from 'react'
 
 type TableName = 'vehicles' | 'faults' | 'inspections' | 'generated_forms' | 'diagnosis_attempts'
 
-let channelCounter = 0
+const POLL_INTERVAL_MS = 15_000
 
 /**
- * Subscribe to Supabase Realtime postgres changes on the given tables.
- * Calls `onRefresh` whenever an INSERT, UPDATE, or DELETE occurs.
+ * Keeps dashboard data fresh by polling while the tab is visible and
+ * refreshing immediately when the tab regains focus. (Replaces database
+ * Realtime; `tables` is kept so call sites document what they depend on.)
  */
 export function useRealtimeRefresh(
-  tables: TableName[],
+  _tables: TableName[],
   onRefresh: () => void
 ) {
   const callbackRef = useRef(onRefresh)
-  callbackRef.current = onRefresh
+  useLayoutEffect(() => {
+    callbackRef.current = onRefresh
+  })
 
   useEffect(() => {
-    const channelName = `dashboard-rt-${++channelCounter}`
-    const channel = supabase.channel(channelName)
-
-    for (const table of tables) {
-      channel.on(
-        'postgres_changes',
-        { event: '*', schema: 'public', table },
-        () => callbackRef.current()
-      )
+    const refresh = () => {
+      if (document.visibilityState === 'visible') callbackRef.current()
     }
-
-    channel.subscribe()
+    const timer = window.setInterval(refresh, POLL_INTERVAL_MS)
+    document.addEventListener('visibilitychange', refresh)
+    window.addEventListener('focus', refresh)
 
     return () => {
-      supabase.removeChannel(channel)
+      window.clearInterval(timer)
+      document.removeEventListener('visibilitychange', refresh)
+      window.removeEventListener('focus', refresh)
     }
   }, [])
 }

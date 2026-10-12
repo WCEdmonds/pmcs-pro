@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useEffect, useState, lazy, Suspense } from 'react'
-import type { User } from '@supabase/supabase-js'
-import { supabase } from './lib/supabase'
+import { getSessionUserId, onAuthChange } from './lib/api'
 import { DashboardLayout } from './components/DashboardLayout'
 
 const LoginPage = lazy(() => import('./pages/LoginPage').then(m => ({ default: m.LoginPage })))
@@ -12,29 +11,9 @@ const PmcsCompliance = lazy(() => import('./pages/PmcsCompliance').then(m => ({ 
 const Settings = lazy(() => import('./pages/Settings').then(m => ({ default: m.Settings })))
 
 function AuthGuard({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [user, setUser] = useState<string | null>(() => getSessionUserId())
 
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null)
-      setLoading(false)
-    })
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null)
-    })
-
-    return () => subscription.unsubscribe()
-  }, [])
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-screen bg-bg-primary">
-        <div className="text-text-secondary font-display text-lg">Loading...</div>
-      </div>
-    )
-  }
+  useEffect(() => onAuthChange(() => setUser(getSessionUserId())), [])
 
   if (!user) {
     return <Navigate to="/login" replace />

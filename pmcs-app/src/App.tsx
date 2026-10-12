@@ -1,8 +1,8 @@
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { type ReactNode, useEffect, useState, lazy, Suspense, useRef } from 'react';
 import { useUserStore } from './stores/userStore';
-import { supabase } from './utils/supabase';
-import { getSupabaseProfile } from './utils/auth';
+import { onAuthChange } from './utils/api';
+import { getRemoteProfile, hasRemoteSession } from './utils/auth';
 import { AppLayout } from './components/layout/AppLayout';
 import { ErrorBoundary } from './components/ui/ErrorBoundary';
 import { startSyncListener } from './utils/syncQueue';
@@ -33,12 +33,11 @@ function AppRoutes() {
   const setUser = useUserStore((s) => s.setUser);
   const syncCleanup = useRef<(() => void) | null>(null);
 
-  // Restore session from Supabase auth (the only source of truth)
+  // Restore session from the stored API token (the only source of truth)
   useEffect(() => {
     const restore = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        const profile = await getSupabaseProfile();
+      if (hasRemoteSession()) {
+        const profile = await getRemoteProfile();
         if (profile) {
           setUser({
             dodId: profile.dod_id,
@@ -58,14 +57,14 @@ function AppRoutes() {
     syncCleanup.current = startSyncListener();
 
     // Listen for auth changes (sign in / sign out)
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event) => {
-      if (event === 'SIGNED_OUT') {
+    const unsubscribeAuth = onAuthChange((signedIn) => {
+      if (!signedIn) {
         useUserStore.getState().logout();
       }
     });
 
     return () => {
-      subscription.unsubscribe();
+      unsubscribeAuth();
       syncCleanup.current?.();
     };
   }, []);

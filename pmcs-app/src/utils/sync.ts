@@ -1,4 +1,4 @@
-import { supabase } from './supabase';
+import { api, getSessionUserId } from './api';
 import { db } from './db';
 import type { InspectionSession, Fault } from '../types';
 import { VEHICLE_REGISTRY } from '../data/vehicles';
@@ -12,156 +12,86 @@ function dataUrlToBlob(dataUrl: string): Blob {
   return new Blob([arr], { type: mime });
 }
 
-export async function syncInspectionToSupabase(
+export async function syncInspection(
   session: InspectionSession,
   faults: Fault[]
 ): Promise<string> {
   // Verify we have an auth session
-  const { data: { session: authSession } } = await supabase.auth.getSession();
-  if (!authSession) {
+  if (!getSessionUserId()) {
     throw new Error('No auth session — sign out and sign back in to enable sync');
   }
 
   const vehicle = VEHICLE_REGISTRY.find((v) => v.type === session.vehicleType);
 
-  // Step 1: Upsert vehicle (normalized bumper number handles HQ-4 vs HQ4)
-  const bumperNormalized = session.bumperNumber.replace(/[-\s]/g, '').toUpperCase();
-  const { data: vehicleData, error: vehicleError } = await supabase.from('vehicles').upsert({
-    bumper_number: session.bumperNumber,
-    bumper_number_normalized: bumperNormalized,
-    vehicle_type: session.vehicleType,
-    serial_number: session.serialNumber || null,
-    registration_number: session.registrationNumber || null,
-    nomenclature: vehicle?.name || session.vehicleType,
-    unit: session.unit,
-    current_odometer: session.odometer,
-  } as never, { onConflict: 'bumper_number_normalized,unit' }).select('id').single();
+  // Vehicle upsert + inspection upsert + fault insert happen server-side in one
+  // call, idempotent on the client session id so retries don't duplicate faults.
+  const result = await api<{ inspection_id: string; fault_ids: string[] }>('POST', '/inspections/sync', {
+    body: {
+      vehicle: {
+        bumper_number: session.bumperNumber,
+        vehicle_type: session.vehicleType,
+        serial_number: session.serialNumber || null,
+        registration_number: session.registrationNumber || null,
+        nomenclature: vehicle?.name || session.vehicleType,
+        unit: session.unit,
+        current_odometer: session.odometer,
+      },
+      inspection: {
+        inspector_dod_id: session.inspectorDodId,
+        inspection_type: session.inspectionType,
+        odometer_reading: session.odometer,
+        remarks: session.remarks || null,
+        date: session.date,
+        started_at: session.createdAt,
+        completed_at: session.completedAt || new Date().toISOString(),
+        client_session_id: session.id,
+      },
+      faults: faults.map((f) => ({
+        item: f.item,
+        item_description: f.itemDescription,
+        zone: f.zone,
+        readiness: f.readiness,
+        category_id: f.categoryId || null,
+        description: f.description,
+        corrective_action: f.correctiveAction || null,
+        part_needed: f.partNeeded,
+        part_description: f.partDescription || null,
+        nsn: f.nsn || null,
+        corrected_on_site: f.correctedOnSite,
+        needs_maintenance: f.needsMaintenance,
+      })),
+    },
+  });
 
-  if (vehicleError) {
-    throw new Error(`Sync: Vehicle upsert failed: ${vehicleError.message}`);
-  }
-  if (!vehicleData) {
-    throw new Error('Sync: Vehicle upsert returned no data');
-  }
+  // Upload fault photos
+  for (let i = 0; i < faults.length; i++) {
+    const remoteFaultId = result.fault_ids[i];
+    if (!remoteFaultId) continue;
 
-  // Step 2: Get profile ID for inspector
-  const { data: profile, error: profileError } = await supabase.from('profiles')
-    .select('id')
-    .eq('dod_id', session.inspectorDodId)
-    .single();
-
-  if (profileError || !profile) {
-    throw new Error(`Sync: Profile lookup failed: ${profileError?.message}`);
-  }
-
-  // Step 3: Insert inspection
-  const { data: inspection, error: inspError } = await supabase.from('inspections').upsert({
-    vehicle_id: vehicleData.id,
-    inspector_id: profile.id,
-    inspection_type: session.inspectionType,
-    status: 'COMPLETED',
-    odometer_reading: session.odometer,
-    remarks: session.remarks || null,
-    date: session.date,
-    started_at: session.createdAt,
-    completed_at: session.completedAt || new Date().toISOString(),
-    client_session_id: session.id,
-  } as never, { onConflict: 'client_session_id' }).select('id').single();
-
-  if (inspError || !inspection) {
-    throw new Error(`Sync: Inspection upsert failed: ${inspError?.message}`);
-  }
-
-  // Step 4: Insert faults
-  if (faults.length > 0) {
-    const faultRows = faults.map((f) => ({
-      inspection_id: inspection.id,
-      vehicle_id: vehicleData.id,
-      item: f.item,
-      item_description: f.itemDescription,
-      zone: f.zone,
-      readiness: f.readiness,
-      category_id: f.categoryId || null,
-      description: f.description,
-      corrective_action: f.correctiveAction || null,
-      part_needed: f.partNeeded,
-      part_description: f.partDescription || null,
-      nsn: f.nsn || null,
-      corrected_on_site: f.correctedOnSite,
-      needs_maintenance: f.needsMaintenance,
-      resolution_status: f.correctedOnSite ? 'CORRECTED' : 'OPEN',
-    }));
-    const { data: insertedFaults, error: faultError } = await supabase
-      .from('faults')
-      .insert(faultRows as never)
-      .select('id, item');
-    if (faultError) {
-      console.error('Sync: Fault insert failed:', faultError.message);
-    }
-
-    // Step 5: Upload fault photos to Supabase Storage
-    if (insertedFaults) {
-      for (let i = 0; i < faults.length; i++) {
-        const localFault = faults[i];
-        const remoteFault = insertedFaults[i] as { id: string };
-        if (!remoteFault) continue;
-
-        const photos = await db.photos.where('faultId').equals(localFault.id).toArray();
-        if (photos.length === 0) continue;
-
-        const photoUrls: string[] = [];
-        for (const photo of photos) {
-          const blob = dataUrlToBlob(photo.dataUrl);
-          const ext = blob.type === 'image/png' ? 'png' : 'jpg';
-          const path = `${session.id}/${remoteFault.id}/${photo.id}.${ext}`;
-          const { error: uploadError } = await supabase.storage
-            .from('fault-photos')
-            .upload(path, blob, { contentType: blob.type });
-          if (uploadError) {
-            console.warn('Sync: Photo upload failed:', uploadError.message);
-            continue;
-          }
-          const { data: urlData } = supabase.storage.from('fault-photos').getPublicUrl(path);
-          photoUrls.push(urlData.publicUrl);
-        }
-
-        if (photoUrls.length > 0) {
-          await supabase.from('faults')
-            .update({ photo_urls: photoUrls } as never)
-            .eq('id', remoteFault.id);
-        }
+    const photos = await db.photos.where('faultId').equals(faults[i].id).toArray();
+    for (const photo of photos) {
+      const blob = dataUrlToBlob(photo.dataUrl);
+      try {
+        await api('POST', `/faults/${remoteFaultId}/photos`, {
+          query: { session: session.id, photo: photo.id, ext: blob.type === 'image/png' ? 'png' : 'jpg' },
+          raw: blob,
+        });
+      } catch (err) {
+        console.warn('Sync: Photo upload failed:', (err as Error).message);
       }
     }
   }
 
-  console.log('Sync: Inspection synced successfully', { inspectionId: inspection.id, faults: faults.length });
-  return inspection.id;
+  console.log('Sync: Inspection synced successfully', { inspectionId: result.inspection_id, faults: faults.length });
+  return result.inspection_id;
 }
 
 export async function pullOpenFaultsForVehicle(bumperNumber: string, unit: string) {
-
-  const { data: vehicle } = await supabase.from('vehicles')
-    .select('id')
-    .eq('bumper_number', bumperNumber)
-    .eq('unit', unit)
-    .single();
-
-  if (!vehicle) return [];
-
-  const { data: faults } = await supabase.from('faults')
-    .select('*')
-    .eq('vehicle_id', vehicle.id)
-    .neq('resolution_status', 'CORRECTED')
-    .order('created_at', { ascending: true });
-
-  return faults || [];
+  const vehicles = await api<{ id: string }[]>('GET', '/vehicles', { query: { bumper_number: bumperNumber, unit } });
+  if (vehicles.length === 0) return [];
+  return api<unknown[]>('GET', '/faults', { query: { vehicle_id: vehicles[0].id, open: 1, order: 'asc' } });
 }
 
 export async function pullUnitVehicles(unit: string) {
-
-  const { data } = await supabase.from('vehicles')
-    .select('*')
-    .eq('unit', unit);
-
-  return data || [];
+  return api<unknown[]>('GET', '/vehicles', { query: { unit } });
 }

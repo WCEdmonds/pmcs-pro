@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { ClipboardCheck, CheckCircle2, AlertCircle } from 'lucide-react'
-import { supabase } from '../lib/supabase'
+import { api } from '../lib/api'
 import { useRealtimeRefresh } from '../hooks/useRealtimeRefresh'
 import { useWatchedUics } from '../hooks/useWatchedUics'
 import type { Vehicle } from '../types/database'
@@ -44,18 +44,10 @@ export function PmcsCompliance() {
     if (uicsLoading) return
     if (isInitialLoad.current) setLoading(true)
 
-    let vehicleQuery = supabase.from('vehicles').select('*').order('bumper_number')
-    if (uics.length > 0) {
-      vehicleQuery = vehicleQuery.in('unit', uics)
-    }
-
-    const [vehiclesRes, inspectionsRes] = await Promise.all([
-      vehicleQuery,
-      supabase.from('inspections').select('id, vehicle_id, completed_at, status').eq('status', 'COMPLETED').order('completed_at', { ascending: false }),
+    const [vehicles, inspections] = await Promise.all([
+      api<Vehicle[]>('GET', '/vehicles', { query: { unit: uics } }).catch(() => [] as Vehicle[]),
+      api<InspectionRecord[]>('GET', '/inspections', { query: { status: 'COMPLETED' } }).catch(() => [] as InspectionRecord[]),
     ])
-
-    const vehicles = (vehiclesRes.data ?? []) as Vehicle[]
-    const inspections = (inspectionsRes.data ?? []) as InspectionRecord[]
 
     // Last inspection per vehicle
     const lastInspection = new Map<string, string>()

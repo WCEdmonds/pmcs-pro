@@ -1,6 +1,6 @@
 import { db } from './db';
 import type { SyncQueueEntry } from './db';
-import { syncInspectionToSupabase } from './sync';
+import { syncInspection } from './sync';
 import type { InspectionSession, Fault } from '../types';
 
 const MAX_ATTEMPTS = 3;
@@ -32,7 +32,7 @@ export async function flushSyncQueue(): Promise<{ synced: number; failed: number
     }
 
     try {
-      await syncInspectionToSupabase(entry.session, entry.faults);
+      await syncInspection(entry.session, entry.faults);
       await db.syncQueue.delete(entry.id);
       synced++;
     } catch {

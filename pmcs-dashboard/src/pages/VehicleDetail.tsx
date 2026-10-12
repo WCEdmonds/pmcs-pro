@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { ArrowLeft, Wrench, CheckCircle, Loader2, FileDown } from 'lucide-react'
-import { supabase } from '../lib/supabase'
+import { api } from '../lib/api'
 import { useRealtimeRefresh } from '../hooks/useRealtimeRefresh'
 import type { Vehicle, Fault, Inspection, DiagnosisAttempt } from '../types/database'
 
@@ -47,29 +47,24 @@ export function VehicleDetail() {
   async function loadData(vehicleId: string) {
     if (isInitialLoad.current) setLoading(true)
 
-    const [vehicleRes, faultsRes, inspectionsRes] = await Promise.all([
-      supabase.from('vehicles').select('*').eq('id', vehicleId).single(),
-      supabase.from('faults').select('*').eq('vehicle_id', vehicleId).neq('resolution_status', 'CORRECTED').order('created_at', { ascending: false }),
-      supabase.from('inspections').select('*').eq('vehicle_id', vehicleId).eq('status', 'COMPLETED').order('completed_at', { ascending: false }).limit(20),
+    const [vehicleRes, allOpenFaults, ins] = await Promise.all([
+      api<Vehicle>('GET', `/vehicles/${vehicleId}`).catch(() => null),
+      api<Fault[]>('GET', '/faults', { query: { vehicle_id: vehicleId, open: 1 } }).catch(() => [] as Fault[]),
+      api<Inspection[]>('GET', '/inspections', { query: { vehicle_id: vehicleId, status: 'COMPLETED', limit: 20 } }).catch(() => [] as Inspection[]),
     ])
 
-    setVehicle(vehicleRes.data as Vehicle | null)
-    const allOpenFaults = (faultsRes.data ?? []) as Fault[]
+    setVehicle(vehicleRes)
     setOpenFaults(allOpenFaults)
 
     // Fetch diagnosis attempts for open faults
     const faultIds = allOpenFaults.map((f) => f.id)
     if (faultIds.length > 0) {
-      const { data: diagnosisData } = await supabase
-        .from('diagnosis_attempts')
-        .select('*')
-        .in('fault_id', faultIds)
-        .order('completed_at', { ascending: false })
+      const diagnosisData = await api<DiagnosisAttempt[]>('GET', '/diagnosis-attempts', { query: { fault_id: faultIds } }).catch(() => [])
 
       setDiagnosisByFaultId(
         (() => {
           const m = new Map<string, DiagnosisAttempt>()
-          for (const d of (diagnosisData ?? []) as DiagnosisAttempt[]) {
+          for (const d of diagnosisData) {
             if (!m.has(d.fault_id)) m.set(d.fault_id, d)
           }
           return m
@@ -80,38 +75,30 @@ export function VehicleDetail() {
     }
 
     // Enrich inspections with inspector names and fault counts
-    const ins = (inspectionsRes.data ?? []) as Inspection[]
     if (ins.length > 0) {
       const inspectorIds = [...new Set(ins.map((i) => i.inspector_id))]
-      const { data: profiles } = await supabase
-        .from('profiles')
-        .select('id, rank, last_name, first_name')
-        .in('id', inspectorIds)
+      const profiles = await api<ProfileRecord[]>('GET', '/profiles', { query: { id: inspectorIds } }).catch(() => [])
 
       const profileMap = new Map<string, string>()
-      for (const p of (profiles ?? []) as ProfileRecord[]) {
+      for (const p of profiles) {
         profileMap.set(p.id, `${p.rank ?? ''} ${p.last_name ?? ''}`.trim())
       }
 
       const inspectionIds = ins.map((i) => i.id)
-      const { data: allFaults } = await supabase
-        .from('faults')
-        .select('id, inspection_id')
-        .in('inspection_id', inspectionIds)
+      const allFaults = await api<FaultIdRecord[]>('GET', '/faults', { query: { inspection_id: inspectionIds } }).catch(() => [])
 
       const faultCountMap = new Map<string, number>()
-      for (const f of (allFaults ?? []) as FaultIdRecord[]) {
+      for (const f of allFaults) {
         faultCountMap.set(f.inspection_id, (faultCountMap.get(f.inspection_id) ?? 0) + 1)
       }
 
       // Load generated forms
-      const { data: forms } = await supabase
-        .from('generated_forms')
-        .select('inspection_id, pdf_storage_path')
-        .in('inspection_id', inspectionIds)
+      const forms = await api<{ inspection_id: string; pdf_storage_path: string }[]>('GET', '/generated-forms', {
+        query: { inspection_id: inspectionIds },
+      }).catch(() => [])
 
       const formMap = new Map<string, string>()
-      for (const f of (forms ?? []) as { inspection_id: string; pdf_storage_path: string }[]) {
+      for (const f of forms) {
         formMap.set(f.inspection_id, f.pdf_storage_path)
       }
 
@@ -133,12 +120,8 @@ export function VehicleDetail() {
 
   async function handleResolve(faultId: string) {
     setResolvingId(faultId)
-    const { data: { user } } = await supabase.auth.getUser()
-
-    const updates: { resolution_status: string; resolved_at: string; resolved_by: string | null; gcss_work_order?: string } = {
+    const updates: { resolution_status: string; gcss_work_order?: string } = {
       resolution_status: 'CORRECTED',
-      resolved_at: new Date().toISOString(),
-      resolved_by: user?.id ?? null,
     }
 
     const wo = workOrderInputs[faultId]
@@ -146,43 +129,30 @@ export function VehicleDetail() {
       updates.gcss_work_order = wo
     }
 
-    await supabase.from('faults').update(updates as never).eq('id', faultId)
+    await api('PATCH', '/faults', { body: { ids: [faultId], ...updates } })
     setOpenFaults((prev) => prev.filter((f) => f.id !== faultId))
     setResolvingId(null)
   }
 
   async function handleDownloadPdf(path: string) {
-    const { data, error } = await supabase.storage.from('generated').createSignedUrl(path, 3600)
-    if (error) {
-      console.error('Download error:', error)
-      alert('Failed to download PDF: ' + error.message)
-      return
-    }
-    if (data?.signedUrl) {
-      window.open(data.signedUrl, '_blank')
+    try {
+      const { url } = await api<{ url: string }>('GET', '/generated-forms/link', { query: { path } })
+      window.open(url, '_blank')
+    } catch (err) {
+      console.error('Download error:', err)
+      alert('Failed to download PDF: ' + (err as Error).message)
     }
   }
 
   async function handleGeneratePdf(inspectionId: string) {
     setGeneratingId(inspectionId)
     try {
-      const { data, error } = await supabase.functions.invoke('generate-da2404', {
-        body: { inspection_id: inspectionId },
-      })
-      if (error) {
-        console.error('Generate error:', error)
-        alert('Failed to generate DA 2404: ' + error.message)
-        return
-      }
-      if (data?.error) {
-        console.error('Generate error:', data.error)
-        alert('Failed to generate DA 2404: ' + data.error)
-        return
-      }
-      if (data?.url) {
-        window.open(data.url, '_blank')
-        if (id) loadData(id)
-      }
+      const data = await api<{ url: string }>('POST', `/inspections/${inspectionId}/da2404`)
+      window.open(data.url, '_blank')
+      if (id) loadData(id)
+    } catch (err) {
+      console.error('Generate error:', err)
+      alert('Failed to generate DA 2404: ' + (err as Error).message)
     } finally {
       setGeneratingId(null)
     }
@@ -195,7 +165,7 @@ export function VehicleDetail() {
       resolution_status: 'ACKNOWLEDGED',
     }
     if (wo) updates.gcss_work_order = wo
-    await supabase.from('faults').update(updates as never).eq('id', faultId)
+    await api('PATCH', '/faults', { body: { ids: [faultId], ...updates } })
     setOpenFaults((prev) =>
       prev.map((f) => f.id === faultId ? { ...f, resolution_status: 'ACKNOWLEDGED' as never, gcss_work_order: (wo || f.gcss_work_order) as never } : f)
     )

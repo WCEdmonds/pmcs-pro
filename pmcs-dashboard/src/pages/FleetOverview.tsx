@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts'
 import { Truck, AlertCircle, CheckCircle2, Filter } from 'lucide-react'
-import { supabase } from '../lib/supabase'
+import { api } from '../lib/api'
 import { useRealtimeRefresh } from '../hooks/useRealtimeRefresh'
 import { useWatchedUics } from '../hooks/useWatchedUics'
 import type { Vehicle } from '../types/database'
@@ -52,29 +52,19 @@ export function FleetOverview() {
     if (uicsLoading) return
     if (isInitialLoad.current) setLoading(true)
 
-    let vehicleQuery = supabase.from('vehicles').select('*').order('bumper_number')
-    if (uics.length > 0) {
-      vehicleQuery = vehicleQuery.in('unit', uics)
+    const logError = (what: string) => (err: Error) => {
+      console.error(`${what} query error:`, err)
+      return []
     }
-
-    const [vehiclesRes, inspectionsRes] = await Promise.all([
-      vehicleQuery,
-      supabase.from('inspections').select('id, vehicle_id, completed_at, status').eq('status', 'COMPLETED').order('completed_at', { ascending: false }),
+    const [allVehicles, inspections] = await Promise.all([
+      api<Vehicle[]>('GET', '/vehicles', { query: { unit: uics } }).catch(logError('Vehicles')),
+      api<InspectionRecord[]>('GET', '/inspections', { query: { status: 'COMPLETED' } }).catch(logError('Inspections')),
     ])
 
-    if (vehiclesRes.error) console.error('Vehicles query error:', vehiclesRes.error)
-    if (inspectionsRes.error) console.error('Inspections query error:', inspectionsRes.error)
-
-    const allVehicles = (vehiclesRes.data ?? []) as Vehicle[]
     const vehicleIds = allVehicles.map((v) => v.id)
-    const faultsRes = vehicleIds.length > 0
-      ? await supabase.from('faults').select('id, vehicle_id').neq('resolution_status', 'CORRECTED').in('vehicle_id', vehicleIds)
-      : { data: [] as { id: string; vehicle_id: string }[] }
-
-    if ('error' in faultsRes && faultsRes.error) console.error('Faults query error:', faultsRes.error)
-
-    const openFaults = (faultsRes.data ?? []) as FaultRecord[]
-    const inspections = (inspectionsRes.data ?? []) as InspectionRecord[]
+    const openFaults = vehicleIds.length > 0
+      ? await api<FaultRecord[]>('GET', '/faults', { query: { vehicle_id: vehicleIds, open: 1 } }).catch(logError('Faults'))
+      : []
 
     console.log('Fleet data loaded:', { vehicles: allVehicles.length, faults: openFaults.length, inspections: inspections.length })
 
@@ -117,15 +107,13 @@ export function FleetOverview() {
     const thirtyDaysAgo = new Date(now)
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
 
-    const { data: history } = await supabase
-      .from('vehicle_status_history')
-      .select('vehicle_id, status, recorded_at')
-      .gte('recorded_at', thirtyDaysAgo.toISOString().slice(0, 10))
-      .order('recorded_at')
+    const history = await api<{ vehicle_id: string; status: string; recorded_at: string }[]>('GET', '/vehicle-status-history', {
+      query: { since: thirtyDaysAgo.toISOString().slice(0, 10) },
+    }).catch(() => [])
 
     // Group snapshots by date
     const byDate = new Map<string, Map<string, string>>()
-    for (const h of (history ?? []) as { vehicle_id: string; status: string; recorded_at: string }[]) {
+    for (const h of history) {
       const date = h.recorded_at.slice(0, 10)
       if (!byDate.has(date)) byDate.set(date, new Map())
       byDate.get(date)!.set(h.vehicle_id, h.status)

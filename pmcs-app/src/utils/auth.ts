@@ -1,58 +1,41 @@
-import { supabase } from './supabase';
+import { api, signIn, signUp, signOut, getSessionUserId, type ApiProfile } from './api';
 
-function dodIdToEmail(dodId: string): string {
-  return `${dodId}@id.pmcspro.app`;
-}
-
-export async function supabaseSignUp(dodId: string, pin: string, profile: {
+export async function remoteSignUp(dodId: string, pin: string, profile: {
   rank: string;
   last_name: string;
   first_name: string;
   mi: string;
   unit: string;
 }) {
-  const { data, error } = await supabase.functions.invoke('signup', {
-    body: { dod_id: dodId, pin, ...profile },
-  });
-
-  if (error) throw error;
-  if (data?.error) throw new Error(data.error);
-
-  await supabaseSignIn(dodId, pin);
-  return data;
+  return signUp(dodId, pin, profile);
 }
 
-export async function supabaseSignIn(dodId: string, pin: string) {
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email: dodIdToEmail(dodId),
-    password: pin,
-  });
-  if (error) throw error;
-  return data;
+export async function remoteSignIn(dodId: string, pin: string) {
+  return signIn(dodId, pin);
 }
 
-export async function supabaseSignOut() {
-  await supabase.auth.signOut();
+export function remoteSignOut() {
+  signOut();
 }
 
-export async function getSupabaseProfile() {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return null;
-
-  const { data } = await supabase.from('profiles')
-    .select('*')
-    .eq('id', user.id)
-    .single();
-  return data;
+export async function getRemoteProfile(): Promise<ApiProfile | null> {
+  if (!getSessionUserId()) return null;
+  try {
+    return await api<ApiProfile>('GET', '/me');
+  } catch {
+    return null;
+  }
 }
 
 export async function checkDodIdExists(dodId: string): Promise<boolean> {
-  const { data, error } = await supabase.rpc('check_dod_id_exists', { p_dod_id: dodId });
-  if (error) return false;
-  return data === true;
+  try {
+    const { exists } = await api<{ exists: boolean }>('GET', `/auth/exists/${encodeURIComponent(dodId)}`);
+    return exists;
+  } catch {
+    return false;
+  }
 }
 
-export async function getSupabaseSession() {
-  const { data: { session } } = await supabase.auth.getSession();
-  return session;
+export function hasRemoteSession(): boolean {
+  return getSessionUserId() !== null;
 }

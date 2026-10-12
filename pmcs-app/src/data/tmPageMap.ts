@@ -1,12 +1,15 @@
 // Maps TM paragraph numbers to PDF page numbers for deep-linking.
 // Generated from TM 9-2320-387-10 (M1151) and TM 9-2320-365-10 (LMTV M1078).
 
+// TM PDFs are served from the R2 `tm-documents/` prefix by the API.
+const TM_BASE = `${(import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/$/, '') ?? ''}/files/tm-documents`;
+
 export const TM_PDF_URLS: Record<string, string> = {
-  'M1151': 'https://piydlquxibpjqljgtdlu.supabase.co/storage/v1/object/public/tm-documents/TM-9-2320-387-10.pdf',
-  'M1152': 'https://piydlquxibpjqljgtdlu.supabase.co/storage/v1/object/public/tm-documents/TM-9-2320-387-10.pdf',
-  'LMTV_M1078': 'https://piydlquxibpjqljgtdlu.supabase.co/storage/v1/object/public/tm-documents/m1078_TM-9-2320-365-10.pdf',
-  'M1101_TRAILER': 'https://piydlquxibpjqljgtdlu.supabase.co/storage/v1/object/public/tm-documents/Trailer-M1101-M1102-TM-9-2330-392-14P.pdf',
-  'MEP803A': 'https://piydlquxibpjqljgtdlu.supabase.co/storage/v1/object/public/tm-documents/TM-9-6115-642-10.pdf',
+  'M1151': `${TM_BASE}/TM-9-2320-387-10.pdf`,
+  'M1152': `${TM_BASE}/TM-9-2320-387-10.pdf`,
+  'LMTV_M1078': `${TM_BASE}/m1078_TM-9-2320-365-10.pdf`,
+  'M1101_TRAILER': `${TM_BASE}/Trailer-M1101-M1102-TM-9-2330-392-14P.pdf`,
+  'MEP803A': `${TM_BASE}/TM-9-6115-642-10.pdf`,
 };
 
 // TM internal page → PDF page number

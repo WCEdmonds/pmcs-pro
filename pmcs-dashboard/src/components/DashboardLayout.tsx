@@ -1,7 +1,7 @@
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { LayoutDashboard, AlertTriangle, ClipboardCheck, LogOut, Shield, Settings } from 'lucide-react'
-import { supabase } from '../lib/supabase'
+import { api, signOut } from '../lib/api'
 import type { Profile } from '../types/database'
 
 const navItems = [
@@ -17,21 +17,17 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     async function loadProfile() {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (user) {
-        const { data } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', user.id)
-          .single()
-        if (data) setProfile(data)
+      try {
+        setProfile(await api<Profile>('GET', '/me'))
+      } catch {
+        // Signed out or offline — header shows no name
       }
     }
     loadProfile()
   }, [])
 
   async function handleLogout() {
-    await supabase.auth.signOut()
+    signOut()
     navigate('/login')
   }
 

@@ -7,7 +7,7 @@ import { VEHICLE_REGISTRY } from '../data/vehicles';
 import type { RosterVehicle } from '../data/vehicleRoster';
 import { ALL_RANKS } from '../data/ranks';
 import { getUnitName, saveUicMapping } from '../utils/uicLookup';
-import { supabase } from '../utils/supabase';
+import { api } from '../utils/api';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { Select } from '../components/ui/Select';
@@ -15,7 +15,7 @@ import { SegmentedControl } from '../components/ui/SegmentedControl';
 import { UicUnitPrompt } from '../components/ui/UicUnitPrompt';
 import type { InspectionType, VehicleType } from '../types';
 
-// Map Supabase vehicle_type strings to app VehicleType
+// Map server vehicle_type strings to app VehicleType
 function toVehicleType(model: string | null): VehicleType | null {
   if (!model) return null;
   if (['M1101', 'M1102'].some(m => model.includes(m))) return 'M1101_TRAILER';
@@ -41,16 +41,18 @@ export default function SessionSetupPage() {
   const [pmcsVehicles, setPmcsVehicles] = useState<(RosterVehicle & { vehicleType: VehicleType })[]>([]);
   const [rosterLoaded, setRosterLoaded] = useState(false);
 
-  // Load vehicles from Supabase for the soldier's unit. If empty, soldier uses manual entry.
+  // Load vehicles from the server for the soldier's unit. If empty, soldier uses manual entry.
   useEffect(() => {
-    async function loadFromSupabase() {
+    async function loadRoster() {
       if (!user?.unit) { setRosterLoaded(true); return; }
       try {
-        const { data } = await supabase
-          .from('vehicles')
-          .select('bumper_number, vehicle_type, serial_number, unit, section, description, current_odometer')
-          .eq('unit', user.unit)
-          .order('bumper_number');
+        const data = await api<Array<{
+          bumper_number: string | null;
+          vehicle_type: string | null;
+          serial_number: string | null;
+          section: string | null;
+          description: string | null;
+        }>>('GET', '/vehicles', { query: { unit: user.unit } });
         if (data && data.length > 0) {
           const mapped = data
             .map((v): (RosterVehicle & { vehicleType: VehicleType }) | null => {
@@ -75,7 +77,7 @@ export default function SessionSetupPage() {
       }
       setRosterLoaded(true);
     }
-    loadFromSupabase();
+    loadRoster();
   }, [user?.unit]);
 
   // Derived vehicle type: from roster selection, or from URL param for manual entry
