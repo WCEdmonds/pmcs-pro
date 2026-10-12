@@ -71,7 +71,7 @@ jobs:
       name: production
       url: https://pmcs-pro.web.app
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v4
         with:
           ref: ${{ needs.gate.outputs.sha }}
           persist-credentials: false

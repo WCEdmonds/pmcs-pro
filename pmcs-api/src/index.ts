@@ -568,6 +568,7 @@ app.patch('/me', async (c) => {
   }
   await db.batch([
     db.prepare(`UPDATE profiles SET ${sets.join(', ')} WHERE id = ?`).bind(...params, userId),
+    ...(unitChanged ? [db.prepare('UPDATE client_status SET unit = ? WHERE user_id = ?').bind(newUnit, userId)] : []),
     ...auditRows.map((e) => auditStmtAs(c, e)),
   ]);
   if (unitChanged) {
@@ -1239,23 +1240,25 @@ app.post('/admin/claim', async (c) => {
   await rateLimit(c, `admin-claim:${userId}`);
   const db = c.env.DB;
   // Also limited in D1 (works without the rate-limit bindings): 5 failures per user per 15 minutes.
+  // Reserve a failure row atomically (insert only while under the limit), so parallel requests
+  // can't all read a stale count. A correct code deletes its reservation and logs the claim instead.
   const since = new Date(Date.now() - LOCKOUT_MINUTES * 60_000).toISOString();
-  const failures = await db.prepare(
-    "SELECT COUNT(*) AS n FROM audit_log WHERE actor_id = ? AND action = 'admin.claim_failed' AND at >= ?",
-  ).bind(userId, since).first<{ n: number }>();
-  if ((failures?.n ?? 0) >= MAX_FAILED_CLAIMS) throw new HttpError(429, 'Too many attempts. Try again later.');
+  const reservationId = crypto.randomUUID();
+  const reserved = await db.prepare(
+    `${AUDIT_INSERT} SELECT ?, ?, ?, ?, ?, ?, 'admin.claim_failed', 'profile', ?, NULL
+     WHERE (SELECT COUNT(*) FROM audit_log WHERE actor_id = ? AND action = 'admin.claim_failed' AND at >= ?) < ?`,
+  ).bind(reservationId, ...actorParams(c.get('access').actor), own, userId, userId, since, MAX_FAILED_CLAIMS).run();
+  if (!reserved.meta.changes) throw new HttpError(429, 'Too many attempts. Try again later.');
 
   const expected = c.env.ADMIN_BOOTSTRAP_CODE;
   if (!expected || !(await safeEqual(body.code, expected))) {
-    await auditAs(c, { action: 'admin.claim_failed', unit: own, targetType: 'profile', targetId: userId });
-    throw new HttpError(403, 'Invalid or expired admin code');
+    throw new HttpError(403, 'Invalid or expired admin code'); // the reserved row is the audit entry
   }
-  if (role !== 'admin') {
-    await db.batch([
-      db.prepare("UPDATE profiles SET role = 'admin' WHERE id = ?").bind(userId),
-      auditStmtAs(c, { action: 'admin.claim', unit: own, targetType: 'profile', targetId: userId, details: { from: role, to: 'admin' } }),
-    ]);
-  }
+  await db.batch([
+    db.prepare('DELETE FROM audit_log WHERE id = ?').bind(reservationId),
+    db.prepare("UPDATE profiles SET role = 'admin' WHERE id = ?").bind(userId),
+    auditStmtAs(c, { action: 'admin.claim', unit: own, targetType: 'profile', targetId: userId, details: { from: role, to: 'admin', ...(role === 'admin' ? { repeat: true } : {}) } }),
+  ]);
   return c.json({ ok: true, role: 'admin' });
 });
 
@@ -1373,6 +1376,7 @@ app.patch('/admin/users/:id', async (c) => {
   if (user.unit !== unit) {
     await c.env.DB.batch([
       c.env.DB.prepare('UPDATE profiles SET unit = ? WHERE id = ?').bind(unit, user.id),
+      c.env.DB.prepare('UPDATE client_status SET unit = ? WHERE user_id = ?').bind(unit, user.id),
       auditStmtAs(c, {
         action: 'user.unit_change', unit, targetType: 'profile', targetId: user.id as string,
         details: { from: user.unit ?? null, to: unit, by_admin: true, target_dod_last4: user.dod_last4 },

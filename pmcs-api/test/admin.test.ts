@@ -157,6 +157,14 @@ describe('sessions', () => {
 });
 
 describe('admin', () => {
+  it('claim limit holds under parallel guesses', async () => {
+    const w = await signup('1000000019', A);
+    const res = await Promise.all(Array.from({ length: 12 }, () => req('POST', '/admin/claim', { token: w.token, body: { code: 'nope' } })));
+    expect(res.filter((r) => r.status === 403)).toHaveLength(5);
+    expect(res.filter((r) => r.status === 429)).toHaveLength(7);
+    expect((await req('POST', '/admin/claim', { token: w.token, body: { code: CODE } })).status).toBe(429);
+  });
+
   it('claim: needs the configured code, is rate-limited and audited', async () => {
     const u = await signup('1000000010', A);
     env = { ...env, ADMIN_BOOTSTRAP_CODE: undefined };
@@ -168,7 +176,7 @@ describe('admin', () => {
     expect((await req('POST', '/admin/claim', { token: u.token, body: { code: CODE } })).status).toBe(200);
     expect((await req('POST', '/admin/claim', { token: u.token, body: { code: CODE } })).status).toBe(200); // idempotent
     expect((await req('GET', '/me', { token: u.token })).json.role).toBe('admin');
-    expect(actions().filter((a) => a.startsWith('admin.claim'))).toEqual([...Array(4).fill('admin.claim_failed'), 'admin.claim']);
+    expect(actions().filter((a) => a.startsWith('admin.claim'))).toEqual([...Array(4).fill('admin.claim_failed'), 'admin.claim', 'admin.claim']); // repeat claims are audited too
 
     const v = await signup('1000000011', A);
     for (let i = 0; i < 5; i++) await req('POST', '/admin/claim', { token: v.token, body: { code: 'nope' } });
