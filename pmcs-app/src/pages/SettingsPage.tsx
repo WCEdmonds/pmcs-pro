@@ -230,6 +230,12 @@ export default function SettingsPage() {
           />
         </section>
 
+        <section aria-labelledby="review-heading">
+          <h2 id="review-heading" className="text-xs font-semibold text-text-secondary font-display mb-3">TROUBLESHOOTING REVIEW</h2>
+          <p className="text-xs text-text-secondary mb-2">Check the guided troubleshooting steps against the TM, flag wrong steps and record a verdict per tree. Works best on a computer.</p>
+          <Button variant="secondary" fullWidth onClick={() => navigate('/review')}>Troubleshooting review</Button>
+        </section>
+
         <section aria-labelledby="appearance-heading">
           <h2 id="appearance-heading" className="text-xs font-semibold text-text-secondary font-display mb-3">APPEARANCE</h2>
           <Toggle label="Dark Theme" checked={isDark} onChange={handleThemeToggle} />

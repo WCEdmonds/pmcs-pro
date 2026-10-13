@@ -21,6 +21,7 @@ const SettingsPage = lazy(() => import('./pages/SettingsPage'));
 const PriorFaultReviewPage = lazy(() => import('./pages/PriorFaultReviewPage'));
 const SetNewPinPage = lazy(() => import('./pages/SetNewPinPage'));
 const ForgotPinPage = lazy(() => import('./pages/ForgotPinPage'));
+const ReviewPage = lazy(() => import('./pages/ReviewPage'));
 
 function AuthGuard({ children }: { children: ReactNode }) {
   const user = useUserStore((s) => s.user);
@@ -99,6 +100,8 @@ function AppRoutes() {
         <Route path="/session/:id/5988" element={<AuthGuard><Form5988Page /></AuthGuard>} />
         <Route path="/history" element={<AuthGuard><AppLayout><HistoryPage /></AppLayout></AuthGuard>} />
         <Route path="/settings" element={<AuthGuard><AppLayout><SettingsPage /></AppLayout></AuthGuard>} />
+        {/* Full-width (phone and computer), so not in the phone-sized AppLayout. */}
+        <Route path="/review" element={<AuthGuard><ReviewPage /></AuthGuard>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Suspense>

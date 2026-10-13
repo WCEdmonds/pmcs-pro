@@ -1,5 +1,7 @@
 export interface User {
   dodId: string;
+  /** Server user id (profile `id`); matches `user_id` on review flags and verdicts. Absent on profiles cached by older versions. */
+  id?: string;
   rank: string;
   lastName: string;
   firstName: string;

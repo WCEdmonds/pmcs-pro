@@ -59,6 +59,7 @@ export function hasRemoteSession(): boolean {
 export function profileToUser(profile: ApiProfile, existing?: Partial<User> | null): User {
   return {
     ...(existing ?? {}),
+    ...(profile.id ? { id: profile.id } : {}),
     dodId: profile.dod_id,
     rank: profile.rank ?? '',
     firstName: profile.first_name ?? '',

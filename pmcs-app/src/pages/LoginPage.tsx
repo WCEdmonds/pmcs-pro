@@ -26,7 +26,8 @@ export default function LoginPage() {
   const [notice] = useState(() => getSignOutNotice());
   const navigate = useNavigate();
   const location = useLocation();
-  const from = (location.state as { from?: { pathname?: string } } | null)?.from?.pathname;
+  const fromLoc = (location.state as { from?: { pathname?: string; hash?: string } } | null)?.from;
+  const from = fromLoc?.pathname;
 
   const cleanDodId = dodId.replace(/\D/g, '');
 
@@ -71,8 +72,10 @@ export default function LoginPage() {
     try {
       const profile = await remoteSignIn(cleanDodId, pin);
       await useUserStore.getState().setFromProfile(profile);
-      // Return to an inspection deep link (e.g. after the session expired); otherwise Home.
-      navigate(from && from.startsWith('/session/') ? from : '/', { replace: true });
+      // Return to an inspection deep link (e.g. after the session expired) or the
+      // troubleshooting review (keeping its #tree); otherwise Home.
+      if (from === '/review') navigate(`/review${fromLoc?.hash ?? ''}`, { replace: true });
+      else navigate(from && from.startsWith('/session/') ? from : '/', { replace: true });
     } catch (err) {
       setError(loginErrorMessage(err));
       setIsLoading(false);
