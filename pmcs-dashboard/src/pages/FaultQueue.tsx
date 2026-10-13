@@ -4,6 +4,7 @@ import { api, errorMessage, getByIds, isAbortedError } from '../lib/api'
 import { useLoader } from '../hooks/useLoader'
 import { unitLabel, unitQuery, useUnits } from '../hooks/useUnits'
 import { formatDay } from '../lib/dates'
+import { compareFaults, partsLabel } from '../lib/faults'
 import { ActionError, ErrorState, ReadinessBadge, StaleBanner } from '../components/Feedback'
 import { UnitSelector } from '../components/UnitSelector'
 import type { Fault, Inspection, ProfileSummary, ResolutionStatus, Vehicle } from '../types/database'
@@ -57,7 +58,7 @@ export function FaultQueue() {
         inspectorName: (ins && names.get(ins.inspector_id)) || 'Unknown',
         inspectionDate: ins?.date ?? ins?.completed_at ?? null,
       }
-    })
+    }).sort(compareFaults)
   }, [data])
 
   async function updateFault(faultId: string, status: Exclude<ResolutionStatus, 'OPEN'>) {
@@ -170,15 +171,15 @@ export function FaultQueue() {
         <table className="w-full" data-testid="fault-table">
           <thead>
             <tr className="text-left text-xs text-text-secondary uppercase tracking-wider">
-              <th className="px-6 py-3">Vehicle</th>
-              {multiUnit && <th className="px-6 py-3">Unit</th>}
-              <th className="px-6 py-3">Item</th>
-              <th className="px-6 py-3">Description</th>
-              <th className="px-6 py-3">Readiness</th>
-              <th className="px-6 py-3">Reported By</th>
-              <th className="px-6 py-3" title="Date of the inspection that found the fault">Inspected</th>
-              <th className="px-6 py-3">WO#</th>
-              <th className="px-6 py-3">Actions</th>
+              <th className="px-3 py-3">Vehicle</th>
+              {multiUnit && <th className="px-3 py-3">Unit</th>}
+              <th className="px-3 py-3">Item</th>
+              <th className="px-3 py-3">Description</th>
+              <th className="px-3 py-3">Readiness</th>
+              <th className="px-3 py-3">Reported By</th>
+              <th className="px-3 py-3" title="Date of the inspection that found the fault">Inspected</th>
+              <th className="px-3 py-3">WO#</th>
+              <th className="px-3 py-3">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
@@ -187,11 +188,12 @@ export function FaultQueue() {
               const busy = actionId === f.id
               return (
                 <tr key={f.id} className="hover:bg-bg-tertiary transition-colors">
-                  <td className="px-6 py-4 font-display text-sm font-semibold text-text-primary">{f.bumperNumber}</td>
-                  {multiUnit && <td className="px-6 py-4 text-sm text-text-secondary">{f.unit ?? '---'}</td>}
-                  <td className="px-6 py-4 text-sm text-text-primary">{f.item ?? '---'}</td>
-                  <td className="px-6 py-4 text-sm text-text-secondary max-w-xs">
-                    <div className="truncate">{f.description ?? f.item_description ?? '---'}</div>
+                  <td className="px-3 py-4 font-display text-sm font-semibold text-text-primary">{f.bumperNumber}</td>
+                  {multiUnit && <td className="px-3 py-4 text-sm text-text-secondary">{f.unit ?? '---'}</td>}
+                  <td className="px-3 py-4 text-sm text-text-primary">{f.item ?? '---'}</td>
+                  <td className="px-3 py-4 text-sm text-text-secondary min-w-[12rem] max-w-xs">
+                    <div className="line-clamp-2" title={f.description ?? f.item_description ?? undefined}>{f.description ?? f.item_description ?? '---'}</div>
+                    {partsLabel(f) && <div className="mt-1 text-xs text-accent-amber" data-testid="parts-needed">{partsLabel(f)}</div>}
                     {f.photo_urls && f.photo_urls.length > 0 && (
                       <div className="flex gap-1.5 mt-1.5">
                         {f.photo_urls.map((url, i) => (
@@ -207,10 +209,10 @@ export function FaultQueue() {
                       </div>
                     )}
                   </td>
-                  <td className="px-6 py-4"><ReadinessBadge readiness={f.readiness} /></td>
-                  <td className="px-6 py-4 text-sm text-text-secondary">{f.inspectorName}</td>
-                  <td className="px-6 py-4 text-sm text-text-secondary">{formatDay(f.inspectionDate)}</td>
-                  <td className="px-6 py-4">
+                  <td className="px-3 py-4"><ReadinessBadge readiness={f.readiness} /></td>
+                  <td className="px-3 py-4 text-sm text-text-secondary">{f.inspectorName}</td>
+                  <td className="px-3 py-4 text-sm text-text-secondary">{formatDay(f.inspectionDate)}</td>
+                  <td className="px-3 py-4">
                     {canEdit ? (
                       <input
                         type="text"
@@ -224,9 +226,9 @@ export function FaultQueue() {
                       <span className="text-xs text-text-secondary">{f.gcss_work_order ?? '---'}</span>
                     )}
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-3 py-4">
                     {canEdit ? (
-                      <div className="flex gap-2">
+                      <div className="flex gap-2 whitespace-nowrap">
                         {f.resolution_status === 'OPEN' && (
                           <button
                             onClick={() => updateFault(f.id, 'ACKNOWLEDGED')}
@@ -258,7 +260,7 @@ export function FaultQueue() {
             })}
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={colCount} className="px-6 py-12 text-center text-text-secondary">
+                <td colSpan={colCount} className="px-3 py-12 text-center text-text-secondary">
                   No faults found
                 </td>
               </tr>

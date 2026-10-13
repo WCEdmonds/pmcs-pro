@@ -5,6 +5,7 @@ import { api, errorMessage, isAbortedError } from '../lib/api'
 import { useLoader } from '../hooks/useLoader'
 import { unitLabel, useUnits } from '../hooks/useUnits'
 import { formatDay, localHHMM } from '../lib/dates'
+import { compareFaults, partsLabel } from '../lib/faults'
 import { ActionError, ErrorState, ReadinessBadge, StaleBanner, StatusBadge } from '../components/Feedback'
 import type { DiagnosisAttempt, Fault, GeneratedForm, Inspection, ProfileSummary, ResolutionStatus, Vehicle } from '../types/database'
 
@@ -29,7 +30,7 @@ async function loadVehicle(vehicleId: string, signal: AbortSignal): Promise<Vehi
     api<Fault[]>('GET', '/faults', { query: { vehicle_id: vehicleId }, signal }),
     api<Inspection[]>('GET', '/inspections', { query: { vehicle_id: vehicleId, status: 'COMPLETED', limit: 20 }, signal }),
   ])
-  const openFaults = allFaults.filter((f) => f.resolution_status !== 'CORRECTED')
+  const openFaults = allFaults.filter((f) => f.resolution_status !== 'CORRECTED').sort(compareFaults)
   const inspectionIds = inspections.map((i) => i.id)
   const inspectorIds = [...new Set(inspections.map((i) => i.inspector_id))]
   const [diagnoses, profiles, forms] = await Promise.all([
@@ -240,8 +241,9 @@ export function VehicleDetail() {
                   return (
                     <tr key={f.id} className="hover:bg-bg-tertiary transition-colors">
                       <td className="px-6 py-4 font-display text-sm text-text-primary">{f.item ?? '---'}</td>
-                      <td className="px-6 py-4 text-sm text-text-secondary max-w-xs">
+                      <td className="px-6 py-4 text-sm text-text-secondary min-w-[18rem] max-w-lg">
                         <div>{f.description ?? f.item_description ?? '---'}</div>
+                        {partsLabel(f) && <div className="mt-1 text-xs text-accent-amber" data-testid="parts-needed">{partsLabel(f)}</div>}
                         {f.photo_urls && f.photo_urls.length > 0 && (
                           <div className="flex gap-2 mt-2">
                             {f.photo_urls.map((url, i) => (
@@ -265,10 +267,12 @@ export function VehicleDetail() {
                                   {steps.map((step, i) => (
                                     <div key={i} className="flex items-start gap-2 text-xs">
                                       <span className="text-text-secondary min-w-[16px]">{i + 1}.</span>
-                                      <span className="text-text-primary">{step.nodeText}</span>
-                                      {step.selectedOption && (
-                                        <span className="text-accent-blue ml-auto flex-shrink-0">&rarr; {step.selectedOption}</span>
-                                      )}
+                                      <div className="min-w-0">
+                                        <p className="text-text-primary">{step.nodeText}</p>
+                                        {step.selectedOption && (
+                                          <p className="text-accent-blue mt-0.5">&rarr; {step.selectedOption}</p>
+                                        )}
+                                      </div>
                                     </div>
                                   ))}
                                 </div>
@@ -308,7 +312,7 @@ export function VehicleDetail() {
                       </td>
                       <td className="px-6 py-4">
                         {canEdit ? (
-                          <div className="flex gap-2">
+                          <div className="flex gap-2 whitespace-nowrap">
                             {f.resolution_status === 'OPEN' && (
                               <button
                                 onClick={() => updateFault(f.id, 'ACKNOWLEDGED')}

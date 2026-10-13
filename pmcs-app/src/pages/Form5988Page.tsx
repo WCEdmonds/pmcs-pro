@@ -288,7 +288,7 @@ export default function Form5988Page() {
                   </span>
                   <span className="text-text-primary text-xs">{fault.description}</span>
                   <span className="text-text-secondary text-xs">
-                    {fault.correctedOnSite ? fault.correctiveAction || 'Corrected' : fault.partNeeded ? `Parts — NSN ${fault.nsn || 'TBD'}` : '—'}
+                    {fault.correctedOnSite ? fault.correctiveAction || 'Corrected' : fault.partNeeded ? `Parts: ${fault.partDescription || 'TBD'}${fault.nsn ? ` (NSN ${fault.nsn})` : ''}` : '—'}
                   </span>
                 </div>
               ))}
