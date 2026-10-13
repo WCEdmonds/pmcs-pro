@@ -1432,6 +1432,126 @@ app.get('/generated-forms/link', async (c) => {
 });
 
 // ---------------------------------------------------------------------------
+// Troubleshooting review (field app /review): signed-in users flag steps of the
+// guided troubleshooting trees and record a verdict per tree. Not unit-scoped:
+// the trees are the same for every unit.
+// ---------------------------------------------------------------------------
+
+const REVIEW_KINDS = new Set(['readiness', 'level', 'tm', 'wording', 'missing', 'safety', 'other']);
+const TREE_RE = /^[A-Za-z0-9_]{1,40}\.[a-z0-9-]{1,40}$/;
+const NODE_RE = /^[A-Za-z0-9_-]{1,64}$/;
+const FLAG_COLS = 'id, tree, node, kind, text, user_id, created_at, resolved_at, resolved_by';
+
+function parseTree(v: unknown): string {
+  if (typeof v !== 'string' || !TREE_RE.test(v)) throw bad('tree must look like "M1097.wont-start"');
+  return v;
+}
+
+async function flagById(c: Ctx) {
+  const row = await c.env.DB.prepare(`SELECT ${FLAG_COLS} FROM review_flags WHERE id = ?`).bind(c.req.param('id')).first<Row>();
+  if (!row) throw new HttpError(404, 'Flag not found');
+  return row;
+}
+
+app.get('/review', async (c) => {
+  const db = c.env.DB;
+  const [flags, verdicts] = await Promise.all([
+    all(db, `SELECT ${FLAG_COLS} FROM review_flags ORDER BY created_at, id`),
+    all(db, 'SELECT tree, user_id, status, note, updated_at FROM review_verdicts ORDER BY updated_at, tree'),
+  ]);
+  const ids = [...new Set([...flags, ...verdicts].map((r) => r.user_id as string))];
+  const people: Record<string, Row> = {};
+  if (ids.length) {
+    for (const p of await all(db, `SELECT id, rank, first_name, last_name FROM profiles WHERE id ${IN_JSON}`, [J(ids)])) {
+      people[p.id as string] = { rank: p.rank ?? null, first_name: p.first_name ?? null, last_name: p.last_name ?? null };
+    }
+  }
+  return c.json({ flags, verdicts, people });
+});
+
+app.post('/review/flags', async (c) => {
+  const body = await readObject(c);
+  const tree = parseTree(body.tree);
+  if (typeof body.node !== 'string' || !NODE_RE.test(body.node)) throw bad('node is not a valid step id');
+  if (typeof body.kind !== 'string' || !REVIEW_KINDS.has(body.kind)) throw bad('kind is not a known flag kind');
+  const text = str(body, 'text', { required: true, max: 4000 })!;
+  const { userId } = c.get('access');
+  await rateLimit(c, `review:${userId}`, { perIp: false });
+  const id = uuid();
+  const [ins] = await c.env.DB.batch([
+    c.env.DB.prepare(
+      `INSERT INTO review_flags (id, tree, node, kind, text, user_id, created_at) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING ${FLAG_COLS}`,
+    ).bind(id, tree, body.node, body.kind, text, userId, now()),
+    auditStmtAs(c, { action: 'review.flag', targetType: 'review_flag', targetId: id, details: { tree, node: body.node, kind: body.kind } }),
+  ]);
+  return c.json(out(ins.results[0] as Row));
+});
+
+/** Resolve or reopen: the flag's author or an admin. */
+app.patch('/review/flags/:id', async (c) => {
+  const body = await readObject(c);
+  if (typeof body.resolved !== 'boolean') throw bad('resolved must be true or false');
+  const flag = await flagById(c);
+  const { userId, role } = c.get('access');
+  if (flag.user_id !== userId && role !== 'admin') throw new HttpError(403, 'Only the person who raised this flag or an admin can change it');
+  const [upd] = await c.env.DB.batch([
+    c.env.DB.prepare(`UPDATE review_flags SET resolved_at = ?, resolved_by = ? WHERE id = ? RETURNING ${FLAG_COLS}`)
+      .bind(body.resolved ? now() : null, body.resolved ? userId : null, flag.id),
+    auditStmtAs(c, {
+      action: body.resolved ? 'review.flag_resolve' : 'review.flag_reopen', targetType: 'review_flag', targetId: flag.id as string,
+      details: { tree: flag.tree, node: flag.node },
+    }),
+  ]);
+  return c.json(out(upd.results[0] as Row));
+});
+
+/** The author can withdraw an unresolved flag. */
+app.delete('/review/flags/:id', async (c) => {
+  const flag = await flagById(c);
+  if (flag.user_id !== c.get('access').userId) throw new HttpError(403, 'Only the person who raised this flag can delete it');
+  if (flag.resolved_at) throw new HttpError(409, 'A resolved flag cannot be deleted');
+  await c.env.DB.batch([
+    c.env.DB.prepare('DELETE FROM review_flags WHERE id = ? AND resolved_at IS NULL').bind(flag.id),
+    auditStmtAs(c, { action: 'review.flag_delete', targetType: 'review_flag', targetId: flag.id as string, details: { tree: flag.tree, node: flag.node } }),
+  ]);
+  return c.json({ ok: true });
+});
+
+/** The caller's verdict on one tree. "approved" is refused while the tree has open flags. */
+app.put('/review/verdicts/:tree', async (c) => {
+  const tree = parseTree(c.req.param('tree'));
+  const body = await readObject(c);
+  const status = body.status;
+  if (status !== 'approved' && status !== 'changes') throw bad("status must be 'approved' or 'changes'");
+  const note = str(body, 'note', { max: 4000 }) || null;
+  const { userId } = c.get('access');
+  await rateLimit(c, `review:${userId}`, { perIp: false });
+  const db = c.env.DB;
+  const at = now();
+  // The open-flag check is part of the write, so a flag raised meanwhile can't slip past it.
+  const [upd] = await db.batch([
+    db.prepare(
+      `INSERT INTO review_verdicts (tree, user_id, status, note, updated_at)
+       SELECT ?, ?, ?, ?, ? WHERE ? = 'changes' OR NOT EXISTS (SELECT 1 FROM review_flags WHERE tree = ? AND resolved_at IS NULL)
+       ON CONFLICT (tree, user_id) DO UPDATE SET status = excluded.status, note = excluded.note, updated_at = excluded.updated_at
+       RETURNING tree, user_id, status, note, updated_at`,
+    ).bind(tree, userId, status, note, at, status, tree),
+  ]);
+  const row = upd.results[0] as Row | undefined;
+  if (!row) throw new HttpError(409, 'This tree still has open flags. Resolve them, or mark it Needs changes.', 'OPEN_FLAGS');
+  await auditAs(c, { action: 'review.verdict', targetType: 'review_tree', targetId: tree, details: { status } });
+  return c.json(row);
+});
+
+app.delete('/review/verdicts/:tree', async (c) => {
+  const tree = parseTree(c.req.param('tree'));
+  const { userId } = c.get('access');
+  const gone = await c.env.DB.prepare('DELETE FROM review_verdicts WHERE tree = ? AND user_id = ? RETURNING tree').bind(tree, userId).first();
+  if (gone) await auditAs(c, { action: 'review.verdict_withdraw', targetType: 'review_tree', targetId: tree });
+  return c.json({ ok: true });
+});
+
+// ---------------------------------------------------------------------------
 // Admin (role 'admin', global scope across all units). Becoming admin needs the
 // one-time ADMIN_BOOTSTRAP_CODE secret, or an existing admin's promotion.
 // ---------------------------------------------------------------------------

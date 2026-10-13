@@ -13,7 +13,7 @@ Backend for PMCS Pro on Cloudflare: a Worker (Hono) with D1 and R2. It replaces 
 | `vehicle_status_history` snapshots | A trigger on status change plus a daily cron |
 | Supabase backups | D1 Time Travel (30 days) plus a weekly JSON snapshot in R2 (12 weeks) |
 
-**Deploy order for schema changes: migrate first, then deploy.** The Worker reads the columns added by `migrations/0002_admin_audit.sql` and `0003_user_email.sql`, so run `npm run db:migrate` (remote D1) before `npm run deploy`. Migrations only ever add columns and tables, so the previous Worker keeps working on the migrated database.
+**Deploy order for schema changes: migrate first, then deploy.** The Worker reads the columns added by `migrations/0002_admin_audit.sql`, `0003_user_email.sql` and `0004_troubleshooting_review.sql`, so run `npm run db:migrate` (remote D1) before `npm run deploy`. Migrations only ever add columns and tables, so the previous Worker keeps working on the migrated database.
 
 ## Access model
 
@@ -42,6 +42,9 @@ All responses are JSON. Errors are `{error}` (plus a machine-readable `code` on 
 | `POST /auth/pin-reset/confirm {dod_id, code, new_pin}` | Public. → `{token, profile}`. Sets the PIN, clears lockout and `must_change_pin`, revokes every other session. Errors: 400 `CODE_INVALID` / `CODE_EXPIRED`, 429 `CODE_LOCKED` |
 | `PUT /me/email {email}` | → profile + `email_code_sent`. Stores the address unconfirmed and emails a code; the old confirmed address gets a notice |
 | `POST /me/email/resend` · `POST /me/email/verify {code}` · `DELETE /me/email` | Resend the code (429 `CODE_LIMIT`), confirm, remove |
+| `GET /review` | → `{flags, verdicts, people}` for the troubleshooting review page (`/review` in the field app). Any signed-in user |
+| `POST /review/flags {tree, node, kind, text}` · `PATCH /review/flags/:id {resolved}` · `DELETE /review/flags/:id` | Raise a flag on a tree step; resolve/reopen (author or admin); delete (author, unresolved) |
+| `PUT /review/verdicts/:tree {status, note?}` · `DELETE /review/verdicts/:tree` | The caller's verdict (`approved` / `changes`). `approved` → 409 `OPEN_FLAGS` while the tree has open flags |
 | `POST /auth/change-pin {current_pin, new_pin}` | → `{token, profile}`. The current PIN is checked with the login lockout rules (wrong → 403 `{code:'INVALID_PIN'}`, 5th wrong → locked, 429). `new_pin` must be 6–12 digits and different. Clears `must_change_pin` and revokes every other session |
 | `GET /auth/exists/:dodId` | → `{exists}`. Returns false for unclaimed imported profiles |
 | `GET /me` / `PATCH /me {rank?, first_name?, last_name?, mi?, unit?}` | Profile (with `role` and `must_change_pin`) plus `visible_units` (own unit first). A unit change emails the new unit |
@@ -110,6 +113,8 @@ Writes are best effort: where it is natural they are part of the same D1 batch a
 | `user.sign_out_everywhere` | Self | |
 | `user.email_change` / `user.email_remove` | `PUT /me/email` with a new address / `DELETE /me/email` | `from`, `to` (masked, e.g. `j***@army.mil`) |
 | `user.email_verified` | `POST /me/email/verify` | `email` (masked) |
+| `review.flag` / `review.flag_resolve` / `review.flag_reopen` / `review.flag_delete` | Troubleshooting review flags (`/review/flags`) | `tree`, `node`, `kind` |
+| `review.verdict` / `review.verdict_withdraw` | `PUT` / `DELETE /review/verdicts/:tree` | `status` |
 | `user.pin_reset_email` | `POST /auth/pin-reset/confirm` | `email` (masked) |
 | `auth.locked` | The 5th wrong PIN (login or change-pin); once per lock | `via`, `failed_attempts`, `locked_until` |
 | `admin.claim` / `admin.claim_failed` | `POST /admin/claim` | `from`, `to` |

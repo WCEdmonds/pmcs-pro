@@ -12,6 +12,7 @@ export const AUDIT_ACTION_PREFIXES = [
   'uic.',
   'unit_settings.',
   'watch.',
+  'review.',
   'admin.',
 ] as const
 
@@ -31,6 +32,12 @@ export const KNOWN_AUDIT_ACTIONS = [
   'fault.resolve',
   'inspection.synced',
   'photo.upload',
+  'review.flag',
+  'review.flag_delete',
+  'review.flag_reopen',
+  'review.flag_resolve',
+  'review.verdict',
+  'review.verdict_withdraw',
   'uic.name',
   'uic.rename',
   'unit_settings.update',
