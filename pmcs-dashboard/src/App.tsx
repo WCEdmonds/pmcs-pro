@@ -13,6 +13,7 @@ const VehicleDetail = lazy(() => import('./pages/VehicleDetail').then(m => ({ de
 const FaultQueue = lazy(() => import('./pages/FaultQueue').then(m => ({ default: m.FaultQueue })))
 const PmcsCompliance = lazy(() => import('./pages/PmcsCompliance').then(m => ({ default: m.PmcsCompliance })))
 const Settings = lazy(() => import('./pages/Settings').then(m => ({ default: m.Settings })))
+const Review = lazy(() => import('./pages/Review').then(m => ({ default: m.Review })))
 const AdminUsers = lazy(() => import('./pages/admin/AdminUsers').then(m => ({ default: m.AdminUsers })))
 const AdminUnitSettings = lazy(() => import('./pages/admin/AdminUnitSettings').then(m => ({ default: m.AdminUnitSettings })))
 const AdminAudit = lazy(() => import('./pages/admin/AdminAudit').then(m => ({ default: m.AdminAudit })))
@@ -67,6 +68,7 @@ export default function App() {
                     <Route path="/faults" element={<FaultQueue />} />
                     <Route path="/compliance" element={<PmcsCompliance />} />
                     <Route path="/settings" element={<Settings />} />
+                    <Route path="/review" element={<Review />} />
                     <Route path="/admin" element={<AdminGuard />}>
                       <Route index element={<Navigate to="users" replace />} />
                       <Route path="users" element={<AdminUsers />} />

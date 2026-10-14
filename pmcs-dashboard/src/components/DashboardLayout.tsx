@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from 'react-router-dom'
-import { LayoutDashboard, AlertTriangle, ClipboardCheck, LogOut, Shield, ShieldCheck, Settings } from 'lucide-react'
+import { LayoutDashboard, AlertTriangle, ClipboardCheck, LogOut, Shield, ShieldCheck, Settings, BookOpenCheck } from 'lucide-react'
 import { signOut } from '../lib/api'
 import { useUnits } from '../hooks/useUnits'
 import { EmailPromptBanner } from './EmailPromptBanner'
@@ -8,6 +8,7 @@ const navItems = [
   { to: '/', icon: LayoutDashboard, label: 'Fleet Overview' },
   { to: '/faults', icon: AlertTriangle, label: 'Fault Queue' },
   { to: '/compliance', icon: ClipboardCheck, label: 'PMCS Compliance' },
+  { to: '/review', icon: BookOpenCheck, label: 'Troubleshooting Review' },
   { to: '/settings', icon: Settings, label: 'Settings' },
 ]
 const adminItem = { to: '/admin', icon: ShieldCheck, label: 'Admin' }

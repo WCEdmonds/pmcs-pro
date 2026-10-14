@@ -1,4 +1,8 @@
 @import "tailwindcss";
+/* The troubleshooting review page is shared with the field app: generate its classes too. */
+@source "../../pmcs-app/src/pages/ReviewPage.tsx";
+@source "../../pmcs-app/src/components/review";
+@source "../../pmcs-app/src/components/ui";
 
 @theme {
   --color-bg-primary: #0F1215;

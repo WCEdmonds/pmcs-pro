@@ -81,10 +81,33 @@ function StatusDot({ status }: { status: TreeStatus }) {
   return <span className={`inline-block w-2.5 h-2.5 rounded-full border-2 ${DOT_CLASS[status]}`} aria-hidden="true" />;
 }
 
+/** Who is reviewing, and where "home" is. Supplied by the host app (field app or dashboard). */
+export interface ReviewViewer {
+  id: string | null;
+  isAdmin: boolean;
+  rank?: string | null;
+  firstName?: string | null;
+  lastName?: string | null;
+  dodId?: string | null;
+  homeLabel: string;
+}
+
 export default function ReviewPage() {
   const user = useUserStore((s) => s.user);
-  const me = user?.id ?? getSessionUserId();
-  const isAdmin = user?.role === 'admin';
+  return (
+    <ReviewScreen
+      viewer={{
+        id: user?.id ?? getSessionUserId(), isAdmin: user?.role === 'admin',
+        rank: user?.rank, firstName: user?.firstName, lastName: user?.lastName, dodId: user?.dodId, homeLabel: 'PMCS Pro home',
+      }}
+    />
+  );
+}
+
+export function ReviewScreen({ viewer }: { viewer: ReviewViewer }) {
+  const user = viewer;
+  const me = viewer.id;
+  const isAdmin = viewer.isAdmin;
   const location = useLocation();
   const navigate = useNavigate();
   const mainRef = useRef<HTMLElement>(null);
@@ -197,7 +220,7 @@ export default function ReviewPage() {
   }
 
   // ---- people ----
-  const myPerson: ReviewPerson | undefined = user
+  const myPerson: ReviewPerson | undefined = user.id
     ? { rank: user.rank || null, first_name: user.firstName || null, last_name: user.lastName || null }
     : undefined;
   const myName = personName(myPerson);
@@ -358,7 +381,7 @@ export default function ReviewPage() {
       <div className="min-h-full flex flex-col items-center justify-center gap-3 px-4 text-center">
         <p className="text-text-primary">The troubleshooting trees couldn't be loaded.</p>
         <p className="text-sm text-text-secondary">Check your connection and reload the page.</p>
-        <Link to="/" className="text-accent-blue underline">Back to PMCS Pro</Link>
+        <Link to="/" className="text-accent-blue underline">{viewer.homeLabel}</Link>
       </div>
     );
   }
@@ -507,10 +530,10 @@ export default function ReviewPage() {
             <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
               <Link to="/" className="inline-flex items-center gap-1.5 min-h-[44px] text-sm text-accent-blue">
                 <ArrowLeft size={16} aria-hidden="true" />
-                PMCS Pro home
+                {viewer.homeLabel}
               </Link>
               <span className="text-sm text-text-secondary" data-testid="signed-in">
-                Signed in as <b className="text-text-primary font-semibold">{myName || user?.dodId || 'you'}</b>
+                Signed in as <b className="text-text-primary font-semibold">{myName || user.dodId || 'you'}</b>
                 {isAdmin ? ' · admin' : ''}
               </span>
             </div>

@@ -1,6 +1,11 @@
 // Troubleshooting review API (pmcs-api: /review). All routes need the session token.
 import { api } from './api';
 
+/** How the review page talks to the API. The field app uses its own client; the dashboard injects its own. */
+export type ReviewRequest = <T>(method: string, path: string, opts?: { body?: unknown }) => Promise<T>;
+let request: ReviewRequest = (method, path, opts) => api(method, path, opts);
+export function setReviewRequest(fn: ReviewRequest) { request = fn; }
+
 export type FlagKind = 'readiness' | 'level' | 'tm' | 'wording' | 'missing' | 'safety' | 'other';
 
 export const FLAG_KINDS: [FlagKind, string][] = [
@@ -55,7 +60,7 @@ export interface ReviewState {
 export const OPEN_FLAGS = 'OPEN_FLAGS';
 
 export async function fetchReview(): Promise<ReviewState> {
-  const res = await api<Partial<ReviewState>>('GET', '/review');
+  const res = await request<Partial<ReviewState>>('GET', '/review');
   return {
     flags: Array.isArray(res?.flags) ? res.flags : [],
     verdicts: Array.isArray(res?.verdicts) ? res.verdicts : [],
@@ -64,23 +69,23 @@ export async function fetchReview(): Promise<ReviewState> {
 }
 
 export function createFlag(tree: string, node: string, kind: FlagKind, text: string): Promise<ReviewFlag> {
-  return api<ReviewFlag>('POST', '/review/flags', { body: { tree, node, kind, text } });
+  return request<ReviewFlag>('POST', '/review/flags', { body: { tree, node, kind, text } });
 }
 
 export function setFlagResolved(id: string, resolved: boolean): Promise<ReviewFlag> {
-  return api<ReviewFlag>('PATCH', `/review/flags/${encodeURIComponent(id)}`, { body: { resolved } });
+  return request<ReviewFlag>('PATCH', `/review/flags/${encodeURIComponent(id)}`, { body: { resolved } });
 }
 
 export function deleteFlag(id: string): Promise<{ ok: boolean }> {
-  return api<{ ok: boolean }>('DELETE', `/review/flags/${encodeURIComponent(id)}`);
+  return request<{ ok: boolean }>('DELETE', `/review/flags/${encodeURIComponent(id)}`);
 }
 
 export function saveVerdict(tree: string, status: VerdictStatus, note: string): Promise<ReviewVerdict> {
-  return api<ReviewVerdict>('PUT', `/review/verdicts/${encodeURIComponent(tree)}`, { body: note ? { status, note } : { status } });
+  return request<ReviewVerdict>('PUT', `/review/verdicts/${encodeURIComponent(tree)}`, { body: note ? { status, note } : { status } });
 }
 
 export function withdrawVerdict(tree: string): Promise<{ ok: boolean }> {
-  return api<{ ok: boolean }>('DELETE', `/review/verdicts/${encodeURIComponent(tree)}`);
+  return request<{ ok: boolean }>('DELETE', `/review/verdicts/${encodeURIComponent(tree)}`);
 }
 
 export function personName(p: ReviewPerson | undefined): string {
